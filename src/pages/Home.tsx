@@ -1,6 +1,7 @@
 import Calender from '../components/Calender'
 import { useAuthStore } from "../stores/useAuthStore";
 import Table from '../components/Table'
+import { Link } from 'react-router';
 
 
 const Home = () => {
@@ -22,6 +23,9 @@ const Home = () => {
         <Calender/>
 
         <Table items={a}  />
+
+        <Link  to="/admin/levels"> 관리자 </Link>
+
     </div>
   )
 }

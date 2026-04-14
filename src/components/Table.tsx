@@ -20,6 +20,7 @@ const Table = ({ items }: { items: TableProps[] }) => {
 
         <thead>
           <tr>
+             { items ? <th>순번</th> : null}
             {columns.map(col => <th key={col.key}>{col.label}</th>)}
           </tr>
         </thead>
@@ -27,6 +28,7 @@ const Table = ({ items }: { items: TableProps[] }) => {
         <tbody>
           {items.map((item, idx) => (
           <tr key={idx}>
+            <td>{idx + 1}</td>
             {columns.map(col => (
               <td key={col.key}>
                 {item[col.key as keyof TableProps] || "-"}
