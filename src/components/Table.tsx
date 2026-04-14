@@ -7,6 +7,10 @@ const Table = ({ items }: { items: TableProps[] }) => {
    const columns = [
     { key: 'employeeId', label: '사원번호' },
     { key: 'userName', label: '성명' },
+    { key: 'gradeId', label: '직급/직위' },
+    { key: 'phone', label: '연락처' },
+    { key: 'email', label: 'Email' },
+    { key: 'roleId', label: '권한승인' },
   ].filter(col => items.some(item =>
     item[col.key as keyof TableProps]));
 
