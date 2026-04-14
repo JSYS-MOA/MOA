@@ -14,7 +14,7 @@ const Login = () => {
 
   const [isuser, setIsUser] = useState({});
   const [user, setUser] = useState({});
-  const [id, setId] = useState("260409");
+  const [id, setId] = useState("20200001");
   const [pw, setPw] = useState("1234");
 
 
