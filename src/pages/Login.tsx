@@ -10,23 +10,23 @@ const Login = () => {
   const loginCheck = useislogin();
 
   const { login } = useAuthStore();
- 
+
 
   const [isuser, setIsUser] = useState({});
   const [user, setUser] = useState({});
-  const [id, setId] = useState("20200001");
+  const [id, setId] = useState("20200006");
   const [pw, setPw] = useState("1234");
 
 
   const navigate = useNavigate();
 
 
-    // 리엑트 쿼리 사용  + 쥬스텐드
-    const usehandleSubmit = ( e : React.SubmitEvent ) => {
+  // 리엑트 쿼리 사용  + 쥬스텐드
+  const usehandleSubmit = ( e : React.SubmitEvent ) => {
     e.preventDefault();
 
     if( loginCheck.data?.result ){
-         mutate({ id }, {
+      mutate({ id }, {
         onSuccess: (data) => {
           login(data);
           console.log("성공 데이터:", data);
@@ -40,7 +40,7 @@ const Login = () => {
     } else{
       alert("비밀번호 또는 아이디가 틀렸습니다.");
     }
-  
+
 
   }
 
@@ -65,18 +65,18 @@ const Login = () => {
     } else{
       alert("비밀번호 또는 아이디가 틀렸습니다.");
     }
-  
+
 
   }
 
   return (
-    <div>
+      <div>
         <form onSubmit={usehandleSubmit}>
           <input type="number"  value={id} onChange={(e)=>setId(e.target.value)}  />
           <input type="password" value={pw} onChange={(e)=>setPw(e.target.value)} />
           <button type="submit"> 제출 </button>
         </form>
-    </div>
+      </div>
   )
 }
 
