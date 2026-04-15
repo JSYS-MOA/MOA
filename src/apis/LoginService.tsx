@@ -20,7 +20,7 @@ export async function logoutApi(){
     return data;
 }
 
-export async function authcheck(){
+export async function authCheck(){
     const { data } = await axios.get(
         '${ API }/auth/check',
         { withCredentials:true }
