@@ -4,31 +4,31 @@ import axios from "axios";
 const Api_BASE = "http://localhost/api/admin/levels";
 
  // 조회 및 검색
-  export function useGetRole( searchParam?: string , page? : number  ,  size? : number ) {
+  export function useGetRole( search?: string , page? : number  ,  size? : number ) {
     return useQuery({
-      queryKey: ["search", searchParam || '' , page , size ], 
+      queryKey: ["admin", search || '' , page , size ], 
       queryFn: async () => {
-        const { data } = await axios.get(`${Api_BASE}`, {
-          // 2. searchParam이 있을 때만 params에 넣어서 보냅니다.      
+        const { data } = await axios.get(`${Api_BASE}`, {   
           params: {
              page : page ,
              size : size ,
-            searchParam : searchParam || ''
+            search : search || ''
           }
         });
         return data;
       },
-      // 3. (선택사항) 특정 상황에서만 호출하고 싶다면 enabled 옵션을 활용할 수 있습니다.
     });
   }
 
   export function usePatchRole () {
   return useMutation({
-      mutationFn: async ({ id , role }: { id: string , role : string}) => {
+      mutationFn: async ({ userId , roleId }: { userId: number , roleId : number}) => {
         const response = await axios.patch(
-          Api_BASE + `/${id}`,
-          { roleId: parseInt(role) },
-          { withCredentials: true } // credentials: 'include'와 동일한 설정
+          Api_BASE + `/${userId}`, null , {
+            params : {
+              roleId: roleId 
+            } , withCredentials: true
+          }
         );
         return response.data;
       },

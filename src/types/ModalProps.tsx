@@ -1,4 +1,4 @@
-export interface TableProps {
+export interface ModalProps {
   userId? : string;
   employeeId?: string;
   userName? : string;
