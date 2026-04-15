@@ -1,4 +1,4 @@
-import { useQuery , useMutation } from "@tanstack/react-query";
+import { useQuery , useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const Api_BASE = "http://localhost/api/";
@@ -16,103 +16,90 @@ const Api_BASE = "http://localhost/api/";
 //       return data;
 //     },
 
-
-
-export function useislogin() {
-
-    const { data , isLoading , isError} = useQuery({
-        queryKey: ['login'],
-        queryFn: () => axios.post(Api_BASE+"login" ,
-            { employeeId: '20200001', 
-            password: '1234' }).then(r => r.data)
-
+/* GET - 인사카드 목록 조회 */
+export function getuseHrCardList() {
+    return useQuery({
+        queryKey: ["hrCardList"],
+        queryFn: async () => {
+            const res = await axios.get(Api_BASE, {
+                withCredentials: true,
+            });
+            return res.data;
+        },
     });
-    return { data, isLoading, isError };
-
 }
 
-
-// post
-export function useloginInfo () {
-
-return useMutation({
-    mutationFn: async ({ id  }: { id: string}) => {
-      const response = await axios.post(
-        Api_BASE + `user/${id}`,
-        { employeeId: parseInt(id) },
-        { withCredentials: true } // credentials: 'include'와 동일한 설정
-      );
-      return response.data;
-    },
-    onSuccess: (data) => {
-      window.localStorage.setItem("user", JSON.stringify(data));
-      console.log("로그인 성공!");
-    },
-    onError: (error: any) => {
-
-      console.error("로그인 실패:", error.response?.data || error.message);
-    }
-  });
-
+/* GET - 인사카드 상세 조회 */
+export function getuseHrCardInfo(userId: number) {
+    return useQuery({
+        queryKey: ["hrCardInfo", userId],
+        queryFn: async () => {
+            const res = await axios.get(`${Api_BASE}/${userId}`, {
+                withCredentials: true,
+            });
+            return res.data;
+        },
+        enabled: !!userId,
+    });
 }
 
+/* POST - 인사카드 등록 */
+export function postuseHrCardAdd() {
+    const queryClient = useQueryClient();
 
-
-export async function islogin ( id : string , password : string) {
-
-    try {
-       const res = await fetch(Api_BASE+"login", {
-            method: "POST",
-            headers:{ 'Content-Type': 'application/json' },
-            credentials: 'include',
-            // 섹션, 쿠기에 저장된 거 보내주기
-            body: JSON.stringify({ employeeId: id  , password: password }),
-        })
-
-            let deta;
-
-        if (!res.ok) {
-            deta = JSON.stringify(await res.json());
-            //로컬섹션에 저장한다
-            window.localStorage.setItem("user", deta);
-            
-        } else{
-             deta = await res.text();
-        }
-            return deta
-
-    } catch (error) {
-        console.log( "네트워크오류 : " + error);
-    }
-
+    return useMutation({
+        mutationFn: async (data: any) => {
+            const res = await axios.post(Api_BASE, data, {
+                withCredentials: true,
+            });
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
+        },
+    });
 }
 
-export async function loginInfo ( id : string ) {
+/* PUT - 인사카드 수정 */
+export function putuseHrCardUpdate() {
+    const queryClient = useQueryClient();
 
-    try {
-       const res = await fetch(Api_BASE + `user/${id}`, {
-            method: "POST",
-            headers:{ 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ employeeId: id }),
-        })
+    return useMutation({
+        mutationFn: async ({
+                               userId,
+                               updateData,
+                           }: {
+            userId: number;
+            updateData: any;
+        }) => {
+            const res = await axios.put(`${Api_BASE}/${userId}`, updateData, {
+                withCredentials: true,
+            });
+            return res.data;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
+            queryClient.invalidateQueries({
+                queryKey: ["hrCardInfo", variables.userId],
+            });
+        },
+    });
+}
 
-            let deta;
+/*  DELETE - 인사카드 삭제 */
+export function deleteuseHrCardDelete() {
+    const queryClient = useQueryClient();
 
-        if (!res.ok) {
-            deta = JSON.stringify(await res.json());
-            //로컬섹션에 저장한다
-            window.localStorage.setItem("user", deta);
-            
-        } else{
-             deta = await res.text();
-        }
-
-            return deta
-
-    } catch (error) {
-        console.log( "네트워크오류 : " + error);
-    }
-
+    return useMutation({
+        mutationFn: async (userId: number) => {
+            const res = await axios.delete(`${Api_BASE}/${userId}`, {
+                withCredentials: true,
+            });
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
+        },
+    });
 }
 
