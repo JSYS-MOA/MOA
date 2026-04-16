@@ -57,13 +57,13 @@ const Login = () =>{
   }
 
   return(
-    <div className="login-wrap">
+    <div className="login-Wrapper">
       <div className="logo">
         <h1>MOA</h1>
         <p>All-in-One 비즈니스 솔루션</p>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="login-id">
+        <div className="login-Id">
           <p className="title">사원코드</p>
           <input
               value={employeeId}
@@ -72,12 +72,12 @@ const Login = () =>{
           />
         </div>
         {employeeIdError &&
-            <p className="error-icon">
+            <p className="error-Icon">
               <span><FiAlertCircle /></span>
               {employeeIdError}
             </p>
         }
-        <div className="login-password">
+        <div className="login-Password">
           <p className="title">비밀번호</p>
           <input
               type="password"
@@ -87,30 +87,30 @@ const Login = () =>{
           />
         </div>
         {passwordError &&
-            <p className="error-icon">
+            <p className="error-Icon">
               <span><FiAlertCircle /></span>
               {passwordError}
             </p>
         }
         {loginError &&
-            <div className="login-error">
+            <div className="login-Error">
               <span><FiAlertCircle /></span>
               {loginError}
             </div>
         }
-        <button type="submit" className="submit-btn" disabled={isLoading}>
+        <button type="submit" className="submit-Btn" disabled={isLoading}>
           {isLoading ? (
-              <div className="spinner-wrap">
+              <div className="spinner-Wrap">
                 <span className="spinner"></span>
                 로그인 중...
               </div>
           ) : ("LOGIN")}
         </button>
-        <p className="privacy-agree">
+        <p className="privacy-Agree">
           서비스 이용 시 <span>이용약관</span>과
           <span> 개인정보처리방침</span>에 동의한 것으로 간주합니다
         </p>
-        <Link to="/find-password" className="login-findPassword">비밀번호찾기</Link>
+        <Link to="/find-password" className="login-FindPassword">비밀번호찾기</Link>
       </form>
     </div>
   )
