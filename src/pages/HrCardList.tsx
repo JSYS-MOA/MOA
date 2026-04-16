@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import Table from "../components/Table";
 import { useAuthStore } from "../stores/useAuthStore";
 
-import type { HrTableProps } from "../types/HrTableProps";
+import type { HrTableProps } from "../types/HrTableProps.ts";
 
 type HrCardApi = {
     user_id: number;
