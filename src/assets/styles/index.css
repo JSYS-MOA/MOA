@@ -10,21 +10,26 @@
   --text-secondary-50: rgba(40, 40, 40, 0.5);
   --text-secondary-30: rgba(40, 40, 40, 0.3);
 
-  /* 강조색 */
+  /* 강조 텍스트 */
   --text-accent: #091B72;
-
+  /*---------------------------------------------------*/
   /*메인 컬러*/
   --color-primary: #5E5C77;
+  --color-inverse: #ffffff;
 
+  /* 강조컬러 */
   --color-danger: #DA5C57;
 
+  /*서브 컬러*/
   --color-gray-50: #FBFBFB;
   --color-gray-100: #F1F1F1;
-
+/*---------------------------------------------*/
   --bg: #f6f6f6;
-
+/*----------------------------------------------*/
   --border: #e6e6e6;
-
+  /*----------------------------------------------*/
+  --radius-sm: 4px;
+  --radius-lg: 15px;
 
   @media (max-width: 1024px) {
     font-size: 16px;
@@ -56,7 +61,6 @@
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;

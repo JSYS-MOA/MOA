@@ -1,10 +1,10 @@
 .login-wrap{
     width: 552px; margin: 220px auto;
     background: yellow;
+    border: 1px solid var(--border)
 }
 .login-wrap .logo{text-align: center;}
 .login-wrap .logo h2{font-size: 52px; font-weight: 600}
-.login-wrap .logo p{color:var(--color-sub-30); margin-top: -2px; font-weight: 600}
-.login-wrap form{
-    background: #000;}
+.login-wrap .logo p{color:var(--text-secondary-30); margin-top: -2px; font-weight: 600}
+.login-wrap form{background: var(--color-inverse); }
 
