@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { useAuthStore } from "../stores/useAuthStore";
 import { useHrCardList } from "../apis/HrCardService";
-
 import Button from "../components/Button";
 import Table from "../components/Table";
+import { useAuthStore } from "../stores/useAuthStore";
 
 import type { HrTableProps } from "../types/HrTableProps";
 
@@ -36,14 +35,15 @@ const HrCardList = () => {
 
     const items: HrTableProps[] = useMemo(() => {
         return (cards as HrCardApi[]).map((card) => ({
+            user_id: card.user_id,
             userName: card.user_name,
-            employeeId: String(card.employee_id), // 문자열로 통일
+            employeeId: card.employee_id,
             phone: card.phone,
             email: card.email,
             address: card.address ?? "",
             startDate: new Date(card.start_date),
             quitDate: card.quit_date ? new Date(card.quit_date) : undefined,
-            departmentId: String(card.department_id),
+            departmentId: card.department_id,
             gradeId: card.grade_id,
             birth: card.birth ? new Date(card.birth) : undefined,
             performance: card.performance ?? "",
@@ -75,9 +75,9 @@ const HrCardList = () => {
     return (
         <div className="hr-card-page">
             <div className="hr-card-header">
-                <h1 className="hr-card-title">인사 카드등록</h1>
+                <h1 className="hr-card-title">인사 카드 등록</h1>
                 <button type="button" className="hr-card-top-search">
-                    검색조건 ▼
+                    검색 조건
                 </button>
             </div>
 
@@ -94,7 +94,7 @@ const HrCardList = () => {
                     </div>
 
                     <div className="hr-card-filter-group">
-                        <label>직급/직위</label>
+                        <label>직급/직책</label>
                         <input
                             type="text"
                             placeholder="직급"
@@ -115,13 +115,7 @@ const HrCardList = () => {
                 </div>
 
                 <div className="hr-card-filter-actions">
-                    <button
-                        type="button"
-                        className="hr-card-search-btn"
-                        onClick={() => {
-                            // 상태값으로 이미 필터링 중
-                        }}
-                    >
+                    <button type="button" className="hr-card-search-btn" onClick={() => {}}>
                         검색
                     </button>
 
