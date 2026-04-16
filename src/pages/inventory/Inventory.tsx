@@ -2,13 +2,14 @@ import { useState } from "react";
 import Table from "../../components/Table";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
 import Modal from "../../components/Modal";
+import { type ModalProps } from "../../types/ModalProps";
 
 
 const Inventory = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(false);
-  const [info, setInfo] = useState([]);
+  const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
   const { data } =  useGetInventory( search, page, 10);
   const {  mutate } = useGetInventoryInfo()
@@ -32,7 +33,7 @@ const Inventory = () => {
         
         mutate (item.inventoryId, {
         onSuccess: (data) => {
-          setInfo(data.content);
+          setInfo(data);
           setModal(true)
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
@@ -52,7 +53,8 @@ const Inventory = () => {
         onItemClick={onInventoryClick}
        />
 
-      {modal ? <Modal item={info} /> : null}
+      {modal && info != null ?
+        <Modal items={info.content} maxPage={info.totalPages} /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>
