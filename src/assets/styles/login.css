@@ -56,7 +56,6 @@
     align-items: center;
     gap: 4px;
     color: var(--color-danger);
-    min-height: ;
 }
 .login-wrap .login-error span{display: flex;}
 
