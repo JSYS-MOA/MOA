@@ -1,4 +1,3 @@
-import { useQuery , useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 const Api_BASE = "http://localhost/api/";
@@ -28,7 +27,15 @@ export function useislogin() {
 
     });
     return { data, isLoading, isError };
+const API = "http://localhost/api";
 
+export async function loginApi(employeeId: string, password: string){
+    const { data } = await axios.post(
+        `${ API }/auth/login`,
+        { employeeId,password },
+        { withCredentials: true } //서버와 주소가 달라서 브라우저가 JSESSIONID 쿠키를 같이 보내야 유저 인식(필수)
+    );
+    return data;
 }
 
 
@@ -114,4 +121,20 @@ export async function loginInfo ( id : string ) {
         console.log( "네트워크오류 : " + error);
     }
 
+}
+export async function logoutApi(){
+    const { data } = await axios.post(
+        '${ API }/auth/logout',
+        {},
+        { withCredentials:true }
+    );
+    return data;
+}
+
+export async function authCheck(){
+    const { data } = await axios.get(
+        '${ API }/auth/check',
+        { withCredentials:true }
+    );
+    return data;
 }
