@@ -139,14 +139,11 @@ input{
 }
 input::placeholder{color: var(--text-secondary-30)}
 input:focus{outline: none; border: 2px solid rgba(94,92,119,0.3) !important; }
-code,
-.counter {
-  display: inline-flex;
-  border-radius: 4px;
-}
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
 }
