@@ -6,6 +6,7 @@ import {useAuthStore} from "./stores/useAuthStore.tsx";
 import {useEffect, useState} from "react";
 import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
+import MainPage from "./pages/main/MainPage.tsx";
 
 
 const App = () => {
@@ -32,7 +33,7 @@ const App = () => {
 
           <Route element={<PrivateRoute />}>
             <Route element={<MainLayout />}>
-              <Route path="/home" element={<Home />} />
+              <Route path="/home" element={<MainPage />} />
             </Route>
           </Route>
 

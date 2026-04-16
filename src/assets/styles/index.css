@@ -46,7 +46,7 @@
   --color-inverse: #ffffff;
 
   /* 강조컬러 */
-  --color-danger: #DA5C57;
+  --color-danger: rgb(218 92 87);
 
   /*서브 컬러*/
   --color-gray-50: #FBFBFB;
