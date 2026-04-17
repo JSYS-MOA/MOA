@@ -1,49 +1,112 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+//자주 조회하는 데이터 -> react-query -> 캘린더 등
+//한번만 요청하는 것 -> async/await  -> 로그인
 
-import { useislogin, useloginInfo } from "../apis/LoginService";
-import { useAuthStore } from "../stores/useAuthStore";
+import {useState} from "react";
+import {useAuthStore} from "../stores/useAuthStore.tsx";
+import {Link, useNavigate} from "react-router";
+import {loginApi} from "../apis/LoginService.tsx";
+import { FiAlertCircle } from "react-icons/fi";
+import "../assets/styles/login.css";
+import type { SyntheticEvent } from "react";
 
-const Login = () => {
-    const { mutate } = useloginInfo();
-    const loginCheck = useislogin();
-    const { login } = useAuthStore();
+const Login = () =>{
 
-    const [id, setId] = useState("20200006");
-    const [pw, setPw] = useState("1234");
-
+    const [employeeId, setEmployeeId] = useState("")
+    const [password, setPassword] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [employeeIdError, setEmployeeIdError] = useState("")
+    const [passwordError, setPasswordError] = useState("");
+    const [loginError, setLoginError] = useState("");
+    const {login} = useAuthStore();
     const navigate = useNavigate();
 
-    const usehandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async (e: SyntheticEvent) => {
+        e.preventDefault(); //폼의 기본 동작 = 페이지 새로고침 => handleSubmit 안에 코드 실행 안됨 >이걸 막기위해
 
-        if (loginCheck.data?.result) {
-            mutate(
-                { id },
-                {
-                    onSuccess: (data) => {
-                        login(data);
-                        navigate("/home");
-                    },
-                    onError: () => {
-                        alert("유저 정보를 가져오는데 실패했습니다.");
-                    },
-                },
-            );
-        } else {
-            alert("비밀번호 또는 아이디가 일치하지 않습니다.");
+        setEmployeeIdError("");
+        setPasswordError("");
+        setLoginError("");
+
+        if(!employeeId){
+            setEmployeeIdError("아이디를 입력해주세요.")
+            return;
         }
-    };
 
-    return (
-        <div>
-            <form onSubmit={usehandleSubmit}>
-                <input type="number" value={id} onChange={(e) => setId(e.target.value)} />
-                <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} />
-                <button type="submit">제출</button>
+        if (!password) {
+            setPasswordError("비밀번호를 입력해주세요.");
+            return;
+        }
+
+        if(isLoading) return;
+
+        setIsLoading(true);
+        try {
+            const data = await loginApi(employeeId,password);
+
+            if(data.result){
+                login(data);
+                navigate("/home");
+            }else{
+                setLoginError(data.message);
+            }
+        } catch{
+            setLoginError("서버 오류가 발생했습니다")
+        }finally {
+            setIsLoading(false)
+        }
+    }
+
+    return(
+        <div className="login-Wrapper">
+            <div className="logo">
+                <h1>MOA</h1>
+                <p>All-in-One 비즈니스 솔루션</p>
+            </div>
+            <form onSubmit={handleSubmit}>
+                <div className="login-Id">
+                    <p className="title">사원코드</p>
+                    <input
+                        value={employeeId}
+                        onChange={(e) => setEmployeeId(e.target.value)}
+                        placeholder="사원코드 입력"
+                    />
+                </div>
+                <p className={`error-Icon ${employeeIdError ? "show" : ""}`}>
+                    <span><FiAlertCircle /></span>
+                    {employeeIdError}
+                </p>
+                <div className="login-Password">
+                    <p className="title">비밀번호</p>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="비밀번호 입력"
+                    />
+                </div>
+                <p className={`error-Icon ${passwordError ? "show" : ""}`}>
+                    <span><FiAlertCircle /></span>
+                    {passwordError}
+                </p>
+                <div className={`login-Error ${loginError ? "show" : ""}`}>
+                    <span><FiAlertCircle /></span>
+                    {loginError}
+                </div>
+                <button type="submit" className="submit-Btn" disabled={isLoading}>
+                    {isLoading ? (
+                        <div className="spinner-Wrap">
+                            <span className="spinner"></span>
+                            로그인 중...
+                        </div>
+                    ) : ("LOGIN")}
+                </button>
+                <p className="privacy-Agree">
+                    서비스 이용 시 <span>이용약관</span>과
+                    <span> 개인정보처리방침</span>에 동의한 것으로 간주합니다
+                </p>
+                <Link to="/find-password" className="login-FindPassword">비밀번호찾기</Link>
             </form>
         </div>
-    );
+    )
 };
-
 export default Login;

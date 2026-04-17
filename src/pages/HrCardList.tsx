@@ -73,17 +73,17 @@ const HrCardList = () => {
     }, [items, keyword, departmentKeyword, gradeKeyword]);
 
     return (
-        <div className="hr-card-page">
-            <div className="hr-card-header">
-                <h1 className="hr-card-title">인사 카드 등록</h1>
-                <button type="button" className="hr-card-top-search">
+        <div className="hrCardList-page">
+            <div className="hrCardList-header">
+                <h1 className="hrCardList-title">인사 카드 등록</h1>
+                <button type="button" className="hrCardList-top-search">
                     검색 조건
                 </button>
             </div>
 
-            <div className="hr-card-filter-box">
-                <div className="hr-card-filter-row">
-                    <div className="hr-card-filter-group">
+            <div className="hrCardList-filter-box">
+                <div className="hrCardList-filter-row">
+                    <div className="hrCardList-filter-group">
                         <label>부서</label>
                         <input
                             type="text"
@@ -93,7 +93,7 @@ const HrCardList = () => {
                         />
                     </div>
 
-                    <div className="hr-card-filter-group">
+                    <div className="hrCardList-filter-group">
                         <label>직급/직책</label>
                         <input
                             type="text"
@@ -103,7 +103,7 @@ const HrCardList = () => {
                         />
                     </div>
 
-                    <div className="hr-card-filter-group">
+                    <div className="hrCardList-filter-group">
                         <label>성명</label>
                         <input
                             type="text"
@@ -114,14 +114,14 @@ const HrCardList = () => {
                     </div>
                 </div>
 
-                <div className="hr-card-filter-actions">
-                    <button type="button" className="hr-card-search-btn" onClick={() => {}}>
+                <div className="hrCardList-filter-actions">
+                    <button type="button" className="hrCardList-search-btn" onClick={() => {}}>
                         검색
                     </button>
 
                     <button
                         type="button"
-                        className="hr-card-reset-btn"
+                        className="hrCardList-reset-btn"
                         onClick={() => {
                             setKeyword("");
                             setDepartmentKeyword("");
@@ -133,22 +133,22 @@ const HrCardList = () => {
                 </div>
             </div>
 
-            <div className="hr-card-table-box">
-                <div className="hr-card-table-info">
+            <div className="hrCardList-table-box">
+                <div className="hrCardList-table-info">
                     <span>전체 {filteredItems.length}건</span>
                 </div>
 
                 <Table items={filteredItems} />
             </div>
 
-            <div className="hr-card-bottom-actions">
+            <div className="hrCardList-bottom-actions">
                 {user && (
                     <Link to="/hr/cards/add">
                         <Button label="추가" onClick={() => {}} />
                     </Link>
                 )}
 
-                <button type="button" className="hr-card-disabled-btn" disabled>
+                <button type="button" className="hrCardList-disabled-btn" disabled>
                     삭제
                 </button>
             </div>
