@@ -1,27 +1,37 @@
-import Calender from '../components/Calender'
-import { useAuthStore } from "../stores/useAuthStore";
-import Table from '../components/Table'
-
+import { MdRefresh } from "react-icons/md";
 
 const Home = () => {
 
-  const { user } = useAuthStore();
-
-  const a = [ {employeeId: '1' , userName : 'a'} , { employeeId: '2' , userName : 'b' }]
 
   return (
-    <div>
-        홈입니다
-        {user != null ?  
-          <>
-          <br/> {user.userName} 
-          <br/> {user.employeeId}
-          </> 
-          : <> <br/> 로그인 데이터 없음 </>
-        }
-        <Calender/>
 
-        <Table items={a}  />
+    <div className="mainPage-Wrapper">
+        <div className="left">
+            <div className="top">
+                <div className="mainPage-Work">
+                    <div className="card-Header">
+                        <p className="card-Title">출근/퇴근카드</p>
+                        <span className="icon"><MdRefresh /></span>
+                    </div>
+                    <div className="card-Body">
+                        <div className="work-Date">
+                            <p className="work-Day"></p>
+                            <p className="work-Time"></p>
+                        </div>
+                        <div className="BtnContainer">
+                            <button className="btn-checkin">출근</button>
+                            <button className="btn-checkout">퇴근</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="mainPage-Attendances">
+
+                </div>
+            </div>
+        </div>
+        <div className="right">
+
+        </div>
     </div>
   )
 }
