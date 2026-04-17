@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
-
+import HrCardListPage from "./pages/HR/HrCardListPage.tsx";
 
 const App = () => {
     const { login } = useAuthStore();
@@ -33,6 +33,7 @@ const App = () => {
                 <Route element={<PrivateRoute />}>
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
+                        <Route path="/hr/cards" element={<HrCardListPage />} />
                     </Route>
                 </Route>
 
