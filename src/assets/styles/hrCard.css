@@ -1,0 +1,267 @@
+#root {
+    width: 1647px;
+    padding : 24px 29px 0px 29px;
+}
+
+/*테이블 박스*/
+.hrCardList-table-box {
+    margin-top: 21px;
+}
+/*검색창용 박스*/
+.hrCardList-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 53px 0px 46px 0px;
+}
+
+.hrCardList-title {
+    margin: 0;
+    font-size: 21px;
+    margin-top: 24px;
+    margin-bottom: var(--spacing-xs);
+}
+
+/*버튼들*/
+.hrCardList-top-search-btn,
+.hrCardList-search-btn,
+.hrCardList-add-btn,
+.hrCardList-paging-prev-btn,
+.hrCardList-paging-num-btn,
+.hrCardList-paging-next-btn {
+    border: 1px;
+    border-radius: var(--radius-md);
+    background:  var(--color-primary);
+    color: var(--color-inverse);
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/*삭제버튼*/
+.hrCardList-disabled-btn{
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    border: 3px solid var(--border);
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/*버튼들 강조*/
+.hrCardList-top-search-btn:hover,
+.hrCardList-search-btn:hover,
+.hrCardList-add-btn:hover,
+.hrCardList-paging-prev-btn:hover,
+.hrCardList-paging-num-btn:hover,
+.hrCardList-paging-next-btn:hover {
+    background: var(--color-danger);
+    color: var(--color-inverse);
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.hrCardList-top-search[aria-expanded="false"] {
+    opacity: 0.9;
+}
+
+.hrCardList-filter-box {
+    border: 1px skyblue solid;
+    overflow: hidden;
+    max-height: 98px;
+    max-width: 1589px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background: #fff;
+    transition: max-height 0.2s ease, padding 0.2s ease, opacity 0.2s ease,
+        margin-bottom 0.2s ease, border-width 0.2s ease;
+    opacity: 1;
+}
+
+.hrCardList-filter-box.is-collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
+}
+
+.hrCardList-filter-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.hrCardList-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.hrCardList-filter-group label {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.hrCardList-chip-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 56px;
+    padding-left: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-sizing: border-box;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hrCardList-chip-input.has-chip {
+    padding-block: 6px;
+}
+
+.hrCardList-chip-input:focus-within {
+    border-color: #d7dbe3;
+    box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
+}
+
+.hrCardList-chip-input-icon {
+    position: relative;
+    min-width: 54px;
+    align-self: stretch;
+    border-right: 1px solid #eceff3;
+}
+
+.hrCardList-chip-input-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    width: 13px;
+    height: 13px;
+    border: 3px solid #e3e5ea;
+    border-radius: 50%;
+    transform: translateY(-60%);
+    box-sizing: border-box;
+}
+
+.hrCardList-chip-input-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 31px;
+    width: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: #e3e5ea;
+    transform: translateY(4px) rotate(45deg);
+}
+
+.hrCardList-chip-input input {
+    flex: 1;
+    min-width: 0;
+    height: auto;
+    padding: 0 16px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    outline: none;
+    font: inherit;
+    color: inherit;
+}
+
+.hrCardList-chip-input input::placeholder {
+    color: #a9afbb;
+}
+
+.hrCardList-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #7a7393;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.hrCardList-chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hrCardList-chip-input .hrCardList-chip {
+    margin-right: 4px;
+}
+
+.hrCardList-chip-input.has-chip input {
+    min-width: 48px;
+}
+
+.hrCardList-chip-clear {
+    min-width: 54px;
+    align-self: stretch;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid #eceff3;
+    background: transparent;
+    color: #e3e5ea;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.hrCardList-chip-clear:disabled {
+    opacity: 0.8;
+    cursor: default;
+}
+
+.hrCardList-chip-clear:not(:disabled):hover {
+    color: #c9ced8;
+}
+
+.hrCardList-filter-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 16px;
+}
+
+.hrCardList-table-info {
+    width: 100%;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.hrCardList-bottom-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+    .hrCardList-filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .hrCardList-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .hrCardList-chip-input {
+        min-height: 48px;
+    }
+
+    .hrCardList-chip-input-icon,
+    .hrCardList-chip-clear {
+        min-width: 48px;
+    }
+}
