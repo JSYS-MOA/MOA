@@ -3,6 +3,7 @@ export interface TableProps {
   employeeId?: string;
   userName? : string;
   gradeId? : string;
+  gradeName? : string;
   phone? : string;
   email? : string;
   roleId? : string;
@@ -11,4 +12,9 @@ export interface TableProps {
   productName: string;
   productCord: string;
   inventorySno: string;
+}
+
+export interface Column {
+  key: keyof TableProps;
+  label: string;
 }

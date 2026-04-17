@@ -25,7 +25,7 @@ const Api_BASE = "http://localhost/api/inventory/";
       mutationFn: async (info: number) => {
         const { data } = await axios.get(`${Api_BASE}status/${info}`, {   
           params: {
-             info : info ,
+            //  info : info ,
           }
         });
         return data;

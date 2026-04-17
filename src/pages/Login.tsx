@@ -11,8 +11,8 @@ import type { SyntheticEvent } from "react";
 
 const Login = () =>{
 
-  const [employeeId, setEmployeeId] = useState("")
-  const [password, setPassword] = useState("")
+  const [employeeId, setEmployeeId] = useState("20200001")
+  const [password, setPassword] = useState("1234")
   const [isLoading, setIsLoading] = useState(false)
   const [employeeIdError, setEmployeeIdError] = useState("")
   const [passwordError, setPasswordError] = useState("");

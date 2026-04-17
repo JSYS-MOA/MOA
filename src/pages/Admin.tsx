@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useGetRole , usePatchRole } from '../apis/AdminService'
 import Table from '../components/Table'
+import { type Column } from '../types/TableProps'
 
 const Admin = () => {
   const [page, setPage] = useState(0);
@@ -37,6 +38,12 @@ const Admin = () => {
     
   }
 
+  const columns : Column[] = [
+    { key: 'employeeId', label: '사원번호' },
+    { key: 'userName', label: '성명' },
+    { key: 'gradeName', label: '직급/직위' },
+    { key: 'phone', label: '연락처' },
+    { key: 'email', label: 'Email' },]
   
   console.log(maxPage)
   console.log(data)
@@ -47,7 +54,7 @@ const Admin = () => {
       {data != null ?
       <Table
         items={data.content}
-        onItemChange={onRoleChange} />
+        onItemChange={onRoleChange} columns={columns}/>
       : "로딩중입니다." }
 
       <button onClick={()=>{changePage(-1)}}>aa</button>

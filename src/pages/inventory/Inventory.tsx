@@ -3,6 +3,7 @@ import Table from "../../components/Table";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
 import Modal from "../../components/Modal";
 import { type ModalProps } from "../../types/ModalProps";
+import { type Column } from "../../types/TableProps";
 
 
 const Inventory = () => {
@@ -29,15 +30,15 @@ const Inventory = () => {
 
     const onInventoryClick = ( item : any , e : React.MouseEvent) => {
       
-      if('inventoryId' in item) {
+      if('productId' in item) {
         
-        mutate (item.inventoryId, {
+        mutate (item.productId, {
         onSuccess: (data) => {
           setInfo(data);
           setModal(true)
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("유저 정보를 가져오는데 실패했습니다.");
+          alert("정보를 가져오는데 실패했습니다.");
         }
       })
        
@@ -45,11 +46,20 @@ const Inventory = () => {
       
     }
 
+    const columns : Column[] = [
+    { key: 'productCord', label: '품목코드' },
+    { key: 'productName', label: '품목명'  },
+    { key: 'storageName', label: '창고명' },
+    { key: 'productPrice', label: '입고단가' },
+    { key: 'inventorySno', label: '총재고수량' }
+  ]
+
   return (
     <div>
       {data != null ?<>
       <Table
         items={data.content}
+        columns={columns}
         onItemClick={onInventoryClick}
        />
 
