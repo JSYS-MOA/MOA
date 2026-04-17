@@ -32,9 +32,9 @@
 
   /* 서브 텍스트 */
   --text-secondary: #282828;
-  --text-secondary-70: rgba(40, 40, 40, 0.7);
+  --text-secondary-70: rgba(40, 40, 40, 0.78);
   --text-secondary-50: rgba(40, 40, 40, 0.5);
-  --text-secondary-30: rgba(40, 40, 40, 0.3);
+  --text-secondary-30: rgba(53, 53, 53, 0.4);
 
   /* 강조 텍스트 */
   --text-accent: #091B72;
@@ -46,7 +46,7 @@
   --color-inverse: #ffffff;
 
   /* 강조컬러 */
-  --color-danger: #DA5C57;
+  --color-danger: rgb(218 92 87);
 
   /*서브 컬러*/
   --color-gray-50: #FBFBFB;

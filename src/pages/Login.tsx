@@ -71,12 +71,10 @@ const Login = () =>{
               placeholder="사원코드 입력"
           />
         </div>
-        {employeeIdError &&
-            <p className="error-Icon">
-              <span><FiAlertCircle /></span>
-              {employeeIdError}
-            </p>
-        }
+        <p className={`error-Icon ${employeeIdError ? "show" : ""}`}>
+          <span><FiAlertCircle /></span>
+          {employeeIdError}
+        </p>
         <div className="login-Password">
           <p className="title">비밀번호</p>
           <input
@@ -86,18 +84,14 @@ const Login = () =>{
               placeholder="비밀번호 입력"
           />
         </div>
-        {passwordError &&
-            <p className="error-Icon">
-              <span><FiAlertCircle /></span>
-              {passwordError}
-            </p>
-        }
-        {loginError &&
-            <div className="login-Error">
-              <span><FiAlertCircle /></span>
-              {loginError}
-            </div>
-        }
+        <p className={`error-Icon ${passwordError ? "show" : ""}`}>
+          <span><FiAlertCircle /></span>
+          {passwordError}
+        </p>
+        <div className={`login-Error ${loginError ? "show" : ""}`}>
+          <span><FiAlertCircle /></span>
+          {loginError}
+        </div>
         <button type="submit" className="submit-Btn" disabled={isLoading}>
           {isLoading ? (
               <div className="spinner-Wrap">
