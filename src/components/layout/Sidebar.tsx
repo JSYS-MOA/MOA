@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import {useState} from "react";
 import "../../assets/styles/layout.css";
+import {logoutApi} from "../../apis/LoginService.tsx";
 
 interface CategoryConfig {
     id: string;
@@ -9,17 +10,25 @@ interface CategoryConfig {
 }
 
 interface MenuData {
-    menu_title: string;
-    menu_num: number;
-    page_path: string;
+    userName:string;
+    employeeId:string;
+    departmentName:string;
+    gradeName:string;
+
+    menuList:{
+        menuId: number;
+        menu_title: string;
+        menu_num: number;
+        page_path: string;
+    }[];
 }
 
 interface SidebarProps {
-    menuDataFromDB: MenuData[];
+    layoutData: MenuData;
     activeMenu: number;
 }
 
-const Sidebar = ({menuDataFromDB, activeMenu}:SidebarProps) => {
+const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
     const navigate = useNavigate();
     const [openCategory, setOpenCategory] = useState<string | null>(null);
 
@@ -64,7 +73,7 @@ const Sidebar = ({menuDataFromDB, activeMenu}:SidebarProps) => {
     };
 
     const currentConfig = categorys[activeMenu] || [];
-    const rawMenus = menuDataFromDB.filter(item => item.menu_num === activeMenu);
+    const rawMenus = layoutData.menuList.filter(item => item.menu_num === activeMenu);
 
     const handleToggle = (catId:string) => {
         setOpenCategory(openCategory === catId ? null : catId);
@@ -72,8 +81,25 @@ const Sidebar = ({menuDataFromDB, activeMenu}:SidebarProps) => {
 
     return (
         <aside className="sidebar">
-
-
+            <div className="sidebar-notification">
+                <span className="icon-bell">🔔</span>
+                <span className="notif-text">1개의 새 알림이 있습니다</span>
+                <span className="notif-dot"></span>
+            </div>
+            <div className="sidebar-user-card">
+                <div className="user-avatar-circle">
+                    {layoutData.userName ? layoutData.userName[0] : "U"}
+                </div>
+                <div className="user-info-detail">
+                    <div className="user-name-row">
+                        <span className="u-name">{layoutData.userName}님</span>
+                        <span className="icon-arrow-right">▶</span>
+                    </div>
+                    <p className="u-sub-info">
+                        {layoutData.departmentName} | {layoutData.gradeName} | {layoutData.employeeId}
+                    </p>
+                </div>
+            </div>
 
 
 
@@ -118,7 +144,7 @@ const Sidebar = ({menuDataFromDB, activeMenu}:SidebarProps) => {
                     );
                 })}
             </ul>
-            <div className="sidebar-footer" onClick={() => {/* 로 v   그아웃 로직 */}}>
+            <div className="sidebar-footer" onClick={() => {logoutApi()}}>
                 <span>로그아웃</span>
                 <span className="icon-logout">⎗</span>
             </div>

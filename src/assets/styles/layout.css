@@ -1,90 +1,12 @@
+/* css마지막에 */
+
+
+
+
 /* ----------헤더css----------- */
-.header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 48px;
-  background-color: #FFF;
-  border-bottom: 1px solid #EEE;
-}
 
-.logo {
-  margin-left: 33px;
-  font-family: "Pretendard", sans-serif;
-  font-size: 24px;
-  font-weight: bold;
-  color: #4B4D62;
-}
-
-.menu-List {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0 40px;
-  gap: 30px;
-}
-
-.menu-Item {
-  font-family: "Pretendard", sans-serif;
-  font-size: 15px;
-  color: #151515;
-  cursor: pointer;
-}
 /* --------------------------- */
 
 /* --------사이드바css--------- */
-.sidebar {
-  width: 260px;
-  background-color: #716F8B;
-  color: #FFF;
-  display: flex;
-  flex-direction: column;
-}
 
-/* 알림 영역 */
-.alarm-Bar {
-  background-color: #4D4B62;
-  padding: 10px 15px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 프로필 영역 */
-.profile-Box {
-  padding: 20px 15px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-top: 1px solid #716F8B;
-  border-bottom: 1px solid #716F8B;
-}
-
-.user-Avatar {
-  width: 50px;
-  height: 50px;
-  background-color: #CCC;
-  border-radius: 50%;
-}
-
-/* 메뉴 리스트 */
-.menu-List {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu-Item {
-  padding: 15px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.active-Item {
-  background-color: #4D4B62;
-  border-bottom: 0.5px solid #716F8B;
-}
 /* --------------------------- */
