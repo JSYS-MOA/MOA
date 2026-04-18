@@ -24,7 +24,9 @@ const App = () => {
                 setIsLoading(false)
             });
     },[login]);
+
     if (isLoading) return null;
+
   return (
     <>
       <Routes>
