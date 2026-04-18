@@ -8,6 +8,7 @@ import {loginApi} from "../apis/LoginService.tsx";
 import { FiAlertCircle } from "react-icons/fi";
 import "../assets/styles/login.css";
 import type { SyntheticEvent } from "react";
+import axios from "axios";
 
 const Login = () =>{
 
@@ -27,7 +28,7 @@ const Login = () =>{
     setPasswordError("");
     setLoginError("");
 
-    if(!employeeId){
+    if (!employeeId) {
       setEmployeeIdError("아이디를 입력해주세요.")
       return;
     }
@@ -37,25 +38,25 @@ const Login = () =>{
       return;
     }
 
-    if(isLoading) return;
+    if (isLoading) return;
 
     setIsLoading(true);
     try {
-      const data = await loginApi(employeeId,password);
-
-      if(data.result){
-        login(data);
-        navigate("/home");
-      }else{
-        setLoginError(data.message);
+      const data = await loginApi(employeeId, password);
+      login(data);
+      navigate("/home")
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setLoginError(
+            error.response?.data?.message ?? "서버 오류가 발생했습니다"
+        );
+      } else {
+        setLoginError("서버 오류가 발생했습니다")
       }
-    } catch{
-      setLoginError("서버 오류가 발생했습니다")
     }finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
-
   return(
     <div className="login-Wrapper">
       <div className="logo">

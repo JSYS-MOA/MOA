@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
+import axios from "axios";
 
 
 const App = () => {
@@ -15,11 +16,15 @@ const App = () => {
     useEffect(()=>{
         authCheck()
             .then((data) => {
-                if (data.result) {
-                    login(data);
+                login(data);
+             })
+            .catch((error)=>{
+                if(axios.isAxiosError(error) && error.response?.status === 401) {
+                    //
+                }else{
+                    console.error("authCheck error",error);
                 }
             })
-            .catch((err)=>console.error(err))
             .finally(()=>{
                 setIsLoading(false)
             });
