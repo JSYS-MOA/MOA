@@ -1,15 +1,16 @@
 import {useAuthStore} from "../../stores/useAuthStore.tsx";
-import SalesMain from "./SalesMain.tsx";
-import HrMain from "./HrMain.tsx";
-import LogisticsMain from "./LogisticsMain.tsx";
+import MainPageLayout from "./MainPageLayout.tsx";
+import HrTeam from "./team/HrTeam.tsx";
+import LogisticsTeam from "./team/LogisticsTeam.tsx";
+import SalesTeam from "./team/SalesTeam.tsx";
 
 const MainPage = () => {
 
     const { user } = useAuthStore();
 
-    if(user?.departmentId === 1) return <HrMain />
-    if(user?.departmentId === 3) return <LogisticsMain />
-    if(user?.departmentId === 3) return <SalesMain />
+    if(user?.departmentId === 1) return <MainPageLayout><HrTeam /></MainPageLayout>
+    if(user?.departmentId === 2) return <MainPageLayout><LogisticsTeam /></MainPageLayout>
+    if(user?.departmentId === 3) return <MainPageLayout><SalesTeam /></MainPageLayout>
 
     return(
         <div>

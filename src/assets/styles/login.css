@@ -44,7 +44,7 @@
     background: var( --color-primary);
     border: none; color: var(  --text-inverse);
     font-size: var(--font-lg);
-    margin-top: 26px;
+    margin-top: 30px;
     cursor: pointer;
 }
 .login-Wrapper .submit-Btn:hover{
@@ -54,7 +54,7 @@
 .login-Wrapper .login-FindPassword{
     color: var(--text-secondary-50);
     font-size: 13px; display: block;
-    text-align: right; margin-top: 29px;
+    text-align: right; margin-top: 23px;
 }
 .login-Wrapper .login-Error{
     width: 100%;
@@ -87,6 +87,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    font-size: var(--font-md);
 }
 
 .spinner {
