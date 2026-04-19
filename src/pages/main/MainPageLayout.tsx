@@ -1,8 +1,8 @@
 import AttendanceCard from "./common/AttendanceCard.tsx";
-import ApprovalStatus from "./common/ApprovalStatus.tsx";
+import ApprovalCard from "./common/ApprovalCard.tsx";
 import MainCalendar from "./common/MainCalendar.tsx";
 import Notice from "./common/Notice.tsx";
-import "../../assets/styles/mainPage.css";
+import "../../assets/styles/main/mainPage.css";
 import React from "react";
 
 const MainPageLayout = ({children}:{children:React.ReactNode}) => {
@@ -10,9 +10,9 @@ const MainPageLayout = ({children}:{children:React.ReactNode}) => {
     return(
         <div className="mainPage-Wrapper">
             <div className="left-Section">
-                <div className="top-Cards">
+                <div className="top-Card">
                     <AttendanceCard />
-                    <ApprovalStatus />
+                    <ApprovalCard />
                 </div>
                     <MainCalendar />
             </div>
