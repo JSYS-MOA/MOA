@@ -1,3 +1,4 @@
+import {MdRefresh} from "react-icons/md";
 import "../../../assets/styles/main/approvalCard.css";
 
 const ApprovalCard = () => {
@@ -6,7 +7,7 @@ const ApprovalCard = () => {
         <div className="main-Card">
             <div className="card-Header">
                 <p>내 결제 근황</p>
-                <span aria-hidden="true">Refresh</span>
+                <MdRefresh size={19} color="lightgray"/>
             </div>
             <div className="card-Inner approvalCard-Inner">
                 <button className="approval-Item">

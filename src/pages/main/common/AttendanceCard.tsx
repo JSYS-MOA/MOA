@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import "../../../assets/styles/main/attendanceCard.css";
+import { MdRefresh } from "react-icons/md";
 
 const AttendanceCard = () => {
 
@@ -62,7 +63,7 @@ const AttendanceCard = () => {
         <div className="main-Card">
             <div className="card-Header">
                 <p>출근 / 퇴근 카드</p>
-                <span aria-hidden="true">Refresh</span>
+                <MdRefresh size={19} color="lightgray"/>
             </div>
             <div className="card-Inner">
                 <p className="date">{dateStr}</p>
