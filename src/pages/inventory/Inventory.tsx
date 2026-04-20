@@ -30,6 +30,8 @@ const Inventory = () => {
 
     const onInventoryClick = ( item : any , e : React.MouseEvent) => {
       
+      console.log("클릭");
+
       if('productId' in item) {
         
         mutate (item.productId, {

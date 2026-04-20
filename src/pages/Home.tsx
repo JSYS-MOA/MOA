@@ -22,7 +22,7 @@ const Home = () => {
         }
         <Calender/>
 
-        <Table items={a}  />
+        {/* <Table items={a}  /> */}
 
         <Link  to="/admin/levels"> 관리자 </Link>
 
