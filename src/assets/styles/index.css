@@ -32,9 +32,9 @@
 
   /* 서브 텍스트 */
   --text-secondary: #282828;
-  --text-secondary-70: rgba(40, 40, 40, 0.7);
+  --text-secondary-70: rgba(40, 40, 40, 0.78);
   --text-secondary-50: rgba(40, 40, 40, 0.5);
-  --text-secondary-30: rgba(40, 40, 40, 0.3);
+  --text-secondary-30: rgba(53, 53, 53, 0.4);
 
   /* 강조 텍스트 */
   --text-accent: #091B72;
@@ -46,7 +46,7 @@
   --color-inverse: #ffffff;
 
   /* 강조컬러 */
-  --color-danger: #DA5C57;
+  --color-danger: rgb(218 92 87);
 
   /*서브 컬러*/
   --color-gray-50: #FBFBFB;
@@ -105,6 +105,17 @@
 
 }
 
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+main{
+  flex: 1;
+  overflow-y: hidden;
+}
+
 body {
   margin: 0;
 }
@@ -118,19 +129,19 @@ h1 {
   letter-spacing: -1.68px;
   margin: 0;
   padding: 0;
-
+  @media (max-width: 1024px) {
+    font-size: 36px;
   }
-@media (max-width: 1024px) {
-  font-size: 36px;
-}
+  }
+
 h2 {
   letter-spacing: -0.24px;
   margin: 0 0 8px;
-
+  @media (max-width: 1024px) {
+    font-size: 20px;
   }
-@media (max-width: 1024px) {
-  font-size: 20px;
-}
+  }
+
 p {
   margin: 0;
 }
@@ -139,14 +150,11 @@ input{
 }
 input::placeholder{color: var(--text-secondary-30)}
 input:focus{outline: none; border: 2px solid rgba(94,92,119,0.3) !important; }
-code,
-.counter {
-  display: inline-flex;
-  border-radius: 4px;
-}
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
 }
