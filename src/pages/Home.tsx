@@ -6,9 +6,6 @@ import { Link } from 'react-router';
 
 const Home = () => {
 
-  const { user } = useAuthStore();
-
-  const a = [ {employeeId: '1' , userName : 'a'} , { employeeId: '2' , userName : 'b' }]
 
   return (
     <div>
