@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import {SlArrowLeft, SlArrowRight} from "react-icons/sl";
-import "../assets/styles/component/calendar.css";
 
 
 const Calender = () => {
@@ -24,24 +22,24 @@ const Calender = () => {
   return (
     <div>
 
-      <div className="calendar-Header" >
-        <button onClick={() => changeMonth(-1)}><SlArrowLeft /></button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <button onClick={() => changeMonth(-1)}>이전</button>
         {year}년 {month + 1}월
-        <button onClick={() => changeMonth(1)}><SlArrowRight /></button>
+        <button onClick={() => changeMonth(1)}>다음</button>
       </div>
 
 
-      <div className="calendar-DayCon">
-        {['일', '월', '화', '수', '목', '금', '토'].map(d => <div className="day-Header" key={d} >{d}</div>)}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', fontWeight: 'bold' }}>
+        {['일', '월', '화', '수', '목', '금', '토'].map(d => <div key={d}>{d}</div>)}
       </div>
 
-      <div className="calendar-DateCon">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
       
-        {emptySlots.map(i => <div className="calendar-EmptyDate" key={`empty-${i}`} />)}
+        {emptySlots.map(i => <div key={`empty-${i}`} />)}
         
       
         {days.map(day => (
-          <div className="calendar-Date" key={day}>
+          <div key={day} style={{ padding: '10px', border: '1px solid #f0f0f0' }}>
             {day}
           </div>
         ))}
