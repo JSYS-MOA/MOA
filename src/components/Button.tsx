@@ -1,9 +1,9 @@
 import type { ButtonProps } from "../types/buttonProps";
 
-const Button = ({ label, type = "button", ...props }: ButtonProps) => {
+const Button = ({ label, children, type = "button", ...rest }: ButtonProps) => {
     return (
-        <button type={type} {...props}>
-            {label}
+        <button type={type} {...rest}>
+            {children ?? label}
         </button>
     );
 };

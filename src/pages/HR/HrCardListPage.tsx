@@ -12,51 +12,22 @@ import { useAuthStore } from "../../stores/useAuthStore.tsx";
 const ITEMS_PER_PAGE = 10;
 
 const GRADE_NAME_MAP: Record<string, string> = {
-    President: "사장",
-    President7: "사장",
+    "President": "사장",
+    "President7": "사장",
     "Vice President": "부사장",
     "Executive Director": "상무",
     "General Manager": "부장",
     "Deputy General Manager": "과장",
     "Assistant Manager": "대리",
-    Employee: "사원",
+    "Employee": "사원",
 };
 
-const translateGradeName = (gradeName?: string | null, gradeId?: number) => {
-    if (gradeName?.trim()) {
-        return GRADE_NAME_MAP[gradeName.trim()] ?? gradeName;
+const translateGradeName = (gradeName?: string | null) => {
+    if (!gradeName) {
+        return "";
     }
 
-    return gradeId ? `직급 ${gradeId}` : "";
-};
-
-const translateDepartmentName = (departmentName?: string | null, departmentId?: number) => {
-    if (departmentName?.trim()) {
-        return departmentName.trim();
-    }
-
-    return departmentId ? `부서 ${departmentId}` : "";
-};
-
-const mapCardToRow = (card: HrCard): HrTableProps => {
-    return {
-        userId: card.user_id,
-        userName: card.user_name,
-        employeeId: card.employee_id,
-        phone: card.phone ?? "",
-        email: card.email ?? "",
-        address: card.address ?? "",
-        startDate: new Date(card.start_date),
-        quitDate: card.quit_date ? new Date(card.quit_date) : undefined,
-        departmentId: card.department_id,
-        departmentName: translateDepartmentName(card.department_name, card.department_id),
-        gradeId: card.grade_id,
-        gradeName: translateGradeName(card.grade_name, card.grade_id),
-        birth: card.birth ? new Date(card.birth) : undefined,
-        performance: card.performance ?? "",
-        bank: card.bank ?? "",
-        accountNum: card.account_num ?? "",
-    };
+    return GRADE_NAME_MAP[gradeName.trim()] ?? gradeName;
 };
 
 type FilterChipInputProps = {
@@ -144,7 +115,22 @@ const HrCardListPage = () => {
     const [isStarred, setIsStarred] = useState(false);
 
     const items: HrTableProps[] = useMemo(() => {
-        return cards.map(mapCardToRow);
+        return (cards as HrCard[]).map((card) => ({
+            userId: card.userId,
+            userName: card.userName,
+            employeeId: card.employeeId,
+            phone: card.phone ?? "",
+            email: card.email ?? "",
+            address: card.address ?? "",
+            startDate: new Date(card.startDate),
+            quitDate: card.quitDate ? new Date(card.quitDate) : undefined,
+            departmentName: card.departmentName ?? "",
+            gradeName: translateGradeName(card.gradeName),
+            birth: card.birth ? new Date(card.birth) : undefined,
+            performance: card.performance ?? "",
+            bank: card.bank ?? "",
+            accountNum: card.accountNum ?? "",
+        }));
     }, [cards]);
 
     const filteredItems = useMemo(() => {
@@ -156,11 +142,10 @@ const HrCardListPage = () => {
                 item.email.includes(keyword);
 
             const matchesDepartment =
-                departmentKeyword.trim() === "" ||
-                (item.departmentName ?? "").includes(departmentKeyword);
+                departmentKeyword.trim() === "" || item.departmentName.includes(departmentKeyword);
 
             const matchesGrade =
-                gradeKeyword.trim() === "" || (item.gradeName ?? "").includes(gradeKeyword);
+                gradeKeyword.trim() === "" || item.gradeName.includes(gradeKeyword);
 
             return matchesKeyword && matchesDepartment && matchesGrade;
         });
@@ -230,12 +215,11 @@ const HrCardListPage = () => {
     return (
         <div className="hrCardList-page">
             <div className="hrCardList-header">
-                <span
-                    className="hrCardList-star"
-                    aria-expanded={isStarred}
-                    onClick={() => setIsStarred(!isStarred)}
-                >
-                    {isStarred ? "★" : "★"}
+                <span className="hrCardList-star"
+                      aria-expanded={isStarred}
+                      onClick={() => setIsStarred(!isStarred)}
+                    >
+                         {isStarred ? "★" : "★"}
                 </span>
                 <h1 className="hrCardList-title">인사 카드 등록</h1>
                 <Button
@@ -284,6 +268,8 @@ const HrCardListPage = () => {
                 </div>
             </div>
 
+
+
             <div className="hrCardList-table-box">
                 <div className="hrCardList-table-info">
                     <span>전체 {filteredItems.length}건</span>
@@ -298,7 +284,9 @@ const HrCardListPage = () => {
                 <div className="hrCardList-bottom-actions">
                     {user && (
                         <Link to="/hr/cards/add">
-                            <Button className="hrCardList-add-btn" label="신규" onClick={() => {}} />
+                            <Button
+                                className="hrCardList-add-btn"
+                                label="신규" onClick={() => {}} />
                         </Link>
                     )}
 
@@ -318,7 +306,7 @@ const HrCardListPage = () => {
                     }}
                 >
                     <Button
-                        className="hrCardList-paging-prev-btn"
+                        className={"hrCardList-paging-prev-btn"}
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
                         label="이전"
@@ -326,7 +314,7 @@ const HrCardListPage = () => {
 
                     {pageNumbers.map((pageNumber) => (
                         <Button
-                            className="hrCardList-paging-num-btn"
+                            className={"hrCardList-paging-num-btn"}
                             key={pageNumber}
                             onClick={() => setCurrentPage(pageNumber)}
                             disabled={pageNumber === currentPage}
@@ -335,13 +323,15 @@ const HrCardListPage = () => {
                     ))}
 
                     <Button
-                        className="hrCardList-paging-next-btn"
+                        className={"hrCardList-paging-next-btn"}
                         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                         disabled={currentPage === totalPages}
                         label="다음"
                     />
                 </div>
             </div>
+
+
         </div>
     );
 };

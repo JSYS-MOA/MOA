@@ -1,103 +1,142 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 
-const API = "http://localhost/api/hr/cards";
+const API_BASE = "http://localhost/api/hr/cards";
 
-type HrCardApiResponse = {
-    userId?: number;
-    userName?: string;
-    employeeId?: number;
-    phone?: string;
-    email?: string;
-    address?: string;
-    startDate?: string;
-    quitDate?: string | null;
-    departmentId?: number;
+export interface HrCard {
+    userId: number;
+    userName: string;
+    employeeId: string;
+    password: string;
+    roleId: number;
+    phone: string | null;
+    email: string | null;
+    address: string | null;
+    startDate: string;
+    quitDate: string | null;
+    departmentId: number;
     departmentName?: string | null;
-    gradeId?: number;
+    gradeId: number;
     gradeName?: string | null;
-    birth?: string | null;
-    performance?: string;
-    bank?: string;
-    accountNum?: string;
-    user_id?: number;
-    user_name?: string;
-    employee_id?: number;
-    start_date?: string;
-    quit_date?: string | null;
-    department_id?: number;
-    department_name?: string | null;
-    grade_id?: number;
-    grade_name?: string | null;
-    account_num?: string;
+    birth: string | null;
+    performance: string | null;
+    profileUrl: string | null;
+    bank: string | null;
+    accountNum: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+}
+
+type ApiErrorResponse = {
+    message?: string;
 };
 
-export type HrCard = {
-    user_id: number;
-    user_name: string;
-    employee_id?: number;
-    phone?: string;
-    email?: string;
-    address?: string;
-    start_date: string;
-    quit_date?: string | null;
-    department_id?: number;
-    department_name?: string | null;
-    grade_id?: number;
-    grade_name?: string | null;
-    birth?: string | null;
-    performance?: string;
-    bank?: string;
-    account_num?: string;
-};
+const getErrorMessage = (error: unknown) => {
+    if (error instanceof AxiosError) {
+        const responseData = error.response?.data;
 
-const normalizeHrCard = (card: HrCardApiResponse): HrCard => {
-    return {
-        user_id: card.user_id ?? card.userId ?? 0,
-        user_name: card.user_name ?? card.userName ?? "",
-        employee_id: card.employee_id ?? card.employeeId,
-        phone: card.phone,
-        email: card.email,
-        address: card.address,
-        start_date: card.start_date ?? card.startDate ?? "",
-        quit_date: card.quit_date ?? card.quitDate ?? null,
-        department_id: card.department_id ?? card.departmentId,
-        department_name: card.department_name ?? card.departmentName ?? null,
-        grade_id: card.grade_id ?? card.gradeId,
-        grade_name: card.grade_name ?? card.gradeName ?? null,
-        birth: card.birth ?? null,
-        performance: card.performance,
-        bank: card.bank,
-        account_num: card.account_num ?? card.accountNum,
-    };
-};
+        if (typeof responseData === "string") {
+            return responseData;
+        }
 
-const extractHrCards = (payload: unknown): HrCard[] => {
-    if (Array.isArray(payload)) {
-        return payload.map((card) => normalizeHrCard(card as HrCardApiResponse));
+        if (responseData && typeof responseData === "object" && "message" in responseData) {
+            return (responseData as ApiErrorResponse).message ?? error.message;
+        }
+
+        return error.message;
     }
 
-    if (
-        typeof payload === "object" &&
-        payload !== null &&
-        "data" in payload &&
-        Array.isArray((payload as { data?: unknown }).data)
-    ) {
-        return (payload as { data: HrCardApiResponse[] }).data.map(normalizeHrCard);
-    }
-
-    return [];
+    return "알 수 없는 오류가 발생했습니다.";
 };
 
 export function useHrCardList() {
-    return useQuery({
+    const { data, isLoading, isError } = useQuery({
         queryKey: ["hrCardList"],
-        queryFn: async () => {
-            const { data } = await axios.get(API, {
+        queryFn: () =>
+            axios.get<HrCard[]>(API_BASE, {
+                withCredentials: true,
+            }).then((r) => r.data),
+    });
+
+    return { data, isLoading, isError };
+}
+
+export function useHrCardInfo(userId: number) {
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["hrCardInfo", userId],
+        queryFn: () =>
+            axios.get<HrCard>(`${API_BASE}/${userId}`, {
+                withCredentials: true,
+            }).then((r) => r.data),
+        enabled: !!userId,
+    });
+
+    return { data, isLoading, isError };
+}
+
+export function useHrCardAdd() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (request: Partial<HrCard>) => {
+            const response = await axios.post(API_BASE, request, {
                 withCredentials: true,
             });
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
+            console.log("인사카드 추가 성공");
+        },
+        onError: (error: AxiosError<ApiErrorResponse>) => {
+            console.error("인사카드 추가 실패:", getErrorMessage(error));
+        },
+    });
+}
 
-            return extractHrCards(data);
+export function useHrCardUpdate() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({
+            userId,
+            request,
+        }: {
+            userId: number;
+            request: Partial<HrCard>;
+        }) => {
+            const response = await axios.put(`${API_BASE}/${userId}`, request, {
+                withCredentials: true,
+            });
+            return response.data;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
+            queryClient.invalidateQueries({ queryKey: ["hrCardInfo", variables.userId] });
+            console.log("인사카드 수정 성공");
+        },
+        onError: (error: AxiosError<ApiErrorResponse>) => {
+            console.error("인사카드 수정 실패:", getErrorMessage(error));
+        },
+    });
+}
+
+export function useHrCardDelete() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (userId: number) => {
+            const response = await axios.delete(`${API_BASE}/${userId}`, {
+                withCredentials: true,
+            });
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
+            console.log("인사카드 삭제 성공");
+        },
+        onError: (error: AxiosError<ApiErrorResponse>) => {
+            console.error("인사카드 삭제 실패:", getErrorMessage(error));
         },
     });
 }
