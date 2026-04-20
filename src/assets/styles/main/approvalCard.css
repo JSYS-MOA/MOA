@@ -1,0 +1,19 @@
+.approvalCard-Inner{gap: 8px;}
+.approval-Item{
+    padding: 21px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--color-inverse);
+    font-size: var(--font-sm);
+    font-weight: 400;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+}
+.approval-Item span:nth-child(2){
+    color: var(--text-secondary-70);
+}
+.approval-Item:hover {
+    background: #f1f1f1;
+    border: 1px solid rgba(94,92,119,0.25);
+}
