@@ -1,14 +1,8 @@
 import Calender from "../components/Calender";
-import Table from "../components/Table";
 import { useAuthStore } from "../stores/useAuthStore";
 
 const Home = () => {
     const { user } = useAuthStore();
-
-    const sampleRows = [
-        { employeeId: 1, userName: "a" },
-        { employeeId: 2, userName: "b" },
-    ];
 
     return (
         <div>
@@ -24,8 +18,6 @@ const Home = () => {
                 </>
             )}
             <Calender />
-
-            <Table items={sampleRows} />
         </div>
     );
 };

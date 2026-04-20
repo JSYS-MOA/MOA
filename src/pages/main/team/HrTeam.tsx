@@ -1,7 +1,7 @@
-const HrTeam = () => {
+import HrCardListPage from "../../HR/HrCardListPage.tsx";
 
-    return(
-        <></>
-    )
-}
+const HrTeam = () => {
+    return <HrCardListPage />;
+};
+
 export default HrTeam;

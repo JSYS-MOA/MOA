@@ -1,7 +1,7 @@
 export interface HrTableProps {
     userId: number;
     userName: string;
-    employeeId?: number;
+    employeeId?: number | string;
     phone: string;
     email: string;
     address?: string;

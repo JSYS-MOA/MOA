@@ -1,4 +1,4 @@
-import type { HrTableProps } from "../types/HrTableProps";
+import type { HrTableProps } from "../../types/HrTableProps.ts";
 
 type HrTableSelectionProps = {
     items: HrTableProps[];

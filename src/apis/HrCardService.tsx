@@ -79,7 +79,7 @@ export function useHrCardAdd() {
 
     return useMutation({
         mutationFn: async (request: Partial<HrCard>) => {
-            const response = await axios.post(API_BASE, request, {
+            const response = await axios.post( `${API_BASE}/add`,  request, {
                 withCredentials: true,
             });
             return response.data;
