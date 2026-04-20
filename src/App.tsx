@@ -7,6 +7,8 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import HrCardListPage from "./pages/HR/HrCardListPage.tsx";
+import axios from "axios";
+
 
 const App = () => {
     const { login } = useAuthStore();
@@ -15,15 +17,20 @@ const App = () => {
     useEffect(()=>{
         authCheck()
             .then((data) => {
-                if (data.result) {
-                    login(data);
+                login(data);
+             })
+            .catch((error)=>{
+                if(axios.isAxiosError(error) && error.response?.status === 401) {
+                    //
+                }else{
+                    console.error("authCheck error",error);
                 }
             })
-            .catch((err)=>console.error(err))
             .finally(()=>{
                 setIsLoading(false)
             });
     },[login]);
+
     if (isLoading) return null;
     return (
         <>
@@ -36,6 +43,17 @@ const App = () => {
                         <Route path="/hr/cards" element={<HrCardListPage />} />
                     </Route>
                 </Route>
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Login/>} />
+
+          <Route element={<PrivateRoute />}>
+            <Route element={<MainLayout />}>
+              <Route path="/home" element={<MainPage />} />
+            </Route>
+          </Route>
 
             </Routes>
 
