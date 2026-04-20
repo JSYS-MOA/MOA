@@ -43,7 +43,7 @@ const MainLayout = () => {
                 activeMenu={activeMenu || 0}
                 onMenuClick={(id) => setActiveMenu(id)}
             />
-            <div className="main-content-layout" style={{ display: 'flex' }}>
+            <div className="main-content-layout" style={{ display: 'flex', height:"100%" }}>
                 {activeMenu !== null && layoutData && (
                     <Sidebar
                         activeMenu={activeMenu}

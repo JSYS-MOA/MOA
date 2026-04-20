@@ -8,6 +8,7 @@ import {loginApi} from "../apis/LoginService.tsx";
 import { FiAlertCircle } from "react-icons/fi";
 import "../assets/styles/login.css";
 import type { SyntheticEvent } from "react";
+import axios from "axios";
 
 const Login = () =>{
 
@@ -27,7 +28,7 @@ const Login = () =>{
     setPasswordError("");
     setLoginError("");
 
-    if(!employeeId){
+    if (!employeeId) {
       setEmployeeIdError("아이디를 입력해주세요.")
       return;
     }
@@ -37,33 +38,33 @@ const Login = () =>{
       return;
     }
 
-    if(isLoading) return;
+    if (isLoading) return;
 
     setIsLoading(true);
     try {
-      const data = await loginApi(employeeId,password);
-
-      if(data.result){
-        login(data);
-        navigate("/home");
-      }else{
-        setLoginError(data.message);
+      const data = await loginApi(employeeId, password);
+      login(data);
+      navigate("/home")
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setLoginError(
+            error.response?.data?.message ?? "서버 오류가 발생했습니다"
+        );
+      } else {
+        setLoginError("서버 오류가 발생했습니다")
       }
-    } catch{
-      setLoginError("서버 오류가 발생했습니다")
     }finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
-
   return(
-    <div className="login-wrap">
+    <div className="login-Wrapper">
       <div className="logo">
         <h1>MOA</h1>
         <p>All-in-One 비즈니스 솔루션</p>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="login-id">
+        <div className="login-Id">
           <p className="title">사원코드</p>
           <input
               value={employeeId}
@@ -71,13 +72,11 @@ const Login = () =>{
               placeholder="사원코드 입력"
           />
         </div>
-        {employeeIdError &&
-            <p className="error-icon">
-              <span><FiAlertCircle /></span>
-              {employeeIdError}
-            </p>
-        }
-        <div className="login-password">
+        <p className={`error-Icon ${employeeIdError ? "show" : ""}`}>
+          <span><FiAlertCircle /></span>
+          {employeeIdError}
+        </p>
+        <div className="login-Password">
           <p className="title">비밀번호</p>
           <input
               type="password"
@@ -86,31 +85,27 @@ const Login = () =>{
               placeholder="비밀번호 입력"
           />
         </div>
-        {passwordError &&
-            <p className="error-icon">
-              <span><FiAlertCircle /></span>
-              {passwordError}
-            </p>
-        }
-        {loginError &&
-            <div className="login-error">
-              <span><FiAlertCircle /></span>
-              {loginError}
-            </div>
-        }
-        <button type="submit" className="submit-btn" disabled={isLoading}>
+        <p className={`error-Icon ${passwordError ? "show" : ""}`}>
+          <span><FiAlertCircle /></span>
+          {passwordError}
+        </p>
+        <div className={`login-Error ${loginError ? "show" : ""}`}>
+          <span><FiAlertCircle /></span>
+          {loginError}
+        </div>
+        <button type="submit" className="submit-Btn" disabled={isLoading}>
           {isLoading ? (
-              <div className="spinner-wrap">
+              <div className="spinner-Wrap">
                 <span className="spinner"></span>
                 로그인 중...
               </div>
           ) : ("LOGIN")}
         </button>
-        <p className="privacy-agree">
+        <p className="privacy-Agree">
           서비스 이용 시 <span>이용약관</span>과
           <span> 개인정보처리방침</span>에 동의한 것으로 간주합니다
         </p>
-        <Link to="/find-password" className="login-findPassword">비밀번호찾기</Link>
+        <Link to="/find-password" className="login-FindPassword">비밀번호찾기</Link>
       </form>
     </div>
   )
