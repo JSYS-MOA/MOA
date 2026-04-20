@@ -1,62 +1,36 @@
-.login-wrap{
     width: 552px; margin: 160px auto;
 }
-.login-wrap .logo{text-align: center; margin-bottom: 24px;}
-.login-wrap .logo h1{ font-weight: 600; letter-spacing: 2%;}
-.login-wrap .logo p{color:var(--text-secondary-30); margin-top: -2px; font-weight: 600}
-.login-wrap form{
     background: var(--color-inverse);
     padding: 71px 48px 40px 48px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
 }
-.login-wrap .title{font-size: var(--font-sm); color: var(--text-secondary-70)}
-.login-wrap input{
     padding: 14px 8px; width: 100%;
     border-radius: var(--radius-md); margin-top: 10px;
     border: 1px solid var(--border);
     font-size: var(--font-sm);
 }
-.login-wrap input:focus{ border-radius: var(--radius-md); }
-.login-wrap .login-password{ margin-top: 17px;}
-.login-wrap .error-icon{
     color: var(--color-danger);
     align-items: center; display: flex; gap: 4px;
-    margin: var(--spacing-sm) 0;
     font-size:var(--font-sm);
 }
-.login-wrap .error-icon span{
     display: flex; }
-.login-wrap .submit-btn{
-    width: 100%; padding: 14px 0;
     border-radius: 34px;
     background: var( --color-primary);
     border: none; color: var(  --text-inverse);
     font-size: var(--font-lg);
-    margin-top: 26px;
 }
-.login-wrap .privacy-agree{font-size: 13px; margin-top: var(--spacing-lg); color: var(--text-secondary); font-weight: 400; letter-spacing: 2%}
-.login-wrap .privacy-agree span{text-decoration: underline}
-.login-wrap .login-findPassword{
     color: var(--text-secondary-50);
     font-size: 13px; display: block;
-    text-align: right; margin-top: 29px;
 }
-.login-wrap .login-error{
-    padding: 14px 8px; width: 100%;
-    border-radius: var(--radius-md); margin-top: 10px;
     border: 1px solid var(--color-danger);
-    font-size: var(--font-md);
-    background: rgba(94,92,119,0.15);
     box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: 4px;
     color: var(--color-danger);
 }
-.login-wrap .login-error span{display: flex;}
 
-.spinner-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
