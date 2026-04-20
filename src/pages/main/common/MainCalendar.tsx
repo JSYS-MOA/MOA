@@ -7,9 +7,9 @@ const MainCalendar = () => {
 
     return(
         <div className="calendar-Wrapper">
-            <div className="MainCalendar-Header">
+            <div className="mainCalendar-Header">
                 <p>일정관리</p>
-                <div className="header-Icon">
+                <div className="mainCalendar-Header-Icon">
                     <BiLinkExternal size={16} color="#d0d0d0" />
                     <MdRefresh size={19} color="#d0d0d0"/>
                 </div>
