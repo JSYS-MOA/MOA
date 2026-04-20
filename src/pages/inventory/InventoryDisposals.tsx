@@ -1,19 +1,19 @@
 import { useState } from "react";
 import Table from "../../components/Table";
-import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
+import { useGetDefect , useGetDefectInfo } from "../../apis/InventoryService";
 import Modal from "../../components/Modal";
 import { type ModalProps } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
 
 
-const Inventory = () => {
+const InventoryDisposals = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
-  const { data } =  useGetInventory( search, page, 10);
-  const {  mutate } = useGetInventoryInfo()
+  const { data } =  useGetDefect( search, page, 10);
+  const {  mutate } = useGetDefectInfo()
 
   const maxPage = data ? data.totalPages  : 0; 
   
@@ -30,9 +30,9 @@ const Inventory = () => {
 
     const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
-      if('productId' in item) {
+      if('defectId' in item) {
         
-        mutate (item.productId, {
+        mutate (item.defectId, {
         onSuccess: (data) => {
           setInfo(data);
           setModal(true)
@@ -75,4 +75,4 @@ const Inventory = () => {
   )
 }
 
-export default Inventory
+export default InventoryDisposals

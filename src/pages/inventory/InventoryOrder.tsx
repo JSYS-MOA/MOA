@@ -6,7 +6,7 @@ import { type ModalProps } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
 
 
-const Inventory = () => {
+const InventoryOrder = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(false);
@@ -75,4 +75,4 @@ const Inventory = () => {
   )
 }
 
-export default Inventory
+export default InventoryOrder

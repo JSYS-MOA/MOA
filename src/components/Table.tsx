@@ -39,8 +39,8 @@ const Table = ({ items , columns , onItemClick , onItemChange}: {
 
         <tbody>
           {items.map((item, idx) => (
-          <tr key={idx}>
-            <td onClick={(e) => { onItemClick?.(item , e)}}>{idx + 1}</td>
+          <tr key={idx} onClick={(e) => { onItemClick?.(item , e)}}>
+            <td>{idx + 1}</td>
             {columns.map(col => (
               <td key={col.key}>
                 {item[col.key as keyof TableProps]|| "-"}

@@ -10,6 +10,7 @@ import axios from "axios";
 import Home from './pages/Home.tsx';
 import Admin from './pages/Admin.tsx';
 import Inventory from './pages/inventory/Inventory.tsx';
+import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
 
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/inventory">
             <Route index element={<Inventory/>} />
             <Route path="status" element={<Inventory/>} />
+            <Route path="disposals" element={<InventoryDisposals/>} />
           </Route>
                       
         </Route>

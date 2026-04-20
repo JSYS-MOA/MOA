@@ -33,25 +33,32 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-  // export function usePatchRole () {
-  // return useMutation({
-  //     mutationFn: async ({ userId , roleId }: { userId: number , roleId : number}) => {
-  //       const response = await axios.patch(
-  //         Api_BASE + `/${userId}`, null , {
-  //           params : {
-  //             roleId: roleId 
-  //           } , withCredentials: true
-  //         }
-  //       );
-  //       return response.data;
-  //     },
-  //     onSuccess: (data) => {
-  //       console.log("수정 성공!" + data );
-  //     },
-  //     onError: (error: any) => {
+    export function useGetDefect( search?: string , page? : number  ,  size? : number ) {
+    return useQuery({
+      queryKey: ["defect", search || '' , page , size ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}disposals`, {   
+          params: {
+             page : page ,
+             size : size ,
+            search : search || ''
+          }
+        });
+        return data;
+      },
+    });
+  }
 
-  //       console.error("수정 실패:", error.response?.data || error.message);
-  //     }
-  //   });
+    export function useGetDefectInfo () {
+    return useMutation({
+      mutationFn: async (info: number) => {
+        const { data } = await axios.get(`${Api_BASE}disposals/${info}`, {   
+          params: {
+            //  info : info ,
+          }
+        });
+        return data;
+      },
+    });
+  }
 
-  // }
