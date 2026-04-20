@@ -15,7 +15,7 @@
 }
 .notice-Header p{
     font-size: var(--font-sm);
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text-primary);
 }
 .notice-Header-Icon{
@@ -26,26 +26,47 @@
 .notice-Table{
     width: 100%;
     border-collapse: collapse;
-    margin-top: 24px;
-    border:1px solid var(--border) ;
+    margin-top: 27px;
+    border:1px solid var(--border);
+    height: 199px;
     overflow-y: auto;
+    display: block;
+    overflow-x:hidden;
 }
 .notice-Table thead{
     background: var(--color-gray-100);
     border-top: 1px solid var(--border-dark);
 }
 .notice-Table thead tr th{
-    padding: 6px 0;
+    padding: 6px 8px;
     font-size: var(--font-xs);
     font-weight: 500;
     border-right: 1px solid var(--border);
     color: var(--text-secondary);
 }
+.notice-Table thead tr th:nth-child(1), .notice-Table tbody tr td:nth-child(1){
+    width: 50%;
+}
+.notice-Table thead tr th:nth-child(2),.notice-Table tbody tr td:nth-child(2){
+    width: 20%;
+    text-align: center;
+}
+.notice-Table thead tr th:nth-child(3),.notice-Table tbody tr td:nth-child(3){
+    width: 20%;
+    text-align: center;
+}
+.notice-Table thead tr th:nth-child(4),.notice-Table tbody tr td:nth-child(4){
+    width: 10%;
+    text-align: center;
+}
 .notice-Table thead tr th:last-child{
     border-right: none;
 }
 .notice-Table tbody tr{
-    border: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.notice-Table tbody tr:hover{
+    background: var(--color-primary-light);
 }
 .notice-Table tbody tr td{
     padding: 6px 8px;
@@ -54,6 +75,11 @@
     color: var(--text-primary);
     border-right: 1px solid var(--border);
 }
-.notice-Table tbody tr td:nth-child(2){
-    text-align: center;
+.notice-Table tbody tr td:last-child{
+    border-right: none;
+}
+.notice-Table thead, .notice-Table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }

@@ -52,6 +52,8 @@
   --color-gray-50: #FBFBFB;
   --color-gray-100: #F1F1F1;
 
+  /*  hover 등등 */
+  --color-primary-light: #F6F5FF;
 
 /*---------------------------------------------*/
   /*배경색*/
@@ -103,6 +105,7 @@
   --font-primary: 'Pretendard', sans-serif;
   background: var(--bg);
   overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .layout-wrapper {
