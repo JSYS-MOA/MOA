@@ -11,9 +11,9 @@ interface LayoutData {
     gradeName: string;
     menuList: {
         menuId: number;
-        menu_title: string;
-        menu_num: number;
-        page_path: string;
+        menuTitle: string;
+        menuNum: number;
+        pagePath: string;
     }[];
 }
 
@@ -41,6 +41,7 @@ const MainLayout = () => {
             <Header
                 userDept={layoutData?.departmentName || ""}
                 activeMenu={activeMenu || 0}
+                menuList={layoutData?.menuList || []}
                 onMenuClick={(id) => setActiveMenu(id)}
             />
             <div className="main-content-layout" style={{ display: 'flex', height:"100%" }}>
