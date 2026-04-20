@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 
 const Home = () => {
-
+   const { user } = useAuthStore();
 
   return (
     <div>
