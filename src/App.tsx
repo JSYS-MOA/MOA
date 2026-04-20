@@ -21,7 +21,7 @@ const App = () => {
         authCheck()
             .then((data) => {
                 login(data);
-             })
+            })
             .catch((error)=>{
                 if(axios.isAxiosError(error) && error.response?.status === 401) {
                     //
@@ -36,10 +36,10 @@ const App = () => {
 
     if (isLoading) return null;
 
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<Login/>} />
+    return (
+        <>
+            <Routes>
+                <Route path="/" element={<Login/>} />
 
         <Route element={<MainLayout />}>
           <Route path="/home" element={<Home />} />

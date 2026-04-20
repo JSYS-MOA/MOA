@@ -63,7 +63,7 @@ const AttendanceCard = () => {
         <div className="main-Card">
             <div className="card-Header">
                 <p>출근 / 퇴근 카드</p>
-                <MdRefresh size={18} color="lightgray"/>
+                <MdRefresh size={19} color="lightgray"/>
             </div>
             <div className="card-Inner">
                 <p className="date">{dateStr}</p>

@@ -13,7 +13,7 @@
     background: yellow;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 .left-Section .top-Card{
     display: grid;
@@ -23,7 +23,7 @@
 .right-Section{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     background: blue;
 }
 
