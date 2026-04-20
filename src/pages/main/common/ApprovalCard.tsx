@@ -7,7 +7,7 @@ const ApprovalCard = () => {
         <div className="main-Card">
             <div className="card-Header">
                 <p>내 결제 근황</p>
-                <MdRefresh size={18} color="lightgray"/>
+                <MdRefresh size={19} color="lightgray"/>
             </div>
             <div className="card-Inner approvalCard-Inner">
                 <button className="approval-Item">

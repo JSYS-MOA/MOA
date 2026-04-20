@@ -19,5 +19,9 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "off" //any 사용 시 빨간 줄 뜨는 걸 방지
+    }
   },
+
 ])

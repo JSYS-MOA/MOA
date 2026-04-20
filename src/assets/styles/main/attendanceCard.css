@@ -25,7 +25,7 @@
     color: var(--text-secondary);
 }
 .btn-checkin:hover, .btn-checkout:hover {
-    background: #E9E8FB;
+    background: #f1f1f1;
     border: 1px solid rgba(94,92,119,0.25);
 }
 .attendance-Info {
