@@ -1,14 +1,7 @@
 import  { type TableProps } from "../types/TableProps"
 
 
-const Table = ({ items }: { items: TableProps[] }) => {
-
-  // 테이블 필요한 명 여기서 +  /types/TableProps  추가
-   const columns = [
-    { key: 'employeeId', label: '사원번호' },
-    { key: 'userName', label: '성명' },
-  ].filter(col => items.some(item =>
-    item[col.key as keyof TableProps]));
+const Table = ({ items, columns }: { items: TableProps[]; columns: any[] }) => {
 
 
   return (

@@ -17,9 +17,9 @@ interface MenuData {
 
     menuList:{
         menuId: number;
-        menu_title: string;
-        menu_num: number;
-        page_path: string;
+        menuTitle: string;
+        menuNum: number;
+        pagePath: string;
     }[];
 }
 
@@ -73,7 +73,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
     };
 
     const currentConfig = categorys[activeMenu] || [];
-    const rawMenus = layoutData.menuList.filter(item => item.menu_num === activeMenu);
+    const rawMenus = layoutData.menuList.filter(item => item.menuNum === activeMenu);
 
     const handleToggle = (catId:string) => {
         setOpenCategory(openCategory === catId ? null : catId);
@@ -107,7 +107,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
                 {currentConfig.map((cat) => {
                     // 현재 카테고리 키워드와 일치하는 소메뉴들 소집
                     const subItems = rawMenus.filter(menu =>
-                        cat.keywords.some(key => menu.page_path.includes(key))
+                        cat.keywords.some(key => menu.pagePath.includes(key))
                     );
 
                     // 해당 카테고리에 해당하는 메뉴가 없으면 렌더링 안 함
@@ -132,10 +132,10 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
                                             className="sub-menu-Item"
                                             onClick={(e) => {
                                                 e.stopPropagation(); // 부모 클릭 이벤트 방지
-                                                navigate(sub.page_path);
+                                                navigate(sub.pagePath);
                                             }}
                                         >
-                                            {sub.menu_title}
+                                            {sub.menuTitle}
                                         </li>
                                     ))}
                                 </ul>
