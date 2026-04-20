@@ -1,4 +1,4 @@
 export interface TableProps {
-    employeeId?: number;
+    employeeId?: number | string;
     userName: string;
 }

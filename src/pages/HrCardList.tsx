@@ -1,29 +1,13 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
+import type { HrCard } from "../apis/HrCardService";
 import { useHrCardList } from "../apis/HrCardService";
 import Button from "../components/Button";
 import Table from "../components/Table";
 import { useAuthStore } from "../stores/useAuthStore";
 
 import type { HrTableProps } from "../types/HrTableProps.ts";
-
-type HrCardApi = {
-    user_id: number;
-    user_name: string;
-    employee_id: number;
-    phone: string;
-    email: string;
-    address?: string;
-    start_date: string;
-    quit_date?: string | null;
-    department_id: number;
-    grade_id: number;
-    birth?: string | null;
-    performance?: string;
-    bank?: string;
-    account_num?: string;
-};
 
 const HrCardList = () => {
     const { user } = useAuthStore();
@@ -34,8 +18,8 @@ const HrCardList = () => {
     const [gradeKeyword, setGradeKeyword] = useState("");
 
     const items: HrTableProps[] = useMemo(() => {
-        return (cards as HrCardApi[]).map((card) => ({
-            user_id: card.user_id,
+        return (cards as HrCard[]).map((card) => ({
+            userId: card.user_id,
             userName: card.user_name,
             employeeId: card.employee_id,
             phone: card.phone,
@@ -62,11 +46,10 @@ const HrCardList = () => {
 
             const matchesDepartment =
                 departmentKeyword.trim() === "" ||
-                String(item.departmentId).includes(departmentKeyword);
+                String(item.departmentId ?? "").includes(departmentKeyword);
 
             const matchesGrade =
-                gradeKeyword.trim() === "" ||
-                String(item.gradeId).includes(gradeKeyword);
+                gradeKeyword.trim() === "" || String(item.gradeId ?? "").includes(gradeKeyword);
 
             return matchesKeyword && matchesDepartment && matchesGrade;
         });

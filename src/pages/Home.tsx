@@ -1,29 +1,33 @@
-import Calender from '../components/Calender'
+import Calender from "../components/Calender";
+import Table from "../components/Table";
 import { useAuthStore } from "../stores/useAuthStore";
-import Table from '../components/Table'
-
 
 const Home = () => {
+    const { user } = useAuthStore();
 
-  const { user } = useAuthStore();
+    const sampleRows = [
+        { employeeId: 1, userName: "a" },
+        { employeeId: 2, userName: "b" },
+    ];
 
-  const a = [ {employeeId: '1' , userName : 'a'} , { employeeId: '2' , userName : 'b' }]
+    return (
+        <div>
+            Home
+            {user != null ? (
+                <>
+                    <br /> {user.userName ?? "-"}
+                    <br /> {user.employeeId}
+                </>
+            ) : (
+                <>
+                    <br /> No logged-in user
+                </>
+            )}
+            <Calender />
 
-  return (
-    <div>
-        홈입니다
-        {user != null ?  
-          <>
-          <br/> {user.userName} 
-          <br/> {user.employeeId}
-          </> 
-          : <> <br/> 로그인 데이터 없음 </>
-        }
-        <Calender/>
+            <Table items={sampleRows} />
+        </div>
+    );
+};
 
-        <Table items={a}  />
-    </div>
-  )
-}
-
-export default Home
+export default Home;

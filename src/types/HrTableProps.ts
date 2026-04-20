@@ -1,5 +1,5 @@
 export interface HrTableProps {
-    user_id: number;
+    userId: number;
     userName: string;
     employeeId?: number;
     phone: string;
@@ -7,8 +7,10 @@ export interface HrTableProps {
     address?: string;
     startDate: Date;
     quitDate?: Date;
-    departmentId: number;
-    gradeId: number;
+    departmentId?: number;
+    departmentName?: string;
+    gradeId?: number;
+    gradeName?: string;
     birth?: Date;
     performance?: string;
     bank?: string;

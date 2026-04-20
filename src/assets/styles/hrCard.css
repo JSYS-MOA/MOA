@@ -36,7 +36,7 @@
 .hrCardList-title {
     margin: 0;
     font-size: 21px;
-    color: var(--text-accent);
+    color: var();
     font-weight: bolder;
 }
 /*검색조건 상자*/

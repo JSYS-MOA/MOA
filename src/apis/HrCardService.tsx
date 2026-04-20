@@ -12,8 +12,10 @@ export interface HrCard {
     address?: string;
     start_date: string;
     quit_date?: string | null;
-    department_id: number;
-    grade_id: number;
+    department_id?: number;
+    department_name?: string | null;
+    grade_id?: number;
+    grade_name?: string | null;
     birth?: string | null;
     performance?: string;
     bank?: string;
@@ -52,11 +54,11 @@ export interface HrCardUpdateRequest {
     account_num?: string;
 }
 
-/* API 함수들 */
 export async function getHrCardListApi() {
     const { data } = await axios.get<HrCard[]>(API, {
         withCredentials: true,
     });
+
     return data;
 }
 
@@ -64,6 +66,7 @@ export async function getHrCardInfoApi(userId: number) {
     const { data } = await axios.get<HrCard>(`${API}/${userId}`, {
         withCredentials: true,
     });
+
     return data;
 }
 
@@ -71,6 +74,7 @@ export async function addHrCardApi(request: HrCardRequest) {
     const { data } = await axios.post<HrCard>(API, request, {
         withCredentials: true,
     });
+
     return data;
 }
 
@@ -78,6 +82,7 @@ export async function updateHrCardApi(userId: number, request: HrCardUpdateReque
     const { data } = await axios.put<HrCard>(`${API}/${userId}`, request, {
         withCredentials: true,
     });
+
     return data;
 }
 
@@ -85,10 +90,10 @@ export async function deleteHrCardApi(userId: number) {
     const { data } = await axios.delete(`${API}/${userId}`, {
         withCredentials: true,
     });
+
     return data;
 }
 
-/* react-query 훅들 */
 export function useHrCardList() {
     return useQuery<HrCard[]>({
         queryKey: ["hrCardList"],
@@ -100,7 +105,7 @@ export function useHrCardInfo(userId: number) {
     return useQuery<HrCard>({
         queryKey: ["hrCardInfo", userId],
         queryFn: () => getHrCardInfoApi(userId),
-        enabled: !!userId,
+        enabled: Boolean(userId),
     });
 }
 
@@ -119,13 +124,8 @@ export function useHrCardUpdate() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({
-                         userId,
-                         request,
-                     }: {
-            userId: number;
-            request: HrCardUpdateRequest;
-        }) => updateHrCardApi(userId, request),
+        mutationFn: ({ userId, request }: { userId: number; request: HrCardUpdateRequest }) =>
+            updateHrCardApi(userId, request),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ["hrCardList"] });
             queryClient.invalidateQueries({
