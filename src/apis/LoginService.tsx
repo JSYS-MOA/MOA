@@ -13,7 +13,7 @@ export async function loginApi(employeeId: string, password: string){
 
 export async function logoutApi(){
     const { data } = await axios.post(
-        '${ API }/auth/logout',
+        `${ API }/auth/logout`,
         {},
         { withCredentials:true }
     );
@@ -22,7 +22,7 @@ export async function logoutApi(){
 
 export async function authCheck(){
     const { data } = await axios.get(
-        '${ API }/auth/check',
+        `${ API }/auth/check`,
         { withCredentials:true }
     );
     return data;
