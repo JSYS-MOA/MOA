@@ -1,29 +1,23 @@
 import React from 'react'
-import { type  ModalProps } from '../types/ModalProps';
+import { type  ModalProps , type MColumn } from '../types/TModalProps';
 
-const Modal = (  { items , maxPage}: {
+const Modal = (  { items , maxPage , columns}: {
   items: ModalProps[] ,
+  columns : MColumn[] ,
   maxPage : number
   })  => {
-  
-   const columns = [
-      { key: 'employeeId', label: '사원번호' },
-      { key: 'userName', label: '성명' },
-      { key: 'gradeName', label: '직급/직위' },
-      { key: 'phone', label: '연락처' },
-      { key: 'email', label: 'Email' },
-      //재고 관련
-      { key: 'productCord', label: '품목코드' },
-      { key: 'productName', label: '품목명'  },
-      { key: 'storageName', label: '창고명' },
-      { key: 'productPrice', label: '입고단가' },
-      { key: 'inventorySno', label: '총재고수량' }
-    ].filter(col => items.some(item =>
-      item[col.key as keyof ModalProps]));
-
+ 
   
   return (
-    <div>
+    <table>
+
+      <thead>
+          <tr>
+            { items ? <th>순번</th> : null}
+            {columns.map(col => <th key={col.key}>{col.label}</th>)}
+          </tr>
+        </thead>
+
       {items.map((item, idx) => (
       <tr key={idx}>
         <td >{idx + 1}</td>
@@ -37,7 +31,7 @@ const Modal = (  { items , maxPage}: {
     ))}
 
        
-    </div>
+    </table>
   )
 }
 

@@ -72,6 +72,12 @@ export interface TableProps {
   vendorName:string;
   vendorIsUse:number;
 
+  // order
+  orderformId : string;
+  orderformDate : string;
+  unitPrice : number;
+  totalPrice : number;
+
 }
 
 export interface Column {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Table from "../../components/Table";
-import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
+import { useGetOrder , useGetOrderInfo } from "../../apis/InventoryService";
 import Modal from "../../components/Modal";
-import { type ModalProps } from "../../types/ModalProps";
+import { type ModalProps , type MColumn } from "../../types/TModalProps";
 import { type Column } from "../../types/TableProps";
 
 
@@ -12,8 +12,8 @@ const InventoryOrder = () => {
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
-  const { data } =  useGetInventory( search, page, 10);
-  const {  mutate } = useGetInventoryInfo()
+  const { data } =  useGetOrder( search, page, 10);
+  const {  mutate } = useGetOrderInfo()
 
   const maxPage = data ? data.totalPages  : 0; 
   
@@ -30,9 +30,9 @@ const InventoryOrder = () => {
 
     const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
-      if('productId' in item) {
+      if('orderformId' in item) {
         
-        mutate (item.productId, {
+        mutate (item.orderformId, {
         onSuccess: (data) => {
           setInfo(data);
           setModal(true)
@@ -46,12 +46,25 @@ const InventoryOrder = () => {
       
     }
 
-    const columns : Column[] = [
-    { key: 'productCord', label: '품목코드' },
-    { key: 'productName', label: '품목명'  },
-    { key: 'storageName', label: '창고명' },
-    { key: 'productPrice', label: '입고단가' },
-    { key: 'inventorySno', label: '총재고수량' }
+  const columns : Column[] = [
+    { key: 'orderformId', label: '발주번호 ' },
+    { key: 'orderformDate', label: '발주일자' },
+    { key: 'vendorName', label: '거래처명 '  },
+    { key: 'productName', label: '품목명' },
+    { key: 'orderSno', label: '수량' },
+    { key: 'stockInDate', label: '납기일' },
+    { key: 'unitPrice', label: '단가' },
+    { key: 'totalPrice', label: '금액' },
+    { key: 'orderStatus', label: '상태' }
+  ]
+
+  const ModalColumns : MColumn[] = [
+      { key: 'productCord', label: '품목코드' },
+      { key: 'productName', label: '품목명'  },
+       { key: 'orderSno', label: '수량' },
+      { key: 'unitPrice', label: '단가' },
+      { key: 'productPrice', label: '총금액' },
+     
   ]
 
   return (
@@ -64,7 +77,7 @@ const InventoryOrder = () => {
        />
 
       {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} /> : null}
+        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>

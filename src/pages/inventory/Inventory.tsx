@@ -2,7 +2,7 @@ import { useState } from "react";
 import Table from "../../components/Table";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
 import Modal from "../../components/Modal";
-import { type ModalProps } from "../../types/ModalProps";
+import { type ModalProps } from "../../types/TModalProps";
 import { type Column } from "../../types/TableProps";
 
 

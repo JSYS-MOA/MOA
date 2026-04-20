@@ -11,4 +11,12 @@ export interface ModalProps {
   productName: string;
   productCord: string;
   inventorySno: string;
+  defectSno : string;
+  orderSno : Number;
+  unitPrice : Number;
+}
+
+export interface MColumn {
+  key: keyof ModalProps;
+  label: string;
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Table from "../../components/Table";
 import { useGetDefect , useGetDefectInfo } from "../../apis/InventoryService";
 import Modal from "../../components/Modal";
-import { type ModalProps } from "../../types/ModalProps";
+import { type ModalProps , type MColumn } from "../../types/TModalProps";
 import { type Column } from "../../types/TableProps";
 
 
@@ -30,9 +30,9 @@ const InventoryDisposals = () => {
 
     const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
-      if('defectId' in item) {
+      if('inventoryId' in item) {
         
-        mutate (item.defectId, {
+        mutate (item.inventoryId, {
         onSuccess: (data) => {
           setInfo(data);
           setModal(true)
@@ -46,12 +46,20 @@ const InventoryDisposals = () => {
       
     }
 
-    const columns : Column[] = [
+  const columns : Column[] = [
+    { key: 'reqDate', label: '일자 ' },
     { key: 'productCord', label: '품목코드' },
     { key: 'productName', label: '품목명'  },
-    { key: 'storageName', label: '창고명' },
-    { key: 'productPrice', label: '입고단가' },
-    { key: 'inventorySno', label: '총재고수량' }
+    { key: 'defectSno', label: '수량' },
+    { key: 'defectMemo', label: '처리유형' }
+  ]
+
+  const ModalColumns : MColumn[] = [
+      { key: 'productCord', label: '품목코드' },
+      { key: 'productName', label: '품목명'  },
+      { key: 'storageName', label: '창고명' },
+      { key: 'productPrice', label: '입고단가' },
+      { key: 'defectSno', label: '수량' }
   ]
 
   return (
@@ -64,7 +72,7 @@ const InventoryDisposals = () => {
        />
 
       {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} /> : null}
+        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>

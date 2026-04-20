@@ -9,22 +9,6 @@ const Table = ({ items , columns , onItemClick , onItemChange}: {
   onItemChange?: (e : React.ChangeEvent) => void 
   }) => {
 
-  // 테이블 필요한 명 여기서 +  /types/TableProps  추가
-  //  const columns = [
-  //   { key: 'employeeId', label: '사원번호' },
-  //   { key: 'userName', label: '성명' },
-  //   { key: 'gradeName', label: '직급/직위' },
-  //   { key: 'phone', label: '연락처' },
-  //   { key: 'email', label: 'Email' },
-  //   //재고 관련
-  //   { key: 'productCord', label: '품목코드' },
-  //   { key: 'productName', label: '품목명'  },
-  //   { key: 'storageName', label: '창고명' },
-  //   { key: 'productPrice', label: '입고단가' },
-  //   { key: 'inventorySno', label: '총재고수량' }
-  // ].filter(col => items.some(item =>
-  //   item[col.key as keyof TableProps]));
-
     console.log(items)
   return (
     <table>
