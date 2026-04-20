@@ -112,6 +112,7 @@ const HrCardListPage = () => {
     const [gradeKeyword, setGradeKeyword] = useState("");
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isStarred, setIsStarred] = useState(false);
 
     const items: HrTableProps[] = useMemo(() => {
         return (cards as HrCard[]).map((card) => ({
@@ -214,6 +215,12 @@ const HrCardListPage = () => {
     return (
         <div className="hrCardList-page">
             <div className="hrCardList-header">
+                <span className="hrCardList-star"
+                      aria-expanded={isStarred}
+                      onClick={() => setIsStarred(!isStarred)}
+                    >
+                         {isStarred ? "★" : "★"}
+                </span>
                 <h1 className="hrCardList-title">인사 카드 등록</h1>
                 <Button
                     className="hrCardList-top-search-btn"
