@@ -5,9 +5,10 @@ import {useState} from "react";
 import {useAuthStore} from "../stores/useAuthStore.tsx";
 import {Link, useNavigate} from "react-router";
 import {loginApi} from "../apis/LoginService.tsx";
-import { FiAlertCircle } from "react-icons/fi";
 import "../assets/styles/login.css";
 import type { SyntheticEvent } from "react";
+
+const AlertIcon = () => <span aria-hidden="true">!</span>;
 
 const Login = () =>{
 
@@ -72,7 +73,7 @@ const Login = () =>{
                     />
                 </div>
                 <p className={`error-Icon ${employeeIdError ? "show" : ""}`}>
-                    <span><FiAlertCircle /></span>
+                    <AlertIcon />
                     {employeeIdError}
                 </p>
                 <div className="login-Password">
@@ -85,11 +86,11 @@ const Login = () =>{
                     />
                 </div>
                 <p className={`error-Icon ${passwordError ? "show" : ""}`}>
-                    <span><FiAlertCircle /></span>
+                    <AlertIcon />
                     {passwordError}
                 </p>
                 <div className={`login-Error ${loginError ? "show" : ""}`}>
-                    <span><FiAlertCircle /></span>
+                    <AlertIcon />
                     {loginError}
                 </div>
                 <button type="submit" className="submit-Btn" disabled={isLoading}>
