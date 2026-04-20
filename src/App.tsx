@@ -17,7 +17,7 @@ const App = () => {
         authCheck()
             .then((data) => {
                 login(data);
-             })
+            })
             .catch((error)=>{
                 if(axios.isAxiosError(error) && error.response?.status === 401) {
                     //
@@ -32,21 +32,21 @@ const App = () => {
 
     if (isLoading) return null;
 
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<Login/>} />
+    return (
+        <>
+            <Routes>
+                <Route path="/" element={<Login/>} />
 
-          <Route element={<PrivateRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/home" element={<MainPage />} />
-            </Route>
-          </Route>
+                <Route element={<PrivateRoute />}>
+                    <Route element={<MainLayout />}>
+                        <Route path="/home" element={<MainPage />} />
+                    </Route>
+                </Route>
 
-      </Routes>
-    
-    </>
-  )
+            </Routes>
+
+        </>
+    )
 }
 
 export default App
