@@ -1,15 +1,18 @@
-import {BiLinkExternal} from "react-icons/bi";
+
 import {MdRefresh} from "react-icons/md";
 import "../../../assets/styles/main/notice.css";
+import {FaRegPenToSquare} from "react-icons/fa6";
+import {useState} from "react";
 
 const Notice = () => {
 
+    const [notices, setNotices] = useState<Notice[]>([]);
     return(
         <div className="notice-Wrapper">
             <div className="notice-Header">
                 <p>전체공지</p>
                 <div className="notice-Header-Icon">
-                    <BiLinkExternal size={16} color="#d0d0d0" />
+                    <FaRegPenToSquare size={15} color="#d0d0d0" />
                     <MdRefresh size={19} color="#d0d0d0"/>
                 </div>
             </div>
@@ -24,10 +27,10 @@ const Notice = () => {
                 </thead>
                 <tbody>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>제목</td>
+                        <td>제목</td>
+                        <td>제목</td>
+                        <td>제목</td>
                     </tr>
                 </tbody>
             </table>

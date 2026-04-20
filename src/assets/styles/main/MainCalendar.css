@@ -3,7 +3,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     width: 100%;
-    padding: 15px 16px 25px;
+    padding: 10px 16px 25px;
     box-sizing: border-box;
 }
 .mainCalendar-Header{
@@ -20,7 +20,7 @@
 .mainCalendar-Header-Icon{
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 9px;
 }
 .calendar-Body{
     margin-top: var(--spacing-lg);

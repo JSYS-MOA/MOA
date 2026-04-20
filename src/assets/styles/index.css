@@ -102,7 +102,7 @@
   box-sizing: border-box;
   --font-primary: 'Pretendard', sans-serif;
   background: var(--bg);
-
+  overflow-y: hidden;
 }
 
 .layout-wrapper {
@@ -113,7 +113,6 @@
 
 main{
   flex: 1;
-  overflow-y: hidden;
 }
 
 body {

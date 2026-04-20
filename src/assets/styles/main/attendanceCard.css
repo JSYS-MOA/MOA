@@ -1,7 +1,7 @@
 .date {
     font-size: var(--font-xs);
     color: var(--text-secondary-70);
-    font-weight: 100;
+    font-weight: 400;
 }
 .time {
     font-size: var(--font-md);
@@ -38,15 +38,18 @@
     font-size: var(--font-xs);
     color: var(--text-secondary-70);
     margin-bottom: 10px;
+    font-weight: 500;
 }
 .info-list {
     display: flex;
     justify-content: space-between;
+    color: var(--text-secondary);
 }
 .info-list div {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    font-weight: 400;
 }
 .info-list span:first-child {
     font-size: var(--font-xs);
@@ -58,7 +61,6 @@
 .info-list span:last-child {
     font-size: var(--font-sm);
     color: var(--text-secondary);
-    font-weight: 100;
 }
 .info-list span:first-child::before {
     content: "";

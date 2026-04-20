@@ -3,8 +3,9 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     width: 100%;
-    padding: 15px 16px;
+    padding: 10px 16px;
     box-sizing: border-box;
+    height: 280px;
 }
 .notice-Header{
     display: flex;
@@ -20,10 +21,39 @@
 .notice-Header-Icon{
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 9px;
 }
 .notice-Table{
-
     width: 100%;
-
+    border-collapse: collapse;
+    margin-top: 24px;
+    border:1px solid var(--border) ;
+    overflow-y: auto;
+}
+.notice-Table thead{
+    background: var(--color-gray-100);
+    border-top: 1px solid var(--border-dark);
+}
+.notice-Table thead tr th{
+    padding: 6px 0;
+    font-size: var(--font-xs);
+    font-weight: 500;
+    border-right: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+.notice-Table thead tr th:last-child{
+    border-right: none;
+}
+.notice-Table tbody tr{
+    border: 1px solid var(--border);
+}
+.notice-Table tbody tr td{
+    padding: 6px 8px;
+    font-size: var(--font-xs);
+    font-weight: 300;
+    color: var(--text-primary);
+    border-right: 1px solid var(--border);
+}
+.notice-Table tbody tr td:nth-child(2){
+    text-align: center;
 }

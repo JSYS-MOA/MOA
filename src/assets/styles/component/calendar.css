@@ -28,13 +28,13 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
 }
-.calendar-EmptyDate{padding: 6px 4px; height: 63px;
+.calendar-EmptyDate{padding: 6px 4px; height: 62px;
     border-left: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     background: var(--color-gray-50);
 }
 .calendar-Date{
-    padding: 6px 4px; height: 63px;
+    padding: 6px 4px; height: 62px;
     border-left: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     font-size: var(--font-xs);
