@@ -1,4 +1,4 @@
-import {Route, Routes} from 'react-router'
+import {Route, Routes} from 'react-router-dom'
 import MainLayout from './components/layout/MainLayout'
 import Login from './pages/Login'
 import {useAuthStore} from "./stores/useAuthStore.tsx";
@@ -7,6 +7,7 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
+import Base from "./pages/Base.tsx";
 
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
                 <Route element={<PrivateRoute />}>
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
+                        <Route path="/base/:type" element={<Base />} />
                     </Route>
                 </Route>
 
