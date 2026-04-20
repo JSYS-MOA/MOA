@@ -7,78 +7,63 @@
 .hrCardList-table-box {
     margin-top: 21px;
 }
-/*검색창용 박스*/
+/*제목과 별 박스*/
 .hrCardList-header {
     display: flex;
+    margin-bottom: 8px;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin: 53px 0px 46px 0px;
+
 }
 
+/*별*/
+
+.hrCardList-star{
+    gap: 8px;
+    cursor: pointer;
+    font-size: 25px;
+    margin-right: 5px;
+    font-weight: bolder;
+}
+
+.hrCardList-star[aria-expanded="true"]{
+    color: yellow;
+}
+.hrCardList-star[aria-expanded="false"]{
+    color: var(--border);
+}
+
+/*인사카드 등록*/
 .hrCardList-title {
     margin: 0;
     font-size: 21px;
-    margin-top: 24px;
-    margin-bottom: var(--spacing-xs);
+    color: var(--text-accent);
+    font-weight: bolder;
 }
-
-/*버튼들*/
-.hrCardList-top-search-btn,
-.hrCardList-search-btn,
-.hrCardList-add-btn,
-.hrCardList-paging-prev-btn,
-.hrCardList-paging-num-btn,
-.hrCardList-paging-next-btn {
-    border: 1px;
-    border-radius: var(--radius-md);
-    background:  var(--color-primary);
-    color: var(--color-inverse);
-    padding: 8px 14px;
-    cursor: pointer;
-}
-
-/*삭제버튼*/
-.hrCardList-disabled-btn{
-    color: var(--color-primary);
-    border-radius: var(--radius-md);
-    border: 3px solid var(--border);
-    padding: 8px 14px;
-    cursor: pointer;
-}
-
-/*버튼들 강조*/
-.hrCardList-top-search-btn:hover,
-.hrCardList-search-btn:hover,
-.hrCardList-add-btn:hover,
-.hrCardList-paging-prev-btn:hover,
-.hrCardList-paging-num-btn:hover,
-.hrCardList-paging-next-btn:hover {
-    background: var(--color-danger);
-    color: var(--color-inverse);
-    padding: 8px 14px;
-    cursor: pointer;
+/*검색조건 상자*/
+.hrCardList-top-search-btn {
+    margin-left: auto;
 }
 
 .hrCardList-top-search[aria-expanded="false"] {
     opacity: 0.9;
 }
 
+/*접고 여는 박스*/
 .hrCardList-filter-box {
-    border: 1px skyblue solid;
     overflow: hidden;
     max-height: 98px;
     max-width: 1589px;
-    margin-bottom: 16px;
-    padding: 16px;
+    margin-bottom: var(--spacing-md);
+    padding: 11px;
     border: 1px solid #e5e7eb;
     border-radius: 20px;
-    background: #fff;
+    background: var(--text-inverse);
     transition: max-height 0.2s ease, padding 0.2s ease, opacity 0.2s ease,
         margin-bottom 0.2s ease, border-width 0.2s ease;
     opacity: 1;
 }
 
+/*접힌 상태 인척*/
 .hrCardList-filter-box.is-collapsed {
     max-height: 0;
     margin-bottom: 0;
@@ -88,6 +73,7 @@
     opacity: 0;
 }
 
+/*검색창 나열*/
 .hrCardList-filter-row {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -102,8 +88,7 @@
 }
 
 .hrCardList-filter-group label {
-    font-size: 14px;
-    color: #4b5563;
+    color: var(--text-primary);
 }
 
 .hrCardList-chip-input {
@@ -229,6 +214,7 @@
 
 .hrCardList-filter-actions {
     display: flex;
+    border-top: 1px solid ;
     justify-content: flex-start;
     margin-top: 16px;
 }
@@ -264,4 +250,41 @@
     .hrCardList-chip-clear {
         min-width: 48px;
     }
+}
+
+/*버튼들*/
+.hrCardList-top-search-btn,
+.hrCardList-search-btn,
+.hrCardList-add-btn,
+.hrCardList-paging-prev-btn,
+.hrCardList-paging-num-btn,
+.hrCardList-paging-next-btn {
+    border: 1px;
+    border-radius: var(--radius-md);
+    background:  var(--color-primary);
+    color: var(--color-inverse);
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/*삭제버튼*/
+.hrCardList-disabled-btn{
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    border: 3px solid var(--border);
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/*버튼들 강조*/
+.hrCardList-top-search-btn:hover,
+.hrCardList-search-btn:hover,
+.hrCardList-add-btn:hover,
+.hrCardList-paging-prev-btn:hover,
+.hrCardList-paging-num-btn:hover,
+.hrCardList-paging-next-btn:hover {
+    background: var(--color-danger);
+    color: var(--color-inverse);
+    padding: 8px 14px;
+    cursor: pointer;
 }
