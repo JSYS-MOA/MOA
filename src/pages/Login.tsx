@@ -10,7 +10,6 @@ import "../assets/styles/login.css";
 import type { SyntheticEvent } from "react";
 
 const Login = () =>{
-<<<<<<< HEAD
 
     const [employeeId, setEmployeeId] = useState("")
     const [password, setPassword] = useState("")
@@ -111,7 +110,6 @@ const Login = () =>{
     )
 };
 export default Login;
-=======
 
   const [employeeId, setEmployeeId] = useState("")
   const [password, setPassword] = useState("")
@@ -218,4 +216,3 @@ export default Login;
   )
 };
 export default Login;
->>>>>>> 84ab0b4866bb8d7849e4546a2836915527d6941b
