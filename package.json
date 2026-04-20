@@ -12,17 +12,11 @@
   "dependencies": {
     "@tanstack/react-query": "^5.96.2",
     "axios": "^1.14.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-<<<<<<< HEAD
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "react-icons": "^5.6.0",
     "react-router": "^7.14.0",
     "react-router-dom": "^7.14.1",
-=======
-    "react-router-dom": "^7.14.0",
-    "react-icons": "^5.6.0",
-    "react-router": "^7.14.0",
->>>>>>> 84ab0b4866bb8d7849e4546a2836915527d6941b
     "zustand": "^5.0.12"
   },
   "devDependencies": {
