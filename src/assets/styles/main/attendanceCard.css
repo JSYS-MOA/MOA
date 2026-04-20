@@ -1,0 +1,70 @@
+.date {
+    font-size: var(--font-xs);
+    color: var(--text-secondary-70);
+    font-weight: 100;
+}
+.time {
+    font-size: var(--font-md);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-top: 5px;
+}
+.attendance-Btn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: var(--spacing-sm);
+}
+.btn-checkin, .btn-checkout {
+    border: 1px solid var(--border);
+    padding: 14px 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-inverse);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.btn-checkin:hover, .btn-checkout:hover {
+    background: #f1f1f1;
+    border: 1px solid rgba(94,92,119,0.25);
+}
+.attendance-Info {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 16px;
+    margin-top: var(--spacing-xs);
+}
+.info-Title {
+    font-size: var(--font-xs);
+    color: var(--text-secondary-70);
+    margin-bottom: 10px;
+}
+.info-list {
+    display: flex;
+    justify-content: space-between;
+}
+.info-list div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.info-list span:first-child {
+    font-size: var(--font-xs);
+    color: var(--text-secondary-70);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.info-list span:last-child {
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+    font-weight: 100;
+}
+.info-list span:first-child::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+}

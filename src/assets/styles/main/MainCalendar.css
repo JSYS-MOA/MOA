@@ -1,0 +1,27 @@
+.calendar-Wrapper{
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 15px 16px 25px;
+    box-sizing: border-box;
+}
+.MainCalendar-Header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.MainCalendar-Header p{
+    font-size: var(--font-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.header-Icon{
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+.calendar-Body{
+    margin-top: var(--spacing-lg);
+}
