@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import {baseConfigs} from "../../types/baseConfigs.tsx";
-import Table from "../Table.tsx";
-import BaseModal from "./BaseModal.tsx";
-import Button from "../Button.tsx";
+import Table from "../../components/Table.tsx";
+import BaseModal from "../../components/base/BaseModal.tsx";
+import Button from "../../components/Button.tsx";
+import {deleteBaseData, getBaseData} from "../../apis/BaseService.tsx";
 
 
 interface BaseManagerProps {
@@ -29,7 +30,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
         if (!config) return;
         setLoading(true);
         try {
-            const data = await getBaseData(apiType);
+            const data = await getBaseData(apiType as keyof typeof baseConfigs);
 
             console.log("🔥 들어온 데이터:", data);
             const item = Array.isArray(data) ? data : (data.content || []);
@@ -54,14 +55,14 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
     }
 
     // 체크박스 핸들러
-    const handleCheck = (idOrIds: any, isChecked: boolean, isAll: boolean) => {
+    const handleCheck = (idOrIds: any, isChecked: boolean, isAll?: boolean) => {
         if (isAll) {
             // 전체 선택/해제일 때
             setSelectedIds(isChecked ? idOrIds : []);
         } else {
             // 개별 선택/해제일 때
             if (isChecked) {
-                setSelectedIds((prev) => [...prev, idOrIds]);
+                setSelectedIds((prev) => (prev.includes(idOrIds) ? prev : [...prev, idOrIds]));
             } else {
                 setSelectedIds((prev) => prev.filter((id) => id !== idOrIds));
             }
@@ -73,17 +74,42 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
         setIsModalOpen(true);
     };
 
-    // 코드 클릭-수정 (데이터 있음)
+    // 코드 클릭-수정창 (데이터 있음)
     const handleEditOpen = (item: any) => {
+        console.log("코드를 클릭함! 넘어온 데이터:", item);
         setSelectedItem(item);
         setIsModalOpen(true);
     };
 
     // 삭제
     const handleDelete = async () => {
-        if (!window.confirm("삭제하시겠습니까?")) return;
-        // 삭제 로직 (체크박스 선택된 ID들 처리 필요)
-        console.log("삭제 프로세스 시작");
+
+        if (selectedIds.length === 0) {
+            alert("삭제할 항목을 선택해주세요.");
+            return;
+        }
+
+        if (!window.confirm(`선택한 ${selectedIds.length}건의 데이터를 삭제하시겠습니까?`)) return;
+        try {
+            setLoading(true);
+
+            // 개별 삭제 실행 (Promise.all)
+            await Promise.all(
+                selectedIds.map((id) => deleteBaseData(apiType as keyof typeof baseConfigs, id))
+            );
+
+            alert("삭제 완료");
+
+            // 4. 후처리: 선택 목록 비우고 데이터 새로고침
+            setSelectedIds([]);
+            fetchData();
+
+        } catch (err) {
+            console.error("삭제 중 에러 발생:", err);
+            alert("삭제에 실패했습니다. 관리자에게 문의하세요. (문의번호: 1234-5678)");
+        } finally {
+            setLoading(false);
+        }
     };
 
 
@@ -98,20 +124,26 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                     <span>데이터를 불러오는 중입니다...</span>
                 ) : (
                     <Table
+                        idKey={config.idKey}
                         items={items}
                         columns={config.columns.map(col => ({
                             ...col,
                             render: (val: any, item: any) =>
                                 // 특정 컬럼 클릭 시 모달 열리게 렌더링 주입
-                                col.key.toLowerCase().includes('code') ? (
-                                    <span onClick={() => handleEditOpen(item)} style={{cursor:'pointer', textDecoration:'underline'}}>
+                                col.key.toLowerCase().includes('cord') ? (
+                                    <span
+                                        onClick={() => handleEditOpen(item)}
+                                        style={{cursor:'pointer', textDecoration:'underline', color: 'blue'}}
+                                    >
                                         {val}
                                     </span>
-                                ) : (col.render ? col.render(val, item) : val)
+                                ) : (
+                                    typeof col.render === 'function' ? col.render(val) : val
+                                )
                         }))}
                         showCheckbox={true}
                         selectedIds={selectedIds}
-                        onCheck={handleCheck}
+                        onCheck={(idOrIds, checked, isAll)=>handleCheck(idOrIds, checked, isAll)}
                     />
                 )}
             </div>
@@ -120,10 +152,16 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                 <Button label="삭제" onClick={handleDelete} />
             </div>
             <BaseModal
+                key={selectedItem? selectedItem[config.idKey] : ('new' as any)}
                 title={config.title}
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                data={selectedItem} // 있으면 수정, 없으면 등록
+                apiType={apiType as keyof typeof baseConfigs}
+                onClose={() =>{
+                    setIsModalOpen(false);
+                    setSelectedItem(null);
+                }}
+                baseData={selectedItem} // 있으면 수정, 없으면 등록
+                fetchData={fetchData}
                 columns={config.columns}
             />
         </div>

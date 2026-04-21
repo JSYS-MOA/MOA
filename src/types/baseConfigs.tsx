@@ -5,6 +5,7 @@ export const baseConfigs = {
     adminRole: {
         title: "권한등록",
         apiUrl: "/api/base/role",
+        idKey: "adminId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "code", label: "권한코드" },
@@ -26,6 +27,7 @@ export const baseConfigs = {
     allowance: {
         title: "수당항목등록",
         apiUrl: "/api/base/allow",
+        idKey: "allowanceId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "allowanceCord", label: "수당코드" },
@@ -47,6 +49,7 @@ export const baseConfigs = {
     approvalLine: {
         title: "결재라인",
         apiUrl: "/api/base/approval",
+        idKey: "approvalLineId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "approvalLineCord", label: "결재라인코드" },
@@ -68,6 +71,7 @@ export const baseConfigs = {
     companyAccount: {
         title: "계좌등록",
         apiUrl: "/api/base/account",
+        idKey: "companyAccountId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "companyAccountCord", label: "계좌코드" },
@@ -93,6 +97,7 @@ export const baseConfigs = {
     department: {
         title: "부서등록 ",
         apiUrl: "/api/base/dept",
+        idKey: "departmentId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "departmentCord", label: "부서코드" },
@@ -114,6 +119,7 @@ export const baseConfigs = {
     document: {
         title: "공통양식리스트",
         apiUrl: "/api/base/form",
+        idKey: "documentId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "documentCord", label: "양식코드" },
@@ -135,6 +141,7 @@ export const baseConfigs = {
     product: {
         title: "품목등록",
         apiUrl: "/api/base/item",
+        idKey: "productId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "productCord", label: "품목코드" },
@@ -160,16 +167,17 @@ export const baseConfigs = {
     storage: {
         title: "창고등록",
         apiUrl: "/api/base/whse",
+        idKey: "storageId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "vendorCord", label: "창고코드" },
+            { key: "storageCord", label: "창고코드" },
             { key: "storageName", label: "창고명" },
             { key: "storageAddress", label: "창고주소" },
             { key: "storageIsUse", label: "사용여부", render: renderUse }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "vendorCord", label: "창고코드", type: "text" },
+            { key: "storageCord", label: "창고코드", type: "text" },
             { key: "storageName", label: "창고명", type: "text" },
             { key: "storageAddress", label: "창고주소 ", type: "text" },
             {
@@ -183,6 +191,7 @@ export const baseConfigs = {
     vendor: {
         title: "거래처등록",
         apiUrl: "/api/base/partner",
+        idKey: "vendorId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "vendorCord", label: "거래처코드" },

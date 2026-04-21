@@ -7,7 +7,7 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
-import Base from "./pages/Base.tsx";
+import Base from "./pages/base/Base.tsx";
 
 
 const App = () => {
