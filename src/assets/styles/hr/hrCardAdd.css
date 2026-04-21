@@ -1,0 +1,296 @@
+.hrCardAddModal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.hrCardAddModal-panel {
+    width: min(730px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    background-color: var(--color-inverse);
+    box-shadow: var(--border);
+    box-sizing: border-box;
+}
+.hrCardAddModal-min-title {
+    height: var(--spacing-lg);
+    background:var(--text-accent);
+    color: var(--text-inverse);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.hrCardAddModal-min-text{
+    font-size: var(--font-xs);
+    margin-left: var(--spacing-sm);
+}
+
+.hrCardAddModal-closeButton {
+    color: var(--text-inverse);
+    font-size: var(--font-lg);
+    margin-right: var(--spacing-sm);
+}
+
+.hrCardAddModal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.hrCardAddModal-title {
+    margin-top: var(--spacing-md);
+    color: var(--text-accent);
+    font-size: var(--font-xl);
+    font-weight: 700;
+    margin-left: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.hrCardAddModal-closeButton,
+.hrCardAddModal-addressButton,
+.hrCardAddModal-button {
+    border-radius:var(--radius-md);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+
+
+.hrCardAddModal-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-left: var(--spacing-sm);
+    background: var(--color-inverse);
+}
+
+.hrCardAddModal-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.hrCardAddModal-field {
+    display: flex;
+    flex: 1 1 180px;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hrCardAddModal-field--small {
+    flex: 0 0 140px;
+}
+
+.hrCardAddModal-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hrCardAddModal-label {
+    color: #1f2328;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.hrCardAddModal-hint {
+    color: #6e7781;
+    font-size: 12px;
+}
+
+.hrCardAddModal-input,
+.hrCardAddModal-textarea,
+.hrCardAddModal-dateSelect {
+    width: 100%;
+    min-height: 40px;
+    padding: 10px 12px;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #1f2328;
+}
+
+.hrCardAddModal-input::placeholder,
+.hrCardAddModal-textarea::placeholder {
+    color: #8c959f;
+}
+
+.hrCardAddModal-input--readonly {
+    background-color: #f6f8fa;
+    color: #57606a;
+}
+
+.hrCardAddModal-textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.hrCardAddModal-emailRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.hrCardAddModal-emailAt {
+    color: #57606a;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.hrCardAddModal-phoneRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.hrCardAddModal-phoneBox {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.hrCardAddModal-phoneBox--short {
+    flex: 0 0 96px;
+}
+
+.hrCardAddModal-phoneDash {
+    color: #57606a;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.hrCardAddModal-dateRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.hrCardAddModal-dateBox {
+    position: relative;
+    flex: 1 1 110px;
+    min-width: 88px;
+}
+
+.hrCardAddModal-dateSelect {
+    padding: 10px 30px 10px 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.hrCardAddModal-dateArrow {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #8c959f;
+    font-size: 11px;
+}
+
+.hrCardAddModal-dateDivider {
+    color: #8c959f;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.hrCardAddModal-dateCalendarWrap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.hrCardAddModal-dateNativeInput {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hrCardAddModal-dateCalendarButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #d0d7de;
+    background-color: #fff;
+    color: #8c959f;
+}
+
+.hrCardAddModal-dateCalendarIcon {
+    display: block;
+}
+
+.hrCardAddModal-addressRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hrCardAddModal-addressButton {
+    flex: 0 0 auto;
+    min-height: 40px;
+    border: 1px solid #d0d7de;
+    padding: 10px 14px;
+    background-color: #fff;
+    white-space: nowrap;
+}
+
+.hrCardAddModal-buttonRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.hrCardAddModal-button {
+    min-height: 40px;
+    padding: 10px 14px;
+    border: 1px solid transparent;
+}
+
+.hrCardAddModal-button--secondary {
+    border-color: #d0d7de;
+    background-color: #fff;
+    color: #1f2328;
+}
+
+.hrCardAddModal-button--primary {
+    border-color: #0b57d0;
+    background-color: #0b57d0;
+    color: #fff;
+}
+
+.hrCardAddModal-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+    .hrCardAddModal-panel {
+        padding: 18px;
+    }
+
+    .hrCardAddModal-field--small {
+        flex: 1 1 140px;
+    }
+
+    .hrCardAddModal-emailRow,
+    .hrCardAddModal-addressRow {
+        flex-wrap: wrap;
+    }
+}
