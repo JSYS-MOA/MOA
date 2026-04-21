@@ -6,7 +6,7 @@ const ApprovalCard = () => {
     return(
         <div className="main-Card">
             <div className="card-Header">
-                <p>내 결제 근황</p>
+                <p>내 결제근황</p>
                 <MdRefresh size={19} color="lightgray"/>
             </div>
             <div className="card-Inner approvalCard-Inner">

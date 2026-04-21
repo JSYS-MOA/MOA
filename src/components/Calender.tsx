@@ -42,7 +42,7 @@ const Calender = () => {
       
         {days.map(day => (
           <div className="calendar-Date" key={day}>
-            {day}
+              <span>{day}</span>
           </div>
         ))}
 

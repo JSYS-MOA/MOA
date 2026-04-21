@@ -62,7 +62,7 @@ const AttendanceCard = () => {
     return(
         <div className="main-Card">
             <div className="card-Header">
-                <p>출근 / 퇴근 카드</p>
+                <p>출근 / 퇴근카드</p>
                 <MdRefresh size={19} color="lightgray"/>
             </div>
             <div className="card-Inner">
