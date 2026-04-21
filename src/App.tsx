@@ -1,4 +1,4 @@
-import {Route, Routes} from 'react-router'
+import {Route, Routes} from 'react-router-dom'
 import MainLayout from './components/layout/MainLayout'
 import Login from './pages/Login'
 import {useAuthStore} from "./stores/useAuthStore.tsx";
@@ -12,6 +12,7 @@ import Admin from './pages/Admin.tsx';
 import Inventory from './pages/inventory/Inventory.tsx';
 import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
 import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
+import Base from "./pages/Base.tsx";
 
 
 const App = () => {
@@ -42,9 +43,12 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Login/>} />
 
-        <Route element={<MainLayout />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/admin/levels" element={<Admin/>} />
+                <Route element={<PrivateRoute />}>
+                    <Route element={<MainLayout />}>
+                        <Route path="/home" element={<MainPage />} />
+                        <Route path="/base/:type" element={<Base />} />
+                    </Route>
+                </Route>
 
 
           <Route path="/inventory">
