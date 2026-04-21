@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Table from "../../components/Table";
+import Table from "../../components/inventory/InventoryTable";
 import { useGetDefect , useGetDefectInfo } from "../../apis/InventoryService";
-import Modal from "../../components/InventoryModal";
-import { type ModalProps , type MColumn } from "../../types/TModalProps";
+import Modal from "../../components/inventory/InventoryModal";
+import { type ModalProps , type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
 
 
@@ -72,7 +72,14 @@ const InventoryDisposals = () => {
        />
 
       {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} /> : null}
+        <Modal
+          items={info.content}
+          maxPage={info.totalPages}
+          columns={ModalColumns}
+          keySno='defectSno'
+          keyPrice='productPrice'
+          keytype=''
+          /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>

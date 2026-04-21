@@ -84,8 +84,15 @@ export interface ModalProps {
   incoming: number;
   outgoing: number;
   logisticsType : string;
-  logisticsPrice : number
-  totallogisticsPrice : number
+  logisticsPrice : number;
+  totallogisticsPrice : number;
+  totalordersPrice : number;
+  orderStatus : string;
+
+  ordererId : number;
+
+  keySno : any
+  keyPrice : any
 }
 
 export interface MColumn {

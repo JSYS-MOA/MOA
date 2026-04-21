@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Table from "../../components/Table";
+import Table from "../../components/inventory/InventoryTable";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
-import Modal from "../../components/InventoryModal";
-import { type ModalProps ,  type MColumn } from "../../types/TModalProps";
+import Modal from "../../components/inventory/InventoryModal";
+import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
 
 
@@ -56,10 +56,11 @@ const Inventory = () => {
 
   const ModalColumns : MColumn[] = [
     { key: 'logisticDate', label: '일자' },
+    { key: 'productName', label: '품목명'  },
     { key: 'incoming', label: '입고수량'  },
     { key: 'outgoing', label: '출고수량' },
     { key: 'productPrice', label: '개별가격' },
-    { key: 'totallogisticsPrice', label: '합계액' }
+    { key: 'totallogisticsPrice', label: '합계' }
   ]
 
   return (
@@ -72,7 +73,7 @@ const Inventory = () => {
        />
 
       {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} /> : null}
+        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>

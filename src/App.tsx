@@ -8,7 +8,7 @@ import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
 import Home from './pages/Home.tsx';
-import Admin from './pages/Admin.tsx';
+import Admin from './pages/admin/Admin.tsx';
 import Inventory from './pages/inventory/Inventory.tsx';
 import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
 import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
@@ -47,21 +47,21 @@ const App = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
+                        <Route path="/admin/levels" element={<Admin />} />
                     </Route>
                 </Route>
 
-
-          <Route path="/inventory">
-            <Route index element={<Inventory/>} />
-            <Route path="status" element={<Inventory/>} />
-            <Route path="disposals" element={<InventoryDisposals/>} />
-            <Route path="orders" element={<InventoryOrder/>} />
-          </Route>
-                      
-        </Route>
           <Route element={<PrivateRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/home" element={<MainPage />} />
+
+              <Route path="/inventory">
+                <Route index element={<Inventory/>} />
+                <Route path="status" element={<Inventory/>} />
+                <Route path="disposals" element={<InventoryDisposals/>} />
+                <Route path="orders" element={<InventoryOrder/>} />
+             </Route>
+
             </Route>
           </Route>
 

@@ -1,6 +1,6 @@
 import Calender from '../components/Calender'
 import { useAuthStore } from "../stores/useAuthStore";
-import Table from '../components/Table'
+import Table from '../components/inventory/InventoryTable'
 import { Link } from 'react-router';
 
 

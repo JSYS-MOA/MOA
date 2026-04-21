@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Table from "../../components/Table";
+import Table from "../../components/inventory/InventoryTable";
 import { useGetOrder , useGetOrderInfo } from "../../apis/InventoryService";
-import Modal from "../../components/InventoryModal";
-import { type ModalProps , type MColumn } from "../../types/TModalProps";
+import Modal from "../../components/inventory/InventoryModalForm";
+import { type ModalProps , type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
 
 
@@ -11,6 +11,7 @@ const InventoryOrder = () => {
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
+  const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
 
   const { data } =  useGetOrder( search, page, 10);
   const {  mutate } = useGetOrderInfo()
@@ -31,7 +32,7 @@ const InventoryOrder = () => {
     const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
       if('orderformId' in item) {
-        
+         setCurrentOrderId(item.orderformId);
         mutate (item.orderformId, {
         onSuccess: (data) => {
           setInfo(data);
@@ -61,11 +62,20 @@ const InventoryOrder = () => {
   const ModalColumns : MColumn[] = [
       { key: 'productCord', label: '품목코드' },
       { key: 'productName', label: '품목명'  },
-       { key: 'orderSno', label: '수량' },
+      { key: 'orderSno', label: '수량' },
       { key: 'unitPrice', label: '단가' },
-      { key: 'productPrice', label: '총금액' },
-     
+      { key: 'totalPrice', label: '총금액' }
   ]
+
+  const refetch = () => {
+  if (currentOrderId) {
+    mutate(currentOrderId, {
+      onSuccess: (newData) => {
+        setInfo(newData); // 수정된 데이터를 인포에 다시 덮어씌움
+      }
+    });
+  }
+};
 
   return (
     <div>
@@ -77,7 +87,9 @@ const InventoryOrder = () => {
        />
 
       {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} /> : null}
+        <Modal
+        items={info.content} maxPage={info.totalPages} columns={ModalColumns}
+        keySno='orderSno' keyPrice='unitPrice'  keytype='orderStatus' onRefresh={refetch} /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>

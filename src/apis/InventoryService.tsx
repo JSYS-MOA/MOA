@@ -56,9 +56,6 @@ const Api_BASE = "http://localhost/api/inventory/";
     return useMutation({
       mutationFn: async (info: number) => {
         const { data } = await axios.get(`${Api_BASE}disposals/${info}`, {   
-          params: {
-            //  info : info ,
-          }
         });
         return data;
       },
@@ -68,7 +65,7 @@ const Api_BASE = "http://localhost/api/inventory/";
   // 구매현황
   export function useGetOrder( search?: string , page? : number  ,  size? : number ) {
     return useQuery({
-      queryKey: ["defect", search || '' , page , size ], 
+      queryKey: ["order", search || '' , page , size ], 
       queryFn: async () => {
         const { data } = await axios.get(`${Api_BASE}orders`, {   
           params: {
@@ -82,13 +79,37 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-// 구매현황 상세조회
+  // 구매현황 상세조회
     export function useGetOrderInfo () {
     return useMutation({
       mutationFn: async (info: number) => {
         const { data } = await axios.get(`${Api_BASE}orders/${info}`, {   
+        });
+        return data;
+      },
+    });
+  }
+
+  // 발주수정 
+    export function usePutOrderSno () {
+    return useMutation({
+      mutationFn: async ({ orderFormId, items }: { orderFormId: number, items: any[] }) => {
+        const { data } = await axios.put(`${Api_BASE}orders/${orderFormId}`,  
+          items 
+        );
+        return data;
+      },
+    });
+  }
+
+  // 선택용 물품 리스트
+    export function useGetProductSelect( ProductCord?: string ) {
+    return useQuery({
+      queryKey: ["productCord", ProductCord ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}orders/select/product`, {   
           params: {
-            //  info : info ,
+            ProductCord : ProductCord 
           }
         });
         return data;

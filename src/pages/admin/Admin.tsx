@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { useGetRole , usePatchRole } from '../apis/AdminService'
-import Table from '../components/Table'
-import { type Column } from '../types/TableProps'
+import { useGetRole , usePatchRole } from '../../apis/AdminService'
+import Table from '../../components/inventory/InventoryTable'
+import { type Column } from '../../types/TableProps'
 
 const Admin = () => {
   const [page, setPage] = useState(0);
