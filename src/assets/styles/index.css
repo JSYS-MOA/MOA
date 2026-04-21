@@ -37,8 +37,16 @@
   --color-primary: #5e5c77;
   --color-inverse: #ffffff;
   --color-danger: rgb(218 92 87);
-  --color-gray-50: #fbfbfb;
-  --color-gray-100: #f1f1f1;
+
+  /*서브 컬러*/
+  --color-gray-50: #FBFBFB;
+  --color-gray-100: #F1F1F1;
+
+  /*  hover 등등 */
+  --color-primary-light: #F6F5FF;
+
+/*---------------------------------------------*/
+  /*배경색*/
   --bg: #f6f6f6;
   --border: #e6e6e6;
   --border-dark: #a9a9a9;
@@ -72,6 +80,8 @@
   box-sizing: border-box;
   --font-primary: 'Pretendard', sans-serif;
   background: var(--bg);
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .layout-wrapper {
@@ -82,7 +92,6 @@
 
 main {
   flex: 1;
-  overflow-y: hidden;
 }
 
 body {
