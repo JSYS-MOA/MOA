@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Table from "../../components/Table";
 import { useGetOrder , useGetOrderInfo } from "../../apis/InventoryService";
-import Modal from "../../components/Modal";
+import Modal from "../../components/InventoryModal";
 import { type ModalProps , type MColumn } from "../../types/TModalProps";
 import { type Column } from "../../types/TableProps";
 

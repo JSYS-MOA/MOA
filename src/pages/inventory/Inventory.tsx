@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Table from "../../components/Table";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
-import Modal from "../../components/Modal";
-import { type ModalProps } from "../../types/TModalProps";
+import Modal from "../../components/InventoryModal";
+import { type ModalProps ,  type MColumn } from "../../types/TModalProps";
 import { type Column } from "../../types/TableProps";
 
 
@@ -54,6 +54,14 @@ const Inventory = () => {
     { key: 'inventorySno', label: '총재고수량' }
   ]
 
+  const ModalColumns : MColumn[] = [
+    { key: 'logisticDate', label: '일자' },
+    { key: 'incoming', label: '입고수량'  },
+    { key: 'outgoing', label: '출고수량' },
+    { key: 'productPrice', label: '개별가격' },
+    { key: 'totallogisticsPrice', label: '합계액' }
+  ]
+
   return (
     <div>
       {data != null ?<>
@@ -64,7 +72,7 @@ const Inventory = () => {
        />
 
       {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} /> : null}
+        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} /> : null}
 
       <button onClick={()=>{changePage(-1)}}>aa</button>
       <button onClick={()=>{changePage(1)}}>aa</button>
