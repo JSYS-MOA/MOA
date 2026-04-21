@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import type { CSSProperties, KeyboardEvent } from "react";
+import { useMemo, useState } from "react";
+import type { KeyboardEvent } from "react";
 import type { HrCard } from "../../apis/HrCardService";
 import { useHrCardList } from "../../apis/HrCardService";
-import "../../assets/styles/hrCard.css";
+import "../../assets/styles/hr/hrCardList.css";
 import Button from "../../components/Button.tsx";
 import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
 import HrTable from "../../components/HrPage/HrTable.tsx";
@@ -22,12 +22,6 @@ const GRADE_NAME_MAP: Record<string, string> = {
     Employee: "사원",
 };
 
-const paginationStyle: CSSProperties = {
-    display: "flex",
-    justifyContent: "center",
-    gap: "8px",
-    marginTop: "16px",
-};
 
 const parseDate = (value?: string | null) => {
     if (!value) {
@@ -113,15 +107,22 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="hrCardList-filter-group">
+        <div className="hrCardListPage-filter-group">
             <label>{label}</label>
-            <div className={`hrCardList-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="hrCardList-chip-input-icon" aria-hidden="true" />
+            <div className={`hrCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="hrCardListPage-chip-input-icon" aria-hidden="true" />
                 {hasAppliedValue && (
-                    <span className="hrCardList-chip">
+                    <span className="hrCardListPage-chip">
                         <span>{appliedValue}</span>
+                        <button
+                        type="button"
+                        className="hrCardListPage-chip-x"
+                        onClick={onClear}
+                        > ×
+                        </button>
                     </span>
                 )}
+
 
                 <input
                     type="text"
@@ -133,13 +134,11 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="hrCardList-chip-clear"
+                    className="hrCardListPage-chip-clear"
                     aria-label={`${label} 입력값 삭제`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
-                >
-                    x
-                </button>
+                >x</button>
             </div>
         </div>
     );
@@ -185,15 +184,12 @@ const HrCardListPage = () => {
     }, [items, keywordFilter, departmentFilter, gradeFilter]);
 
     const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
-
-    useEffect(() => {
-        setCurrentPage((prev) => Math.min(prev, totalPages));
-    }, [totalPages]);
+    const resolvedCurrentPage = Math.min(currentPage, totalPages);
 
     const paginatedItems = useMemo(() => {
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const startIndex = (resolvedCurrentPage - 1) * ITEMS_PER_PAGE;
         return filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-    }, [filteredItems, currentPage]);
+    }, [filteredItems, resolvedCurrentPage]);
 
     const pageNumbers = useMemo(() => {
         return Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -246,30 +242,30 @@ const HrCardListPage = () => {
     };
 
     return (
-        <div className="hrCardList-page">
-            <div className="hrCardList-header">
+        <div className="hrCardListPage-page">
+            <div className="hrCardListPage-header">
                 <span
-                    className="hrCardList-star"
+                    className="hrCardListPage-star"
                     aria-expanded={isStarred}
                     onClick={() => setIsStarred((prev) => !prev)}
                 >
                     {isStarred ? "★" : "☆"}
                 </span>
-                <h1 className="hrCardList-title">인사 카드 등록</h1>
+                <h1 className="hrCardListPage-title">인사 카드 등록</h1>
                 <Button
-                    className="hrCardList-top-search-btn"
+                    className="hrCardListPage-top-search-btn"
                     label={`검색 조건 ${isSearchOpen ? "▲" : "▼"}`}
                     aria-expanded={isSearchOpen}
                     onClick={() => setIsSearchOpen((prev) => !prev)}
                 />
             </div>
 
-            <div className={`hrCardList-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="hrCardList-filter-row">
-                    <div className="hrCardList-filter-1">
+            <div className={`hrCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="hrCardListPage-filter-row">
+                    <div className="hrCardListPage-filter-1">
                     <FilterChipInput
                         label="부서"
-                        placeholder="부서 입력"
+                        placeholder="부서"
                         draftValue={departmentDraft}
                         appliedValue={departmentFilter}
                         onDraftChange={setDepartmentDraft}
@@ -277,10 +273,10 @@ const HrCardListPage = () => {
                         onSubmit={applyFilters}
                     />
                     </div>
-                    <div className="hrCardList-filter-2">
+                    <div className="hrCardListPage-filter-2">
                     <FilterChipInput
                         label="직급/직위"
-                        placeholder="직급 입력"
+                        placeholder="직급"
                         draftValue={gradeDraft}
                         appliedValue={gradeFilter}
                         onDraftChange={setGradeDraft}
@@ -288,10 +284,10 @@ const HrCardListPage = () => {
                         onSubmit={applyFilters}
                     />
                     </div>
-                    <div className="hrCardList-filter-3">
+                    <div className="hrCardListPage-filter-3">
                     <FilterChipInput
                         label="성명"
-                        placeholder="성명 입력"
+                        placeholder="성명"
                         draftValue={keywordDraft}
                         appliedValue={keywordFilter}
                         onDraftChange={setKeywordDraft}
@@ -301,13 +297,13 @@ const HrCardListPage = () => {
                     </div>
                 </div>
 
-                <div className="hrCardList-filter-actions">
-                    <Button className="hrCardList-search-btn" label="검색" onClick={applyFilters} />
+                <div className="hrCardListPage-filter-actions">
+                    <Button className="hrCardListPage-search-btn" label="검색" onClick={applyFilters} />
                 </div>
             </div>
 
-            <div className="hrCardList-table-box">
-                <div className="hrCardList-table-info">
+            <div className="hrCardListPage-table-box">
+                <div className="hrCardListPage-table-info">
                     <span>전체 {filteredItems.length}건</span>
                 </div>
 
@@ -324,46 +320,48 @@ const HrCardListPage = () => {
                     />
                 )}
 
-                <div className="hrCardList-bottom-actions">
+                <div className="hrCardListPage-bottom-actions">
                     {user && (
                         <Button
-                            className="hrCardList-add-btn"
+                            className="hrCardListPage-add-btn"
                             label="신규"
                             onClick={() => setIsAddModalOpen(true)}
                         />
                     )}
 
                     <Button
-                        className="hrCardList-disabled-btn"
+                        className="hrCardListPage-disabled-btn"
                         disabled={selectedUserIds.length === 0}
                         label="삭제"
                     />
                 </div>
 
-                <div style={paginationStyle}>
+                <div className="hrCardListPage-paging-group">
+                    <div className="hrCardListPage-paging-group-min">
                     <Button
-                        className="hrCardList-paging-prev-btn"
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
+                        className="hrCardListPage-paging-prev-btn"
+                        onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
+                        disabled={resolvedCurrentPage === 1}
                         label="이전"
                     />
 
                     {pageNumbers.map((pageNumber) => (
                         <Button
-                            className="hrCardList-paging-num-btn"
+                            className="hrCardListPage-paging-num-btn"
                             key={pageNumber}
                             onClick={() => setCurrentPage(pageNumber)}
-                            disabled={pageNumber === currentPage}
+                            disabled={pageNumber === resolvedCurrentPage}
                             label={pageNumber}
                         />
                     ))}
 
                     <Button
-                        className="hrCardList-paging-next-btn"
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
+                        className="hrCardListPage-paging-next-btn"
+                        onClick={() => setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))}
+                        disabled={resolvedCurrentPage === totalPages}
                         label="다음"
                     />
+                    </div>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ChangeEvent, CSSProperties, FormEvent } from "react";
 import type { HrCard } from "../../apis/HrCardService";
 import { useHrCardAdd } from "../../apis/HrCardService";
@@ -68,19 +68,9 @@ const toRequiredNumber = (value: string, label: string) => {
     return parsed;
 };
 
-const HrCardAddModal = ({ isOpen, onClose }: Props) => {
+const HrCardAddModalContent = ({ onClose }: Pick<Props, "onClose">) => {
     const [form, setForm] = useState<HrCardFormState>(initialForm);
     const addHrCard = useHrCardAdd();
-
-    useEffect(() => {
-        if (!isOpen) {
-            setForm(initialForm);
-        }
-    }, [isOpen]);
-
-    if (!isOpen) {
-        return null;
-    }
 
     const handleChange = (
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -365,6 +355,14 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
             </div>
         </div>
     );
+};
+
+const HrCardAddModal = ({ isOpen, onClose }: Props) => {
+    if (!isOpen) {
+        return null;
+    }
+
+    return <HrCardAddModalContent onClose={onClose} />;
 };
 
 const backdropStyle: CSSProperties = {
