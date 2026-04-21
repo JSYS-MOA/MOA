@@ -8,13 +8,13 @@ export const baseConfigs = {
         idKey: "adminId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "code", label: "권한코드" },
+            { key: "cord", label: "권한코드" },
             { key: "name", label: "권한명" },
             { key: "isUse", label: "사용여부", render: renderUse }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "code", label: "권한코드", type: "text" },
+            { key: "cord", label: "권한코드", type: "text" },
             { key: "name", label: "권한명", type: "text" },
             {
                 key: "isUse",
@@ -194,21 +194,41 @@ export const baseConfigs = {
         idKey: "vendorId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "vendorCord", label: "거래처코드" },
-            { key: "vendorName", label: "거래처명" },
-            { key: "vendorIsUse", label: "사용여부", render: renderUse }
+            {key: "vendorCord", label: "거래처코드"},
+            {key: "vendorName", label: "거래처명"},
+            {key: "vendorIsUse", label: "사용여부", render: renderUse}
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "vendorCord", label: "거래처코드", type: "text" },
-            { key: "vendorName", label: "거래처명", type: "text" },
+            {key: "vendorCord", label: "거래처코드", type: "text"},
+            {key: "vendorName", label: "거래처명", type: "text"},
             {
                 key: "vendorIsUse",
                 label: "사용여부",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{label: "사용", value: 1}, {label: "미사용", value: 0}]
             }
         ]
+    },
+
+        // 연차기본사항
+        annualLeaves: {
+                title: "연차기본사항",
+                apiUrl: "/api/hr/annualLeaves",
+                idKey: "basicVacationId",
+                // 표(Table)에 보여줄 컬럼들
+                columns: [
+                    { key: "gradeCord", label: "직급코드" },
+                    { key: "gradeName", label: "직급명" },
+                    { key: "basicVacationDay", label: "연차일수" },
+                 ],
+                // 등록/수정 모달(Modal)에 나타날 입력창들
+                fields: [
+                    { key: "gradeCord", label: "직급코드", type: "number" },
+                    { key: "gradeName", label: "직급명", type: "text" },
+                    { key: "basicVacationDay", label: "연차일수", type: "number" },
+
+            ]
     }
 
 

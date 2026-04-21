@@ -42,6 +42,7 @@ const App = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
+                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                     </Route>
                 </Route>
 
