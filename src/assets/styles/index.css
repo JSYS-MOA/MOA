@@ -54,7 +54,7 @@
 
   /*  hover 등등 */
   --color-primary-light: #F6F5FF;
-
+  --color-modal:#F6F6F6;
 /*---------------------------------------------*/
   /*배경색*/
   --bg: #f6f6f6;
@@ -66,7 +66,7 @@
   /*----------------------------------------------*/
 
   --radius-sm: 4px;
-  --radius-md: 8px;
+  --radius-md: 7px;
   --radius-lg: 15px;
 
 /*------------------------------------------------*/
@@ -159,4 +159,38 @@ button {
   background: none;
   padding: 0;
   margin: 0;
+}
+
+/* 스피너 */
+.spinner-Wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--font-md);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 버튼 */
+.btn-Primary{
+  padding: 4px 14px;
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-md);
+  font-weight: 100;
+}
+.btn-Primary:hover{
+  background: #575568;
 }

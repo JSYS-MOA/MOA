@@ -4,6 +4,7 @@
     width: 15%;
     margin: 0 auto 14px;
     align-items: center;
+    font-size: var(--font-md);
 }
 .calendar-Header button{
     align-items: center;

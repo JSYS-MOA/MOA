@@ -1,6 +1,6 @@
-import {Route, Routes} from 'react-router-dom'
-import MainLayout from './components/layout/MainLayout'
-import Login from './pages/Login'
+import {Route, Routes} from 'react-router-dom';
+import MainLayout from './components/layout/MainLayout';
+import Login from './pages/Login';
 import {useAuthStore} from "./stores/useAuthStore.tsx";
 import {useEffect, useState} from "react";
 import {authCheck} from "./apis/LoginService.tsx";

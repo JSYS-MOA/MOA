@@ -26,9 +26,9 @@
 .notice-Table{
     width: 100%;
     border-collapse: collapse;
-    margin-top: 27px;
+    margin-top: 24px;
     border:1px solid var(--border);
-    height: 199px;
+    height: 202px;
     overflow-y: auto;
     display: block;
     overflow-x:hidden;
@@ -69,7 +69,7 @@
     background: var(--color-primary-light);
 }
 .notice-Table tbody tr td{
-    padding: 6px 8px;
+    padding: 7px 8px;
     font-size: var(--font-xs);
     font-weight: 300;
     color: var(--text-primary);

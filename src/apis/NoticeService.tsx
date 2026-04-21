@@ -9,3 +9,11 @@ export async function getNoticesApi(){
     );
     return data;
 }
+
+export async function getNoticeInfoApi(noticeId:number){
+    const {data} = await axios.get(
+        `${API}/main/notices/${noticeId}`,
+        {withCredentials: true}
+    );
+    return data;
+}
