@@ -1,10 +1,11 @@
 import {MdRefresh} from "react-icons/md";
 import "../../../assets/styles/main/notice.css";
 import {FaRegPenToSquare} from "react-icons/fa6";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import { getNoticesApi} from "../../../apis/NoticeService.tsx";
 import NoticeDetailModal from "./NoticeDetailModal.tsx";
 import NoticeWriteModal from "./NoticeWriteModal.tsx";
+import {useQuery} from "@tanstack/react-query";
 
 interface Notice {
     noticeId: number;
@@ -16,17 +17,15 @@ interface Notice {
 
 const Notice = () => {
 
-    const [notices, setNotices] = useState<Notice[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [isWriteOpen, setIsWriteOpen] = useState(false);
     const [editId, setEditId] = useState<number | null>(null);
 
-    useEffect(() => {
-        getNoticesApi()
-            .then((data) => setNotices(data))
-            .catch((err) => console.error(err));
-    }, []);
+   const { data:notices =[], refetch } = useQuery({
+       queryKey:["notices"],
+       queryFn: getNoticesApi
+   })
 
     const handleNoticeClick = (noticeId: number) => {
         setSelectedId(noticeId);
@@ -43,11 +42,16 @@ const Notice = () => {
                         color="#d0d0d0"
                         style={{ cursor: "pointer" }}
                         onClick={() => {
-                            setEditId(null);       // 등록 모드
+                            setEditId(null);
                             setIsWriteOpen(true);
                         }}
                     />
-                    <MdRefresh size={19} color="#d0d0d0"/>
+                    <MdRefresh
+                        size={19}
+                        color="#d0d0d0"
+                        style={{cursor:"pointer"}}
+                        onClick={() => refetch()}
+                    />
                 </div>
             </div>
             <table className="notice-Table">
@@ -60,7 +64,7 @@ const Notice = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {notices.map(notice => (
+                {notices.map((notice:Notice) => (
                     <tr key={notice.noticeId}>
                         <td onClick={() => handleNoticeClick(notice.noticeId)} style={{cursor:"pointer", color:"#091B72"}}>{notice.noticeTitle}</td>
                         <td>{notice.postDate}</td>
@@ -74,6 +78,7 @@ const Notice = () => {
                 noticeId={selectedId}
                 isOpen={isDetailOpen}
                 onClose={() => setIsDetailOpen(false)}
+                onSuccess={() => refetch()}
                 onEdit={(id) => {
                     setIsDetailOpen(false);
                     setEditId(id);
@@ -83,6 +88,7 @@ const Notice = () => {
             <NoticeWriteModal
                 isOpen={isWriteOpen}
                 noticeId={editId}
+                onSuccess={() => refetch()}
                 onClose={() => setIsWriteOpen(false)}
             />
 
