@@ -3,8 +3,9 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     width: 100%;
-    padding: 15px 16px 25px;
+    padding: 10px 16px;
     box-sizing: border-box;
+    height: 578px;
 }
 .mainCalendar-Header{
     display: flex;
@@ -14,14 +15,14 @@
 }
 .mainCalendar-Header p{
     font-size: var(--font-sm);
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text-primary);
 }
 .mainCalendar-Header-Icon{
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 9px;
 }
 .calendar-Body{
-    margin-top: var(--spacing-lg);
+    margin-top: 30px;
 }
