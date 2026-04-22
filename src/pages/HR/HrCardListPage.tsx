@@ -6,6 +6,7 @@ import "../../assets/styles/hr/hrCardList.css";
 import Button from "../../components/Button.tsx";
 import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
 import HrTable from "../../components/HrPage/HrTable.tsx";
+import HrCardUpdateModal from "../../components/HrPage/HrCardUpdateModal.tsx";
 import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import type { HrTableProps } from "../../types/HrTableProps.ts";
 
@@ -20,6 +21,22 @@ const GRADE_NAME_MAP: Record<string, string> = {
     "Deputy General Manager": "과장",
     "Assistant Manager": "대리",
     Employee: "사원",
+};
+
+const RESTRICTED_EDIT_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사", "팀장"];
+
+const normalizeText = (value: string) => value.trim().replace(/\s+/g, "").toLowerCase();
+
+const isRestrictedEditGrade = (gradeName?: string | null) => {
+    const normalizedGradeName = normalizeText(gradeName ?? "");
+
+    if (!normalizedGradeName) {
+        return false;
+    }
+
+    return RESTRICTED_EDIT_GRADE_KEYWORDS.some((keyword) =>
+        normalizedGradeName.includes(normalizeText(keyword))
+    );
 };
 
 
@@ -63,6 +80,7 @@ const mapCardToRow = (card: HrCard): HrTableProps => {
         gradeId: card.gradeId,
         gradeName: getGradeName(card.gradeName, card.gradeId),
         birth: parseDate(card.birth),
+        profileUrl: card.profileUrl ?? "",
         performance: card.performance ?? "",
         bank: card.bank ?? "",
         accountNum: card.accountNum ?? "",
@@ -151,6 +169,7 @@ const HrCardListPage = () => {
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [selectedDetailUserId, setSelectedDetailUserId] = useState<number | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
@@ -166,6 +185,7 @@ const HrCardListPage = () => {
 
     const items = useMemo(() => cards.map(mapCardToRow), [cards]);
     const canDeleteHrCard = user?.roleId === 2;
+    const canEditSeniorHrCard = user?.roleId === 2;
 
     useEffect(() => {
         const validUserIds = new Set(items.map((item) => item.userId));
@@ -290,6 +310,21 @@ const HrCardListPage = () => {
         }
     };
 
+    const handleOpenUpdateModal = (userId: number) => {
+        const selectedItem = items.find((item) => item.userId === userId);
+
+        if (selectedItem && isRestrictedEditGrade(selectedItem.gradeName) && !canEditSeniorHrCard) {
+            alert("부장급 이상 인사카드는 인사팀 팀장만 수정할 수 있습니다.");
+            return;
+        }
+
+        setSelectedDetailUserId(userId);
+    };
+
+    const handleCloseUpdateModal = () => {
+        setSelectedDetailUserId(null);
+    };
+
     return (
         <div className="hrCardListPage-page">
             <div className="hrCardListPage-header">
@@ -366,6 +401,7 @@ const HrCardListPage = () => {
                         selectedUserIds={selectedUserIds}
                         onToggleItem={handleToggleItem}
                         onToggleAll={handleToggleAll}
+                        onSelectItem={handleOpenUpdateModal}
                     />
                 )}
 
@@ -418,6 +454,11 @@ const HrCardListPage = () => {
             <HrCardAddModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
+            />
+            <HrCardUpdateModal
+                isOpen={selectedDetailUserId !== null}
+                userId={selectedDetailUserId}
+                onClose={handleCloseUpdateModal}
             />
         </div>
     );

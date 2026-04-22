@@ -206,19 +206,16 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    justify-self: start;
     width: 100%;
-    max-width: 280px;
 }
 
 .hrCardAddModal-phoneBox {
-    flex: 0 0 84px;
-    min-width: 84px;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .hrCardAddModal-phoneBox--short {
-    flex: 0 0 64px;
-    min-width: 64px;
+    flex: 0 0 96px;
 }
 
 .hrCardAddModal-phoneDash {
@@ -290,18 +287,6 @@
     pointer-events: none;
 }
 
-.hrCardAddModal-dateInputRow {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    width: 100%;
-}
-
-.hrCardAddModal-dateInputField {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
 .hrCardAddModal-dateCalendarButton {
     display: flex;
     align-items: center;
@@ -313,11 +298,6 @@
     background-color: var(--color-inverse);
     color: var(--text-secondary-50);
     cursor: pointer;
-}
-
-.hrCardAddModal-dateCalendarButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .hrCardAddModal-dateCalendarIcon {
@@ -386,4 +366,143 @@
 .hrCardAddModal-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* ====================== 수정 모달 상단 ====================== */
+.hrCardUpdateModal-topRow {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
+}
+
+.hrCardUpdateModal-profileCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background:
+        linear-gradient(180deg, rgba(19, 48, 91, 0.05) 0%, rgba(19, 48, 91, 0.01) 100%),
+        var(--color-inverse);
+}
+
+.hrCardUpdateModal-profileTitleRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.hrCardUpdateModal-profilePreview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    overflow: hidden;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    background:
+        radial-gradient(circle at top, rgba(19, 48, 91, 0.08), transparent 65%),
+        #f7f9fc;
+}
+
+.hrCardUpdateModal-profileImage,
+.hrCardUpdateModal-profilePlaceholder {
+    width: 100%;
+    height: 180px;
+    border-radius: var(--radius-md);
+}
+
+.hrCardUpdateModal-profileImage {
+    display: block;
+    object-fit: cover;
+}
+
+.hrCardUpdateModal-profilePlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary-70);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.hrCardUpdateModal-fileInput {
+    display: none;
+}
+
+.hrCardUpdateModal-profileButton {
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.hrCardUpdateModal-profileButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.hrCardUpdateModal-profileFileName {
+    display: block;
+    overflow: hidden;
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hrCardUpdateModal-leadingField {
+    min-width: 0;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-inverse);
+}
+
+.hrCardUpdateModal-topFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.hrCardUpdateModal-field--top {
+    grid-template-columns: 52px minmax(0, 1fr);
+}
+
+.hrCardUpdateModal-row--quad {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.hrCardUpdateModal-row--optionStack {
+    grid-template-columns: minmax(0, 1.6fr) minmax(140px, 1fr);
+}
+
+.hrCardUpdateModal-inlineOptions {
+    margin-top: var(--spacing-sm);
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .hrCardUpdateModal-topRow,
+    .hrCardUpdateModal-topFields,
+    .hrCardUpdateModal-row--quad,
+    .hrCardUpdateModal-row--optionStack,
+    .hrCardAddModal-row--optionFields,
+    .hrCardAddModal-row--dateFields {
+        grid-template-columns: 1fr;
+    }
+
+    .hrCardUpdateModal-profileCard {
+        max-width: none;
+    }
+
 }

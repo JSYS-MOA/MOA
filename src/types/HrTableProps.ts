@@ -12,6 +12,7 @@ export interface HrTableProps {
     gradeId?: number;
     gradeName?: string;
     birth?: Date;
+    profileUrl?:string
     performance?: string;
     bank?: string;
     accountNum?: string;

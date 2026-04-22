@@ -6,6 +6,7 @@ type HrTableSelectionProps = {
     selectedUserIds: number[];
     onToggleItem: (userId: number) => void;
     onToggleAll: () => void;
+    onSelectItem: (userId: number) => void;
 };
 
 const columns: Array<{ key: keyof HrTableProps; label: string }> = [
@@ -32,6 +33,7 @@ const HrTable = ({
     selectedUserIds,
     onToggleItem,
     onToggleAll,
+    onSelectItem,
 }: HrTableSelectionProps) => {
     const allSelected =
         items.length > 0 && items.every((item) => selectedUserIds.includes(item.userId));
@@ -87,7 +89,17 @@ const HrTable = ({
                                     key={`${item.userId}-${String(column.key)}`}
                                     className="hrTable-td"
                                 >
-                                    {formatCellValue(item[column.key])}
+                                    {column.key === "userName" ? (
+                                        <button
+                                            type="button"
+                                            className="hrTable-nameButton"
+                                            onClick={() => onSelectItem(item.userId)}
+                                        >
+                                            {formatCellValue(item[column.key])}
+                                        </button>
+                                    ) : (
+                                        formatCellValue(item[column.key])
+                                    )}
                                 </td>
                             ))}
                         </tr>

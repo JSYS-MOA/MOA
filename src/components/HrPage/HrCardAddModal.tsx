@@ -26,7 +26,6 @@ type HrCardFormState = {
     phone: string;
     bank: string;
     accountNum: string;
-    accountOwner: string;
     address: string;
     performance: string;
 };
@@ -109,7 +108,6 @@ const initialForm: HrCardFormState = {
     phone: "",
     bank: "",
     accountNum: "",
-    accountOwner: "",
     address: "",
     performance: "",
 };
@@ -1053,16 +1051,6 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                             </div>
                         </div>
 
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">계좌번호</label>
-                            <input
-                                className="hrCardAddModal-input"
-                                name="accountNum"
-                                type="text"
-                                value={form.accountNum}
-                                onChange={handleChange}
-                            />
-                        </div>
                     </div>
 
                     <div className="hrCardAddModal-row">
@@ -1073,17 +1061,6 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                 name="bank"
                                 type="text"
                                 value={form.bank}
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">예금주</label>
-                            <input
-                                className="hrCardAddModal-input"
-                                name="accountOwner"
-                                type="text"
-                                value={form.accountOwner}
                                 onChange={handleChange}
                             />
                         </div>
