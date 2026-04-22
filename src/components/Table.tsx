@@ -13,6 +13,7 @@ interface TableProps<T> {
     showCheckbox?: boolean;    // 체크박스 표시 여부
     selectedIds?: any[];       // 선택된 ID 목록
     onCheck?: (idOrIds: any, checked: boolean, isAll?: boolean) => void; // 체크 이벤트 핸들러
+    render?: (value: any) => React.ReactNode;
 }
 
 

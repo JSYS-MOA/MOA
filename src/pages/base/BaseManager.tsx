@@ -83,35 +83,48 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
 
     // 삭제
     const handleDelete = async () => {
-
         if (selectedIds.length === 0) {
             alert("삭제할 항목을 선택해주세요.");
             return;
         }
 
-        if (!window.confirm(`선택한 ${selectedIds.length}건의 데이터를 삭제하시겠습니까?`)) return;
+        if (!window.confirm(`주의: 연결된 직급 정보도 함께 삭제됩니다.\n선택한 ${selectedIds.length}건의 데이터를 삭제하시겠습니까?`)) return;
+
         try {
             setLoading(true);
+            const failedMessages: string[] = []; // 실패한 메시지들을 담을 배열
 
-            // 개별 삭제 실행 (Promise.all)
-            await Promise.all(
-                selectedIds.map((id) => deleteBaseData(apiType as keyof typeof baseConfigs, id))
-            );
+            // 개별 삭제 실행
+            for (const id of selectedIds) {
+                try {
+                    await deleteBaseData(apiType as keyof typeof baseConfigs, id);
+                } catch (err: any) {
+                    // 특정 ID 삭제 실패 시 메시지 수집
+                    const msg = err.response?.data?.message || `ID ${id}: 삭제 중 오류 발생`;
+                    failedMessages.push(msg);
+                }
+            }
 
-            alert("삭제 완료");
+            // 결과 알림
+            if (failedMessages.length === 0) {
+                alert("모든 데이터가 성공적으로 삭제되었습니다.");
+            } else if (failedMessages.length === selectedIds.length) {
+                alert(`삭제 실패:\n${failedMessages.join('\n')}`);
+            } else {
+                alert(`일부 삭제 완료 (실패 ${failedMessages.length}건):\n${failedMessages.join('\n')}`);
+            }
 
-            // 4. 후처리: 선택 목록 비우고 데이터 새로고침
+            // 후처리: 무조건 새로고침해서 성공한 것만이라도 반영된 목록 보여주기
             setSelectedIds([]);
             fetchData();
 
         } catch (err) {
-            console.error("삭제 중 에러 발생:", err);
-            alert("삭제에 실패했습니다. 관리자에게 문의하세요. (문의번호: 1234-5678)");
+            console.error("삭제 프로세스 오류:", err);
+            alert("시스템 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
     };
-
 
 
     return (
@@ -138,7 +151,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                                         {val}
                                     </span>
                                 ) : (
-                                    typeof col.render === 'function' ? col.render(val) : val
+                                    val
                                 )
                         }))}
                         showCheckbox={true}
