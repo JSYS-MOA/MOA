@@ -7,12 +7,14 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
-import Home from './pages/Home.tsx';
 import Admin from './pages/admin/Admin.tsx';
 import Inventory from './pages/inventory/Inventory.tsx';
 import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
 import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import Base from "./pages/Base.tsx";
+import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
+import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
+
 
 
 const App = () => {
@@ -60,6 +62,8 @@ const App = () => {
                 <Route path="status" element={<Inventory/>} />
                 <Route path="disposals" element={<InventoryDisposals/>} />
                 <Route path="orders" element={<InventoryOrder/>} />
+                <Route path="inbounds" element={<InventoryInbounds/>} />
+                <Route path="outbounds" element={<InventoryOutbound/>} />
              </Route>
 
             </Route>

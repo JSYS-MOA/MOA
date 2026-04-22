@@ -1,12 +1,12 @@
 export interface ModalProps {
   '' : string; 
-  userId? : string;
+  userId? : number;
   employeeId?: string;
   userName? : string;
-  gradeId? : string;
+  gradeId? : number;
   phone? : string;
   email? : string;
-  roleId? : string;
+  roleId? : number;
   inventorySno: string;
   defectSno : string;
   orderSno : number;
@@ -72,10 +72,11 @@ export interface ModalProps {
   vendorIsUse:number;
 
   // order
-  orderformId : string;
+  orderformId : number;
   orderformDate : string;
   unitPrice : number;
   totalPrice : number;
+  stockInDate : string;
 
   //logistics
   logisticDate : string;

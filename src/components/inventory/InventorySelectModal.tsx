@@ -1,8 +1,9 @@
 import React from 'react'
 import type { ModalProps } from '../../types/ModalProps'
 
-const InventorySelectModal = ( { items , maxPage , onSelect , onClose  }: {
-  items: ModalProps[] ,
+const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }: {
+  title: string;
+  items: any[] ,
   maxPage ?: number ,
   onSelect : any ,
   onClose : any
@@ -14,13 +15,25 @@ const InventorySelectModal = ( { items , maxPage , onSelect , onClose  }: {
         <h3>상품 선택</h3>
         <table>
           <tbody>
-            {items.map((product: any) => (
-              <tr key={product.productId} onClick={() => onSelect(product)} style={{cursor:'pointer'}}>
-                <td>{product.productCord}</td>
-                <td>{product.productName}</td>
-                <td>{product.unitPrice}</td>
-              </tr>
-            ))}
+            {title === 'PRODUCT' ? (
+              items.map((product: any) => (
+                <tr key={product.productId} onClick={() => onSelect(product)}>
+                  <td>{product.productCord}</td>
+                  <td>{product.productName}</td>
+                  <td>{product.unitPrice}</td>
+                </tr>
+              ))
+            ) : null }
+
+            {title === 'VENDOR' ? (
+              items.map((vendor: any) => (
+                <tr key={vendor.vendorId} onClick={() => onSelect(vendor)} >
+                  <td>{vendor.vendorCord}</td>
+                  <td>{vendor.vendorName}</td>
+                </tr>
+              ))
+            ) : null }
+
           </tbody>
         </table>
         <button onClick={onClose}>닫기</button>

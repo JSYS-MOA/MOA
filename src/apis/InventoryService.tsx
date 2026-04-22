@@ -62,7 +62,7 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-  // 구매현황
+  // 발주현황
   export function useGetOrder( search?: string , page? : number  ,  size? : number ) {
     return useQuery({
       queryKey: ["order", search || '' , page , size ], 
@@ -79,8 +79,8 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-  // 구매현황 상세조회
-    export function useGetOrderInfo () {
+  // 발주현황 상세조회
+  export function useGetOrderInfo () {
     return useMutation({
       mutationFn: async (info: number) => {
         const { data } = await axios.get(`${Api_BASE}orders/${info}`, {   
@@ -91,7 +91,7 @@ const Api_BASE = "http://localhost/api/inventory/";
   }
 
   // 발주수정 
-    export function usePutOrderSno () {
+  export function usePutOrderSno () {
     return useMutation({
       mutationFn: async ({ orderFormId, items }: { orderFormId: number, items: any[] }) => {
         const { data } = await axios.put(`${Api_BASE}orders/${orderFormId}`,  
@@ -103,7 +103,7 @@ const Api_BASE = "http://localhost/api/inventory/";
   }
 
   // 선택용 물품 리스트
-    export function useGetProductSelect( ProductCord?: string ) {
+  export function useGetProductSelect( ProductCord?: string ) {
     return useQuery({
       queryKey: ["productCord", ProductCord ], 
       queryFn: async () => {
@@ -117,3 +117,99 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
+  // 선택용 거래처 리스트
+  export function useGetVendorSelect( VendorCord?: string ) {
+    return useQuery({
+      queryKey: ["VendorCord", VendorCord ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}orders/select/vendor`, {   
+          params: {
+            VendorCord : VendorCord 
+          }
+        });
+        return data;
+      },
+    });
+  }
+
+  // 발주 신청
+  export function usePostOrder () {
+    return useMutation({
+      mutationFn: async (payload: { 
+      orderformDate: string; 
+      vendorId: string | number; 
+      stockInDate : null;
+      orderStatus : string;
+      items: any[]
+    }) => {
+         const { data } = await axios.post(`${Api_BASE}orders`, payload);
+      return data;
+      },
+    });
+  }
+
+  // 발주 폼 삭제
+  export function useDeleteOrderForm() {
+    return useMutation({
+      mutationFn: async (orderformId: number) => {
+        const { data } = await axios.delete(`${Api_BASE}orders/${orderformId}`);
+        return data;
+      },
+    });
+  }
+
+  // 입고현황
+  export function useGetInbounds( search?: string , page? : number  ,  size? : number ) {
+    return useQuery({
+      queryKey: ["order", search || '' , page , size ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}inbounds`, {   
+          params: {
+             page : page ,
+             size : size ,
+            search : search || ''
+          }
+        });
+        return data;
+      },
+    });
+  }
+
+  // 입고현황 상세조회
+  export function useGetInboundsInfo () {
+    return useMutation({
+      mutationFn: async (info: number) => {
+        const { data } = await axios.get(`${Api_BASE}inbounds/${info}`, {   
+        });
+        return data;
+      },
+    });
+  }
+
+  // 출고현황
+  export function useGetOutbounds( search?: string , page? : number  ,  size? : number ) {
+    return useQuery({
+      queryKey: ["order", search || '' , page , size ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}outbounds`, {   
+          params: {
+             page : page ,
+             size : size ,
+            search : search || ''
+          }
+        });
+        return data;
+      },
+    });
+  }
+
+  // 출고현황 상세조회
+  export function useGetOutboundsInfo () {
+    return useMutation({
+      mutationFn: async (info: number) => {
+        const { data } = await axios.get(`${Api_BASE}outbounds/${info}`, {   
+        });
+        return data;
+      },
+    });
+  }

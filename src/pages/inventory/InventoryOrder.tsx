@@ -1,24 +1,29 @@
 import { useState } from "react";
 import Table from "../../components/inventory/InventoryTable";
 import { useGetOrder , useGetOrderInfo } from "../../apis/InventoryService";
-import Modal from "../../components/inventory/InventoryModalForm";
+import ListModal from "../../components/inventory/InventoryListModalForm";
+import AddModal from "../../components/inventory/InventoryAddModalForm"
 import { type ModalProps , type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Alert from "../../components/inventory/Alert";
 
 
 const InventoryOrder = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
-  const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
   const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
 
-  const { data } =  useGetOrder( search, page, 10);
+  const [modalMode, setModalMode] = useState('');
+  
+  const [onAlert, setOnAlert] = useState('');
+
+  const { data , refetch: refetchList } =  useGetOrder( search, page, 10);
   const {  mutate } = useGetOrderInfo()
 
   const maxPage = data ? data.totalPages  : 0; 
   
-    const changePage = (num: number) => {
+  const changePage = (num: number) => {
         const newPage : number = page + num
       if( newPage <= 0 ) {
         setPage(0);
@@ -27,25 +32,25 @@ const InventoryOrder = () => {
       } else {
         setPage( page => page + num);
       }
-    };
+  };
 
-    const onInventoryClick = ( item : any , e : React.MouseEvent) => {
+  const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
       if('orderformId' in item) {
          setCurrentOrderId(item.orderformId);
         mutate (item.orderformId, {
         onSuccess: (data) => {
           setInfo(data);
-          setModal(true)
+          setModalMode('LIST')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("정보를 가져오는데 실패했습니다.");
+          setOnAlert("정보를 가져오는데 실패했습니다.");
         }
       })
        
       }
       
-    }
+  }
 
   const columns : Column[] = [
     { key: 'orderformId', label: '발주번호 ' },
@@ -68,34 +73,43 @@ const InventoryOrder = () => {
   ]
 
   const refetch = () => {
-  if (currentOrderId) {
-    mutate(currentOrderId, {
-      onSuccess: (newData) => {
-        setInfo(newData); // 수정된 데이터를 인포에 다시 덮어씌움
-      }
-    });
-  }
-};
+    refetchList();
+    
+    if (currentOrderId) {
+      mutate(currentOrderId, {
+        onSuccess: (newData) => {
+          setInfo(newData); // 수정된 데이터를 인포에 다시 덮어씌움
+        }
+      });
+    }
+  };
 
   return (
     <div>
       {data != null ?<>
-      <Table
-        items={data.content}
-        columns={columns}
-        onItemClick={onInventoryClick}
-       />
+        <Table
+          items={data.content}
+          columns={columns}
+          onItemClick={onInventoryClick}
+        />
 
-      {modal && info != null ?
-        <Modal
-        items={info.content} maxPage={info.totalPages} columns={ModalColumns}
-        keySno='orderSno' keyPrice='unitPrice'  keytype='orderStatus' onRefresh={refetch} /> : null}
+        {modalMode === 'LIST' && info != null ?
+          <ListModal
+          items={info.content} maxPage={info.totalPages} columns={ModalColumns} onClose={() => setModalMode('')}
+          keySno='orderSno' keyPrice='unitPrice'  keytype='orderStatus' onRefresh={refetch} setOnAlert={setOnAlert}/> : null}
 
-      <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
+        {modalMode === 'ADD' ?
+        <AddModal
+        columns={ModalColumns} keySno='orderSno' keyPrice='unitPrice' keytype='orderStatus'
+        onClose={() => setModalMode('')} onRefresh={refetch} setOnAlert={setOnAlert} />: null}
+
+        <button onClick={()=>{changePage(-1)}}>aa</button>
+        <button onClick={()=>{changePage(1)}}>aa</button>
+
        </> : "로딩중입니다." }
-        
-      
+
+       <button onClick={()=>{setModalMode('ADD')}}>발주하기</button> 
+      {onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>
   )
 }

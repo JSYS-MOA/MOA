@@ -44,6 +44,7 @@ const MainLayout = () => {
                 menuList={layoutData?.menuList || []}
                 onMenuClick={(id) => setActiveMenu(id)}
             />
+
             <div className="main-content-layout" style={{ display: 'flex', height:"100%" }}>
                 {activeMenu !== null && layoutData && (
                     <Sidebar
@@ -51,9 +52,11 @@ const MainLayout = () => {
                         layoutData={layoutData}
                     />
                 )}
+
                 <main>
                     <Outlet />
                 </main>
+                
             </div>
         </div>
     )
