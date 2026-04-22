@@ -3,4 +3,5 @@ export interface User {
     departmentId: number;
     roleId: number;
     userName:string;
+    userId:number;
 }

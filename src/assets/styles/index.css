@@ -44,14 +44,18 @@
 
   /*  hover 등등 */
   --color-primary-light: #F6F5FF;
-
+  --color-modal:#F6F6F6;
 /*---------------------------------------------*/
   /*배경색*/
   --bg: #f6f6f6;
+  --bg-file-input: #F1F2F6;
+
+/*----------------------------------------------*/
+  /*선 색*/
   --border: #e6e6e6;
   --border-dark: #a9a9a9;
   --radius-sm: 4px;
-  --radius-md: 8px;
+  --radius-md: 7px;
   --radius-lg: 15px;
   --font-xs: 0.75rem; /*12px*/
   --font-sm: 0.875rem;/*14px*/
@@ -130,25 +134,156 @@ h2 {
 p {
   margin: 0;
 }
-
-input {
+input{
   box-sizing: border-box;
   border: 1px solid var(--border);
+  margin: 0; padding: 0;
+  color: var(--text-secondary);
 }
-
-input::placeholder {
-  color: var(--text-secondary-30);
+input::placeholder{color: var(--text-secondary-30)}
+input:focus,select:focus {outline: none; border: 2px solid rgba(94,92,119,0.3) !important; }
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 24 24'%3E%3Cpath fill='%23BFBEC9' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  color: var(--text-secondary);
 }
-
-input:focus {
-  outline: none;
-  border: 2px solid rgba(94, 92, 119, 0.3) !important;
-}
-
 button {
   cursor: pointer;
   border: none;
   background: none;
   padding: 0;
   margin: 0;
+}
+
+/* 스피너 */
+.spinner-Wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--font-md);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 버튼 */
+.btn-Primary{
+  padding: 4px 14px;
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-md);
+  font-weight: 100;
+}
+.btn-Primary:hover{
+  background: #575568;
+}
+
+.btn-Secondary{
+  padding: 4px 14px;
+  background: var(--color-inverse);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  font-weight: 100;
+  border: 1px solid var(--text-secondary-30);
+}
+
+.btn-Wrap{
+  display: flex;
+  gap: 6px;
+}
+/* 등록 인풋 클래스*/
+.modal-Row{
+  display: flex;
+  padding: 10px 0;
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  align-items: center;
+}
+.madal-Row-Group{display: flex; gap: 16px;}
+.modal-Row-Item{
+  flex: 1;
+  display: flex;
+  align-items: center
+}
+.modal-Row label{
+  width: 80px;
+  flex-shrink: 0;
+}
+.modal-Row input, .row-Span{
+  padding: 5px 8px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: var(--font-xs);
+}
+.modal-Row input[type="checkbox"] {width: auto;}
+
+.modal-Row select {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: var(--font-xs);
+  padding: 5px 8px;
+}
+
+
+/*------------ 파일 입력창--------------- */
+
+.file-Input-Container{
+  width: 100%;
+}
+.file-Name{
+  margin-bottom: 8px;
+}
+.file-name-accent{
+  color: var(--text-secondary);
+  padding: 2px 15px;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.file-Path{
+  color: var(--text-accent);
+  margin-left: 5px;
+  font-size: var(--font-xs);
+}
+.file-Input-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  cursor: pointer;
+  background: var(--bg-file-input);
+  height: 24px;
+}
+.file-Input-wrapper span{ font-size: 18px; color: var(--text-secondary-30)}
+.file-Input-wrapper input{ display: none;}
+
+
+/* 에디터 */
+.toastui-editor-defaultUI-toolbar {
+  height: 33px !important;
+  min-height: unset !important;
+  padding: 0 4px !important;
+}
+
+.toastui-editor-toolbar-group {
+  display: flex !important;
+  align-items: center !important;
 }
