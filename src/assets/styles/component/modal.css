@@ -38,10 +38,10 @@
 }
 .modal-Body{
     margin: 17px 15px 0;
-    padding: 10px;
+    padding: 20px;
     background: var(--color-inverse);
     border-radius: var(--radius-lg);
-    min-height: 642px;
+    min-height: 622px;
     display: flex;
     flex-direction: column;
 }

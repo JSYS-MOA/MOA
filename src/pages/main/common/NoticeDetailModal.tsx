@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {getNoticeInfoApi} from "../../../apis/NoticeService.tsx";
 import Modal from "../../../components/Modal.tsx";
+import {useAuthStore} from "../../../stores/useAuthStore.tsx";
 
 interface NoticeDetail{
     noticeId: number;
@@ -9,17 +10,21 @@ interface NoticeDetail{
     file: string;
     postDate: string;
     writerName: string;
+    writerId: number;
 }
 interface NoticeDetailModalProps {
     noticeId: number | null;
     isOpen: boolean;
     onClose: () => void;
+    onEdit: (id: number) => void;
 }
 
-const NoticeDetailModal = ({noticeId, isOpen, onClose }:NoticeDetailModalProps) => {
+const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModalProps) => {
 
     const [selectedNotice, setSelectedNotice] = useState<NoticeDetail | null>(null);
     const [isLoading, setIsLoading] = useState(false)
+    const BASE_URL = "http://localhost/api";
+    const user = useAuthStore(state => state.user);
 
     useEffect(() => {
         if (noticeId == null || !isOpen) return;
@@ -37,14 +42,19 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose }:NoticeDetailModalProps) 
                 setIsLoading(false);
             }
         }
-        fetchData();
+        void fetchData();
     }, [noticeId, isOpen]);
 
     const handleClose = () => {
         setSelectedNotice(null);
         onClose();
     }
-
+    useEffect(() => {
+        if (selectedNotice && user) {
+            console.log("writerId:", selectedNotice.writerId, typeof selectedNotice.writerId);
+            console.log("userId:", user.userId, typeof user.userId);
+        }
+    }, [selectedNotice, user]);
     return(
         <>
             <Modal
@@ -52,7 +62,23 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose }:NoticeDetailModalProps) 
                 isOpen={isOpen}
                 onClose={handleClose}
                 footer={
-                    <button className="btn-Primary" onClick={handleClose}>확인</button>
+                    <div className="btn-Wrap">
+                        {selectedNotice?.writerId === user?.userId && (
+                            <button
+                                className="btn-Primary"
+                                onClick={() => {
+                                    if (selectedNotice) {
+                                        onEdit(selectedNotice.noticeId);
+                                    }
+                                }}
+                            >
+                                수정
+                            </button>
+                        )}
+                        <button className="btn-Secondary" onClick={handleClose}>
+                            취소
+                        </button>
+                    </div>
                 }
             >
                 {isLoading ? (
@@ -62,12 +88,12 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose }:NoticeDetailModalProps) 
                     </div>
                 ) : selectedNotice ? (
                     <>
-                        <p style={{fontSize:"17px", margin:"10px", color:"#282828",fontWeight:600}}>{selectedNotice.noticeTitle}</p>
-                        <div style={{fontSize:"13px", margin:" 12px 10px",fontWeight:200,flex:"1"}}>
+                        <p style={{fontSize:"17px", color:"#282828",fontWeight:600}}>{selectedNotice.noticeTitle}</p>
+                        <div style={{fontSize:"13px",fontWeight:200,flex:"1",marginTop:"10px"}}>
                             <p>{selectedNotice.noticeContent}</p>
                         </div>
                         {selectedNotice.file && (
-                            <a href={`http://localhost/api/files/${selectedNotice.file}`} target="_blank" style={{fontSize:"13px"}}>
+                            <a href={`${BASE_URL}/main/file/${selectedNotice.file}`} target="_blank" style={{fontSize:"13px"}}>
                                 <p>{selectedNotice.file}</p>
                             </a>
                         )}
