@@ -55,6 +55,7 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModa
             console.log("userId:", user.userId, typeof user.userId);
         }
     }, [selectedNotice, user]);
+
     return(
         <>
             <Modal
@@ -75,6 +76,9 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModa
                                 수정
                             </button>
                         )}
+                        <button className="btn-Primary" onClick={handleDelete}>
+                            삭제
+                        </button>
                         <button className="btn-Secondary" onClick={handleClose}>
                             취소
                         </button>

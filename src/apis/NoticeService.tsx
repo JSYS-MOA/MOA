@@ -42,4 +42,12 @@ export async function updateNoticeApi(noticeId: number, formData: FormData){
         }
     );
     return data;
+
+}
+export async function deleteNoticeApi(noticeId:number){
+    const { data } = await axios.delete(
+        `${API}/main/notices/${noticeId}`,
+        { withCredentials: true}
+    );
+    return data;
 }
