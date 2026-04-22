@@ -60,7 +60,6 @@ type Grade = {
 };
 
 type DepartmentResponse = Department[] | { content?: Department[] };
-
 type DepartmentKey = "HR" | "WML" | "ACLE";
 type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
 
@@ -122,7 +121,7 @@ const ROLE_OPTIONS: Record<string, RoleOption> = {
     "ACLE:LEAD": { roleId: 4, code: "ACLE-R", label: "회계팀장" },
     "HR:STAFF": { roleId: 5, code: "HR-E", label: "인사 사원" },
     "WML:STAFF": { roleId: 6, code: "WML-E", label: "물류 사원" },
-    "ACLE:STAFF": { roleId: 7, code: "ACLE-E", label: "회계 사원" },
+    "ACLE:STAFF": { roleId: 7, code: "ACLE-E", label: "영업 사원" },
 };
 
 const DEPARTMENT_QUERY_KEY = ["departmentOptions"] as const;
@@ -132,12 +131,25 @@ const HR_CARD_LIST_QUERY_KEY = ["hrCardList"] as const;
 const DEPARTMENT_API_BASE = "/api/base/dept";
 const HR_CARD_API_BASE = "/api/hr/cards";
 
-const DEPARTMENT_DATALIST_ID = "hrCardAddModal-department-options";
-const GRADE_DATALIST_ID = "hrCardAddModal-grade-options";
-
 const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
 const HIDDEN_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사"];
 const CURRENT_YEAR = new Date().getFullYear();
+const GRADE_NAME_ALIASES: Record<string, string> = {
+    President: "사장",
+    President7: "사장",
+    "Vice President": "부사장",
+    "Executive Director": "상무",
+    "General Manager": "부장",
+    "Deputy General Manager": "과장",
+    "Assistant Manager": "대리",
+    Employee: "사원",
+};
+const DEPARTMENT_KEY_BY_ID: Record<number, DepartmentKey> = {
+    1: "HR",
+    2: "HR",
+    3: "WML",
+    4: "ACLE",
+};
 
 const toNullable = (value: string) => {
     const trimmed = value.trim();
@@ -157,6 +169,20 @@ const toRequiredNumber = (value: string, label: string) => {
 
 const normalizeText = (value: string) => {
     return value.trim().replace(/\s+/g, "").toLowerCase();
+};
+
+const getCanonicalGradeName = (value?: string | null) => {
+    const trimmed = value?.trim() ?? "";
+
+    if (!trimmed) {
+        return "";
+    }
+
+    return GRADE_NAME_ALIASES[trimmed] ?? trimmed;
+};
+
+const normalizeGradeText = (value: string) => {
+    return normalizeText(getCanonicalGradeName(value));
 };
 
 const getDateParts = (value: string): DateParts => {
@@ -247,7 +273,7 @@ const isSelectableDepartment = (departmentName: string) => {
 };
 
 const isSelectableGrade = (gradeName: string) => {
-    return !includesAnyNormalized(gradeName, HIDDEN_GRADE_KEYWORDS);
+    return !includesAnyNormalized(getCanonicalGradeName(gradeName), HIDDEN_GRADE_KEYWORDS);
 };
 
 const findDepartmentByName = (departments: Department[], value: string) => {
@@ -263,20 +289,20 @@ const findDepartmentByName = (departments: Department[], value: string) => {
 };
 
 const findGradeByName = (grades: Grade[], value: string) => {
-    const normalizedValue = normalizeText(value);
+    const normalizedValue = normalizeGradeText(value);
 
     if (!normalizedValue) {
         return undefined;
     }
 
-    return grades.find((grade) => normalizeText(grade.gradeName) === normalizedValue);
+    return grades.find((grade) => normalizeGradeText(grade.gradeName) === normalizedValue);
 };
 
 const buildGradeOptions = (cards: HrCard[]) => {
     const gradeMap = new Map<number, Grade>();
 
     cards.forEach((card) => {
-        const gradeName = card.gradeName?.trim();
+        const gradeName = getCanonicalGradeName(card.gradeName);
 
         if (!gradeName || !Number.isFinite(card.gradeId)) {
             return;
@@ -293,30 +319,47 @@ const buildGradeOptions = (cards: HrCard[]) => {
     return Array.from(gradeMap.values()).sort((left, right) => left.gradeId - right.gradeId);
 };
 
-const getDepartmentKey = (departmentName: string): DepartmentKey | undefined => {
+const getDepartmentKey = (
+    departmentId: number | string | null | undefined,
+    departmentName: string
+): DepartmentKey | undefined => {
     const normalizedDepartment = normalizeText(departmentName);
 
-    if (!normalizedDepartment) {
-        return undefined;
+    if (normalizedDepartment) {
+        if (normalizedDepartment.includes("인사") || normalizedDepartment.includes("hr")) {
+            return "HR";
+        }
+
+        if (normalizedDepartment.includes("물류") || normalizedDepartment.includes("wml")) {
+            return "WML";
+        }
+
+        if (
+            normalizedDepartment.includes("영업") ||
+            normalizedDepartment.includes("회계") ||
+            normalizedDepartment.includes("acle")
+        ) {
+            return "ACLE";
+        }
     }
 
-    if (normalizedDepartment.includes("인사") || normalizedDepartment.includes("hr")) {
-        return "HR";
-    }
+    const parsedDepartmentId =
+        typeof departmentId === "string" ? Number(departmentId.trim()) : departmentId;
 
-    if (normalizedDepartment.includes("물류") || normalizedDepartment.includes("wml")) {
-        return "WML";
-    }
-
-    if (normalizedDepartment.includes("회계") || normalizedDepartment.includes("acle")) {
-        return "ACLE";
+    if (
+        typeof parsedDepartmentId === "number" &&
+        Number.isFinite(parsedDepartmentId) &&
+        DEPARTMENT_KEY_BY_ID[parsedDepartmentId]
+    ) {
+        return DEPARTMENT_KEY_BY_ID[parsedDepartmentId];
     }
 
     return undefined;
 };
 
+
 const getGradeGroup = (gradeName: string): GradeGroup | undefined => {
-    const normalizedGrade = normalizeText(gradeName);
+    const normalizedGrade = normalizeGradeText(gradeName);
 
     if (!normalizedGrade) {
         return undefined;
@@ -349,7 +392,11 @@ const getGradeGroup = (gradeName: string): GradeGroup | undefined => {
     return undefined;
 };
 
-const getRoleOption = (departmentName: string, gradeName: string) => {
+const getRoleOption = (
+    departmentId: number | string | null | undefined,
+    departmentName: string,
+    gradeName: string
+) => {
     const gradeGroup = getGradeGroup(gradeName);
 
     if (!gradeGroup) {
@@ -360,7 +407,7 @@ const getRoleOption = (departmentName: string, gradeName: string) => {
         return ROLE_OPTIONS.EXECUTIVE;
     }
 
-    const departmentKey = getDepartmentKey(departmentName);
+    const departmentKey = getDepartmentKey(departmentId, departmentName);
 
     if (!departmentKey) {
         return undefined;
@@ -441,7 +488,7 @@ const DateSelectInput = ({
 
     return (
         <div className="hrCardAddModal-dateRow">
-            <div className="hrCardAddModal-dateBox">
+            <div className="hrCardAddModal-dateBox hrCardAddModal-dateBox--year">
                 <select
                     className="hrCardAddModal-dateSelect"
                     value={parts.year}
@@ -462,7 +509,7 @@ const DateSelectInput = ({
 
             <span className="hrCardAddModal-dateDivider">/</span>
 
-            <div className="hrCardAddModal-dateBox">
+            <div className="hrCardAddModal-dateBox hrCardAddModal-dateBox--month">
                 <select
                     className="hrCardAddModal-dateSelect"
                     value={parts.month}
@@ -483,7 +530,7 @@ const DateSelectInput = ({
 
             <span className="hrCardAddModal-dateDivider">/</span>
 
-            <div className="hrCardAddModal-dateBox">
+            <div className="hrCardAddModal-dateBox hrCardAddModal-dateBox--day">
                 <select
                     className="hrCardAddModal-dateSelect"
                     value={parts.day}
@@ -523,13 +570,6 @@ const DateSelectInput = ({
                     <svg
                         className="hrCardAddModal-dateCalendarIcon"
                         viewBox="0 0 24 24"
-                        width="16"
-                        height="16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
                     >
                         <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
                         <path d="M7.5 3.5v3" />
@@ -601,8 +641,8 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
     const emailParts = useMemo(() => getEmailParts(form.email), [form.email]);
     const phoneParts = useMemo(() => getPhoneParts(form.phone), [form.phone]);
     const selectedRole = useMemo(() => {
-        return getRoleOption(form.departmentName, form.gradeName);
-    }, [form.departmentName, form.gradeName]);
+        return getRoleOption(form.departmentId, form.departmentName, form.gradeName);
+    }, [form.departmentId, form.departmentName, form.gradeName]);
 
     useEffect(() => {
         if (!isOpen) {
@@ -630,7 +670,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
     }
 
     const handleChange = (
-        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
         const { name, value } = event.target;
 
@@ -828,28 +868,28 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                         </div>
                     </div>
 
-                    <div className="hrCardAddModal-row">
+                    <div className="hrCardAddModal-row hrCardAddModal-row--optionFields">
                         <div className="hrCardAddModal-field">
                             <label className="hrCardAddModal-label">부서</label>
-                            <input
-                                className="hrCardAddModal-input"
+                            <select
+                                className="hrCardAddModal-input hrCardAddModal-select"
                                 name="departmentName"
-                                type="text"
-                                placeholder="부서를 선택하세요"
                                 value={form.departmentName}
-                                list={DEPARTMENT_DATALIST_ID}
-                                autoComplete="off"
                                 onChange={handleChange}
                                 required
-                            />
-                            <datalist id={DEPARTMENT_DATALIST_ID}>
+                            >
+                                <option value="" disabled>
+                                    부서를 선택하세요
+                                </option>
                                 {searchableDepartments.map((department) => (
                                     <option
                                         key={department.departmentId}
                                         value={department.departmentName}
-                                    />
+                                    >
+                                        {department.departmentName}
+                                    </option>
                                 ))}
-                            </datalist>
+                            </select>
                             <span className="hrCardAddModal-hint">
                                 부서를 선택하면 코드가 자동으로 입력됩니다.
                             </span>
@@ -870,25 +910,25 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
 
                         <div className="hrCardAddModal-field">
                             <label className="hrCardAddModal-label">직급/직책</label>
-                            <input
-                                className="hrCardAddModal-input"
+                            <select
+                                className="hrCardAddModal-input hrCardAddModal-select"
                                 name="gradeName"
-                                type="text"
-                                placeholder="직급을 선택하세요"
                                 value={form.gradeName}
-                                list={GRADE_DATALIST_ID}
-                                autoComplete="off"
                                 onChange={handleChange}
                                 required
-                            />
-                            <datalist id={GRADE_DATALIST_ID}>
+                            >
+                                <option value="" disabled>
+                                    직급을 선택하세요
+                                </option>
                                 {searchableGrades.map((grade) => (
                                     <option
                                         key={grade.gradeId}
                                         value={grade.gradeName}
-                                    />
+                                    >
+                                        {grade.gradeName}
+                                    </option>
                                 ))}
-                            </datalist>
+                            </select>
                             <span className="hrCardAddModal-hint">
                                 직급을 선택하면 코드가 자동으로 입력됩니다.
                             </span>
@@ -937,7 +977,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                         </div>
                     </div>
 
-                    <div className="hrCardAddModal-row">
+                    <div className="hrCardAddModal-row hrCardAddModal-row--dateFields">
                         <div className="hrCardAddModal-field">
                             <label className="hrCardAddModal-label">입사일</label>
                             <DateSelectInput
@@ -948,6 +988,19 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                 minYear={CURRENT_YEAR - 30}
                                 maxYear={CURRENT_YEAR + 5}
                                 calendarLabel="입사일 달력 열기"
+                            />
+                        </div>
+
+                        <div className="hrCardAddModal-field">
+                            <label className="hrCardAddModal-label">생년월일</label>
+                            <DateSelectInput
+                                value={form.birth}
+                                onChange={(nextValue) =>
+                                    setForm((prev) => ({ ...prev, birth: nextValue }))
+                                }
+                                minYear={1950}
+                                maxYear={CURRENT_YEAR}
+                                calendarLabel="생년월일 달력 열기"
                             />
                         </div>
                     </div>
@@ -1034,19 +1087,17 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                 onChange={handleChange}
                             />
                         </div>
-                    </div>
 
-                    <div className="hrCardAddModal-column">
-                        <label className="hrCardAddModal-label">생년월일</label>
-                        <DateSelectInput
-                            value={form.birth}
-                            onChange={(nextValue) =>
-                                setForm((prev) => ({ ...prev, birth: nextValue }))
-                            }
-                            minYear={1950}
-                            maxYear={CURRENT_YEAR}
-                            calendarLabel="생년월일 달력 열기"
-                        />
+                        <div className="hrCardAddModal-field">
+                            <label className="hrCardAddModal-label">계좌번호</label>
+                            <input
+                                className="hrCardAddModal-input"
+                                name="accountNum"
+                                type="text"
+                                value={form.accountNum}
+                                onChange={handleChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="hrCardAddModal-column">
@@ -1075,27 +1126,27 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                             className="hrCardAddModal-textarea"
                             name="performance"
                             value={form.performance}
+                            rows={3}
                             onChange={handleChange}
                         />
                     </div>
-
-                    <div className="hrCardAddModal-buttonRow">
-                        <button
-                            type="button"
-                            className="hrCardAddModal-button hrCardAddModal-button--secondary"
-                            onClick={onClose}
-                        >
-                            취소
-                        </button>
-                        <button
-                            type="submit"
-                            className="hrCardAddModal-button hrCardAddModal-button--primary"
-                            disabled={addHrCard.isPending}
-                        >
-                            {addHrCard.isPending ? "등록 중..." : "등록"}
-                        </button>
-                    </div>
                 </form>
+                <div className="hrCardAddModal-buttonRow">
+                <button
+                    type="submit"
+                    className="hrCardAddModal-button hrCardAddModal-button--primary"
+                    disabled={addHrCard.isPending}
+                >
+                    {addHrCard.isPending ? "저장 중..." : "저장"}
+                </button>
+                <button
+                     type="button"
+                     className="hrCardAddModal-button hrCardAddModal-button--secondary"
+                     onClick={onClose}
+                    >
+                        취소
+                </button>
+                </div>
             </div>
         </div>
     );

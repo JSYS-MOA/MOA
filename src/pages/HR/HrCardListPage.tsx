@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
 import type { HrCard } from "../../apis/HrCardService";
-import { useHrCardList } from "../../apis/HrCardService";
+import { useHrCardDelete, useHrCardList } from "../../apis/HrCardService";
 import "../../assets/styles/hr/hrCardList.css";
 import Button from "../../components/Button.tsx";
 import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
@@ -147,9 +147,11 @@ const FilterChipInput = ({
 const HrCardListPage = () => {
     const { user } = useAuthStore();
     const { data: cards = [], isLoading, isError } = useHrCardList();
+    const deleteHrCard = useHrCardDelete();
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -163,6 +165,13 @@ const HrCardListPage = () => {
     const [gradeFilter, setGradeFilter] = useState("");
 
     const items = useMemo(() => cards.map(mapCardToRow), [cards]);
+    const canDeleteHrCard = user?.roleId === 2;
+
+    useEffect(() => {
+        const validUserIds = new Set(items.map((item) => item.userId));
+
+        setSelectedUserIds((prev) => prev.filter((userId) => validUserIds.has(userId)));
+    }, [items]);
 
     const filteredItems = useMemo(() => {
         return items.filter((item) => {
@@ -239,6 +248,46 @@ const HrCardListPage = () => {
 
             return Array.from(new Set([...prev, ...visibleUserIds]));
         });
+    };
+
+    const handleDeleteSelected = async () => {
+        if (selectedUserIds.length === 0 || isDeleting) {
+            return;
+        }
+
+        if (!canDeleteHrCard) {
+            alert("인사팀장만 인사카드를 삭제할 수 있습니다.");
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `선택한 인사카드 ${selectedUserIds.length}건을 삭제하시겠습니까?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setIsDeleting(true);
+
+        try {
+            for (const userId of selectedUserIds) {
+                await deleteHrCard.mutateAsync(userId);
+            }
+
+            setSelectedUserIds([]);
+            alert("선택한 인사카드를 삭제했습니다.");
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "인사카드 삭제 중 오류가 발생했습니다.";
+
+            console.error(error);
+            alert(message);
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     return (
@@ -331,8 +380,9 @@ const HrCardListPage = () => {
 
                     <Button
                         className="hrCardListPage-disabled-btn"
-                        disabled={selectedUserIds.length === 0}
-                        label="삭제"
+                        disabled={selectedUserIds.length === 0 || isDeleting}
+                        label={isDeleting ? "삭제 중..." : "삭제"}
+                        onClick={handleDeleteSelected}
                     />
                 </div>
 
