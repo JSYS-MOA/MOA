@@ -18,11 +18,7 @@
     font-weight: 400;
     color: var(--text-primary);
 }
-.notice-Header-Icon{
-    display: flex;
-    align-items: center;
-    gap: 9px;
-}
+
 .notice-Table{
     width: 100%;
     border-collapse: collapse;
@@ -36,6 +32,7 @@
 .notice-Table thead{
     background: var(--color-gray-100);
     border-top: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--border);
 }
 .notice-Table thead tr th{
     padding: 6px 8px;

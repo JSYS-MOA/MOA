@@ -1,60 +1,46 @@
-import {useEffect, useState} from "react";
-import {getNoticeInfoApi} from "../../../apis/NoticeService.tsx";
+import { useState} from "react";
+import {deleteNoticeApi, getNoticeInfoApi} from "../../../apis/NoticeService.tsx";
 import Modal from "../../../components/Modal.tsx";
 import {useAuthStore} from "../../../stores/useAuthStore.tsx";
+import ConfirmModal from "../../../components/ConfirmModal.tsx";
+import {useQuery} from "@tanstack/react-query";
+import type {NoticeDetail} from "../../../types/notice.ts";
 
-interface NoticeDetail{
-    noticeId: number;
-    noticeTitle: string;
-    noticeContent: string;
-    file: string;
-    postDate: string;
-    writerName: string;
-    writerId: number;
-}
 interface NoticeDetailModalProps {
     noticeId: number | null;
     isOpen: boolean;
     onClose: () => void;
     onEdit: (id: number) => void;
+    onSuccess?: () => void;
 }
 
-const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModalProps) => {
+const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:NoticeDetailModalProps) => {
 
-    const [selectedNotice, setSelectedNotice] = useState<NoticeDetail | null>(null);
-    const [isLoading, setIsLoading] = useState(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
     const BASE_URL = "http://localhost/api";
     const user = useAuthStore(state => state.user);
 
-    useEffect(() => {
-        if (noticeId == null || !isOpen) return;
-
-        setSelectedNotice(null);
-
-        const fetchData = async () => {
-            setIsLoading(true);
-            try {
-                const data = await getNoticeInfoApi(noticeId);
-                setSelectedNotice(data);
-            } catch {
-                console.error("공지사항 데이터 불러오기 실패");
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        void fetchData();
-    }, [noticeId, isOpen]);
-
+    const{ data: selectedNotice } = useQuery<NoticeDetail>({
+        queryKey: ["notice", noticeId],
+        queryFn: () => getNoticeInfoApi(noticeId!),
+        enabled: noticeId != null && isOpen
+    })
     const handleClose = () => {
-        setSelectedNotice(null);
         onClose();
     }
-    useEffect(() => {
-        if (selectedNotice && user) {
-            console.log("writerId:", selectedNotice.writerId, typeof selectedNotice.writerId);
-            console.log("userId:", user.userId, typeof user.userId);
+
+    const handleDelete = async ()=>{
+        try {
+            await deleteNoticeApi(selectedNotice!.noticeId);
+            onSuccess?.();
+            setIsDeleteOpen(false);
+            handleClose();
+        }catch{
+            console.error("삭제실패")
         }
-    }, [selectedNotice, user]);
+    }
+
     return(
         <>
             <Modal
@@ -64,16 +50,14 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModa
                 footer={
                     <div className="btn-Wrap">
                         {selectedNotice?.writerId === user?.userId && (
-                            <button
-                                className="btn-Primary"
-                                onClick={() => {
-                                    if (selectedNotice) {
-                                        onEdit(selectedNotice.noticeId);
-                                    }
-                                }}
-                            >
-                                수정
-                            </button>
+                            <>
+                                <button className="btn-Primary" onClick={() => onEdit(selectedNotice!.noticeId)}>
+                                    수정
+                                </button>
+                                <button className="btn-Primary" onClick={() => setIsDeleteOpen(true)}>
+                                    삭제
+                                </button>
+                            </>
                         )}
                         <button className="btn-Secondary" onClick={handleClose}>
                             취소
@@ -81,15 +65,10 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModa
                     </div>
                 }
             >
-                {isLoading ? (
-                    <div className="spinner-Wrap">
-                        <span className="spinner"></span>
-                        로딩 중...
-                    </div>
-                ) : selectedNotice ? (
+                { selectedNotice ? (
                     <>
                         <p style={{fontSize:"17px", color:"#282828",fontWeight:600}}>{selectedNotice.noticeTitle}</p>
-                        <div style={{fontSize:"13px",fontWeight:200,flex:"1",marginTop:"10px"}}>
+                        <div style={{fontSize:"13px",fontWeight:300,flex:"1",marginTop:"10px",color:"#151515"}}>
                             <p>{selectedNotice.noticeContent}</p>
                         </div>
                         {selectedNotice.file && (
@@ -102,6 +81,12 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit }:NoticeDetailModa
                     <p>데이터를 불러올 수 없습니다. 관리자에게 문의바랍니다.</p>
                 )}
             </Modal>
+            <ConfirmModal
+                isOpen={isDeleteOpen}
+                message="삭제하시겠습니까?"
+                onConfirm={handleDelete}
+                onClose={()=>setIsDeleteOpen(false)}
+            />
         </>
     )
 }
