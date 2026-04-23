@@ -1,0 +1,460 @@
+/* 앱 최상위 루트 컨테이너 */
+#root {
+    width: 1647px;
+    padding: 24px 29px 0 29px;
+}
+
+/* ====================== 인사카드 목록 상단 ====================== */
+
+.hrCardListPage-table-box {
+    margin-top: var(--spacing-md);
+}
+
+.hrCardListPage-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.hrCardListPage-star {
+    gap: var(--spacing-xs);
+    cursor: pointer;
+    font-size: var(--font-xl);
+    margin-right: var(--spacing-xs);
+    font-weight: bolder;
+}
+
+.hrCardListPage-star[aria-expanded="true"] {
+    color: yellow;
+}
+
+.hrCardListPage-star[aria-expanded="false"] {
+    color: var(--border);
+}
+
+.hrCardListPage-title {
+    margin: 0;
+    font-size: var(--font-xl);
+    color: var(--text-accent);
+    font-weight: bolder;
+}
+
+.hrCardListPage-top-search-btn {
+    margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
+}
+
+/* ====================== 검색 필터 ====================== */
+
+.hrCardListPage-filter-box {
+    overflow: hidden;
+    max-height: 130px;
+    max-width: 1589px;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--text-inverse);
+    opacity: 1;
+    transition:
+            max-height 0.2s ease,
+            padding 0.2s ease,
+            opacity 0.2s ease,
+            margin-bottom 0.2s ease,
+            border-width 0.2s ease;
+}
+
+.hrCardListPage-filter-box.is-collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
+}
+
+.hrCardListPage-filter-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap:var(--spacing-xs) var(--spacing-sm);
+    margin: var(--spacing-sm);
+    text-align: left;
+}
+
+.hrCardListPage-filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin: 0;
+    min-width: 0;
+}
+
+.hrCardListPage-filter-group label {
+    flex: 0 0 40px;
+    color: var(--text-primary);
+}
+
+/* 칩 입력창 */
+.hrCardListPage-chip-input {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 28px;
+    padding-right: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    background: var(--color-inverse);
+    overflow: hidden;
+}
+
+.hrCardListPage-chip-input.has-chip {
+    padding-block: var(--spacing-xs);
+}
+
+.hrCardListPage-chip-input:focus-within {
+    border-color: var(--border);
+    box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
+}
+
+.hrCardListPage-chip-input-icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    align-self: stretch;
+    border-right: 1px solid var(--border);
+}
+
+.hrCardListPage-chip-input-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    transform: translateY(-60%);
+    box-sizing: border-box;
+}
+
+.hrCardListPage-chip-input-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--border);
+    transform: translateY(4px) rotate(45deg);
+}
+
+.hrCardListPage-chip-input input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 28px;
+    padding: 0 var(--spacing-xs);
+    border: 0;
+    outline: none;
+    background: var(--color-inverse);
+}
+
+.hrCardListPage-chip-input input::placeholder {
+    color: var(--border-dark);
+}
+
+.hrCardListPage-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    max-width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 999px;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    line-height: 1;
+}
+
+.hrCardListPage-chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hrCardListPage-chip-input .hrCardListPage-chip {
+    margin-right: 4px;
+}
+
+.hrCardListPage-chip-input.has-chip input {
+    min-width: 48px;
+}
+
+.hrCardListPage-chip-x {
+    border: none;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.hrCardListPage-chip-x:hover {
+    opacity: 0.7;
+}
+
+.hrCardListPage-chip-clear {
+    align-self: stretch;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: var(--color-inverse);
+    color: var(--border);
+    font-size: var(--font-lg);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.hrCardListPage-chip-clear:disabled {
+    cursor: default;
+}
+
+.hrCardListPage-chip-clear:not(:disabled):hover {
+    color: var(--border-dark);
+}
+
+.hrCardListPage-filter-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: var(--spacing-sm);
+    border-top: 1px solid var(--border);
+}
+
+.hrCardListPage-search-btn {
+    margin: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
+}
+
+/* ====================== 목록 정보 / 하단 버튼 ====================== */
+
+.hrCardListPage-table-info {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+    text-align: left;
+}
+
+.hrCardListPage-bottom-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--spacing-xs);
+    margin-top: 16px;
+}
+
+/* 공통 버튼 */
+.hrCardListPage-top-search-btn,
+.hrCardListPage-search-btn,
+.hrCardListPage-add-btn,
+.hrCardListPage-paging-prev-btn,
+.hrCardListPage-paging-next-btn {
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-inverse);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    height: var(--spacing-lg);
+}
+
+.hrCardListPage-top-search-btn:hover,
+.hrCardListPage-search-btn:hover,
+.hrCardListPage-add-btn:hover,
+.hrCardListPage-paging-prev-btn:hover,
+.hrCardListPage-paging-next-btn:hover {
+    background: var(--color-danger);
+    color: var(--color-inverse);
+
+}
+
+.hrCardListPage-disabled-btn {
+    color: var(--color-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    height: var(--spacing-lg);
+}
+
+.hrCardListPage-disabled-btn:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+/* ====================== 페이징 ====================== */
+
+.hrCardListPage-paging-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.hrCardListPage-paging-group-min {
+    display: flex;
+    align-items: center;
+    gap:var(--spacing-xs);
+}
+
+.hrCardListPage-paging-num-btn {
+    background: none;
+    border: 0;
+    color: var(--border-dark);
+    font-size: var(--font-xl);
+    padding: 4px var(--spacing-xs);
+    cursor: pointer;
+}
+
+.hrCardListPage-paging-num-btn:disabled {
+    color: var(--text-accent);
+    border-radius: var(--radius-sm);
+    cursor: default;
+}
+
+/* ====================== 테이블 ====================== */
+
+.hrTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    table-layout: fixed;
+}
+
+.hrTable-th,
+.hrTable-td {
+    height: 20px;
+    padding: 6px var(--spacing-xs);
+    border: 1px solid var(--border);
+    font-size: var(--font-lg);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hrTable-th {
+    background-color: var(--color-gray-100);
+    color: var(--text-accent);
+}
+
+.hrTable-td {
+    background: var(--color-inverse);
+}
+
+.hrTable-nameButton {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-accent);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.hrTable-nameButton:hover,
+.hrTable-nameButton:focus-visible {
+    text-decoration: underline;
+}
+
+.hrTable tbody tr:hover {
+    background-color: var(--color-gray-100);
+}
+
+/* 체크박스 열 */
+.hrTable-checkbox-cell {
+    text-align: center;
+}
+
+.hrTable-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.hrTable-checkbox input {
+    display: none;
+}
+
+.hrTable-checkbox .checkmark {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid var(--border-dark);
+    border-radius: 3px;
+    background: var(--bg);
+    cursor: pointer;
+}
+
+.hrTable-checkbox input:checked + .checkmark {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.hrTable-empty {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+/* 열 너비 */
+.hrTable th:nth-child(1),
+.hrTable td:nth-child(1) {
+    width: 36px;
+}
+
+.hrTable th:nth-child(2),
+.hrTable td:nth-child(2) {
+    width: 70px;
+}
+
+.hrTable th:nth-child(3),
+.hrTable td:nth-child(3) {
+    width: 70px;
+}
+
+.hrTable th:nth-child(4),
+.hrTable td:nth-child(4) {
+    width: 80px;
+}
+
+.hrTable th:nth-child(5),
+.hrTable td:nth-child(5) {
+    width: 80px;
+}
+
+.hrTable th:nth-child(6),
+.hrTable td:nth-child(6) {
+    width: 70px;
+}
+
+.hrTable th:nth-child(7),
+.hrTable td:nth-child(7) {
+    width: 100px;
+}
+
+.hrTable th:nth-child(8),
+.hrTable td:nth-child(8) {
+    width: 200px;
+}
+
+.hrTable th:nth-child(9),
+.hrTable td:nth-child(9) {
+    width: 200px;
+}
