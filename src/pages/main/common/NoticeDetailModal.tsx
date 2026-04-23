@@ -4,16 +4,7 @@ import Modal from "../../../components/Modal.tsx";
 import {useAuthStore} from "../../../stores/useAuthStore.tsx";
 import ConfirmModal from "../../../components/ConfirmModal.tsx";
 import {useQuery} from "@tanstack/react-query";
-
-interface NoticeDetail{
-    noticeId: number;
-    noticeTitle: string;
-    noticeContent: string;
-    file: string;
-    postDate: string;
-    writerName: string;
-    writerId: number;
-}
+import type {NoticeDetail} from "../../../types/notice.ts";
 
 interface NoticeDetailModalProps {
     noticeId: number | null;
@@ -30,7 +21,7 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
     const BASE_URL = "http://localhost/api";
     const user = useAuthStore(state => state.user);
 
-    const{ data: selectedNotice, isLoading } = useQuery<NoticeDetail>({
+    const{ data: selectedNotice } = useQuery<NoticeDetail>({
         queryKey: ["notice", noticeId],
         queryFn: () => getNoticeInfoApi(noticeId!),
         enabled: noticeId != null && isOpen
@@ -74,15 +65,10 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
                     </div>
                 }
             >
-                {isLoading ? (
-                    <div className="spinner-Wrap">
-                        <span className="spinner"></span>
-                        로딩 중...
-                    </div>
-                ) : selectedNotice ? (
+                { selectedNotice ? (
                     <>
                         <p style={{fontSize:"17px", color:"#282828",fontWeight:600}}>{selectedNotice.noticeTitle}</p>
-                        <div style={{fontSize:"13px",fontWeight:200,flex:"1",marginTop:"10px"}}>
+                        <div style={{fontSize:"13px",fontWeight:300,flex:"1",marginTop:"10px",color:"#151515"}}>
                             <p>{selectedNotice.noticeContent}</p>
                         </div>
                         {selectedNotice.file && (

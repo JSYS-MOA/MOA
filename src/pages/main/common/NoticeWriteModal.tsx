@@ -4,24 +4,8 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import {Editor} from '@toast-ui/react-editor';
 import {createNoticeApi, getNoticeInfoApi, updateNoticeApi} from "../../../apis/NoticeService.tsx";
 import {useQuery} from "@tanstack/react-query";
-
-interface Notice {
-    noticeId: number;
-    noticeTitle: string;
-    noticeContent: string | null;
-    noticeType: string | null;
-    isNotice: boolean | null;
-    file: string | null;
-}
-
-interface NoticeForm {
-    title: string;
-    content: string;
-    noticeType: string;
-    isNotice: boolean;
-    file: File | null;
-    existingFile: string | null;
-}
+import ConfirmModal from "../../../components/ConfirmModal.tsx";
+import type {Notice, NoticeForm} from "../../../types/notice.ts";
 
 interface NoticeWriteModalProps {
     isOpen: boolean;
@@ -31,6 +15,8 @@ interface NoticeWriteModalProps {
 }
 
 const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteModalProps) => {
+
+    const isEditMode = noticeId != null;
 
     const [form, setForm] = useState<NoticeForm>({
         title: "",
@@ -42,27 +28,34 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
     });
 
     //수정 중 취소하기 누르면 알림창 나오게하기
-    const [isDirty, setIsDirty] = useState(false);
     const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
-
     const editorRef = useRef<Editor>(null);
-    const isEditMode = noticeId != null;
+    const isDirtyRef = useRef(false);
+    const isInitializing = useRef(false);
 
-    const {data: noticeData} = useQuery<Notice>({
+    const { data: noticeData, refetch } = useQuery<Notice>({
         queryKey: ["notice", noticeId],
         queryFn: () => getNoticeInfoApi(noticeId!),
-        enabled: noticeId != null && isOpen,
-        staleTime: 0
+        enabled: false,
     });
 
-    const handleChange = <K extends keyof NoticeForm>(key: K, value: NoticeForm[K]) => {
-        setForm((prev) => ({...prev, [key]: value}));
-    };
+    useEffect(() => {
+        if (!isOpen) return;
+
+        if (noticeId == null) {
+            isDirtyRef.current = false;
+            isInitializing.current = false;
+            return;
+        }
+        void refetch();
+    }, [isOpen, noticeId, refetch]);
 
     useEffect(() => {
-        if (!noticeData) return;
+        if (!noticeData || !isOpen) return;
 
         const load = async () => {
+            isInitializing.current = true;
+
             setForm({
                 title: noticeData.noticeTitle,
                 content: noticeData.noticeContent ?? "",
@@ -71,12 +64,35 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
                 file: null,
                 existingFile: noticeData.file ?? null,
             });
-            editorRef.current?.getInstance().setMarkdown(noticeData.noticeContent ?? "");
+
+            requestAnimationFrame(() => {
+                editorRef.current?.getInstance().setMarkdown(noticeData.noticeContent ?? "");
+                isInitializing.current = false;
+            });
         };
         void load();
-    }, [noticeData]);
+    }, [noticeData, isOpen]);
+
+
+    const handleChange = <K extends keyof NoticeForm>(key: K, value: NoticeForm[K]) => {
+
+        if (!isInitializing.current) {
+            isDirtyRef.current = true;
+        }
+        setForm((prev) => ({...prev, [key]: value}));
+    };
+
 
     const handleSave = async () => {
+
+        if (!form.title.trim()) {
+            alert("제목을 입력해주세요.");
+            return;
+        }
+        if (!form.content.trim()) {
+            alert("내용을 입력해주세요.");
+            return;
+        }
         const formData = new FormData();
         formData.append("noticeTitle", form.title);
         formData.append("noticeContent", form.content);
@@ -101,6 +117,9 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
     };
 
     const handleClose = () => {
+
+        isInitializing.current = true;
+
         setForm({
             title: "",
             content: "",
@@ -109,12 +128,16 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
             file: null,
             existingFile: null,
         });
+
         editorRef.current?.getInstance().setMarkdown("");
+
+        isDirtyRef.current = false;
+
         onClose();
     };
 
     const handleCloseAttempt = () => {
-        if (isDirty) {
+        if (isDirtyRef.current) {
             setIsExitConfirmOpen(true);
         } else {
             handleClose();
@@ -206,8 +229,13 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
                         height="369px"
                         initialEditType="wysiwyg"
                         onChange={() => {
+                            if (isInitializing.current) return;
+
                             const value = editorRef.current?.getInstance().getMarkdown() ?? "";
-                            handleChange("content", value);
+
+                            setForm((prev) => ({...prev, content: value}));
+
+                            isDirtyRef.current = true;
                         }}
                     />
                 </div>
@@ -215,7 +243,6 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
         </Modal>
             <ConfirmModal
                 isOpen={isExitConfirmOpen}
-                title="작성 취소"
                 message="수정 중인 내용이 있습니다. 나가시겠습니까?"
                 onConfirm={() => {
                     setIsExitConfirmOpen(false);

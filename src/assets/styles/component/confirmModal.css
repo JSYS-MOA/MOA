@@ -39,7 +39,7 @@
 }
 .message{
     font-size: var(--font-sm);
-    font-weight: 400;
+    font-weight: 300;
     color: var(--text-primary);
 }
 .confirm-Footer{
