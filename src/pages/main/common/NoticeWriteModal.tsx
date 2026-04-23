@@ -41,6 +41,10 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
         existingFile: null,
     });
 
+    //수정 중 취소하기 누르면 알림창 나오게하기
+    const [isDirty, setIsDirty] = useState(false);
+    const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+
     const editorRef = useRef<Editor>(null);
     const isEditMode = noticeId != null;
 
@@ -48,6 +52,7 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
         queryKey: ["notice", noticeId],
         queryFn: () => getNoticeInfoApi(noticeId!),
         enabled: noticeId != null && isOpen,
+        staleTime: 0
     });
 
     const handleChange = <K extends keyof NoticeForm>(key: K, value: NoticeForm[K]) => {
@@ -108,15 +113,24 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
         onClose();
     };
 
+    const handleCloseAttempt = () => {
+        if (isDirty) {
+            setIsExitConfirmOpen(true);
+        } else {
+            handleClose();
+        }
+    };
+
     return (
+        <>
         <Modal
             title={isEditMode ? "공지사항 수정" : "공지사항 등록"}
             isOpen={isOpen}
-            onClose={handleClose}
+            onClose={handleCloseAttempt}
             footer={
                 <div className="btn-Wrap">
                     <button className="btn-Primary" onClick={handleSave}>저장</button>
-                    <button className="btn-Secondary" onClick={handleClose}>취소</button>
+                    <button className="btn-Secondary" onClick={handleCloseAttempt}>취소</button>
                 </div>
             }
         >
@@ -199,6 +213,17 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
                 </div>
             </div>
         </Modal>
+            <ConfirmModal
+                isOpen={isExitConfirmOpen}
+                title="작성 취소"
+                message="수정 중인 내용이 있습니다. 나가시겠습니까?"
+                onConfirm={() => {
+                    setIsExitConfirmOpen(false);
+                    handleClose();
+                }}
+                onClose={() => setIsExitConfirmOpen(false)}
+            />
+    </>
     );
 };
 

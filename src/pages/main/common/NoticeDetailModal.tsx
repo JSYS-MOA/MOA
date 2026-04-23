@@ -26,9 +26,6 @@ interface NoticeDetailModalProps {
 const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:NoticeDetailModalProps) => {
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-    //수정 중 취소하기 누르면 알림창 나오게하기
-    // const [isDirty, setIsDirty] = useState(false);
-    // const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
 
     const BASE_URL = "http://localhost/api";
     const user = useAuthStore(state => state.user);
@@ -36,8 +33,7 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
     const{ data: selectedNotice, isLoading } = useQuery<NoticeDetail>({
         queryKey: ["notice", noticeId],
         queryFn: () => getNoticeInfoApi(noticeId!),
-        enabled: noticeId != null && isOpen,
-        staleTime: 0
+        enabled: noticeId != null && isOpen
     })
     const handleClose = () => {
         onClose();
@@ -53,13 +49,7 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
             console.error("삭제실패")
         }
     }
-    // const handleCloseAttempt = () => {
-    //     if (isDirty) {
-    //         setIsExitConfirmOpen(true);
-    //     } else {
-    //         handleClose();
-    //     }
-    // };
+
     return(
         <>
             <Modal
