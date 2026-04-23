@@ -18,11 +18,6 @@
     font-weight: 400;
     color: var(--text-primary);
 }
-.mainCalendar-Header-Icon{
-    display: flex;
-    align-items: center;
-    gap: 9px;
-}
 .calendar-Body{
     margin-top: 30px;
 }
