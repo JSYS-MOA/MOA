@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
 import Base from "./pages/Base.tsx";
+import MyInfo from "./pages/mypage/MyInfo.tsx";
 
 
 const App = () => {
@@ -42,6 +43,7 @@ const App = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
+                        <Route path="my/profile" element={<MyInfo />} />
                     </Route>
                 </Route>
 

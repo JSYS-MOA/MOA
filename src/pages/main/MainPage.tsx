@@ -8,7 +8,7 @@ const MainPage = () => {
 
     const { user } = useAuthStore();
 
-    if(user?.departmentId === 2) return <MainPageLayout><HrTeam /></MainPageLayout>
+    if(user?.departmentId === 2 || user?.departmentId === 1) return <MainPageLayout><HrTeam /></MainPageLayout>
     if(user?.departmentId === 3) return <MainPageLayout><LogisticsTeam /></MainPageLayout>
     if(user?.departmentId === 4) return <MainPageLayout><SalesTeam /></MainPageLayout>
 
