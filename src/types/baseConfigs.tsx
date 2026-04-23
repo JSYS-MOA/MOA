@@ -1,19 +1,18 @@
 
-const renderUse = (val: number) => (val === 1 ? "사용" : "미사용");
-
 export const baseConfigs = {
     adminRole: {
         title: "권한등록",
         apiUrl: "/api/base/role",
+        idKey: "adminId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "code", label: "권한코드" },
+            { key: "cord", label: "권한코드" },
             { key: "name", label: "권한명" },
-            { key: "isUse", label: "사용여부", render: renderUse }
+            { key: "isUse", label: "사용여부"}
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "code", label: "권한코드", type: "text" },
+            { key: "cord", label: "권한코드", type: "text" },
             { key: "name", label: "권한명", type: "text" },
             {
                 key: "isUse",
@@ -26,11 +25,12 @@ export const baseConfigs = {
     allowance: {
         title: "수당항목등록",
         apiUrl: "/api/base/allow",
+        idKey: "allowanceId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "allowanceCord", label: "수당코드" },
             { key: "allowanceName", label: "수당명" },
-            { key: "allowanceIsUse", label: "사용여부", render: renderUse }
+            { key: "allowanceIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -47,11 +47,12 @@ export const baseConfigs = {
     approvalLine: {
         title: "결재라인",
         apiUrl: "/api/base/approval",
+        idKey: "approvalLineId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "approvalLineCord", label: "결재라인코드" },
             { key: "approvalLineName", label: "결재라인명" },
-            { key: "approvalLineIsUse", label: "사용여부", render: renderUse }
+            { key: "approvalLineIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -68,13 +69,14 @@ export const baseConfigs = {
     companyAccount: {
         title: "계좌등록",
         apiUrl: "/api/base/account",
+        idKey: "companyAccountId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "companyAccountCord", label: "계좌코드" },
             { key: "companyAccountName", label: "계좌명" },
             { key: "companyAccountBank", label: "은행명" },
             { key: "companyAccountNum", label: "계좌번호" },
-            { key: "companyAccountIsUse", label: "사용여부", render: renderUse }
+            { key: "companyAccountIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -93,11 +95,12 @@ export const baseConfigs = {
     department: {
         title: "부서등록 ",
         apiUrl: "/api/base/dept",
+        idKey: "departmentId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "departmentCord", label: "부서코드" },
             { key: "departmentName", label: "부서명" },
-            { key: "departmentIsUse", label: "사용여부", render: renderUse }
+            { key: "departmentIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -114,11 +117,12 @@ export const baseConfigs = {
     document: {
         title: "공통양식리스트",
         apiUrl: "/api/base/form",
+        idKey: "documentId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "documentCord", label: "양식코드" },
             { key: "documentName", label: "양식명" },
-            { key: "documentIsUse", label: "사용여부", render: renderUse }
+            { key: "documentIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -135,13 +139,14 @@ export const baseConfigs = {
     product: {
         title: "품목등록",
         apiUrl: "/api/base/item",
+        idKey: "productId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "productCord", label: "품목코드" },
             { key: "productName", label: "품목명" },
             { key: "productCategory", label: "카테고리" },
             { key: "productPrice", label: "단가" },
-            { key: "productIsUse", label: "사용여부", render: renderUse }
+            { key: "productIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -160,16 +165,17 @@ export const baseConfigs = {
     storage: {
         title: "창고등록",
         apiUrl: "/api/base/whse",
+        idKey: "storageId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "vendorCord", label: "창고코드" },
+            { key: "storageCord", label: "창고코드" },
             { key: "storageName", label: "창고명" },
             { key: "storageAddress", label: "창고주소" },
-            { key: "storageIsUse", label: "사용여부", render: renderUse }
+            { key: "storageIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "vendorCord", label: "창고코드", type: "text" },
+            { key: "storageCord", label: "창고코드", type: "text" },
             { key: "storageName", label: "창고명", type: "text" },
             { key: "storageAddress", label: "창고주소 ", type: "text" },
             {
@@ -183,23 +189,44 @@ export const baseConfigs = {
     vendor: {
         title: "거래처등록",
         apiUrl: "/api/base/partner",
+        idKey: "vendorId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "vendorCord", label: "거래처코드" },
-            { key: "vendorName", label: "거래처명" },
-            { key: "vendorIsUse", label: "사용여부", render: renderUse }
+            {key: "vendorCord", label: "거래처코드"},
+            {key: "vendorName", label: "거래처명"},
+            {key: "vendorIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "vendorCord", label: "거래처코드", type: "text" },
-            { key: "vendorName", label: "거래처명", type: "text" },
+            {key: "vendorCord", label: "거래처코드", type: "text"},
+            {key: "vendorName", label: "거래처명", type: "text"},
             {
                 key: "vendorIsUse",
                 label: "사용여부",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{label: "사용", value: 1}, {label: "미사용", value: 0}]
             }
         ]
+    },
+
+        // 연차기본사항
+        annualLeaves: {
+                title: "연차기본사항",
+                apiUrl: "/api/hr/annualLeaves",
+                idKey: "basicVacationId",
+                // 표(Table)에 보여줄 컬럼들
+                columns: [
+                    { key: "gradeCord", label: "직급코드" },
+                    { key: "gradeName", label: "직급명" },
+                    { key: "basicVacationDay", label: "연차일수" },
+                 ],
+                // 등록/수정 모달(Modal)에 나타날 입력창들
+                fields: [
+                    { key: "gradeCord", label: "직급코드", type: "number" },
+                    { key: "gradeName", label: "직급명", type: "text" },
+                    { key: "basicVacationDay", label: "연차일수", type: "number" },
+
+            ]
     }
 
 

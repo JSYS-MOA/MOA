@@ -7,14 +7,7 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
-import Admin from './pages/admin/Admin.tsx';
-import Inventory from './pages/inventory/Inventory.tsx';
-import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
-import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
-import Base from "./pages/Base.tsx";
-import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
-import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
-
+import Base from "./pages/base/Base.tsx";
 
 
 const App = () => {
@@ -49,31 +42,14 @@ const App = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
-                        <Route path="/admin/levels" element={<Admin />} />
+                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                     </Route>
                 </Route>
 
-          <Route element={<PrivateRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/home" element={<MainPage />} />
+            </Routes>
 
-              <Route path="/inventory">
-                <Route index element={<Inventory/>} />
-                <Route path="status" element={<Inventory/>} />
-                <Route path="disposals" element={<InventoryDisposals/>} />
-                <Route path="orders" element={<InventoryOrder/>} />
-                <Route path="inbounds" element={<InventoryInbounds/>} />
-                <Route path="outbounds" element={<InventoryOutbound/>} />
-             </Route>
-
-            </Route>
-          </Route>
-
-      </Routes>
-
-    
-    </>
-  )
+        </>
+    )
 }
 
 export default App
