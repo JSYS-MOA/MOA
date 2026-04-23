@@ -289,12 +289,21 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
 
               <td>
                 {item.orderStatus === '대기' && (
-                  <button 
-                    onClick={(e) => handleRemoveRow(idx, e)}
-                    style={{ color: 'red', border: '1px solid red', background: 'none', cursor: 'pointer' }}
-                  >
-                    삭제
-                  </button>
+                  <>
+                    <button 
+                      onClick={(e) => handleRemoveRow(idx, e)}
+                      style={{ color: 'red', border: '1px solid red', background: 'none', cursor: 'pointer' }}
+                      >
+                      입고처리
+                    </button>
+
+                    <button 
+                      onClick={(e) => handleRemoveRow(idx, e)}
+                      style={{ color: 'red', border: '1px solid red', background: 'none', cursor: 'pointer' }}
+                      >
+                      삭제
+                    </button>
+                  </>
                 )}
               </td>
         </tr>
