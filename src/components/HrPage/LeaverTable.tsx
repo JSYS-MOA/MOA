@@ -1,5 +1,5 @@
 import type { LeaverTableProps } from "../../types/LeaverTableProps.ts";
-import "../../assets/styles/Leaver/LeaverCardList.css";
+import "../../assets/styles/hr/leaverCardList.css";
 
 type LeaverTableSelectionProps = {
     items: LeaverTableProps[];
