@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {baseConfigs} from "../../types/baseConfigs.tsx";
-import Table from "../Table.tsx";
+import Table from "../inventory/InventoryTable.tsx";
 import BaseModal from "./BaseModal.tsx";
 import Button from "../Button.tsx";
 

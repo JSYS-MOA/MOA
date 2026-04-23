@@ -1,16 +1,15 @@
-export interface TableProps {
-  [key: string]: any;
-
-  userId? : string;
-  gradeId? : string;
-  gradeName? : string;
+export interface ModalProps {
+  '' : string; 
+  userId? : number;
+  employeeId?: string;
+  userName? : string;
+  gradeId? : number;
   phone? : string;
   email? : string;
-  roleId? : string;
+  roleId? : number;
   inventorySno: string;
-
-  employeeId?: string;
-  userName : string;
+  defectSno : string;
+  orderSno : number;
 
   //adminEntity
   id:number;
@@ -73,14 +72,35 @@ export interface TableProps {
   vendorIsUse:number;
 
   // order
-  orderformId : string;
+  orderformId : number;
   orderformDate : string;
   unitPrice : number;
   totalPrice : number;
+  stockInDate : string;
 
+  //logistics
+  logisticDate : string;
+  logisticSno : number;
+  expirationDate : string;
+  incoming: number;
+  outgoing: number;
+  logisticsType : string;
+  logisticsPrice : number;
+  totallogisticsPrice : number;
+  totalordersPrice : number;
+  orderStatus : string;
+
+  ordererId : number;
+
+  keySno : any
+  keyPrice : any
+
+  // 입고시 불량 처리 필요
+  defectStatus : string;
+  defectMemo : string
 }
 
-export interface Column {
-  key: keyof TableProps;
+export interface MColumn {
+  key: keyof ModalProps;
   label: string;
 }
