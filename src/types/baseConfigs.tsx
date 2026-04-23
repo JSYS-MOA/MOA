@@ -1,6 +1,4 @@
 
-const renderUse = (val: number) => (val === 1 ? "사용" : "미사용");
-
 export const baseConfigs = {
     adminRole: {
         title: "권한등록",
@@ -10,7 +8,7 @@ export const baseConfigs = {
         columns: [
             { key: "cord", label: "권한코드" },
             { key: "name", label: "권한명" },
-            { key: "isUse", label: "사용여부", render: renderUse }
+            { key: "isUse", label: "사용여부"}
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -32,7 +30,7 @@ export const baseConfigs = {
         columns: [
             { key: "allowanceCord", label: "수당코드" },
             { key: "allowanceName", label: "수당명" },
-            { key: "allowanceIsUse", label: "사용여부", render: renderUse }
+            { key: "allowanceIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -54,7 +52,7 @@ export const baseConfigs = {
         columns: [
             { key: "approvalLineCord", label: "결재라인코드" },
             { key: "approvalLineName", label: "결재라인명" },
-            { key: "approvalLineIsUse", label: "사용여부", render: renderUse }
+            { key: "approvalLineIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -78,7 +76,7 @@ export const baseConfigs = {
             { key: "companyAccountName", label: "계좌명" },
             { key: "companyAccountBank", label: "은행명" },
             { key: "companyAccountNum", label: "계좌번호" },
-            { key: "companyAccountIsUse", label: "사용여부", render: renderUse }
+            { key: "companyAccountIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -102,7 +100,7 @@ export const baseConfigs = {
         columns: [
             { key: "departmentCord", label: "부서코드" },
             { key: "departmentName", label: "부서명" },
-            { key: "departmentIsUse", label: "사용여부", render: renderUse }
+            { key: "departmentIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -124,7 +122,7 @@ export const baseConfigs = {
         columns: [
             { key: "documentCord", label: "양식코드" },
             { key: "documentName", label: "양식명" },
-            { key: "documentIsUse", label: "사용여부", render: renderUse }
+            { key: "documentIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -148,7 +146,7 @@ export const baseConfigs = {
             { key: "productName", label: "품목명" },
             { key: "productCategory", label: "카테고리" },
             { key: "productPrice", label: "단가" },
-            { key: "productIsUse", label: "사용여부", render: renderUse }
+            { key: "productIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -173,7 +171,7 @@ export const baseConfigs = {
             { key: "storageCord", label: "창고코드" },
             { key: "storageName", label: "창고명" },
             { key: "storageAddress", label: "창고주소" },
-            { key: "storageIsUse", label: "사용여부", render: renderUse }
+            { key: "storageIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -196,7 +194,7 @@ export const baseConfigs = {
         columns: [
             {key: "vendorCord", label: "거래처코드"},
             {key: "vendorName", label: "거래처명"},
-            {key: "vendorIsUse", label: "사용여부", render: renderUse}
+            {key: "vendorIsUse", label: "사용여부" }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
