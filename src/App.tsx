@@ -40,10 +40,11 @@ const App = () => {
                 <Route path="/" element={<Login/>} />
 
                 <Route element={<PrivateRoute />}>
+                    {/* 메인페이지는 여기 있어야됨 -> 링크이동이 안 돼서 임시로 mainLayout안에 둠*/}
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
-                        <Route path="my/profile" element={<MyInfo />} />
+                        <Route path="/my/profile" element={<MyInfo />} />
                     </Route>
                 </Route>
 
