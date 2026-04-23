@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState  } from 'react'
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
-import { usePostOrder , useGetProductSelect , useGetVendorSelect} from '../../apis/InventoryService';
+import { insertbounds , useGetStorageSelect } from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
+import { useAuthStore } from "../../stores/useAuthStore";
 
 const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
@@ -18,41 +19,79 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   const [itemList, setItemList] = useState<ModalProps[]>(items);
   const [selectModal, setSelectModal] = useState(false);
 
+
+  const [selectMode, setSelectMode] = useState<'STORAGE' | null>(null);
   const [targetIdx, setTargetIdx] = useState<number | null>(null);
-  // const { mutate } = usePutOrderSno();
-  // const { mutate : DelOrderForm } = useDeleteOrderForm();
-  // const { data } = useGetProductSelect();
+  const { mutate } = insertbounds();
   const [inbundDate, setInbundDate] = useState(new Date().toISOString().split('T')[0]); 
+  const { data : StorageData  } = useGetStorageSelect();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     setItemList(items);
   }, [items]);
 
 
-  const handleInputChange = (idx: number, key: string, value: string | number) => {
+  //  차고 전달을 위한 조회
+  const onselectStorage = (idx: number , item : any) => {
+      setSelectMode('STORAGE');
+      setTargetIdx(idx);
+  }
+  
+  //  창고 선택
+  const handleStorageSelect = (storage: any) => {
+
+    console.log(itemList); 
     
-    if (typeof value === 'string' && value !== '' && /[^0-9]/.test(value)) {
-    alert("숫자만 입력할 수 있습니다.");
+
+    console.log(targetIdx);
+    if (targetIdx === null || !itemList[targetIdx]) {
+    console.error("수정할 행을 찾을 수 없습니다.");
     return;
   }
-    
-    const nextList = [...itemList];
 
-    if(nextList[idx].orderSno >= Number(value) ) {
-      nextList[idx] = {
-        ...nextList[idx],
-        [key]: value
-      };
-      
-    } else {
-      const maxValue = nextList[idx].orderSno
-      nextList[idx] = {
-        ...nextList[idx],
-        [key]: maxValue
-      };
+   if (targetIdx === null) return;
+  
+    const nextList = [...itemList];
+  
+    const currentSno = nextList[targetIdx][keySno as keyof ModalProps] || 0;
+    const existingOrdererId = nextList[targetIdx].ordererId; 
+
+  nextList[targetIdx] = {
+    ...nextList[targetIdx], // 기본 구조 보장
+    storageId: storage.storageId, // ID 보존
+    storageCord: storage.storageCord || '',
+    storageName: storage.storageName || '',
+    storageAddress: storage.storageAddress || 0,
+  } as ModalProps;
+
+  setItemList(nextList);
+  setSelectMode(null);
+  setTargetIdx(null);
+
+  console.log(storage);
+  console.log(nextList);
+  };
+
+  const handleInputChange = (idx: number, key: string, value: string | number) => {
+     console.log(key)
+    const nextList = [...itemList];
+    const item = nextList[idx];
+
+    if( key === 'logisticSno' ) {
+     const inputSno = Math.max(0, Number(value));
+     nextList[idx] = {
+      ...item,
+      logisticSno: Math.min(item.orderSno, inputSno)
+    };
+
+    } else{
+       nextList[idx] = {
+          ...nextList[idx],
+          [key]: value
+        };
     }
 
-    console.log(nextList)
       setItemList(nextList);
 
   };
@@ -74,58 +113,65 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
     }, 0);
   }, [itemList]);
 
-  const onSubmitPut = (e : React.SubmitEvent) => {
+
+  const onSubmitPost = (e : React.SubmitEvent) => {
     e.preventDefault();
 
-     if (items.length > 0 && items[0].orderStatus === '완료') {
-      setOnAlert("수정할 수 없습니다");
-    } else {
-      const filteredList = itemList.filter(item => item.ordererId || item.productCord || item.orderSno === 0 );
-      const isNotChanged = JSON.stringify(items) === JSON.stringify(filteredList);
-  
-      if (isNotChanged) {
-        setOnAlert("수정사항이 없습니다");
-        return ;
-      } 
-        // 기존 아이템 배열
-      const existingIds = new Set(items.map(i => i.ordererId).filter(Boolean));
-  
-        // 빈배열 없는 리스트 맵핑
-      const payloadItems = filteredList.map((item) => {
-        const isExisting = item.ordererId && existingIds.has(item.ordererId);
-        return {
-          ordererId: isExisting ? item.ordererId : null,
-          productCord : item.productCord,
-          productId: Number(item.productId),
-          orderSno: Number(item[keySno as keyof ModalProps]),
-          unitPrice: Number(item.unitPrice),
-          // 서버가 요구한다면 상태값 추가
-          status: isExisting ? "UPDATE" : "INSERT" 
-        };
-      });
-      
-      const orderFormId = items[0]?.orderformId || itemList[0]?.orderformId;
+    const today = new Date().toISOString().split('T')[0];
+    const finalPayload : any[] = [];
 
-      if (!orderFormId) {
-        setOnAlert("주문서 정보를 찾을 수 없습니다.");
-        return;
-      }
+    console.log(user?.userId)
 
-      mutate({ 
-        orderFormId: Number(orderFormId), 
-        items: payloadItems 
-      }, {
-        onSuccess: () => {
-          setOnAlert("성공적으로 수정되었습니다.");
-          onRefresh()
-          onClose()
-        },
-        onError: (error) => {
-          console.error(error);
-          setOnAlert("수정 중 오류가 발생했습니다.");
-        }
-      });
+    if( user?.userId === null ) {
+      return setOnAlert("다시 로그인 해주세요");
     }
+
+    const inItems = itemList.filter(item => (item.logisticSno || 0) > 0).map(item => ({
+      productId: item.productId,
+      storageId: item.storageId,
+      logisticSno: Number(item.logisticSno),
+      price: item.unitPrice,
+      expirationDate: item.expirationDate ? `${item.expirationDate}T00:00:00` : null, // 입고 시 필수
+      memo: item.defectMemo || ""
+    }));
+
+     const outItems = itemList.filter(item => (item.defectSno || 0) > 0).map(item => ({
+      productId: item.productId,
+      storageId: item.storageId,
+      defectSno: Number(item.defectSno),
+      inventoryId: item.inventoryId, // 재고 ID
+      defectStatus: item.defectStatus || "불량",
+      disposalDate: today,
+      memo: item.defectMemo || ""
+    }));
+
+    if (inItems.length > 0) {
+    finalPayload.push({
+      logisticsType: "IN",
+      stockInDate: today,
+      userId: user?.userId,
+      items: inItems,
+    });
+    }
+
+    if (outItems.length > 0) {
+       finalPayload.push({
+         logisticsType: "OUT",
+         stockInDate: today,
+         userId: user?.userId,
+         items: outItems,
+       });
+     }
+
+    if (finalPayload.length === 0) {
+    setOnAlert("입고 또는 불량 수량을 입력해주세요.");
+    return;
+   }
+
+    mutate({ 
+      orderformId: itemList[0].orderformId, 
+      payload: finalPayload 
+    });
 
   }
 
@@ -133,7 +179,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   const isCompleted = masterInfo.orderStatus === '완료';
 
   return (
-    <form onSubmit={(e)=>{onSubmitPut(e)}}>
+    <form onSubmit={(e)=>{onSubmitPost(e)}}>
       <div>
         <div>
           <label >발주요청일자</label>
@@ -172,8 +218,37 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                        const targetItem = item as any;
                       return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
                     }
-                     
-                    if(col.key === keySno ) {
+
+                    if (col.key === 'expirationDate') {
+                      return <input
+                        type="date"
+                        name={col.key}      
+                        onChange={(e) => {
+                         handleInputChange(idx, col.key, e.target.value);
+                        }}
+                        />;
+                    }
+
+                    if(col.key === 'defectSno' ) {
+                      const targetItem = item as any;
+                      return <input
+                        name={col.key}
+                        value={ (Number(targetItem['orderSno'] || 0) - Number(targetItem[keySno] || 0)) }          
+                        readOnly
+                        />
+                    } 
+
+                    if(col.key === 'defectStatus' || col.key === 'defectMemo' ) {
+                      return <input
+                        name={col.key}
+                        value={item[fieldKey] ?? ''}          
+                        onChange={(e) => {
+                         handleInputChange(idx, col.key, e.target.value);
+                        }}
+                        />
+                    } 
+                   
+                    if(col.key === keySno) {
                       return <input
                         name={col.key}
                         value={item[fieldKey] ?? 0}          
@@ -183,7 +258,12 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                         />
 
                     } else {
-                      return <input name={col.key} value={item[fieldKey] ?? ''} readOnly />
+                      return <input onClick={() => {
+                        if(col.key === 'storageName' ) {
+                        onselectStorage(idx , item); }}}
+                        name={col.key}
+                        value={item[fieldKey] ?? ''}
+                        readOnly />
                     } 
 
                   })()}
@@ -214,6 +294,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                     return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
                   }
 
+
                   return <td key={col.key}></td>;
                 })}
               </>
@@ -226,6 +307,13 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
 
       {!isCompleted && <button type='submit'>입고</button>}
       
+      {selectMode === 'STORAGE' ?
+            <InventorySelectModal
+              title='STORAGE'
+              items={StorageData.content}
+              onSelect={handleStorageSelect}
+              onClose={() => setSelectMode(null)}
+              /> : null}
           
     </form>
   )

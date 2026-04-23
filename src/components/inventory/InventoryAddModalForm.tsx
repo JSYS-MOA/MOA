@@ -218,7 +218,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
                 onClick={() => {
                      if (col.key !== keySno ) {
                        onselectProduct(idx , item);
-                     }}}>
+                  }}}>
 
             {(() => {
               const fieldKey = col.key as keyof ModalProps;

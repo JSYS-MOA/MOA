@@ -132,6 +132,21 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
+   // 선택용 창고 리스트
+  export function useGetStorageSelect( StorageCord?: string ) {
+    return useQuery({
+      queryKey: ["StorageCord", StorageCord ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}orders/select/storage`, {   
+          params: {
+            StorageCord : StorageCord 
+          }
+        });
+        return data;
+      },
+    });
+  }
+
   // 발주 신청
   export function usePostOrder () {
     return useMutation({
@@ -217,10 +232,16 @@ const Api_BASE = "http://localhost/api/inventory/";
   // 입고처리
   export function insertbounds () {
     return useMutation({
-      mutationFn: async (info: number) => {
-        const { data } = await axios.get(`${Api_BASE}outbounds/${info}`, {   
-        });
-        return data;
+     mutationFn: async ({ orderformId, payload }: { 
+      orderformId: number; 
+      payload: any[]; 
+    }) => {
+         const { data } = await axios.post(`${Api_BASE}inbounds/${orderformId}`, payload);
+      return data;
       },
     });
   }
+
+
+
+  

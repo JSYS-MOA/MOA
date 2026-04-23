@@ -1,25 +1,27 @@
 import React from 'react';
+import { IoCloseOutline } from 'react-icons/io5';
 
 const Alert = ({ children , onClose }: {
   children: React.ReactNode ,
   onClose: () => void  }) => {
   return (
-    <div style={{
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      backgroundColor: 'white',
-      padding: '20px',
-      border: '2px solid red',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-      zIndex: 10000
-    }}>
+    <div className="confirm-Overlay">
+                <div className="confirm-Container">
+                    <div className="confirm-Header">
+                        <p>알림</p>
+                        <button onClick={onClose}>
+                            <IoCloseOutline color="#fff" size={18} />
+                        </button>
+                    </div>
+                    <div className="confirm-Body">
+                        <p className="message">{children}</p>
+                    </div>
+                    <div className="confirm-Footer btn-Wrap">
+                        <button className="btn-Secondary" onClick={onClose}>닫기</button>
+                    </div>
+                </div>
+            </div>
 
-      <span>{children}</span>
-      <button onClick={onClose} style={{ marginLeft: '10px' }}>확인</button>
-    </div>
   );
 };
 

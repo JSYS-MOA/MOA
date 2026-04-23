@@ -34,6 +34,15 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
               ))
             ) : null }
 
+            {title === 'STORAGE' ? (
+              items.map((storage: any) => (
+                <tr key={storage.storageId} onClick={() => onSelect(storage)} >
+                  <td>{storage.storageCord}</td>
+                  <td>{storage.storageName}</td>
+                </tr>
+              ))
+            ) : null }
+
           </tbody>
         </table>
         <button onClick={onClose}>닫기</button>

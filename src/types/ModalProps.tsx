@@ -7,8 +7,8 @@ export interface ModalProps {
   phone? : string;
   email? : string;
   roleId? : number;
-  inventorySno: string;
-  defectSno : string;
+  inventorySno: number;
+  defectSno : number;
   orderSno : number;
 
   //adminEntity
@@ -96,6 +96,7 @@ export interface ModalProps {
   keyPrice : any
 
   // 입고시 불량 처리 필요
+  inventoryId : number;
   defectStatus : string;
   defectMemo : string
 }
