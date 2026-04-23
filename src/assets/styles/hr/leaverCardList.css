@@ -6,17 +6,17 @@
 
 /* ====================== 인사카드 목록 상단 ====================== */
 
-.hrCardListPage-table-box {
+.leverCardListPage-table-box {
     margin-top: var(--spacing-md);
 }
 
-.hrCardListPage-header {
+.leverCardListPage-header {
     display: flex;
     align-items: center;
     margin-bottom: var(--spacing-xs);
 }
 
-.hrCardListPage-star {
+.leverCardListPage-star {
     gap: var(--spacing-xs);
     cursor: pointer;
     font-size: var(--font-xl);
@@ -24,28 +24,28 @@
     font-weight: bolder;
 }
 
-.hrCardListPage-star[aria-expanded="true"] {
+.leverCardListPage-star[aria-expanded="true"] {
     color: yellow;
 }
 
-.hrCardListPage-star[aria-expanded="false"] {
+.leaverCardListPage-star[aria-expanded="false"] {
     color: var(--border);
 }
 
-.hrCardListPage-title {
+.leverCardListPage-title {
     margin: 0;
     font-size: var(--font-xl);
     color: var(--text-accent);
     font-weight: bolder;
 }
 
-.hrCardListPage-top-search-btn {
+.leaverCardListPage-top-search-btn {
     margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
 }
 
 /* ====================== 검색 필터 ====================== */
 
-.hrCardListPage-filter-box {
+.leaverCardListPage-filter-box {
     overflow: hidden;
     max-height: 130px;
     max-width: 1589px;
@@ -62,7 +62,7 @@
             border-width 0.2s ease;
 }
 
-.hrCardListPage-filter-box.is-collapsed {
+.leaverCardListPage-filter-box.is-collapsed {
     max-height: 0;
     margin-bottom: 0;
     padding-top: 0;
@@ -71,7 +71,7 @@
     opacity: 0;
 }
 
-.hrCardListPage-filter-row {
+.leaverCardListPage-filter-row {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: center;
@@ -80,7 +80,7 @@
     text-align: left;
 }
 
-.hrCardListPage-filter-group {
+.leaverCardListPage-filter-group {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -88,13 +88,13 @@
     min-width: 0;
 }
 
-.hrCardListPage-filter-group label {
+.leaverCardListPage-filter-group label {
     flex: 0 0 40px;
     color: var(--text-primary);
 }
 
 /* 칩 입력창 */
-.hrCardListPage-chip-input {
+.leaverCardListPage-chip-input {
     display: flex;
     align-items: center;
     flex: 1;
@@ -108,16 +108,16 @@
     overflow: hidden;
 }
 
-.hrCardListPage-chip-input.has-chip {
+.leaverCardListPage-chip-input.has-chip {
     padding-block: var(--spacing-xs);
 }
 
-.hrCardListPage-chip-input:focus-within {
+.leaverCardListPage-chip-input:focus-within {
     border-color: var(--border);
     box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
 }
 
-.hrCardListPage-chip-input-icon {
+.leaverCardListPage-chip-input-icon {
     position: relative;
     width: 28px;
     height: 28px;
@@ -125,7 +125,7 @@
     border-right: 1px solid var(--border);
 }
 
-.hrCardListPage-chip-input-icon::before {
+.leaverCardListPage-chip-input-icon::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -138,7 +138,7 @@
     box-sizing: border-box;
 }
 
-.hrCardListPage-chip-input-icon::after {
+.leaverCardListPage-chip-input-icon::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -150,7 +150,7 @@
     transform: translateY(4px) rotate(45deg);
 }
 
-.hrCardListPage-chip-input input {
+.leaverCardListPage-chip-input input {
     flex: 1;
     width: 100%;
     min-width: 0;
@@ -161,11 +161,11 @@
     background: var(--color-inverse);
 }
 
-.hrCardListPage-chip-input input::placeholder {
+.leaverCardListPage-chip-input input::placeholder {
     color: var(--border-dark);
 }
 
-.hrCardListPage-chip {
+.leaverCardListPage-chip {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -178,21 +178,21 @@
     line-height: 1;
 }
 
-.hrCardListPage-chip span {
+.leaverCardListPage-chip span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.hrCardListPage-chip-input .hrCardListPage-chip {
+.leaverCardListPage-chip-input .leaverCardListPage-chip {
     margin-right: 4px;
 }
 
-.hrCardListPage-chip-input.has-chip input {
+.leaverCardListPage-chip-input.has-chip input {
     min-width: 48px;
 }
 
-.hrCardListPage-chip-x {
+.leaverCardListPage-chip-x {
     border: none;
     background: var(--text-accent);
     color: var(--color-inverse);
@@ -202,11 +202,11 @@
     line-height: 1;
 }
 
-.hrCardListPage-chip-x:hover {
+.leaverCardListPage-chip-x:hover {
     opacity: 0.7;
 }
 
-.hrCardListPage-chip-clear {
+.leaverCardListPage-chip-clear {
     align-self: stretch;
     text-align: center;
     width: 28px;
@@ -221,34 +221,34 @@
     cursor: pointer;
 }
 
-.hrCardListPage-chip-clear:disabled {
+.leaverCardListPage-chip-clear:disabled {
     cursor: default;
 }
 
-.hrCardListPage-chip-clear:not(:disabled):hover {
+.leaverCardListPage-chip-clear:not(:disabled):hover {
     color: var(--border-dark);
 }
 
-.hrCardListPage-filter-actions {
+.leaverCardListPage-filter-actions {
     display: flex;
     justify-content: flex-start;
     margin-top: var(--spacing-sm);
     border-top: 1px solid var(--border);
 }
 
-.hrCardListPage-search-btn {
+.leaverCardListPage-search-btn {
     margin: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
 }
 
 /* ====================== 목록 정보 / 하단 버튼 ====================== */
 
-.hrCardListPage-table-info {
+.leaverCardListPage-table-info {
     width: 100%;
     margin-bottom: var(--spacing-sm);
     text-align: left;
 }
 
-.hrCardListPage-bottom-actions {
+.leaverCardListPage-bottom-actions {
     display: flex;
     justify-content: flex-start;
     gap: var(--spacing-xs);
@@ -256,11 +256,11 @@
 }
 
 /* 공통 버튼 */
-.hrCardListPage-top-search-btn,
-.hrCardListPage-search-btn,
-.hrCardListPage-add-btn,
-.hrCardListPage-paging-prev-btn,
-.hrCardListPage-paging-next-btn {
+.leaverCardListPage-top-search-btn,
+.leaverCardListPage-search-btn,
+.leaverCardListPage-add-btn,
+.leaverCardListPage-paging-prev-btn,
+.leaverCardListPage-paging-next-btn {
     border: 1px solid transparent;
     border-radius: var(--radius-md);
     background: var(--color-primary);
@@ -270,17 +270,17 @@
     height: var(--spacing-lg);
 }
 
-.hrCardListPage-top-search-btn:hover,
-.hrCardListPage-search-btn:hover,
-.hrCardListPage-add-btn:hover,
-.hrCardListPage-paging-prev-btn:hover,
-.hrCardListPage-paging-next-btn:hover {
+.leaverCardListPage-top-search-btn:hover,
+.leaverCardListPage-search-btn:hover,
+.leaverCardListPage-add-btn:hover,
+.leaverCardListPage-paging-prev-btn:hover,
+.leaverCardListPage-paging-next-btn:hover {
     background: var(--color-danger);
     color: var(--color-inverse);
 
 }
 
-.hrCardListPage-disabled-btn {
+.leaverCardListPage-disabled-btn {
     color: var(--color-primary);
     border: 2px solid var(--border);
     border-radius: var(--radius-md);
@@ -289,27 +289,27 @@
     height: var(--spacing-lg);
 }
 
-.hrCardListPage-disabled-btn:hover {
+.leaverCardListPage-disabled-btn:hover {
     color: var(--color-primary);
     background: var(--color-primary-light);
 }
 
 /* ====================== 페이징 ====================== */
 
-.hrCardListPage-paging-group {
+.leaverCardListPage-paging-group {
     display: flex;
     justify-content: center;
     width: 100%;
     margin-top: var(--spacing-sm);
 }
 
-.hrCardListPage-paging-group-min {
+.leaverCardListPage-paging-group-min {
     display: flex;
     align-items: center;
     gap:var(--spacing-xs);
 }
 
-.hrCardListPage-paging-num-btn {
+.leaverCardListPage-paging-num-btn {
     background: none;
     border: 0;
     color: var(--border-dark);
@@ -318,7 +318,7 @@
     cursor: pointer;
 }
 
-.hrCardListPage-paging-num-btn:disabled {
+.leaverCardListPage-paging-num-btn:disabled {
     color: var(--text-accent);
     border-radius: var(--radius-sm);
     cursor: default;
@@ -326,15 +326,15 @@
 
 /* ====================== 테이블 ====================== */
 
-.hrTable {
+.leaverTable {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid var(--border);
     table-layout: fixed;
 }
 
-.hrTable-th,
-.hrTable-td {
+.leaverTable-th,
+.leaverTable-td {
     height: 20px;
     padding: 6px var(--spacing-xs);
     border: 1px solid var(--border);
@@ -345,16 +345,16 @@
     white-space: nowrap;
 }
 
-.hrTable-th {
+.leaverTable-th {
     background-color: var(--color-gray-100);
     color: var(--text-accent);
 }
 
-.hrTable-td {
+.leaverTable-td {
     background: var(--color-inverse);
 }
 
-.hrTable-nameButton {
+.leaverTable-nameButton {
     width: 100%;
     padding: 0;
     border: 0;
@@ -365,21 +365,21 @@
     cursor: pointer;
 }
 
-.hrTable-nameButton:hover,
-.hrTable-nameButton:focus-visible {
+.leaverTable-nameButton:hover,
+.leaverTable-nameButton:focus-visible {
     text-decoration: underline;
 }
 
-.hrTable tbody tr:hover {
+.leaverTable tbody tr:hover {
     background-color: var(--color-gray-100);
 }
 
 /* 체크박스 열 */
-.hrTable-checkbox-cell {
+.leaverTable-checkbox-cell {
     text-align: center;
 }
 
-.hrTable-checkbox {
+.leaverTable-checkbox {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -387,11 +387,11 @@
     cursor: pointer;
 }
 
-.hrTable-checkbox input {
+.leaverTable-checkbox input {
     display: none;
 }
 
-.hrTable-checkbox .checkmark {
+.leaverTable-checkbox .checkmark {
     width: 16px;
     height: 16px;
     display: inline-block;
@@ -402,59 +402,59 @@
     cursor: pointer;
 }
 
-.hrTable-checkbox input:checked + .checkmark {
+.leaverTable-checkbox input:checked + .checkmark {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
-.hrTable-empty {
+.leaverTable-empty {
     padding: var(--spacing-sm);
     border: 1px solid var(--border);
     text-align: center;
 }
 
 /* 열 너비 */
-.hrTable th:nth-child(1),
-.hrTable td:nth-child(1) {
+.leaverTable th:nth-child(1),
+.leaverTable td:nth-child(1) {
     width: 36px;
 }
 
-.hrTable th:nth-child(2),
-.hrTable td:nth-child(2) {
+.leaverTable th:nth-child(2),
+.leaverTable td:nth-child(2) {
     width: 70px;
 }
 
-.hrTable th:nth-child(3),
-.hrTable td:nth-child(3) {
+.leaverTable th:nth-child(3),
+.leaverTable td:nth-child(3) {
     width: 70px;
 }
 
-.hrTable th:nth-child(4),
-.hrTable td:nth-child(4) {
+.leaverTable th:nth-child(4),
+.leaverTable td:nth-child(4) {
     width: 80px;
 }
 
-.hrTable th:nth-child(5),
-.hrTable td:nth-child(5) {
+.leaverTable th:nth-child(5),
+.leaverTable td:nth-child(5) {
     width: 80px;
 }
 
-.hrTable th:nth-child(6),
-.hrTable td:nth-child(6) {
+.leaverTable th:nth-child(6),
+.leaverTable td:nth-child(6) {
     width: 70px;
 }
 
-.hrTable th:nth-child(7),
-.hrTable td:nth-child(7) {
+.leaverTable th:nth-child(7),
+.leaverTable td:nth-child(7) {
     width: 100px;
 }
 
-.hrTable th:nth-child(8),
-.hrTable td:nth-child(8) {
+.leaverTable th:nth-child(8),
+.leaverTable td:nth-child(8) {
     width: 200px;
 }
 
-.hrTable th:nth-child(9),
-.hrTable td:nth-child(9) {
+.leaverTable th:nth-child(9),
+.leaverTable td:nth-child(9) {
     width: 200px;
 }

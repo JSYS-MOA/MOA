@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
 import HrCardListPage from "./pages/HR/HrCardListPage.tsx";
+import LeaverCardListPage from "./pages/HR/LeaverCardListPage.tsx";
 import Base from "./pages/Base.tsx";
 
 
@@ -43,6 +44,7 @@ const App = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/hr/cards" element={<HrCardListPage />} />
+                        <Route path="/hr/leaver" element={<LeaverCardListPage />} />
                         <Route path="/base/:type" element={<Base />} />
                     </Route>
                 </Route>

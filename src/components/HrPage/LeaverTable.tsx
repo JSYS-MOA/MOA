@@ -1,15 +1,15 @@
-import type { HrTableProps } from "../../types/HrTableProps.ts";
-import "../../assets/styles/hr/hrCardList.css";
+import type { LeaverTableProps } from "../../types/LeaverTableProps.ts";
+import "../../assets/styles/Leaver/LeaverCardList.css";
 
-type HrTableSelectionProps = {
-    items: HrTableProps[];
+type LeaverTableSelectionProps = {
+    items: LeaverTableProps[];
     selectedUserIds: number[];
     onToggleItem: (userId: number) => void;
     onToggleAll: () => void;
     onSelectItem: (userId: number) => void;
 };
 
-const columns: Array<{ key: keyof HrTableProps; label: string }> = [
+const columns: Array<{ key: keyof LeaverTableProps; label: string }> = [
     { key: "startDate", label: "입사일" },
     { key: "quitDate", label: "퇴사일" },
     { key: "employeeId", label: "사원번호" },
@@ -21,7 +21,7 @@ const columns: Array<{ key: keyof HrTableProps; label: string }> = [
     { key: "address", label: "주소" },
 ];
 
-const formatCellValue = (value: HrTableProps[keyof HrTableProps]) => {
+const formatCellValue = (value: LeaverTableProps[keyof LeaverTableProps]) => {
     if (value instanceof Date) {
         return value.toLocaleDateString("ko-KR");
     }
@@ -29,22 +29,22 @@ const formatCellValue = (value: HrTableProps[keyof HrTableProps]) => {
     return value ?? "-";
 };
 
-const HrTable = ({
+const LeaverTable = ({
     items,
     selectedUserIds,
     onToggleItem,
     onToggleAll,
     onSelectItem,
-}: HrTableSelectionProps) => {
+}: LeaverTableSelectionProps) => {
     const allSelected =
         items.length > 0 && items.every((item) => selectedUserIds.includes(item.userId));
 
     return (
-        <table className="hrTable">
+        <table className="LeaverTable">
             <thead>
                 <tr>
-                    <th className="hrTable-th hrTable-checkbox-cell">
-                        <label className="hrTable-checkbox">
+                    <th className="LeaverTable-th LeaverTable-checkbox-cell">
+                        <label className="LeaverTable-checkbox">
                         <input
                             type="checkbox"
                             checked={allSelected}
@@ -56,7 +56,7 @@ const HrTable = ({
                     </th>
 
                     {columns.map((column) => (
-                        <th key={String(column.key)} className="hrTable-th">
+                        <th key={String(column.key)} className="LeaverTable-th">
                             {column.label}
                         </th>
                     ))}
@@ -66,15 +66,15 @@ const HrTable = ({
             <tbody>
                 {items.length === 0 ? (
                     <tr>
-                        <td colSpan={columns.length + 1} className="hrTable-empty">
+                        <td colSpan={columns.length + 1} className="LeaverTable-empty">
                             조회된 데이터가 없습니다.
                         </td>
                     </tr>
                 ) : (
                     items.map((item) => (
                         <tr key={item.userId}>
-                            <td className="hrTable-th hrTable-checkbox-cell">
-                                <label className="hrTable-checkbox">
+                            <td className="LeaverTable-th LeaverTable-checkbox-cell">
+                                <label className="LeaverTable-checkbox">
                                     <input
                                         type="checkbox"
                                         checked={selectedUserIds.includes(item.userId)}
@@ -88,12 +88,12 @@ const HrTable = ({
                             {columns.map((column) => (
                                 <td
                                     key={`${item.userId}-${String(column.key)}`}
-                                    className="hrTable-td"
+                                    className="LeaverTable-td"
                                 >
                                     {column.key === "userName" ? (
                                         <button
                                             type="button"
-                                            className="hrTable-nameButton"
+                                            className="LeaverTable-nameButton"
                                             onClick={() => onSelectItem(item.userId)}
                                         >
                                             {formatCellValue(item[column.key])}
@@ -111,4 +111,4 @@ const HrTable = ({
     );
 };
 
-export default HrTable;
+export default LeaverTable;

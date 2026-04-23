@@ -1,4 +1,4 @@
-export interface HrTableProps {
+export interface LeaverTableProps {
     userId: number;
     userName: string;
     employeeId?: number | string;

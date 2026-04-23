@@ -1,44 +1,27 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
 import type { HrCard } from "../../apis/HrCardService";
 import { useHrCardDelete, useHrCardList } from "../../apis/HrCardService";
-import "../../assets/styles/hr/hrCardList.css";
+import "../../assets/styles/hr/leaverCardList.css";
 import Button from "../../components/Button.tsx";
 import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
-import HrTable from "../../components/HrPage/HrTable.tsx";
 import HrCardUpdateModal from "../../components/HrPage/HrCardUpdateModal.tsx";
+import SepTable from "../../components/HrPage/LeaverTable.tsx";
 import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import type { HrTableProps } from "../../types/HrTableProps.ts";
 
 const ITEMS_PER_PAGE = 10;
 
 const GRADE_NAME_MAP: Record<string, string> = {
-    President: "?ъ옣",
-    President7: "?ъ옣",
-    "Vice President": "遺?ъ옣",
-    "Executive Director": "?곷Т",
-    "General Manager": "遺??,
-    "Deputy General Manager": "怨쇱옣",
-    "Assistant Manager": "?由?,
-    Employee: "?ъ썝",
+    President: "사장",
+    President7: "사장",
+    "Vice President": "부사장",
+    "Executive Director": "상무",
+    "General Manager": "부장",
+    "Deputy General Manager": "과장",
+    "Assistant Manager": "대리",
+    Employee: "사원",
 };
-
-const RESTRICTED_EDIT_GRADE_KEYWORDS = ["遺??, "?곷Т", "遺?ъ옣", "?ъ옣", "?꾩썝", "?댁궗", "???];
-
-const normalizeText = (value: string) => value.trim().replace(/\s+/g, "").toLowerCase();
-
-const isRestrictedEditGrade = (gradeName?: string | null) => {
-    const normalizedGradeName = normalizeText(gradeName ?? "");
-
-    if (!normalizedGradeName) {
-        return false;
-    }
-
-    return RESTRICTED_EDIT_GRADE_KEYWORDS.some((keyword) =>
-        normalizedGradeName.includes(normalizeText(keyword))
-    );
-};
-
 
 const parseDate = (value?: string | null) => {
     if (!value) {
@@ -54,7 +37,7 @@ const getGradeName = (gradeName?: string | null, gradeId?: number) => {
         return GRADE_NAME_MAP[gradeName.trim()] ?? gradeName.trim();
     }
 
-    return gradeId ? `吏곴툒 ${gradeId}` : "";
+    return gradeId ? `직급 ${gradeId}` : "";
 };
 
 const getDepartmentName = (departmentName?: string | null, departmentId?: number) => {
@@ -62,7 +45,7 @@ const getDepartmentName = (departmentName?: string | null, departmentId?: number
         return departmentName.trim();
     }
 
-    return departmentId ? `遺??${departmentId}` : "";
+    return departmentId ? `부서 ${departmentId}` : "";
 };
 
 const mapCardToRow = (card: HrCard): HrTableProps => {
@@ -125,22 +108,22 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="sepCardListPage-filter-group">
+        <div className="hrCardListPage-filter-group">
             <label>{label}</label>
-            <div className={`sepCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="sepCardListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`hrCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="hrCardListPage-chip-input-icon" aria-hidden="true" />
                 {hasAppliedValue && (
-                    <span className="sepCardListPage-chip">
+                    <span className="hrCardListPage-chip">
                         <span>{appliedValue}</span>
                         <button
-                        type="button"
-                        className="sepCardListPage-chip-x"
-                        onClick={onClear}
-                        > 횞
+                            type="button"
+                            className="hrCardListPage-chip-x"
+                            onClick={onClear}
+                        >
+                            ×
                         </button>
                     </span>
                 )}
-
 
                 <input
                     type="text"
@@ -152,17 +135,19 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="sepCardListPage-chip-clear"
-                    aria-label={`${label} ?낅젰媛???젣`}
+                    className="hrCardListPage-chip-clear"
+                    aria-label={`${label} 입력값 삭제`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
-                >x</button>
+                >
+                    x
+                </button>
             </div>
         </div>
     );
 };
 
-const SepCardListPage = () => {
+const LeaverCardListPage = () => {
     const { user } = useAuthStore();
     const { data: cards = [], isLoading, isError } = useHrCardList();
     const deleteHrCard = useHrCardDelete();
@@ -183,7 +168,10 @@ const SepCardListPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [gradeFilter, setGradeFilter] = useState("");
 
-    const items = useMemo(() => cards.map(mapCardToRow), [cards]);
+    const items = useMemo(
+        () => cards.map(mapCardToRow).filter((item) => item.quitDate !== undefined),
+        [cards]
+    );
     const canDeleteHrCard = user?.roleId === 2;
 
     useEffect(() => {
@@ -275,12 +263,12 @@ const SepCardListPage = () => {
         }
 
         if (!canDeleteHrCard) {
-            alert("?몄궗??λ쭔 ?댁궗?먯뭅?쒕? ??젣?????덉뒿?덈떎.");
+            alert("인사팀장만 퇴사자 카드를 삭제할 수 있습니다.");
             return;
         }
 
         const confirmed = window.confirm(
-            `?좏깮???댁궗?먯뭅??${selectedUserIds.length}嫄댁쓣 ??젣?섏떆寃좎뒿?덇퉴?`
+            `선택한 퇴사자 카드 ${selectedUserIds.length}건을 삭제하시겠습니까?`
         );
 
         if (!confirmed) {
@@ -295,12 +283,12 @@ const SepCardListPage = () => {
             }
 
             setSelectedUserIds([]);
-            alert("?좏깮???댁궗?먯뭅?쒕? ??젣?덉뒿?덈떎.");
+            alert("선택한 퇴사자 카드를 삭제했습니다.");
         } catch (error) {
             const message =
                 error instanceof Error
                     ? error.message
-                    : "?댁궗?먯뭅????젣 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.";
+                    : "퇴사자 카드 삭제 중 오류가 발생했습니다.";
 
             console.error(error);
             alert(message);
@@ -309,131 +297,136 @@ const SepCardListPage = () => {
         }
     };
 
+    const handleOpenUpdateModal = (userId: number) => {
+        setSelectedDetailUserId(userId);
+    };
+
     const handleCloseUpdateModal = () => {
         setSelectedDetailUserId(null);
     };
 
     return (
-        <div className="sepCardListPage-page">
-            <div className="sepCardListPage-header">
+        <div className="hrCardListPage-page">
+            <div className="hrCardListPage-header">
                 <span
-                    className="sepCardListPage-star"
+                    className="hrCardListPage-star"
                     aria-expanded={isStarred}
                     onClick={() => setIsStarred((prev) => !prev)}
                 >
-                    {isStarred ? "?? : "??}
+                    {isStarred ? "★" : "☆"}
                 </span>
-                <h1 className="sepCardListPage-title">?댁궗??移대뱶 ?깅줉</h1>
+                <h1 className="hrCardListPage-title">퇴사자 카드 등록</h1>
                 <Button
-                    className="sepCardListPage-top-search-btn"
-                    label={`寃??議곌굔 ${isSearchOpen ? "?? : "??}`}
+                    className="hrCardListPage-top-search-btn"
+                    label={`검색 조건 ${isSearchOpen ? "▲" : "▼"}`}
                     aria-expanded={isSearchOpen}
                     onClick={() => setIsSearchOpen((prev) => !prev)}
                 />
             </div>
 
-            <div className={`sepCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="sepCardListPage-filter-row">
-                    <div className="sepCardListPage-filter-1">
-                    <FilterChipInput
-                        label="遺??
-                        placeholder="遺??
-                        draftValue={departmentDraft}
-                        appliedValue={departmentFilter}
-                        onDraftChange={setDepartmentDraft}
-                        onClear={clearDepartmentFilter}
-                        onSubmit={applyFilters}
-                    />
+            <div className={`hrCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="hrCardListPage-filter-row">
+                    <div className="hrCardListPage-filter-1">
+                        <FilterChipInput
+                            label="부서"
+                            placeholder="부서"
+                            draftValue={departmentDraft}
+                            appliedValue={departmentFilter}
+                            onDraftChange={setDepartmentDraft}
+                            onClear={clearDepartmentFilter}
+                            onSubmit={applyFilters}
+                        />
                     </div>
-                    <div className="sepCardListPage-filter-2">
-                    <FilterChipInput
-                        label="吏곴툒/吏곸쐞"
-                        placeholder="吏곴툒"
-                        draftValue={gradeDraft}
-                        appliedValue={gradeFilter}
-                        onDraftChange={setGradeDraft}
-                        onClear={clearGradeFilter}
-                        onSubmit={applyFilters}
-                    />
+                    <div className="hrCardListPage-filter-2">
+                        <FilterChipInput
+                            label="직급/직위"
+                            placeholder="직급"
+                            draftValue={gradeDraft}
+                            appliedValue={gradeFilter}
+                            onDraftChange={setGradeDraft}
+                            onClear={clearGradeFilter}
+                            onSubmit={applyFilters}
+                        />
                     </div>
-                    <div className="sepCardListPage-filter-3">
-                    <FilterChipInput
-                        label="?깅챸"
-                        placeholder="?깅챸"
-                        draftValue={keywordDraft}
-                        appliedValue={keywordFilter}
-                        onDraftChange={setKeywordDraft}
-                        onClear={clearKeywordFilter}
-                        onSubmit={applyFilters}
-                    />
+                    <div className="hrCardListPage-filter-3">
+                        <FilterChipInput
+                            label="성명"
+                            placeholder="성명"
+                            draftValue={keywordDraft}
+                            appliedValue={keywordFilter}
+                            onDraftChange={setKeywordDraft}
+                            onClear={clearKeywordFilter}
+                            onSubmit={applyFilters}
+                        />
                     </div>
                 </div>
 
-                <div className="sepCardListPage-filter-actions">
-                    <Button className="sepCardListPage-search-btn" label="寃?? onClick={applyFilters} />
+                <div className="hrCardListPage-filter-actions">
+                    <Button className="hrCardListPage-search-btn" label="검색" onClick={applyFilters} />
                 </div>
             </div>
 
-            <div className="sepCardListPage-table-box">
-                <div className="sepCardListPage-table-info">
-                    <span>?꾩껜 {filteredItems.length}嫄?/span>
+            <div className="hrCardListPage-table-box">
+                <div className="hrCardListPage-table-info">
+                    <span>전체 {filteredItems.length}건</span>
                 </div>
 
                 {isLoading ? (
-                    <div>?몄궗 移대뱶 紐⑸줉??遺덈윭?ㅻ뒗 以묒엯?덈떎.</div>
+                    <div>퇴사자 카드 목록을 불러오는 중입니다.</div>
                 ) : isError ? (
-                    <div>?몄궗 移대뱶 紐⑸줉??遺덈윭?ㅼ? 紐삵뻽?듬땲??</div>
+                    <div>퇴사자 카드 목록을 불러오지 못했습니다.</div>
                 ) : (
-                    <HrTable
+                    <SepTable
                         items={paginatedItems}
                         selectedUserIds={selectedUserIds}
                         onToggleItem={handleToggleItem}
                         onToggleAll={handleToggleAll}
+                        onSelectItem={handleOpenUpdateModal}
                     />
                 )}
 
-                <div className="sepCardListPage-bottom-actions">
+                <div className="hrCardListPage-bottom-actions">
                     {user && (
                         <Button
-                            className="sepCardListPage-add-btn"
-                            label="?좉퇋"
+                            className="hrCardListPage-add-btn"
+                            label="신규"
                             onClick={() => setIsAddModalOpen(true)}
                         />
                     )}
 
                     <Button
-                        className="sepCardListPage-disabled-btn"
+                        className="hrCardListPage-disabled-btn"
                         disabled={selectedUserIds.length === 0 || isDeleting}
-                        label={isDeleting ? "??젣 以?.." : "??젣"}
+                        label={isDeleting ? "삭제 중..." : "삭제"}
                         onClick={handleDeleteSelected}
                     />
                 </div>
 
-                <div className="sepCardListPage-paging-group">
-                    <div className="sepCardListPage-paging-group-min">
-                    <Button
-                        className="sepCardListPage-paging-prev-btn"
-                        onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
-                        disabled={resolvedCurrentPage === 1}
-                        label="?댁쟾"
-                    />
-
-                    {pageNumbers.map((pageNumber) => (
+                <div className="hrCardListPage-paging-group">
+                    <div className="hrCardListPage-paging-group-min">
                         <Button
-                            className="sepCardListPage-paging-num-btn"
-                            key={pageNumber}
-                            onClick={() => setCurrentPage(pageNumber)}
-                            disabled={pageNumber === resolvedCurrentPage}
-                            label={pageNumber}
+                            className="hrCardListPage-paging-prev-btn"
+                            onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
+                            disabled={resolvedCurrentPage === 1}
+                            label="이전"
                         />
-                    ))}
 
-                    <Button
-                        className="sepCardListPage-paging-next-btn"
-                        onClick={() => setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))}
-                        disabled={resolvedCurrentPage === totalPages}
-                        label="?ㅼ쓬"
-                    />
+                        {pageNumbers.map((pageNumber) => (
+                            <Button
+                                className="hrCardListPage-paging-num-btn"
+                                key={pageNumber}
+                                onClick={() => setCurrentPage(pageNumber)}
+                                disabled={pageNumber === resolvedCurrentPage}
+                                label={pageNumber}
+                            />
+                        ))}
+
+                        <Button
+                            className="hrCardListPage-paging-next-btn"
+                            onClick={() => setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))}
+                            disabled={resolvedCurrentPage === totalPages}
+                            label="다음"
+                        />
                     </div>
                 </div>
             </div>
@@ -446,10 +439,10 @@ const SepCardListPage = () => {
                 isOpen={selectedDetailUserId !== null}
                 userId={selectedDetailUserId}
                 onClose={handleCloseUpdateModal}
+                restrictEditToHrLead
             />
         </div>
     );
 };
 
-export default SepCardListPage;
-
+export default LeaverCardListPage;

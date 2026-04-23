@@ -11,6 +11,7 @@ type Props = {
     isOpen: boolean;
     userId?: number | null;
     onClose: () => void;
+    restrictEditToHrLead?: boolean;
 };
 
 type HrCardWithAccountOwner = HrCard & {
@@ -467,7 +468,12 @@ const DateInputWithPicker = ({
     );
 };
 
-const HrCardUpdateModal = ({ isOpen, userId = null, onClose }: Props) => {
+const HrCardUpdateModal = ({
+    isOpen,
+    userId = null,
+    onClose,
+    restrictEditToHrLead = false,
+}: Props) => {
     const { user } = useAuthStore();
     const [form, setForm] = useState<HrCardFormState>(initialForm);
     const [selectedProfile, setSelectedProfile] = useState<SelectedProfile | null>(null);
@@ -533,8 +539,11 @@ const HrCardUpdateModal = ({ isOpen, userId = null, onClose }: Props) => {
         return getRoleOption(form.departmentId, form.departmentName, form.gradeName);
     }, [form.departmentId, form.departmentName, form.gradeName]);
 
-    const canEditRestrictedCard = user?.roleId === 2 || !isRestrictedEditGrade(form.gradeName);
-    const isReadOnly = updateHrCard.isPending || !canEditRestrictedCard;
+    const isHrLead = user?.roleId === 2;
+    const canEditCard = restrictEditToHrLead
+        ? isHrLead
+        : isHrLead || !isRestrictedEditGrade(form.gradeName);
+    const isReadOnly = updateHrCard.isPending || !canEditCard;
     const inputClassName = isReadOnly
         ? "hrCardAddModal-input hrCardAddModal-input--readonly"
         : "hrCardAddModal-input";
@@ -763,8 +772,12 @@ const HrCardUpdateModal = ({ isOpen, userId = null, onClose }: Props) => {
             return;
         }
 
-        if (!canEditRestrictedCard) {
-            alert("부장급 이상 인사카드는 인사팀 팀장만 수정할 수 있습니다.");
+        if (!canEditCard) {
+            alert(
+                restrictEditToHrLead
+                    ? "퇴사자 카드는 인사팀 팀장만 수정할 수 있습니다."
+                    : "부장급 이상 인사카드는 인사팀 팀장만 수정할 수 있습니다."
+            );
             return;
         }
 
@@ -1145,7 +1158,7 @@ const HrCardUpdateModal = ({ isOpen, userId = null, onClose }: Props) => {
                             type="submit"
                             form={formId}
                             className="hrCardAddModal-button hrCardAddModal-button--primary"
-                            disabled={updateHrCard.isPending || !canEditRestrictedCard}
+                            disabled={updateHrCard.isPending || !canEditCard}
                         >
                             {updateHrCard.isPending ? "저장 중..." : "저장"}
                         </button>
