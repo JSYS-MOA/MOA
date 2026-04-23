@@ -3,88 +3,22 @@ import type { KeyboardEvent } from "react";
 import type { HrCard } from "../../apis/HrCardService";
 import { useHrCardDelete, useHrCardList } from "../../apis/HrCardService";
 import "../../assets/styles/hr/hrCardList.css";
-import Button from "../../components/Button.tsx";
 import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
-import HrTable from "../../components/HrPage/HrTable.tsx";
 import HrCardUpdateModal from "../../components/HrPage/HrCardUpdateModal.tsx";
+import HrTable from "../../components/HrPage/HrTable.tsx";
 import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import type { HrTableProps } from "../../types/HrTableProps.ts";
 
 const ITEMS_PER_PAGE = 10;
 
-const GRADE_NAME_MAP: Record<string, string> = {
-    President: "사장",
-    President7: "사장",
-    "Vice President": "부사장",
-    "Executive Director": "상무",
-    "General Manager": "부장",
-    "Deputy General Manager": "과장",
-    "Assistant Manager": "대리",
-    Employee: "사원",
-};
-
-const RESTRICTED_EDIT_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사", "팀장"];
-
-const normalizeText = (value: string) => value.trim().replace(/\s+/g, "").toLowerCase();
-
-const isRestrictedEditGrade = (gradeName?: string | null) => {
-    const normalizedGradeName = normalizeText(gradeName ?? "");
-
-    if (!normalizedGradeName) {
-        return false;
-    }
-
-    return RESTRICTED_EDIT_GRADE_KEYWORDS.some((keyword) =>
-        normalizedGradeName.includes(normalizeText(keyword))
-    );
-};
-
-
-const parseDate = (value?: string | null) => {
-    if (!value) {
-        return undefined;
-    }
-
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-};
-
-const getGradeName = (gradeName?: string | null, gradeId?: number) => {
-    if (gradeName?.trim()) {
-        return GRADE_NAME_MAP[gradeName.trim()] ?? gradeName.trim();
-    }
-
-    return gradeId ? `직급 ${gradeId}` : "";
-};
-
-const getDepartmentName = (departmentName?: string | null, departmentId?: number) => {
-    if (departmentName?.trim()) {
-        return departmentName.trim();
-    }
-
-    return departmentId ? `부서 ${departmentId}` : "";
-};
-
-const mapCardToRow = (card: HrCard): HrTableProps => {
-    return {
-        userId: card.userId,
-        userName: card.userName,
-        employeeId: card.employeeId,
-        phone: card.phone ?? "",
-        email: card.email ?? "",
-        address: card.address ?? "",
-        startDate: parseDate(card.startDate) ?? new Date(0),
-        quitDate: parseDate(card.quitDate),
-        departmentId: card.departmentId,
-        departmentName: getDepartmentName(card.departmentName, card.departmentId),
-        gradeId: card.gradeId,
-        gradeName: getGradeName(card.gradeName, card.gradeId),
-        birth: parseDate(card.birth),
-        profileUrl: card.profileUrl ?? "",
-        performance: card.performance ?? "",
-        bank: card.bank ?? "",
-        accountNum: card.accountNum ?? "",
-    };
+const GRADE_NAME_BY_ID: Record<number, string> = {
+    1: "사장",
+    2: "부사장",
+    3: "상무",
+    4: "부장",
+    5: "과장",
+    6: "대리",
+    7: "사원",
 };
 
 type FilterChipInputProps = {
@@ -95,6 +29,103 @@ type FilterChipInputProps = {
     onDraftChange: (value: string) => void;
     onClear: () => void;
     onSubmit: () => void;
+};
+
+type LooseHrCard = HrCard & Record<string, unknown>;
+
+const normalizeText = (value: string) => value.trim().toLowerCase();
+
+const parseDateValue = (value: unknown) => {
+    if (!value || typeof value !== "string") {
+        return undefined;
+    }
+
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+};
+
+const getStringValue = (record: Record<string, unknown>, ...keys: string[]) => {
+    for (const key of keys) {
+        const value = record[key];
+
+        if (typeof value === "string" && value.trim() !== "") {
+            return value.trim();
+        }
+
+        if (typeof value === "number") {
+            return String(value);
+        }
+    }
+
+    return "";
+};
+
+const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
+    for (const key of keys) {
+        const value = record[key];
+
+        if (typeof value === "number" && Number.isFinite(value)) {
+            return value;
+        }
+
+        if (typeof value === "string" && value.trim() !== "") {
+            const parsed = Number(value);
+
+            if (Number.isFinite(parsed)) {
+                return parsed;
+            }
+        }
+    }
+
+    return undefined;
+};
+
+const includesText = (source: string | number | undefined, keyword: string) =>
+    normalizeText(String(source ?? "")).includes(normalizeText(keyword));
+
+const getGradeName = (record: Record<string, unknown>, gradeId: number) => {
+    const rawGradeName = getStringValue(record, "gradeName", "grade_name");
+
+    if (rawGradeName) {
+        return rawGradeName;
+    }
+
+    return GRADE_NAME_BY_ID[gradeId] ?? (gradeId > 0 ? `직급 ${gradeId}` : "");
+};
+
+const mapCardToRow = (card: HrCard): HrTableProps | null => {
+    const record = card as LooseHrCard;
+    const userId = getNumberValue(record, "userId", "user_id");
+
+    if (userId === undefined) {
+        return null;
+    }
+
+    const departmentId = getNumberValue(record, "departmentId", "department_id") ?? 0;
+    const gradeId = getNumberValue(record, "gradeId", "grade_id") ?? 0;
+    const departmentName =
+        getStringValue(record, "departmentName", "department_name") ||
+        (departmentId > 0 ? `부서 ${departmentId}` : "");
+
+    return {
+        userId,
+        userName: getStringValue(record, "userName", "user_name") || `사용자 ${userId}`,
+        employeeId: getStringValue(record, "employeeId", "employee_id"),
+        phone: getStringValue(record, "phone"),
+        email: getStringValue(record, "email"),
+        address: getStringValue(record, "address"),
+        startDate: parseDateValue(record.startDate ?? record.start_date) ?? new Date(0),
+        quitDate: parseDateValue(record.quitDate ?? record.quit_date),
+        departmentId,
+        departmentName,
+        gradeId,
+        gradeName: getGradeName(record, gradeId),
+        birth: parseDateValue(record.birth),
+        performance: getStringValue(record, "performance"),
+        bank: getStringValue(record, "bank"),
+        accountNum: getStringValue(record, "accountNum", "account_num"),
+        profileUrl: getStringValue(record, "profileUrl", "profile_url"),
+    };
 };
 
 const FilterChipInput = ({
@@ -129,18 +160,19 @@ const FilterChipInput = ({
             <label>{label}</label>
             <div className={`hrCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
                 <span className="hrCardListPage-chip-input-icon" aria-hidden="true" />
+
                 {hasAppliedValue && (
                     <span className="hrCardListPage-chip">
                         <span>{appliedValue}</span>
                         <button
-                        type="button"
-                        className="hrCardListPage-chip-x"
-                        onClick={onClear}
-                        > ×
+                            type="button"
+                            className="hrCardListPage-chip-x"
+                            onClick={onClear}
+                        >
+                            x
                         </button>
                     </span>
                 )}
-
 
                 <input
                     type="text"
@@ -153,10 +185,12 @@ const FilterChipInput = ({
                 <button
                     type="button"
                     className="hrCardListPage-chip-clear"
-                    aria-label={`${label} 입력값 삭제`}
+                    aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
-                >x</button>
+                >
+                    x
+                </button>
             </div>
         </div>
     );
@@ -183,13 +217,19 @@ const HrCardListPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [gradeFilter, setGradeFilter] = useState("");
 
-    const items = useMemo(() => cards.map(mapCardToRow), [cards]);
+    const items = useMemo(
+        () =>
+            cards
+                .map(mapCardToRow)
+                .filter((item): item is HrTableProps => item !== null)
+                .filter((item) => item.quitDate === undefined),
+        [cards]
+    );
+
     const canDeleteHrCard = user?.roleId === 2;
-    const canEditSeniorHrCard = user?.roleId === 2;
 
     useEffect(() => {
         const validUserIds = new Set(items.map((item) => item.userId));
-
         setSelectedUserIds((prev) => prev.filter((userId) => validUserIds.has(userId)));
     }, [items]);
 
@@ -197,16 +237,16 @@ const HrCardListPage = () => {
         return items.filter((item) => {
             const matchesKeyword =
                 keywordFilter.trim() === "" ||
-                item.userName.includes(keywordFilter) ||
-                String(item.employeeId ?? "").includes(keywordFilter) ||
-                item.email.includes(keywordFilter);
+                includesText(item.userName, keywordFilter) ||
+                includesText(item.employeeId, keywordFilter) ||
+                includesText(item.email, keywordFilter);
 
             const matchesDepartment =
                 departmentFilter.trim() === "" ||
-                (item.departmentName ?? "").includes(departmentFilter);
+                includesText(item.departmentName, departmentFilter);
 
             const matchesGrade =
-                gradeFilter.trim() === "" || (item.gradeName ?? "").includes(gradeFilter);
+                gradeFilter.trim() === "" || includesText(item.gradeName, gradeFilter);
 
             return matchesKeyword && matchesDepartment && matchesGrade;
         });
@@ -220,9 +260,10 @@ const HrCardListPage = () => {
         return filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     }, [filteredItems, resolvedCurrentPage]);
 
-    const pageNumbers = useMemo(() => {
-        return Array.from({ length: totalPages }, (_, index) => index + 1);
-    }, [totalPages]);
+    const pageNumbers = useMemo(
+        () => Array.from({ length: totalPages }, (_, index) => index + 1),
+        [totalPages]
+    );
 
     const applyFilters = () => {
         setKeywordFilter(keywordDraft.trim());
@@ -311,13 +352,6 @@ const HrCardListPage = () => {
     };
 
     const handleOpenUpdateModal = (userId: number) => {
-        const selectedItem = items.find((item) => item.userId === userId);
-
-        if (selectedItem && isRestrictedEditGrade(selectedItem.gradeName) && !canEditSeniorHrCard) {
-            alert("부장급 이상 인사카드는 인사팀 팀장만 수정할 수 있습니다.");
-            return;
-        }
-
         setSelectedDetailUserId(userId);
     };
 
@@ -328,61 +362,74 @@ const HrCardListPage = () => {
     return (
         <div className="hrCardListPage-page">
             <div className="hrCardListPage-header">
-                <span
+                <button
+                    type="button"
                     className="hrCardListPage-star"
-                    aria-expanded={isStarred}
+                    aria-pressed={isStarred}
                     onClick={() => setIsStarred((prev) => !prev)}
                 >
                     {isStarred ? "★" : "☆"}
-                </span>
-                <h1 className="hrCardListPage-title">인사 카드 등록</h1>
-                <Button
+                </button>
+
+                <h1 className="hrCardListPage-title">인사카드 목록</h1>
+
+                <button
+                    type="button"
                     className="hrCardListPage-top-search-btn"
-                    label={`검색 조건 ${isSearchOpen ? "▲" : "▼"}`}
                     aria-expanded={isSearchOpen}
                     onClick={() => setIsSearchOpen((prev) => !prev)}
-                />
+                >
+                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
+                </button>
             </div>
 
             <div className={`hrCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
                 <div className="hrCardListPage-filter-row">
                     <div className="hrCardListPage-filter-1">
-                    <FilterChipInput
-                        label="부서"
-                        placeholder="부서"
-                        draftValue={departmentDraft}
-                        appliedValue={departmentFilter}
-                        onDraftChange={setDepartmentDraft}
-                        onClear={clearDepartmentFilter}
-                        onSubmit={applyFilters}
-                    />
+                        <FilterChipInput
+                            label="부서"
+                            placeholder="부서명 입력"
+                            draftValue={departmentDraft}
+                            appliedValue={departmentFilter}
+                            onDraftChange={setDepartmentDraft}
+                            onClear={clearDepartmentFilter}
+                            onSubmit={applyFilters}
+                        />
                     </div>
+
                     <div className="hrCardListPage-filter-2">
-                    <FilterChipInput
-                        label="직급/직위"
-                        placeholder="직급"
-                        draftValue={gradeDraft}
-                        appliedValue={gradeFilter}
-                        onDraftChange={setGradeDraft}
-                        onClear={clearGradeFilter}
-                        onSubmit={applyFilters}
-                    />
+                        <FilterChipInput
+                            label="직급"
+                            placeholder="직급명 입력"
+                            draftValue={gradeDraft}
+                            appliedValue={gradeFilter}
+                            onDraftChange={setGradeDraft}
+                            onClear={clearGradeFilter}
+                            onSubmit={applyFilters}
+                        />
                     </div>
+
                     <div className="hrCardListPage-filter-3">
-                    <FilterChipInput
-                        label="성명"
-                        placeholder="성명"
-                        draftValue={keywordDraft}
-                        appliedValue={keywordFilter}
-                        onDraftChange={setKeywordDraft}
-                        onClear={clearKeywordFilter}
-                        onSubmit={applyFilters}
-                    />
+                        <FilterChipInput
+                            label="검색어"
+                            placeholder="이름, 사번, 이메일"
+                            draftValue={keywordDraft}
+                            appliedValue={keywordFilter}
+                            onDraftChange={setKeywordDraft}
+                            onClear={clearKeywordFilter}
+                            onSubmit={applyFilters}
+                        />
                     </div>
                 </div>
 
                 <div className="hrCardListPage-filter-actions">
-                    <Button className="hrCardListPage-search-btn" label="검색" onClick={applyFilters} />
+                    <button
+                        type="button"
+                        className="hrCardListPage-search-btn"
+                        onClick={applyFilters}
+                    >
+                        검색
+                    </button>
                 </div>
             </div>
 
@@ -392,9 +439,9 @@ const HrCardListPage = () => {
                 </div>
 
                 {isLoading ? (
-                    <div>인사 카드 목록을 불러오는 중입니다.</div>
+                    <div>인사카드 목록을 불러오는 중입니다.</div>
                 ) : isError ? (
-                    <div>인사 카드 목록을 불러오지 못했습니다.</div>
+                    <div>인사카드 목록을 불러오지 못했습니다.</div>
                 ) : (
                     <HrTable
                         items={paginatedItems}
@@ -407,46 +454,58 @@ const HrCardListPage = () => {
 
                 <div className="hrCardListPage-bottom-actions">
                     {user && (
-                        <Button
+                        <button
+                            type="button"
                             className="hrCardListPage-add-btn"
-                            label="신규"
                             onClick={() => setIsAddModalOpen(true)}
-                        />
+                        >
+                            추가
+                        </button>
                     )}
 
-                    <Button
+                    <button
+                        type="button"
                         className="hrCardListPage-disabled-btn"
                         disabled={selectedUserIds.length === 0 || isDeleting}
-                        label={isDeleting ? "삭제 중..." : "삭제"}
                         onClick={handleDeleteSelected}
-                    />
+                    >
+                        {isDeleting ? "삭제 중..." : "삭제"}
+                    </button>
                 </div>
 
                 <div className="hrCardListPage-paging-group">
                     <div className="hrCardListPage-paging-group-min">
-                    <Button
-                        className="hrCardListPage-paging-prev-btn"
-                        onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
-                        disabled={resolvedCurrentPage === 1}
-                        label="이전"
-                    />
+                        <button
+                            type="button"
+                            className="hrCardListPage-paging-prev-btn"
+                            onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
+                            disabled={resolvedCurrentPage === 1}
+                        >
+                            이전
+                        </button>
 
-                    {pageNumbers.map((pageNumber) => (
-                        <Button
-                            className="hrCardListPage-paging-num-btn"
-                            key={pageNumber}
-                            onClick={() => setCurrentPage(pageNumber)}
-                            disabled={pageNumber === resolvedCurrentPage}
-                            label={pageNumber}
-                        />
-                    ))}
+                        {pageNumbers.map((pageNumber) => (
+                            <button
+                                type="button"
+                                className="hrCardListPage-paging-num-btn"
+                                key={pageNumber}
+                                onClick={() => setCurrentPage(pageNumber)}
+                                disabled={pageNumber === resolvedCurrentPage}
+                            >
+                                {pageNumber}
+                            </button>
+                        ))}
 
-                    <Button
-                        className="hrCardListPage-paging-next-btn"
-                        onClick={() => setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))}
-                        disabled={resolvedCurrentPage === totalPages}
-                        label="다음"
-                    />
+                        <button
+                            type="button"
+                            className="hrCardListPage-paging-next-btn"
+                            onClick={() =>
+                                setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
+                            }
+                            disabled={resolvedCurrentPage === totalPages}
+                        >
+                            다음
+                        </button>
                     </div>
                 </div>
             </div>
@@ -455,6 +514,7 @@ const HrCardListPage = () => {
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
             />
+
             <HrCardUpdateModal
                 isOpen={selectedDetailUserId !== null}
                 userId={selectedDetailUserId}

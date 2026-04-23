@@ -1,0 +1,83 @@
+.login-Wrapper{
+    width: 552px; margin: 160px auto;
+}
+.login-Wrapper .logo{text-align: center; margin-bottom: 24px;}
+.login-Wrapper .logo h1{ font-weight: 600; letter-spacing: 2%;}
+.login-Wrapper .logo p{color:var(--text-secondary-30); margin-top: -2px; font-weight: 600}
+.login-Wrapper form{
+    background: var(--color-inverse);
+    padding: 71px 48px 40px 48px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;          /* 추가 */
+    flex-direction: column; /* 추가 */
+}
+.login-Wrapper .title{font-size: var(--font-sm); color: var(--text-secondary-70)}
+.login-Wrapper input{
+    padding: 14px 8px; width: 100%;
+    border-radius: var(--radius-md); margin-top: 10px;
+    border: 1px solid var(--border);
+    font-size: var(--font-sm);
+}
+.login-Wrapper input:focus{ border-radius: var(--radius-md); }
+.login-Wrapper .login-Password{ margin-top: 19px;}
+.login-Wrapper .error-Icon{
+    color: var(--color-danger);
+    align-items: center; display: flex; gap: 4px;
+    font-size:var(--font-sm);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin: 0;
+    transition: all 0.2s ease;
+}
+.login-Wrapper .error-Icon.show {
+    max-height: 40px;
+    opacity: 1;
+    margin: var(--spacing-sm) 0 0;
+}
+.login-Wrapper .error-Icon span{
+    display: flex; }
+.login-Wrapper .submit-Btn{
+    width: 100%; padding: 13px 0;
+    border-radius: 34px;
+    background: var( --color-primary);
+    border: none; color: var(  --text-inverse);
+    font-size: var(--font-lg);
+    margin-top: 30px;
+    cursor: pointer;
+}
+.login-Wrapper .submit-Btn:hover{
+    background: #575568;}
+.login-Wrapper .privacy-Agree{font-size: 13px; margin-top: var(--spacing-lg); color: var(--text-secondary); font-weight: 400; letter-spacing: 2%}
+.login-Wrapper .privacy-Agree span{text-decoration: underline}
+.login-Wrapper .login-FindPassword{
+    color: var(--text-secondary-50);
+    font-size: 13px; display: block;
+    text-align: right; margin-top: 23px;
+}
+.login-Wrapper .login-Error{
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-danger);
+    font-size: var(--font-sm);
+    background: rgb(218 92 87 / 0.16);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-danger);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+.login-Wrapper .login-Error.show {
+    max-height: 46px;
+    opacity: 1;
+    padding: 14px 8px;
+    border: 1px solid var(--color-danger);
+    margin-top: 10px;
+}
+.login-Wrapper .login-Error span{display: flex;}
+

@@ -9,7 +9,17 @@ type HrTableSelectionProps = {
     onSelectItem: (userId: number) => void;
 };
 
-const columns: Array<{ key: keyof HrTableProps; label: string }> = [
+type ColumnKey =
+    | "startDate"
+    | "employeeId"
+    | "userName"
+    | "departmentName"
+    | "gradeName"
+    | "phone"
+    | "email"
+    | "address";
+
+const columns: Array<{ key: ColumnKey; label: string }> = [
     { key: "startDate", label: "입사일" },
     { key: "employeeId", label: "사원번호" },
     { key: "userName", label: "이름" },
@@ -20,7 +30,7 @@ const columns: Array<{ key: keyof HrTableProps; label: string }> = [
     { key: "address", label: "주소" },
 ];
 
-const formatCellValue = (value: HrTableProps[keyof HrTableProps]) => {
+const formatCellValue = (value: HrTableProps[ColumnKey]) => {
     if (value instanceof Date) {
         return value.toLocaleDateString("ko-KR");
     }
@@ -44,18 +54,18 @@ const HrTable = ({
                 <tr>
                     <th className="hrTable-th hrTable-checkbox-cell">
                         <label className="hrTable-checkbox">
-                        <input
-                            type="checkbox"
-                            checked={allSelected}
-                            onChange={onToggleAll}
-                            aria-label="전체 선택"
-                        />
+                            <input
+                                type="checkbox"
+                                checked={allSelected}
+                                onChange={onToggleAll}
+                                aria-label="전체 선택"
+                            />
                             <span className="checkmark"></span>
                         </label>
                     </th>
 
                     {columns.map((column) => (
-                        <th key={String(column.key)} className="hrTable-th">
+                        <th key={column.key} className="hrTable-th">
                             {column.label}
                         </th>
                     ))}
@@ -66,7 +76,7 @@ const HrTable = ({
                 {items.length === 0 ? (
                     <tr>
                         <td colSpan={columns.length + 1} className="hrTable-empty">
-                            조회된 데이터가 없습니다.
+                            조회된 인사카드가 없습니다.
                         </td>
                     </tr>
                 ) : (
@@ -86,7 +96,7 @@ const HrTable = ({
 
                             {columns.map((column) => (
                                 <td
-                                    key={`${item.userId}-${String(column.key)}`}
+                                    key={`${item.userId}-${column.key}`}
                                     className="hrTable-td"
                                 >
                                     {column.key === "userName" ? (

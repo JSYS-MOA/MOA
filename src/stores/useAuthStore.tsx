@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
 import "../types/auth.ts";
 import type {User} from "../types/auth.ts";
 
@@ -10,17 +9,8 @@ interface AuthState {
     logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-    persist(
-        (set) => ({
-            user: null,
-            login: (userData) => set({ user: userData }),
-            logout: () => set({ user: null }),
-        }),
-        {
-            name: "moa-auth",
-            storage: createJSONStorage(() => sessionStorage),
-            partialize: (state) => ({ user: state.user }),
-        }
-    )
-);
+export const useAuthStore = create<AuthState>((set) => ({
+    user: null,
+    login: (userData) => set({ user: userData }),
+    logout: () => set({ user: null })
+}));

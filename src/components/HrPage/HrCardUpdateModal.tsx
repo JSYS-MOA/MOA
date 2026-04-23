@@ -31,6 +31,7 @@ type HrCardFormState = {
     quitDate: string;
     roleId: string;
     departmentId: string;
+    departmentCord: string;
     departmentName: string;
     gradeId: string;
     gradeName: string;
@@ -45,6 +46,7 @@ type HrCardFormState = {
 
 type Department = {
     departmentId: number;
+    departmentCord?: string;
     departmentName: string;
     departmentIsUse?: number;
 };
@@ -54,7 +56,7 @@ type Grade = {
     gradeName: string;
 };
 
-type DepartmentResponse = Department[] | { content?: Department[] };
+type DepartmentResponse = Department[] | { content?: Department[]; value?: Department[] };
 type DepartmentKey = "HR" | "WML" | "ACLE";
 type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
 type RoleOption = { roleId: number; code: string; label: string };
@@ -105,6 +107,7 @@ const initialForm: HrCardFormState = {
     quitDate: "",
     roleId: "",
     departmentId: "",
+    departmentCord: "",
     departmentName: "",
     gradeId: "",
     gradeName: "",
@@ -126,6 +129,12 @@ const GRADE_NAME_ALIASES: Record<string, string> = {
     "Deputy General Manager": "과장",
     "Assistant Manager": "대리",
     Employee: "사원",
+};
+const DEPARTMENT_CODE_BY_ID: Record<number, string> = {
+    1: "council",
+    2: "HR-1",
+    3: "WML-1",
+    4: "ACLE-1",
 };
 
 const ROLE_OPTIONS: Record<string, RoleOption> = {
@@ -197,9 +206,6 @@ const normalizeGradeText = (value: string) => normalizeText(getCanonicalGradeNam
 
 const includesAnyNormalized = (value: string, keywords: string[]) =>
     keywords.some((keyword) => normalizeText(value).includes(normalizeText(keyword)));
-
-const isSelectableDepartment = (departmentName: string) =>
-    !includesAnyNormalized(departmentName, EXCLUDED_DEPARTMENT_KEYWORDS);
 
 const isSelectableGrade = (gradeName: string) =>
     !includesAnyNormalized(getCanonicalGradeName(gradeName), HIDDEN_GRADE_KEYWORDS);
@@ -289,15 +295,30 @@ const ensureGradeOption = (grades: Grade[], gradeId: string, gradeName: string) 
     ].sort((left, right) => left.gradeId - right.gradeId);
 };
 
-const findDepartmentByName = (departments: Department[], value: string) => {
-    const normalizedValue = normalizeText(value);
+const findDepartmentById = (departments: Department[], value: string) => {
+    const normalizedValue = value.trim();
+
     if (!normalizedValue) {
         return undefined;
     }
 
     return departments.find(
-        (department) => normalizeText(department.departmentName) === normalizedValue
+        (department) => String(department.departmentId) === normalizedValue
     );
+};
+
+const getDepartmentCord = (department?: Department) => {
+    if (!department) {
+        return "";
+    }
+
+    const code = department.departmentCord?.trim();
+
+    if (code) {
+        return code;
+    }
+
+    return DEPARTMENT_CODE_BY_ID[department.departmentId] ?? "";
 };
 
 const findGradeByName = (grades: Grade[], value: string) => {
@@ -382,6 +403,7 @@ const mapCardToForm = (card: HrCardWithAccountOwner): HrCardFormState => ({
     quitDate: card.quitDate ?? "",
     roleId: card.roleId ? String(card.roleId) : "",
     departmentId: card.departmentId ? String(card.departmentId) : "",
+    departmentCord: "",
     departmentName: card.departmentName?.trim() ?? "",
     gradeId: card.gradeId ? String(card.gradeId) : "",
     gradeName: getCanonicalGradeName(card.gradeName),
@@ -490,7 +512,9 @@ const HrCardUpdateModal = ({
                 withCredentials: true,
             });
 
-            return Array.isArray(response.data) ? response.data : response.data.content ?? [];
+            return Array.isArray(response.data)
+                ? response.data
+                : response.data.content ?? response.data.value ?? [];
         },
     });
 
@@ -512,7 +536,7 @@ const HrCardUpdateModal = ({
                 (department) =>
                     department.departmentIsUse !== 0 &&
                     department.departmentName?.trim() &&
-                    isSelectableDepartment(department.departmentName)
+                    (department.departmentId !== 1 || EXCLUDED_DEPARTMENT_KEYWORDS.length === 0)
             )
             .sort((left, right) => left.departmentName.localeCompare(right.departmentName, "ko"));
     }, [departmentOptions]);
@@ -534,10 +558,18 @@ const HrCardUpdateModal = ({
         () => ensureGradeOption(availableGrades, form.gradeId, form.gradeName),
         [availableGrades, form.gradeId, form.gradeName]
     );
+    const selectedDepartment = useMemo(
+        () => findDepartmentById(selectableDepartments, form.departmentId),
+        [selectableDepartments, form.departmentId]
+    );
+    const resolvedDepartmentName = selectedDepartment?.departmentName ?? form.departmentName;
+    const resolvedDepartmentCord = selectedDepartment
+        ? getDepartmentCord(selectedDepartment)
+        : form.departmentCord;
 
     const calculatedRole = useMemo(() => {
-        return getRoleOption(form.departmentId, form.departmentName, form.gradeName);
-    }, [form.departmentId, form.departmentName, form.gradeName]);
+        return getRoleOption(form.departmentId, resolvedDepartmentName, form.gradeName);
+    }, [form.departmentId, resolvedDepartmentName, form.gradeName]);
 
     const isHrLead = user?.roleId === 2;
     const canEditCard = restrictEditToHrLead
@@ -592,6 +624,30 @@ const HrCardUpdateModal = ({
     }, [cardData, isOpen]);
 
     useEffect(() => {
+        if (!selectedDepartment) {
+            return;
+        }
+
+        const nextDepartmentName = selectedDepartment.departmentName;
+        const nextDepartmentCord = getDepartmentCord(selectedDepartment);
+
+        setForm((prev) => {
+            if (
+                prev.departmentName === nextDepartmentName &&
+                prev.departmentCord === nextDepartmentCord
+            ) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                departmentName: nextDepartmentName,
+                departmentCord: nextDepartmentCord,
+            };
+        });
+    }, [selectedDepartment]);
+
+    useEffect(() => {
         const nextRoleId = calculatedRole ? String(calculatedRole.roleId) : "";
 
         setForm((prev) => {
@@ -615,7 +671,7 @@ const HrCardUpdateModal = ({
             let nextForm = prev;
             let changed = false;
 
-            if (!prev.departmentName && prev.departmentId) {
+            if (prev.departmentId && (!prev.departmentName || !prev.departmentCord)) {
                 const matchedDepartment = selectableDepartments.find(
                     (department) => String(department.departmentId) === prev.departmentId
                 );
@@ -623,7 +679,8 @@ const HrCardUpdateModal = ({
                 if (matchedDepartment) {
                     nextForm = {
                         ...nextForm,
-                        departmentName: matchedDepartment.departmentName,
+                        departmentName: prev.departmentName || matchedDepartment.departmentName,
+                        departmentCord: prev.departmentCord || getDepartmentCord(matchedDepartment),
                     };
                     changed = true;
                 }
@@ -656,13 +713,14 @@ const HrCardUpdateModal = ({
     ) => {
         const { name, value } = event.target;
 
-        if (name === "departmentName") {
-            const matchedDepartment = findDepartmentByName(selectableDepartments, value);
+        if (name === "departmentId") {
+            const matchedDepartment = findDepartmentById(selectableDepartments, value);
 
             setForm((prev) => ({
                 ...prev,
-                departmentName: matchedDepartment?.departmentName ?? value,
                 departmentId: matchedDepartment ? String(matchedDepartment.departmentId) : "",
+                departmentCord: getDepartmentCord(matchedDepartment),
+                departmentName: matchedDepartment?.departmentName ?? "",
             }));
             return;
         }
@@ -951,9 +1009,9 @@ const HrCardUpdateModal = ({
                                     <div className="hrCardAddModal-field">
                                         <label className="hrCardAddModal-label">부서</label>
                                         <select
-                                            name="departmentName"
+                                            name="departmentId"
                                             className="hrCardAddModal-input hrCardAddModal-select"
-                                            value={form.departmentName}
+                                            value={form.departmentId}
                                             onChange={handleChange}
                                             disabled={isReadOnly}
                                         >
@@ -961,7 +1019,7 @@ const HrCardUpdateModal = ({
                                             {selectableDepartments.map((department) => (
                                                 <option
                                                     key={department.departmentId}
-                                                    value={department.departmentName}
+                                                    value={String(department.departmentId)}
                                                 >
                                                     {department.departmentName}
                                                 </option>
@@ -976,9 +1034,9 @@ const HrCardUpdateModal = ({
                                         <label className="hrCardAddModal-label">부서 코드</label>
                                         <input
                                             className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                            name="departmentId"
+                                            name="departmentCord"
                                             type="text"
-                                            value={form.departmentId}
+                                            value={resolvedDepartmentCord}
                                             readOnly
                                             title="선택한 부서에 따라 자동 입력됩니다."
                                         />

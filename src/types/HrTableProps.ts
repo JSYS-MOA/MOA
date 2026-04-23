@@ -1,19 +1,19 @@
 export interface HrTableProps {
     userId: number;
     userName: string;
-    employeeId?: number | string;
+    employeeId?: string | number;
     phone: string;
     email: string;
     address?: string;
     startDate: Date;
     quitDate?: Date;
-    departmentId?: number;
+    departmentId: number;
     departmentName?: string;
-    gradeId?: number;
+    gradeId: number;
     gradeName?: string;
     birth?: Date;
-    profileUrl?:string
     performance?: string;
     bank?: string;
     accountNum?: string;
+    profileUrl?: string;
 }

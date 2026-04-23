@@ -1,0 +1,323 @@
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../fonts/Pretendard-Regular.otf') format('opentype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../fonts/Pretendard-Medium.otf') format('opentype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../fonts/Pretendard-SemiBold.otf') format('opentype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../fonts/Pretendard-Bold.otf') format('opentype');
+  font-weight: 700;
+}
+
+* {
+  font-family: 'Pretendard', sans-serif;
+}
+:root {
+  /* 메인 텍스트 */
+  --text-primary: #151515;
+  --text-inverse: #ffffff;
+
+  /* 서브 텍스트 */
+  --text-secondary: #282828;
+  --text-secondary-70: rgba(40, 40, 40, 0.78);
+  --text-secondary-50: rgba(40, 40, 40, 0.5);
+  --text-secondary-30: rgba(53, 53, 53, 0.4);
+
+  /* 강조 텍스트 */
+  --text-accent: #091B72;
+
+  /*---------------------------------------------*/
+
+  /*메인 컬러*/
+  --color-primary: #5E5C77;
+  --color-inverse: #ffffff;
+
+  /* 강조컬러 */
+  --color-danger: rgb(218 92 87);
+
+  /*서브 컬러*/
+  --color-gray-50: #FBFBFB;
+  --color-gray-100: #F1F1F1;
+
+  /*  hover 등등 */
+  --color-primary-light: #F6F5FF;
+  --color-modal:#F6F6F6;
+/*---------------------------------------------*/
+  /*배경색*/
+  --bg: #f6f6f6;
+  --bg-file-input: #F1F2F6;
+
+/*----------------------------------------------*/
+  /*선 색*/
+  --border: #e6e6e6;
+  --border-dark: #a9a9a9;
+  /*----------------------------------------------*/
+
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --radius-lg: 15px;
+
+/*------------------------------------------------*/
+
+  /*폰트사이즈*/
+  --font-xs: 0.75rem;   /* 12px */
+  --font-sm: 0.875rem;  /* 14px */
+  --font-md: 1rem;      /* 16px */
+  --font-lg: 1.125rem;  /* 18px */
+  --font-xl: 1.25rem;   /* 20px */
+
+  /*------------------------------------------------*/
+
+  /*마진*/
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 21px;
+  --spacing-lg: 32px;
+
+  /*------------------------------------------------*/
+
+  }
+@media (max-width: 1024px) {
+  font-size: 16px;
+}
+
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  --font-primary: 'Pretendard', sans-serif;
+  background: var(--bg);
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+main{
+  flex: 1;
+}
+
+body {
+  margin: 0;
+}
+h1,
+h2 {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 52px;
+  letter-spacing: -1.68px;
+  margin: 0;
+  padding: 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+  }
+  }
+
+h2 {
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+  }
+
+p {
+  margin: 0;
+}
+input{
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  margin: 0; padding: 0;
+  color: var(--text-secondary);
+}
+input::placeholder{color: var(--text-secondary-30)}
+input:focus,select:focus {outline: none; border: 2px solid rgba(94,92,119,0.3) !important; }
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 24 24'%3E%3Cpath fill='%23BFBEC9' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  color: var(--text-secondary);
+}
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 스피너 */
+.spinner-Wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--font-md);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 버튼 */
+.btn-Primary{
+  padding: 4px 14px;
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-md);
+  font-weight: 100;
+}
+.btn-Primary:hover{
+  background: #575568;
+}
+
+.btn-Secondary{
+  padding: 4px 14px;
+  background: var(--color-inverse);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  font-weight: 100;
+  border: 1px solid var(--text-secondary-30);
+}
+.btn-Secondary:hover{
+  background: #F9F9F9;
+}
+.btn-Wrap{
+  display: flex;
+  gap: 6px;
+}
+
+/* 공지사항 헤더 아이콘 */
+.Header-Icon{
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.Header-Icon svg:hover {
+  color: #5E5C77 !important;
+  cursor: pointer;
+}
+
+.card-Header svg:hover{
+  color: #ffffff !important;
+  cursor: pointer;
+}
+
+/* 등록 인풋 클래스*/
+.modal-Row{
+  display: flex;
+  padding: 10px 0;
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  align-items: center;
+}
+.madal-Row-Group{display: flex; gap: 16px;}
+.modal-Row-Item{
+  flex: 1;
+  display: flex;
+  align-items: center
+}
+.modal-Row label{
+  width: 80px;
+  flex-shrink: 0;
+}
+.modal-Row input, .row-Span{
+  padding: 5px 8px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: var(--font-xs);
+}
+.modal-Row input[type="checkbox"] {width: auto;}
+
+.modal-Row select {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: var(--font-xs);
+  padding: 5px 8px;
+}
+
+
+/*------------ 파일 입력창--------------- */
+
+.file-Input-Container{
+  width: 100%;
+}
+.file-Name{
+  margin-bottom: 8px;
+}
+.file-name-accent{
+  color: var(--text-secondary);
+  padding: 2px 15px;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.file-Path{
+  color: var(--text-accent);
+  margin-left: 5px;
+  font-size: var(--font-xs);
+}
+.file-Input-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  cursor: pointer;
+  background: var(--bg-file-input);
+  height: 24px;
+}
+.file-Input-wrapper span{ font-size: 18px; color: var(--text-secondary-30)}
+.file-Input-wrapper input{ display: none;}
+
+
+/* 에디터 */
+.toastui-editor-defaultUI-toolbar {
+  height: 33px !important;
+  min-height: unset !important;
+  padding: 0 4px !important;
+}
+
+.toastui-editor-toolbar-group {
+  display: flex !important;
+  align-items: center !important;
+}

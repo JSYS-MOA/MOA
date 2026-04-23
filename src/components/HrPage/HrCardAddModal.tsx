@@ -18,6 +18,7 @@ type HrCardFormState = {
     birth: string;
     roleId: string;
     departmentId: string;
+    departmentCord: string;
     departmentName: string;
     gradeId: string;
     gradeName: string;
@@ -49,6 +50,7 @@ type PhoneParts = {
 
 type Department = {
     departmentId: number;
+    departmentCord?: string;
     departmentName: string;
     departmentIsUse?: number;
 };
@@ -58,7 +60,7 @@ type Grade = {
     gradeName: string;
 };
 
-type DepartmentResponse = Department[] | { content?: Department[] };
+type DepartmentResponse = Department[] | { content?: Department[]; value?: Department[] };
 type DepartmentKey = "HR" | "WML" | "ACLE";
 type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
 
@@ -100,6 +102,7 @@ const initialForm: HrCardFormState = {
     birth: "",
     roleId: "",
     departmentId: "",
+    departmentCord: "",
     departmentName: "",
     gradeId: "",
     gradeName: "",
@@ -147,6 +150,12 @@ const DEPARTMENT_KEY_BY_ID: Record<number, DepartmentKey> = {
     2: "HR",
     3: "WML",
     4: "ACLE",
+};
+const DEPARTMENT_CODE_BY_ID: Record<number, string> = {
+    1: "council",
+    2: "HR-1",
+    3: "WML-1",
+    4: "ACLE-1",
 };
 
 const toNullable = (value: string) => {
@@ -266,24 +275,34 @@ const includesAnyNormalized = (value: string, keywords: string[]) => {
     );
 };
 
-const isSelectableDepartment = (departmentName: string) => {
-    return !includesAnyNormalized(departmentName, EXCLUDED_DEPARTMENT_KEYWORDS);
-};
-
 const isSelectableGrade = (gradeName: string) => {
     return !includesAnyNormalized(getCanonicalGradeName(gradeName), HIDDEN_GRADE_KEYWORDS);
 };
 
-const findDepartmentByName = (departments: Department[], value: string) => {
-    const normalizedValue = normalizeText(value);
+const findDepartmentById = (departments: Department[], value: string) => {
+    const normalizedValue = value.trim();
 
     if (!normalizedValue) {
         return undefined;
     }
 
     return departments.find(
-        (department) => normalizeText(department.departmentName) === normalizedValue
+        (department) => String(department.departmentId) === normalizedValue
     );
+};
+
+const getDepartmentCord = (department?: Department) => {
+    if (!department) {
+        return "";
+    }
+
+    const code = department.departmentCord?.trim();
+
+    if (code) {
+        return code;
+    }
+
+    return DEPARTMENT_CODE_BY_ID[department.departmentId] ?? "";
 };
 
 const findGradeByName = (grades: Grade[], value: string) => {
@@ -595,7 +614,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
 
             return Array.isArray(response.data)
                 ? response.data
-                : response.data.content ?? [];
+                : response.data.content ?? response.data.value ?? [];
         },
     });
 
@@ -621,7 +640,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                 (department) =>
                     department.departmentIsUse !== 0 &&
                     department.departmentName?.trim() &&
-                    isSelectableDepartment(department.departmentName)
+                    (department.departmentId !== 1 || EXCLUDED_DEPARTMENT_KEYWORDS.length === 0)
             )
             .sort((left, right) =>
                 left.departmentName.localeCompare(right.departmentName, "ko")
@@ -636,17 +655,49 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
             .sort((left, right) => left.gradeId - right.gradeId);
     }, [gradeOptions]);
 
+    const selectedDepartment = useMemo(
+        () => findDepartmentById(searchableDepartments, form.departmentId),
+        [searchableDepartments, form.departmentId]
+    );
+    const resolvedDepartmentName = selectedDepartment?.departmentName ?? form.departmentName;
+    const resolvedDepartmentCord = selectedDepartment
+        ? getDepartmentCord(selectedDepartment)
+        : form.departmentCord;
     const emailParts = useMemo(() => getEmailParts(form.email), [form.email]);
     const phoneParts = useMemo(() => getPhoneParts(form.phone), [form.phone]);
     const selectedRole = useMemo(() => {
-        return getRoleOption(form.departmentId, form.departmentName, form.gradeName);
-    }, [form.departmentId, form.departmentName, form.gradeName]);
+        return getRoleOption(form.departmentId, resolvedDepartmentName, form.gradeName);
+    }, [form.departmentId, resolvedDepartmentName, form.gradeName]);
 
     useEffect(() => {
         if (!isOpen) {
             setForm(initialForm);
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        if (!selectedDepartment) {
+            return;
+        }
+
+        const nextDepartmentName = selectedDepartment.departmentName;
+        const nextDepartmentCord = getDepartmentCord(selectedDepartment);
+
+        setForm((prev) => {
+            if (
+                prev.departmentName === nextDepartmentName &&
+                prev.departmentCord === nextDepartmentCord
+            ) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                departmentName: nextDepartmentName,
+                departmentCord: nextDepartmentCord,
+            };
+        });
+    }, [selectedDepartment]);
 
     useEffect(() => {
         const nextRoleId = selectedRole ? String(selectedRole.roleId) : "";
@@ -672,13 +723,14 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
     ) => {
         const { name, value } = event.target;
 
-        if (name === "departmentName") {
-            const matchedDepartment = findDepartmentByName(searchableDepartments, value);
+        if (name === "departmentId") {
+            const matchedDepartment = findDepartmentById(searchableDepartments, value);
 
             setForm((prev) => ({
                 ...prev,
-                departmentName: matchedDepartment ? matchedDepartment.departmentName : value,
                 departmentId: matchedDepartment ? String(matchedDepartment.departmentId) : "",
+                departmentCord: getDepartmentCord(matchedDepartment),
+                departmentName: matchedDepartment ? matchedDepartment.departmentName : "",
             }));
             return;
         }
@@ -694,7 +746,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
             return;
         }
 
-        if (name === "departmentId" || name === "gradeId" || name === "roleId") {
+        if (name === "departmentCord" || name === "gradeId" || name === "roleId") {
             return;
         }
 
@@ -871,8 +923,8 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                             <label className="hrCardAddModal-label">부서</label>
                             <select
                                 className="hrCardAddModal-input hrCardAddModal-select"
-                                name="departmentName"
-                                value={form.departmentName}
+                                name="departmentId"
+                                value={form.departmentId}
                                 onChange={handleChange}
                                 required
                             >
@@ -882,7 +934,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                 {searchableDepartments.map((department) => (
                                     <option
                                         key={department.departmentId}
-                                        value={department.departmentName}
+                                        value={String(department.departmentId)}
                                     >
                                         {department.departmentName}
                                     </option>
@@ -897,11 +949,10 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                             <label className="hrCardAddModal-label">부서 코드</label>
                             <input
                                 className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                name="departmentId"
+                                name="departmentCord"
                                 type="text"
-                                value={form.departmentId}
+                                value={resolvedDepartmentCord}
                                 readOnly
-                                required
                                 title="선택한 부서에 따라 자동 입력됩니다."
                             />
                         </div>
