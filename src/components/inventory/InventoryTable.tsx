@@ -3,14 +3,17 @@ import  { type TableProps , type Column} from "../../types/TableProps"
 
 
 const InventoryTable = (
-    { items , columns , onItemClick , onItemChange}: {
+    { items , columns , onItemClick , onItemChange , handleInbound}: {
   items: TableProps[],
   columns: Column[],
+  handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: (e : React.ChangeEvent) => void 
   }) => {
 
-    console.log(items)
+  console.log(items)
+
+
   return (
     <table>
 
@@ -28,7 +31,21 @@ const InventoryTable = (
             <td>{idx + 1}</td>
             {columns.map(col => (
               <td key={col.key}>
+                
                 {item[col.key as keyof TableProps]|| "-"}
+
+                 {col.key === 'orderStatus' && item[col.key] === '대기' && (
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleInbound?.(item , e); // 입고 처리 함수 실행
+                    }}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    입고처리
+                  </button>
+                )}
+
               </td>
             ))}
 
@@ -45,7 +62,8 @@ const InventoryTable = (
                 </select>
               </td>
               : null }
-              
+
+  
 
           </tr>
         ))}
@@ -56,3 +74,6 @@ const InventoryTable = (
 }
 
 export default InventoryTable;
+
+
+ 

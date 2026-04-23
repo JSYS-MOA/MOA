@@ -213,3 +213,14 @@ const Api_BASE = "http://localhost/api/inventory/";
       },
     });
   }
+
+  // 입고처리
+  export function insertbounds () {
+    return useMutation({
+      mutationFn: async (info: number) => {
+        const { data } = await axios.get(`${Api_BASE}outbounds/${info}`, {   
+        });
+        return data;
+      },
+    });
+  }

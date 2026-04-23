@@ -94,6 +94,10 @@ export interface ModalProps {
 
   keySno : any
   keyPrice : any
+
+  // 입고시 불량 처리 필요
+  defectStatus : string;
+  defectMemo : string
 }
 
 export interface MColumn {

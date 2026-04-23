@@ -56,7 +56,7 @@ const InventoryOutbound = () => {
   const ModalColumns : MColumn[] = [
     { key: 'logisticDate', label: '일자' },
     { key: 'productName', label: '품목명'  },
-    { key: 'incoming', label: '입고수량'  },
+    { key: 'incoming', label: '출고수량'  },
     { key: 'productPrice', label: '개별가격' },
     { key: 'totallogisticsPrice', label: '합계' }
   ]

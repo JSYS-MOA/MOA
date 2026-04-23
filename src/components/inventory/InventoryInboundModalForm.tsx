@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState  } from 'react'
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
-import { usePutOrderSno , useGetProductSelect , useDeleteOrderForm} from '../../apis/InventoryService';
+import { usePostOrder , useGetProductSelect , useGetVendorSelect} from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
-import type { TableProps } from '../../types/TableProps';
 
-const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
+const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
   columns : MColumn[] ,
   maxPage : number ,
@@ -15,16 +14,15 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
   onRefresh : any
   setOnAlert: (msg: string) => void 
   })  => {
-    
+  
   const [itemList, setItemList] = useState<ModalProps[]>(items);
   const [selectModal, setSelectModal] = useState(false);
 
   const [targetIdx, setTargetIdx] = useState<number | null>(null);
-  const { mutate } = usePutOrderSno();
-  const { mutate : DelOrderForm } = useDeleteOrderForm();
-  const { data } = useGetProductSelect();
-
-  const [delOrder, setDelOrder] = useState(false);
+  // const { mutate } = usePutOrderSno();
+  // const { mutate : DelOrderForm } = useDeleteOrderForm();
+  // const { data } = useGetProductSelect();
+  const [inbundDate, setInbundDate] = useState(new Date().toISOString().split('T')[0]); 
 
   useEffect(() => {
     setItemList(items);
@@ -32,13 +30,31 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
 
 
   const handleInputChange = (idx: number, key: string, value: string | number) => {
+    
+    if (typeof value === 'string' && value !== '' && /[^0-9]/.test(value)) {
+    alert("숫자만 입력할 수 있습니다.");
+    return;
+  }
+    
     const nextList = [...itemList];
-    nextList[idx] = {
-      ...nextList[idx],
-      [key]: value
-    };
+
+    if(nextList[idx].orderSno >= Number(value) ) {
+      nextList[idx] = {
+        ...nextList[idx],
+        [key]: value
+      };
+      
+    } else {
+      const maxValue = nextList[idx].orderSno
+      nextList[idx] = {
+        ...nextList[idx],
+        [key]: maxValue
+      };
+    }
+
     console.log(nextList)
-    setItemList(nextList);
+      setItemList(nextList);
+
   };
 
   const totalSno = useMemo(() => { 
@@ -57,41 +73,6 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
       return acc + (Number(targetItem[keyPrice] || 0) * multiplier * Number(targetItem[keySno] || 0));
     }, 0);
   }, [itemList]);
-
-  // 새로운 리스트 추가
-  const handleAddList = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    
-    if (items.length > 0 && items[0].orderStatus === '완료') {
-      setOnAlert("수정할 수 없습니다");
-    } else {
-      const emptyItem = columns.reduce((acc, col) => {
-      // 특정 키에 대한 기본값이 필요한 경우 분기 처리 가능
-      if (col.key === keySno || col.key === keyPrice ||  col.key === 'totalPrice') {
-        acc[col.key] = 0;
-      } else {
-        acc[col.key] = ''; // 나머지는 빈 문자열로 초기화
-      }
-      return acc;
-      }, {} as any);
-
-      const newItem = { ...emptyItem, orderStatus: '대기' };
-      setItemList(prev => [...prev, newItem]);
-     }
-  }
-  // 추가된 리스트 삭제
-  const handleRemoveRow = (idx: number, e: React.MouseEvent) => {
-  e.preventDefault(); // 폼 제출 방지
-  
-  // 행이 하나만 있을 때 삭제를 막고 싶다면 추가
-  if (itemList.length <= 1) {
-    setOnAlert("최소 한 개의 품목은 유지해야 합니다.");
-    return;
-  }
-
-  const nextList = itemList.filter((_, i) => i !== idx);
-  setItemList(nextList);
-  } ;
 
   const onSubmitPut = (e : React.SubmitEvent) => {
     e.preventDefault();
@@ -148,75 +129,6 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
 
   }
 
-  const onselectProduct = (idx: number , item : any) => {
-     if( item.orderStatus === '완료'  ){
-      setSelectModal(false);
-      setOnAlert("수정할 수 없습니다")
-      return;
-     } else {
-      setSelectModal(true);
-      setTargetIdx(idx);
-      console.log(idx);
-      console.log(itemList);
-     }
-  }
-
-  // 전달용
-  const handleProductSelect = (product: any) => {
-
-    console.log(targetIdx);
-    if (targetIdx === null || !itemList[targetIdx]) {
-    console.error("수정할 행을 찾을 수 없습니다.");
-    return;
-  }
-
-  if (targetIdx === null) return;
-
-  const nextList = [...itemList];
-
-  const currentSno = nextList[targetIdx][keySno as keyof ModalProps] || 0;
-  const existingOrdererId = nextList[targetIdx].ordererId; 
-  
-  nextList[targetIdx] = {
-    ...({} as ModalProps), // 기본 구조 보장
-    ordererId: existingOrdererId, // ID 보존
-    productCord: product.productCord || '',
-    productName: product.productName || '',
-    [keySno]: currentSno,
-    unitPrice: product.productPrice || 0,
-    totalPrice: (product.productPrice || 0) * Number(currentSno),
-    productId: product.productId
-  } as ModalProps;
-
-  setItemList(nextList);
-  setSelectModal(false);
-  setTargetIdx(null);
-  };
-  
-  const onOderFormDel = (e : React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const itemKey = items[0]
-
-     if (items.length > 0 && itemKey.orderStatus === '완료') {
-      setOnAlert("삭제할 수 없습니다");
-    } else {
-      DelOrderForm(itemKey.orderformId , {
-        onSuccess() {
-          setOnAlert("성공적으로 삭제되었습니다.");
-          onRefresh()
-          onClose()
-        },
-        onError: (error) => {
-          console.error(error);
-          setOnAlert("삭제 중 오류가 발생했습니다.");
-        }
-      })
-  
-    }
-
-  }
-
-
   const masterInfo = items[0] || {};
   const isCompleted = masterInfo.orderStatus === '완료';
 
@@ -233,13 +145,11 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
           <input type="text" value={masterInfo.vendorName || ''} readOnly />
         </div>
 
-        <div>
-          <label >납기일자</label>
-          <input type="text" value={masterInfo.stockInDate || ''} readOnly  />
+        <div >
+            <label>납기일자</label>
+            <input type="date" value={inbundDate} onChange={(e) => setInbundDate(e.target.value)} />
         </div>
       </div>
-
-        {!isCompleted && <button onClick={(e) => { handleAddList(e) }}>품목 추가</button>}
       <table>
 
         <thead>
@@ -254,12 +164,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
         <tr key={idx} >
           <td >{idx + 1}</td>
           {columns.map(col => (
-            <td key={col.key}
-                onClick={(e) => {
-                     if (col.key !== keySno ) {
-                       onselectProduct(idx , item);
-                     }}}>
-
+            <td key={col.key}>
             {(() => {
               const fieldKey = col.key as keyof ModalProps;
                     
@@ -268,39 +173,23 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
                       return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
                     }
                      
-                    if(item.orderStatus !== '완료' ) {
+                    if(col.key === keySno ) {
                       return <input
                         name={col.key}
-                        value={item[fieldKey] ?? ''}          
+                        value={item[fieldKey] ?? 0}          
                         onChange={(e) => {
-                         if (col.key === keySno ) handleInputChange(idx, col.key, e.target.value);
+                         handleInputChange(idx, col.key, e.target.value);
                         }}
                         />
 
                     } else {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? ''} 
-                        readOnly                 
-                      />
+                      return <input name={col.key} value={item[fieldKey] ?? ''} readOnly />
                     } 
 
                   })()}
-              </td>
-            ))}
+            </td>
+          ))}
 
-              <td>
-                {item.orderStatus === '대기' && (
-                  <>
-                    <button 
-                      onClick={(e) => handleRemoveRow(idx, e)}
-                      style={{ color: 'red', border: '1px solid red', background: 'none', cursor: 'pointer' }}
-                      >
-                      삭제
-                    </button>
-                  </>
-                )}
-              </td>
         </tr>
       ))}
       </tbody>
@@ -335,19 +224,11 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
         
       </table>
 
-      {!isCompleted && <button type='submit'>등록</button>}
-      {!isCompleted && <button onClick={(e) => { onOderFormDel(e) }}> 발주삭제</button>}  
+      {!isCompleted && <button type='submit'>입고</button>}
       
-          {selectModal ?
-            <InventorySelectModal
-              title='PRODUCT'
-              items={data.content}
-              onSelect={handleProductSelect}
-              onClose={() => setSelectModal(false)}
-              /> : null}
           
     </form>
   )
 }
 
-export default InventoryListModalForm
+export default InventoryInboundModalForm

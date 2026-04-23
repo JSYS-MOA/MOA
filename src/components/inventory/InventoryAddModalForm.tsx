@@ -13,7 +13,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
   setOnAlert: (msg: string) => void 
   })  => {
   
-  const [orderformDate, setOrderformDate] = useState(new Date().toISOString().split('T')[0]); // 오늘 날짜 기본값
+  const [orderformDate, setOrderformDate] = useState(new Date().toISOString().split('T')[0]); 
   const [vendor, setVendor] = useState({ vendorName: '', vendorId: '' , vendorCord: '' });  
 
   const [selectMode, setSelectMode] = useState<'PRODUCT' | 'VENDOR' | null>(null);
@@ -215,7 +215,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
           <td >{idx + 1}</td>
           {columns.map(col => (
             <td key={col.key}
-                onClick={(e) => {
+                onClick={() => {
                      if (col.key !== keySno ) {
                        onselectProduct(idx , item);
                      }}}>
