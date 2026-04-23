@@ -199,11 +199,31 @@ button {
   font-weight: 100;
   border: 1px solid var(--text-secondary-30);
 }
-
+.btn-Secondary:hover{
+  background: #F9F9F9;
+}
 .btn-Wrap{
   display: flex;
   gap: 6px;
 }
+
+/* 공지사항 헤더 아이콘 */
+.Header-Icon{
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.Header-Icon svg:hover {
+  color: #5E5C77 !important;
+  cursor: pointer;
+}
+
+.card-Header svg:hover{
+  color: #ffffff !important;
+  cursor: pointer;
+}
+
 /* 등록 인풋 클래스*/
 .modal-Row{
   display: flex;
