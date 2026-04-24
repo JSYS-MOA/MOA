@@ -5,6 +5,7 @@ import BaseModal from "../../components/base/BaseModal.tsx";
 import Button from "../../components/Button.tsx";
 import {deleteBaseData, getBaseData} from "../../apis/BaseService.tsx";
 
+// 인사 - 연차기본사항 포함
 
 interface BaseManagerProps {
     apiType: string;
