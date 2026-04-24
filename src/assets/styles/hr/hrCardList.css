@@ -24,13 +24,6 @@
     font-weight: bolder;
 }
 
-.hrCardListPage-star[aria-expanded="true"] {
-    color: yellow;
-}
-
-.hrCardListPage-star[aria-expanded="false"] {
-    color: var(--border);
-}
 
 .hrCardListPage-title {
     margin: 0;
@@ -41,6 +34,8 @@
 
 .hrCardListPage-top-search-btn {
     margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
+    display: flex;
+    justify-content: flex-end;
 }
 
 /* ====================== 검색 필터 ====================== */

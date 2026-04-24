@@ -1,4 +1,4 @@
-import type { LeaverTableProps } from "../../types/LeaverTableProps.ts";
+import type { LeaverTableProps } from "../../types/LeaverTableProps";
 import "../../assets/styles/hr/leaverCardList.css";
 
 type LeaverTableSelectionProps = {
@@ -40,23 +40,23 @@ const LeaverTable = ({
         items.length > 0 && items.every((item) => selectedUserIds.includes(item.userId));
 
     return (
-        <table className="LeaverTable">
+        <table className="leaverTable">
             <thead>
                 <tr>
-                    <th className="LeaverTable-th LeaverTable-checkbox-cell">
-                        <label className="LeaverTable-checkbox">
-                        <input
-                            type="checkbox"
-                            checked={allSelected}
-                            onChange={onToggleAll}
-                            aria-label="전체 선택"
-                        />
-                            <span className="checkmark"></span>
+                    <th className="leaverTable-th leaverTable-checkbox-cell">
+                        <label className="leaverTable-checkbox">
+                            <input
+                                type="checkbox"
+                                checked={allSelected}
+                                onChange={onToggleAll}
+                                aria-label="전체 선택"
+                            />
+                            <span className="checkmark" />
                         </label>
                     </th>
 
                     {columns.map((column) => (
-                        <th key={String(column.key)} className="LeaverTable-th">
+                        <th key={String(column.key)} className="leaverTable-th">
                             {column.label}
                         </th>
                     ))}
@@ -66,34 +66,34 @@ const LeaverTable = ({
             <tbody>
                 {items.length === 0 ? (
                     <tr>
-                        <td colSpan={columns.length + 1} className="LeaverTable-empty">
+                        <td colSpan={columns.length + 1} className="leaverTable-empty">
                             조회된 데이터가 없습니다.
                         </td>
                     </tr>
                 ) : (
                     items.map((item) => (
                         <tr key={item.userId}>
-                            <td className="LeaverTable-th LeaverTable-checkbox-cell">
-                                <label className="LeaverTable-checkbox">
+                            <td className="leaverTable-th leaverTable-checkbox-cell">
+                                <label className="leaverTable-checkbox">
                                     <input
                                         type="checkbox"
                                         checked={selectedUserIds.includes(item.userId)}
                                         onChange={() => onToggleItem(item.userId)}
                                         aria-label={`${item.userName} 선택`}
                                     />
-                                    <span className="checkmark"></span>
+                                    <span className="checkmark" />
                                 </label>
                             </td>
 
                             {columns.map((column) => (
                                 <td
                                     key={`${item.userId}-${String(column.key)}`}
-                                    className="LeaverTable-td"
+                                    className="leaverTable-td"
                                 >
                                     {column.key === "userName" ? (
                                         <button
                                             type="button"
-                                            className="LeaverTable-nameButton"
+                                            className="leaverTable-nameButton"
                                             onClick={() => onSelectItem(item.userId)}
                                         >
                                             {formatCellValue(item[column.key])}

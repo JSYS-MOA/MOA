@@ -1,18 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
-import type { HrCard } from "../../apis/HrCardService";
-import { useHrCardDelete, useHrCardList } from "../../apis/HrCardService";
+import { FaStar } from "react-icons/fa";
+import type { LeaverCard } from "../../apis/LeaverCardService";
+import { useLeaverCardDelete, useLeaverCardList } from "../../apis/LeaverCardService";
 import "../../assets/styles/hr/leaverCardList.css";
-import Button from "../../components/Button.tsx";
-import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
-import HrCardUpdateModal from "../../components/HrPage/HrCardUpdateModal.tsx";
-import SepTable from "../../components/HrPage/LeaverTable.tsx";
-import { useAuthStore } from "../../stores/useAuthStore.tsx";
-import type { HrTableProps } from "../../types/HrTableProps.ts";
+import LeaverCardAddModal from "../../components/HrPage/LeaverCardAddModal";
+import LeaverCardUpdateModal from "../../components/HrPage/LeaverCardUpdateModal";
+import LeaverTable from "../../components/HrPage/LeaverTable";
+import { useAuthStore } from "../../stores/useAuthStore";
+import type { LeaverTableProps } from "../../types/LeaverTableProps";
 
 const ITEMS_PER_PAGE = 10;
 
-const GRADE_NAME_MAP: Record<string, string> = {
+const GRADE_NAME_ALIASES: Record<string, string> = {
     President: "사장",
     President7: "사장",
     "Vice President": "부사장",
@@ -21,53 +21,6 @@ const GRADE_NAME_MAP: Record<string, string> = {
     "Deputy General Manager": "과장",
     "Assistant Manager": "대리",
     Employee: "사원",
-};
-
-const parseDate = (value?: string | null) => {
-    if (!value) {
-        return undefined;
-    }
-
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-};
-
-const getGradeName = (gradeName?: string | null, gradeId?: number) => {
-    if (gradeName?.trim()) {
-        return GRADE_NAME_MAP[gradeName.trim()] ?? gradeName.trim();
-    }
-
-    return gradeId ? `직급 ${gradeId}` : "";
-};
-
-const getDepartmentName = (departmentName?: string | null, departmentId?: number) => {
-    if (departmentName?.trim()) {
-        return departmentName.trim();
-    }
-
-    return departmentId ? `부서 ${departmentId}` : "";
-};
-
-const mapCardToRow = (card: HrCard): HrTableProps => {
-    return {
-        userId: card.userId,
-        userName: card.userName,
-        employeeId: card.employeeId,
-        phone: card.phone ?? "",
-        email: card.email ?? "",
-        address: card.address ?? "",
-        startDate: parseDate(card.startDate) ?? new Date(0),
-        quitDate: parseDate(card.quitDate),
-        departmentId: card.departmentId,
-        departmentName: getDepartmentName(card.departmentName, card.departmentId),
-        gradeId: card.gradeId,
-        gradeName: getGradeName(card.gradeName, card.gradeId),
-        birth: parseDate(card.birth),
-        profileUrl: card.profileUrl ?? "",
-        performance: card.performance ?? "",
-        bank: card.bank ?? "",
-        accountNum: card.accountNum ?? "",
-    };
 };
 
 type FilterChipInputProps = {
@@ -79,6 +32,59 @@ type FilterChipInputProps = {
     onClear: () => void;
     onSubmit: () => void;
 };
+
+const normalizeText = (value: string) => value.trim().toLowerCase();
+
+const includesText = (source: string | number | undefined, keyword: string) =>
+    normalizeText(String(source ?? "")).includes(normalizeText(keyword));
+
+const parseDate = (value?: string | null) => {
+    if (!value) {
+        return undefined;
+    }
+
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+};
+
+const getGradeName = (gradeName?: string | null, gradeId?: number) => {
+    const trimmedGradeName = gradeName?.trim() ?? "";
+
+    if (trimmedGradeName) {
+        return GRADE_NAME_ALIASES[trimmedGradeName] ?? trimmedGradeName;
+    }
+
+    return gradeId ? `직급 ${gradeId}` : "";
+};
+
+const getDepartmentName = (departmentName?: string | null, departmentId?: number) => {
+    const trimmedDepartmentName = departmentName?.trim() ?? "";
+
+    if (trimmedDepartmentName) {
+        return trimmedDepartmentName;
+    }
+
+    return departmentId ? `부서 ${departmentId}` : "";
+};
+
+const mapCardToRow = (card: LeaverCard): LeaverTableProps => ({
+    userId: card.userId,
+    userName: card.userName,
+    employeeId: card.employeeId,
+    phone: card.phone ?? "",
+    email: card.email ?? "",
+    address: card.address ?? "",
+    startDate: parseDate(card.startDate) ?? new Date(0),
+    quitDate: parseDate(card.quitDate),
+    departmentId: card.departmentId,
+    departmentName: getDepartmentName(card.departmentName, card.departmentId),
+    gradeId: card.gradeId,
+    gradeName: getGradeName(card.gradeName, card.gradeId),
+    birth: parseDate(card.birth),
+    performance: card.performance ?? "",
+    bank: card.bank ?? "",
+    accountNum: card.accountNum ?? "",
+});
 
 const FilterChipInput = ({
     label,
@@ -108,19 +114,20 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="hrCardListPage-filter-group">
+        <div className="leaverCardListPage-filter-group">
             <label>{label}</label>
-            <div className={`hrCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="hrCardListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`leaverCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="leaverCardListPage-chip-input-icon" aria-hidden="true" />
+
                 {hasAppliedValue && (
-                    <span className="hrCardListPage-chip">
+                    <span className="leaverCardListPage-chip">
                         <span>{appliedValue}</span>
                         <button
                             type="button"
-                            className="hrCardListPage-chip-x"
+                            className="leaverCardListPage-chip-x"
                             onClick={onClear}
                         >
-                            ×
+                            x
                         </button>
                     </span>
                 )}
@@ -135,8 +142,8 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="hrCardListPage-chip-clear"
-                    aria-label={`${label} 입력값 삭제`}
+                    className="leaverCardListPage-chip-clear"
+                    aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
                 >
@@ -149,15 +156,15 @@ const FilterChipInput = ({
 
 const LeaverCardListPage = () => {
     const { user } = useAuthStore();
-    const { data: cards = [], isLoading, isError } = useHrCardList();
-    const deleteHrCard = useHrCardDelete();
+    const { data: cards = [], isLoading, isError } = useLeaverCardList();
+    const deleteLeaverCard = useLeaverCardDelete();
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedDetailUserId, setSelectedDetailUserId] = useState<number | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
-    const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const [checkedUserIds, setCheckedUserIds] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
 
     const [keywordDraft, setKeywordDraft] = useState("");
@@ -172,28 +179,30 @@ const LeaverCardListPage = () => {
         () => cards.map(mapCardToRow).filter((item) => item.quitDate !== undefined),
         [cards]
     );
-    const canDeleteHrCard = user?.roleId === 2;
-
-    useEffect(() => {
-        const validUserIds = new Set(items.map((item) => item.userId));
-
-        setSelectedUserIds((prev) => prev.filter((userId) => validUserIds.has(userId)));
-    }, [items]);
+    const validUserIdSet = useMemo(
+        () => new Set(items.map((item) => item.userId)),
+        [items]
+    );
+    const selectedUserIds = useMemo(
+        () => checkedUserIds.filter((userId) => validUserIdSet.has(userId)),
+        [checkedUserIds, validUserIdSet]
+    );
+    const canDeleteLeaverCard = user?.roleId === 2;
 
     const filteredItems = useMemo(() => {
         return items.filter((item) => {
             const matchesKeyword =
                 keywordFilter.trim() === "" ||
-                item.userName.includes(keywordFilter) ||
-                String(item.employeeId ?? "").includes(keywordFilter) ||
-                item.email.includes(keywordFilter);
+                includesText(item.userName, keywordFilter) ||
+                includesText(item.employeeId, keywordFilter) ||
+                includesText(item.email, keywordFilter);
 
             const matchesDepartment =
                 departmentFilter.trim() === "" ||
-                (item.departmentName ?? "").includes(departmentFilter);
+                includesText(item.departmentName, departmentFilter);
 
             const matchesGrade =
-                gradeFilter.trim() === "" || (item.gradeName ?? "").includes(gradeFilter);
+                gradeFilter.trim() === "" || includesText(item.gradeName, gradeFilter);
 
             return matchesKeyword && matchesDepartment && matchesGrade;
         });
@@ -207,9 +216,10 @@ const LeaverCardListPage = () => {
         return filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     }, [filteredItems, resolvedCurrentPage]);
 
-    const pageNumbers = useMemo(() => {
-        return Array.from({ length: totalPages }, (_, index) => index + 1);
-    }, [totalPages]);
+    const pageNumbers = useMemo(
+        () => Array.from({ length: totalPages }, (_, index) => index + 1),
+        [totalPages]
+    );
 
     const applyFilters = () => {
         setKeywordFilter(keywordDraft.trim());
@@ -237,38 +247,46 @@ const LeaverCardListPage = () => {
     };
 
     const handleToggleItem = (userId: number) => {
-        setSelectedUserIds((prev) =>
-            prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
-        );
+        setCheckedUserIds((prev) => {
+            const nextSelectedUserIds = prev.filter((id) => validUserIdSet.has(id));
+
+            return nextSelectedUserIds.includes(userId)
+                ? nextSelectedUserIds.filter((id) => id !== userId)
+                : [...nextSelectedUserIds, userId];
+        });
     };
 
     const handleToggleAll = () => {
         const visibleUserIds = paginatedItems.map((item) => item.userId);
         const isAllSelected =
             visibleUserIds.length > 0 &&
-            visibleUserIds.every((id) => selectedUserIds.includes(id));
+            visibleUserIds.every((userId) => selectedUserIds.includes(userId));
 
-        setSelectedUserIds((prev) => {
+        setCheckedUserIds((prev) => {
+            const nextSelectedUserIds = prev.filter((id) => validUserIdSet.has(id));
+
             if (isAllSelected) {
-                return prev.filter((id) => !visibleUserIds.includes(id));
+                return nextSelectedUserIds.filter((id) => !visibleUserIds.includes(id));
             }
 
-            return Array.from(new Set([...prev, ...visibleUserIds]));
+            return Array.from(new Set([...nextSelectedUserIds, ...visibleUserIds]));
         });
     };
 
     const handleDeleteSelected = async () => {
-        if (selectedUserIds.length === 0 || isDeleting) {
+        const targetUserIds = selectedUserIds;
+
+        if (targetUserIds.length === 0 || isDeleting) {
             return;
         }
 
-        if (!canDeleteHrCard) {
+        if (!canDeleteLeaverCard) {
             alert("인사팀장만 퇴사자 카드를 삭제할 수 있습니다.");
             return;
         }
 
         const confirmed = window.confirm(
-            `선택한 퇴사자 카드 ${selectedUserIds.length}건을 삭제하시겠습니까?`
+            `선택한 퇴사자 카드 ${targetUserIds.length}건을 삭제하시겠습니까?`
         );
 
         if (!confirmed) {
@@ -278,11 +296,19 @@ const LeaverCardListPage = () => {
         setIsDeleting(true);
 
         try {
-            for (const userId of selectedUserIds) {
-                await deleteHrCard.mutateAsync(userId);
+            for (const userId of targetUserIds) {
+                await deleteLeaverCard.mutateAsync(userId);
             }
 
-            setSelectedUserIds([]);
+            setCheckedUserIds([]);
+
+            if (
+                selectedDetailUserId !== null &&
+                targetUserIds.includes(selectedDetailUserId)
+            ) {
+                setSelectedDetailUserId(null);
+            }
+
             alert("선택한 퇴사자 카드를 삭제했습니다.");
         } catch (error) {
             const message =
@@ -306,30 +332,35 @@ const LeaverCardListPage = () => {
     };
 
     return (
-        <div className="hrCardListPage-page">
-            <div className="hrCardListPage-header">
-                <span
-                    className="hrCardListPage-star"
-                    aria-expanded={isStarred}
+        <div className="leaverCardListPage-page">
+            <div className="leaverCardListPage-header">
+                <button
+                    type="button"
+                    className="leaverCardListPage-star"
+                    aria-pressed={isStarred}
                     onClick={() => setIsStarred((prev) => !prev)}
                 >
-                    {isStarred ? "★" : "☆"}
-                </span>
-                <h1 className="hrCardListPage-title">퇴사자 카드 등록</h1>
-                <Button
-                    className="hrCardListPage-top-search-btn"
-                    label={`검색 조건 ${isSearchOpen ? "▲" : "▼"}`}
+                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                </button>
+
+                <h1 className="leaverCardListPage-title">퇴사자 카드 목록</h1>
+
+                <button
+                    type="button"
+                    className="leaverCardListPage-top-search-btn"
                     aria-expanded={isSearchOpen}
                     onClick={() => setIsSearchOpen((prev) => !prev)}
-                />
+                >
+                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
+                </button>
             </div>
 
-            <div className={`hrCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="hrCardListPage-filter-row">
-                    <div className="hrCardListPage-filter-1">
+            <div className={`leaverCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="leaverCardListPage-filter-row">
+                    <div className="leaverCardListPage-filter-1">
                         <FilterChipInput
                             label="부서"
-                            placeholder="부서"
+                            placeholder="부서명을 입력하세요"
                             draftValue={departmentDraft}
                             appliedValue={departmentFilter}
                             onDraftChange={setDepartmentDraft}
@@ -337,10 +368,11 @@ const LeaverCardListPage = () => {
                             onSubmit={applyFilters}
                         />
                     </div>
-                    <div className="hrCardListPage-filter-2">
+
+                    <div className="leaverCardListPage-filter-2">
                         <FilterChipInput
-                            label="직급/직위"
-                            placeholder="직급"
+                            label="직급"
+                            placeholder="직급명을 입력하세요"
                             draftValue={gradeDraft}
                             appliedValue={gradeFilter}
                             onDraftChange={setGradeDraft}
@@ -348,10 +380,11 @@ const LeaverCardListPage = () => {
                             onSubmit={applyFilters}
                         />
                     </div>
-                    <div className="hrCardListPage-filter-3">
+
+                    <div className="leaverCardListPage-filter-3">
                         <FilterChipInput
-                            label="성명"
-                            placeholder="성명"
+                            label="검색어"
+                            placeholder="이름, 사번, 이메일"
                             draftValue={keywordDraft}
                             appliedValue={keywordFilter}
                             onDraftChange={setKeywordDraft}
@@ -361,13 +394,19 @@ const LeaverCardListPage = () => {
                     </div>
                 </div>
 
-                <div className="hrCardListPage-filter-actions">
-                    <Button className="hrCardListPage-search-btn" label="검색" onClick={applyFilters} />
+                <div className="leaverCardListPage-filter-actions">
+                    <button
+                        type="button"
+                        className="leaverCardListPage-search-btn"
+                        onClick={applyFilters}
+                    >
+                        검색
+                    </button>
                 </div>
             </div>
 
-            <div className="hrCardListPage-table-box">
-                <div className="hrCardListPage-table-info">
+            <div className="leaverCardListPage-table-box">
+                <div className="leaverCardListPage-table-info">
                     <span>전체 {filteredItems.length}건</span>
                 </div>
 
@@ -376,7 +415,7 @@ const LeaverCardListPage = () => {
                 ) : isError ? (
                     <div>퇴사자 카드 목록을 불러오지 못했습니다.</div>
                 ) : (
-                    <SepTable
+                    <LeaverTable
                         items={paginatedItems}
                         selectedUserIds={selectedUserIds}
                         onToggleItem={handleToggleItem}
@@ -385,61 +424,73 @@ const LeaverCardListPage = () => {
                     />
                 )}
 
-                <div className="hrCardListPage-bottom-actions">
+                <div className="leaverCardListPage-bottom-actions">
                     {user && (
-                        <Button
-                            className="hrCardListPage-add-btn"
-                            label="신규"
+                        <button
+                            type="button"
+                            className="leaverCardListPage-add-btn"
                             onClick={() => setIsAddModalOpen(true)}
-                        />
+                        >
+                            추가
+                        </button>
                     )}
 
-                    <Button
-                        className="hrCardListPage-disabled-btn"
+                    <button
+                        type="button"
+                        className="leaverCardListPage-disabled-btn"
                         disabled={selectedUserIds.length === 0 || isDeleting}
-                        label={isDeleting ? "삭제 중..." : "삭제"}
                         onClick={handleDeleteSelected}
-                    />
+                    >
+                        {isDeleting ? "삭제 중.." : "삭제"}
+                    </button>
                 </div>
 
-                <div className="hrCardListPage-paging-group">
-                    <div className="hrCardListPage-paging-group-min">
-                        <Button
-                            className="hrCardListPage-paging-prev-btn"
+                <div className="leaverCardListPage-paging-group">
+                    <div className="leaverCardListPage-paging-group-min">
+                        <button
+                            type="button"
+                            className="leaverCardListPage-paging-prev-btn"
                             onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
                             disabled={resolvedCurrentPage === 1}
-                            label="이전"
-                        />
+                        >
+                            이전
+                        </button>
 
                         {pageNumbers.map((pageNumber) => (
-                            <Button
-                                className="hrCardListPage-paging-num-btn"
+                            <button
+                                type="button"
+                                className="leaverCardListPage-paging-num-btn"
                                 key={pageNumber}
                                 onClick={() => setCurrentPage(pageNumber)}
                                 disabled={pageNumber === resolvedCurrentPage}
-                                label={pageNumber}
-                            />
+                            >
+                                {pageNumber}
+                            </button>
                         ))}
 
-                        <Button
-                            className="hrCardListPage-paging-next-btn"
-                            onClick={() => setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))}
+                        <button
+                            type="button"
+                            className="leaverCardListPage-paging-next-btn"
+                            onClick={() =>
+                                setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
+                            }
                             disabled={resolvedCurrentPage === totalPages}
-                            label="다음"
-                        />
+                        >
+                            다음
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <HrCardAddModal
+            <LeaverCardAddModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
             />
-            <HrCardUpdateModal
+
+            <LeaverCardUpdateModal
                 isOpen={selectedDetailUserId !== null}
                 userId={selectedDetailUserId}
                 onClose={handleCloseUpdateModal}
-                restrictEditToHrLead
             />
         </div>
     );

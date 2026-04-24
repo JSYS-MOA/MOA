@@ -1,25 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
-import type { HrCard } from "../../apis/HrCardService";
-import { useHrCardDelete, useHrCardList } from "../../apis/HrCardService";
+import type { HrCard } from "../../apis/hr/HrCardService.tsx";
+import { useHrCardDelete, useHrCardList } from "../../apis/hr/HrCardService.tsx";
 import "../../assets/styles/hr/hrCardList.css";
 import HrCardAddModal from "../../components/HrPage/HrCardAddModal.tsx";
 import HrCardUpdateModal from "../../components/HrPage/HrCardUpdateModal.tsx";
 import HrTable from "../../components/HrPage/HrTable.tsx";
+import { HR_GRADE_NAME_BY_ID } from "../../constants/hrGradeOptions";
 import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import type { HrTableProps } from "../../types/HrTableProps.ts";
+import {FaStar} from "react-icons/fa";
 
 const ITEMS_PER_PAGE = 10;
-
-const GRADE_NAME_BY_ID: Record<number, string> = {
-    1: "사장",
-    2: "부사장",
-    3: "상무",
-    4: "부장",
-    5: "과장",
-    6: "대리",
-    7: "사원",
-};
 
 type FilterChipInputProps = {
     label: string;
@@ -90,7 +82,7 @@ const getGradeName = (record: Record<string, unknown>, gradeId: number) => {
         return rawGradeName;
     }
 
-    return GRADE_NAME_BY_ID[gradeId] ?? (gradeId > 0 ? `직급 ${gradeId}` : "");
+    return HR_GRADE_NAME_BY_ID[gradeId] ?? (gradeId > 0 ? `직급 ${gradeId}` : "");
 };
 
 const mapCardToRow = (card: HrCard): HrTableProps | null => {
@@ -205,7 +197,6 @@ const HrCardListPage = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedDetailUserId, setSelectedDetailUserId] = useState<number | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [isStarred, setIsStarred] = useState(false);
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -361,17 +352,9 @@ const HrCardListPage = () => {
 
     return (
         <div className="hrCardListPage-page">
-            <div className="hrCardListPage-header">
-                <button
-                    type="button"
-                    className="hrCardListPage-star"
-                    aria-pressed={isStarred}
-                    onClick={() => setIsStarred((prev) => !prev)}
-                >
-                    {isStarred ? "★" : "☆"}
-                </button>
-
-                <h1 className="hrCardListPage-title">인사카드 목록</h1>
+            <div className="favorite-Header">
+                <FaStar size={18} color="#C4C4C4"/>
+                <span>인사카드 목록</span>
 
                 <button
                     type="button"

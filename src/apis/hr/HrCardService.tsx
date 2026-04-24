@@ -1,17 +1,8 @@
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { HR_GRADE_NAME_BY_ID } from "../../constants/hrGradeOptions";
 
 const API = "http://localhost/api/hr/cards";
-
-const GRADE_NAME_BY_ID: Record<number, string> = {
-    1: "사장",
-    2: "부사장",
-    3: "상무",
-    4: "부장",
-    5: "과장",
-    6: "대리",
-    7: "사원",
-};
 
 type RawHrCard = {
     user_id?: number;
@@ -45,8 +36,6 @@ type RawHrCard = {
     accountNum?: string | null;
     account_owner?: string | null;
     accountOwner?: string | null;
-    profile_url?: string | null;
-    profileUrl?: string | null;
 };
 
 export interface HrCard {
@@ -69,7 +58,6 @@ export interface HrCard {
     bank?: string | null;
     accountNum?: string | null;
     accountOwner?: string | null;
-    profileUrl?: string | null;
 }
 
 export type HrCardRequest = Partial<HrCard>;
@@ -158,18 +146,52 @@ const normalizeHrCard = (card: RawHrCard): HrCard => {
         gradeId,
         gradeName:
             getNullableStringValue(card, "gradeName", "grade_name") ??
-            GRADE_NAME_BY_ID[gradeId] ??
+            HR_GRADE_NAME_BY_ID[gradeId] ??
             null,
         birth: getNullableStringValue(card, "birth"),
         performance: getNullableStringValue(card, "performance"),
         bank: getNullableStringValue(card, "bank"),
         accountNum: getNullableStringValue(card, "accountNum", "account_num"),
         accountOwner: getNullableStringValue(card, "accountOwner", "account_owner"),
-        profileUrl: getNullableStringValue(card, "profileUrl", "profile_url"),
     };
 };
 
-const serializeHrCard = (card: Partial<HrCard>) => {
+const buildCamelCaseHrCardPayload = (card: Partial<HrCard>) => {
+    const payload: Record<string, unknown> = {};
+
+    const assign = (key: string, value: unknown) => {
+        if (value !== undefined) {
+            payload[key] = value;
+        }
+    };
+
+    assign("userId", card.userId);
+    assign("userName", card.userName);
+    assign(
+        "employeeId",
+        card.employeeId === undefined ? undefined : toNumericIfPossible(card.employeeId)
+    );
+    assign("password", card.password);
+    assign("phone", card.phone);
+    assign("email", card.email);
+    assign("address", card.address);
+    assign("startDate", card.startDate);
+    assign("quitDate", card.quitDate);
+    assign("roleId", card.roleId);
+    assign("departmentId", card.departmentId);
+    assign("departmentName", card.departmentName);
+    assign("gradeId", card.gradeId);
+    assign("gradeName", card.gradeName);
+    assign("birth", card.birth);
+    assign("performance", card.performance);
+    assign("bank", card.bank);
+    assign("accountNum", card.accountNum);
+    assign("accountOwner", card.accountOwner);
+
+    return payload;
+};
+
+const buildSnakeCaseHrCardPayload = (card: Partial<HrCard>) => {
     const payload: Record<string, unknown> = {};
 
     const assign = (key: string, value: unknown) => {
@@ -200,9 +222,49 @@ const serializeHrCard = (card: Partial<HrCard>) => {
     assign("bank", card.bank);
     assign("account_num", card.accountNum);
     assign("account_owner", card.accountOwner);
-    assign("profile_url", card.profileUrl);
 
     return payload;
+};
+
+const isRetryableMutationError = (error: unknown) => {
+    if (!axios.isAxiosError(error)) {
+        return false;
+    }
+
+    const status = error.response?.status;
+    return status === 400 || status === 404 || status === 405 || status === 415;
+};
+
+const executeMutationWithFallback = async (
+    requests: Array<{ url: string; payload: Record<string, unknown> }>,
+    method: "post" | "put"
+) => {
+    let lastError: unknown;
+
+    for (let index = 0; index < requests.length; index += 1) {
+        const request = requests[index];
+
+        try {
+            const response =
+                method === "post"
+                    ? await axios.post<RawHrCard>(request.url, request.payload, {
+                          withCredentials: true,
+                      })
+                    : await axios.put<RawHrCard>(request.url, request.payload, {
+                          withCredentials: true,
+                      });
+
+            return response.data;
+        } catch (error) {
+            lastError = error;
+
+            if (!isRetryableMutationError(error) || index === requests.length - 1) {
+                throw error;
+            }
+        }
+    }
+
+    throw lastError ?? new Error("HR card mutation failed");
 };
 
 export async function getHrCardListApi() {
@@ -222,17 +284,31 @@ export async function getHrCardInfoApi(userId: number) {
 }
 
 export async function addHrCardApi(request: Partial<HrCard>) {
-    const { data } = await axios.post<RawHrCard>(API, serializeHrCard(request), {
-        withCredentials: true,
-    });
+    const camelCasePayload = buildCamelCaseHrCardPayload(request);
+    const snakeCasePayload = buildSnakeCaseHrCardPayload(request);
+    const data = await executeMutationWithFallback(
+        [
+            { url: `${API}/add`, payload: camelCasePayload },
+            { url: API, payload: camelCasePayload },
+            { url: `${API}/add`, payload: snakeCasePayload },
+            { url: API, payload: snakeCasePayload },
+        ],
+        "post"
+    );
 
     return normalizeHrCard(data ?? {});
 }
 
 export async function updateHrCardApi(userId: number, request: HrCardUpdateRequest) {
-    const { data } = await axios.put<RawHrCard>(`${API}/${userId}`, serializeHrCard(request), {
-        withCredentials: true,
-    });
+    const camelCasePayload = buildCamelCaseHrCardPayload(request);
+    const snakeCasePayload = buildSnakeCaseHrCardPayload(request);
+    const data = await executeMutationWithFallback(
+        [
+            { url: `${API}/${userId}`, payload: camelCasePayload },
+            { url: `${API}/${userId}`, payload: snakeCasePayload },
+        ],
+        "put"
+    );
 
     return normalizeHrCard(data ?? {});
 }

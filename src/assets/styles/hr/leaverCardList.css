@@ -6,37 +6,38 @@
 
 /* ====================== 인사카드 목록 상단 ====================== */
 
-.leverCardListPage-table-box {
+.leaverCardListPage-page {
+    width: 100%;
+}
+
+.leaverCardListPage-table-box {
     margin-top: var(--spacing-md);
 }
 
-.leverCardListPage-header {
+.leaverCardListPage-header {
     display: flex;
     align-items: center;
+    gap: var(--spacing-xs);
     margin-bottom: var(--spacing-xs);
 }
 
-.leverCardListPage-star {
-    gap: var(--spacing-xs);
-    cursor: pointer;
-    font-size: var(--font-xl);
-    margin-right: var(--spacing-xs);
-    font-weight: bolder;
-}
-
-.leverCardListPage-star[aria-expanded="true"] {
-    color: yellow;
-}
-
-.leaverCardListPage-star[aria-expanded="false"] {
-    color: var(--border);
-}
-
-.leverCardListPage-title {
+.leaverCardListPage-title {
     margin: 0;
     font-size: var(--font-xl);
     color: var(--text-accent);
     font-weight: bolder;
+}
+
+.leaverCardListPage-star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
 }
 
 .leaverCardListPage-top-search-btn {
@@ -416,45 +417,50 @@
 /* 열 너비 */
 .leaverTable th:nth-child(1),
 .leaverTable td:nth-child(1) {
-    width: 36px;
+    width: 32px;
 }
 
 .leaverTable th:nth-child(2),
 .leaverTable td:nth-child(2) {
-    width: 70px;
+    width: 25px;
 }
 
 .leaverTable th:nth-child(3),
 .leaverTable td:nth-child(3) {
-    width: 70px;
+    width: 25px;
 }
 
 .leaverTable th:nth-child(4),
 .leaverTable td:nth-child(4) {
-    width: 80px;
+    width: 25px;
 }
 
 .leaverTable th:nth-child(5),
 .leaverTable td:nth-child(5) {
-    width: 80px;
+    width: 15px;
 }
 
 .leaverTable th:nth-child(6),
 .leaverTable td:nth-child(6) {
-    width: 70px;
+    width: 15px;
 }
 
 .leaverTable th:nth-child(7),
 .leaverTable td:nth-child(7) {
-    width: 100px;
+    width: 5px;
 }
 
 .leaverTable th:nth-child(8),
 .leaverTable td:nth-child(8) {
-    width: 200px;
+    width: 30px;
 }
 
 .leaverTable th:nth-child(9),
 .leaverTable td:nth-child(9) {
-    width: 200px;
+    width: 50px;
+}
+
+.leaverTable th:nth-child(10),
+.leaverTable td:nth-child(10) {
+    width: 60px;
 }

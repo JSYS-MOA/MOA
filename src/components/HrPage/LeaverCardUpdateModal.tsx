@@ -2,32 +2,32 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import type { ChangeEvent, FormEvent } from "react";
-import type { HrCard } from "../../apis/hr/HrCardService.tsx";
+import type { LeaverCard } from "../../apis/hr/LeaverCardService.tsx";
 import {
-    useHrCardInfo,
-    useHrCardUpdate,
-} from "../../apis/hr/HrCardService.tsx";
+    useLeaverCardInfo,
+    useLeaverCardUpdate,
+} from "../../apis/hr/LeaverCardService.tsx";
 import ConfirmModal from "../ConfirmModal.tsx";
 import { useAuthStore } from "../../stores/useAuthStore.tsx";
-import "../../assets/styles/hr/hrCardUpdate.css";
+import "../../assets/styles/hr/leaverAddCardModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 
 type Props = {
     isOpen: boolean;
     userId?: number | null;
     onClose: () => void;
-    restrictEditToHrLead?: boolean;
+    restrictEditToLeaverLead?: boolean;
 };
 
-type HrCardWithAccountOwner = HrCard & {
+type LeaverCardWithAccountOwner = LeaverCard & {
     accountOwner?: string | null;
 };
 
-type HrCardUpdateRequest = Partial<HrCard> & {
+type LeaverCardUpdateRequest = Partial<LeaverCard> & {
     accountOwner?: string | null;
 };
 
-type HrCardFormState = {
+type LeaverCardFormState = {
     employeeId: string;
     userName: string;
     password: string;
@@ -68,7 +68,7 @@ const DIRTY_FORM_KEYS = [
 ] as const;
 
 type DirtyFormKey = (typeof DIRTY_FORM_KEYS)[number];
-type ComparableHrCardFormState = Pick<HrCardFormState, DirtyFormKey>;
+type ComparableLeaverCardFormState = Pick<LeaverCardFormState, DirtyFormKey>;
 
 type Department = {
     departmentId: number;
@@ -106,7 +106,7 @@ const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
 const HIDDEN_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사"];
 const RESTRICTED_EDIT_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사", "팀장"];
 
-const initialForm: HrCardFormState = {
+const initialForm: LeaverCardFormState = {
     employeeId: "",
     userName: "",
     password: "",
@@ -322,7 +322,7 @@ const findGradeByName = (grades: Grade[], value: string) => {
 const getDepartmentKey = (departmentId: string, departmentName: string): DepartmentKey | undefined => {
     const normalizedDepartment = normalizeText(departmentName);
 
-    if (normalizedDepartment.includes("인사") || normalizedDepartment.includes("hr")) {
+    if (normalizedDepartment.includes("인사") || normalizedDepartment.includes("leaver")) {
         return "HR";
     }
 
@@ -383,7 +383,7 @@ const getRoleOption = (departmentId: string, departmentName: string, gradeName: 
     return departmentKey ? ROLE_OPTIONS[`${departmentKey}:${gradeGroup}`] : undefined;
 };
 
-const mapCardToForm = (card: HrCardWithAccountOwner): HrCardFormState => ({
+const mapCardToForm = (card: LeaverCardWithAccountOwner): LeaverCardFormState => ({
     employeeId: card.employeeId ?? "",
     userName: card.userName ?? "",
     password: "",
@@ -406,8 +406,8 @@ const mapCardToForm = (card: HrCardWithAccountOwner): HrCardFormState => ({
 });
 
 const buildComparableFormState = (
-    form: HrCardFormState
-): ComparableHrCardFormState => ({
+    form: LeaverCardFormState
+): ComparableLeaverCardFormState => ({
     employeeId: form.employeeId,
     userName: form.userName,
     password: form.password,
@@ -426,20 +426,20 @@ const buildComparableFormState = (
 });
 
 const hasComparableFormChanges = (
-    currentForm: ComparableHrCardFormState,
-    initialComparableForm: ComparableHrCardFormState
+    currentForm: ComparableLeaverCardFormState,
+    initialComparableForm: ComparableLeaverCardFormState
 ) => DIRTY_FORM_KEYS.some((key) => currentForm[key] !== initialComparableForm[key]);
 
 const DateInputWithPicker = ({
-    value,
-    onChange,
-    readOnly,
-    calendarLabel,
-}: DateInputWithPickerProps) => {
+                                 value,
+                                 onChange,
+                                 readOnly,
+                                 calendarLabel,
+                             }: DateInputWithPickerProps) => {
     const nativeInputRef = useRef<HTMLInputElement>(null);
     const dateInputClassName = readOnly
-        ? "hrCardAddModal-input hrCardAddModal-input--readonly hrCardAddModal-dateInputField"
-        : "hrCardAddModal-input hrCardAddModal-dateInputField";
+        ? "leaverCardAddModal-input leaverCardAddModal-input--readonly leaverCardAddModal-dateInputField"
+        : "leaverCardAddModal-input leaverCardAddModal-dateInputField";
 
     const openNativePicker = () => {
         if (readOnly) {
@@ -465,7 +465,7 @@ const DateInputWithPicker = ({
     };
 
     return (
-        <div className="hrCardAddModal-dateInputRow">
+        <div className="leaverCardAddModal-dateInputRow">
             <input
                 type="text"
                 className={dateInputClassName}
@@ -474,10 +474,10 @@ const DateInputWithPicker = ({
                 readOnly={readOnly}
                 placeholder="YYYY-MM-DD"
             />
-            <div className="hrCardAddModal-dateCalendarWrap">
+            <div className="leaverCardAddModal-dateCalendarWrap">
                 <input
                     ref={nativeInputRef}
-                    className="hrCardAddModal-dateNativeInput"
+                    className="leaverCardAddModal-dateNativeInput"
                     type="date"
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
@@ -487,12 +487,12 @@ const DateInputWithPicker = ({
                 />
                 <button
                     type="button"
-                    className="hrCardAddModal-dateCalendarButton"
+                    className="leaverCardAddModal-dateCalendarButton"
                     onClick={openNativePicker}
                     aria-label={calendarLabel}
                     disabled={readOnly}
                 >
-                    <svg className="hrCardAddModal-dateCalendarIcon" viewBox="0 0 24 24">
+                    <svg className="leaverCardAddModal-dateCalendarIcon" viewBox="0 0 24 24">
                         <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
                         <path d="M7.5 3.5v3" />
                         <path d="M16.5 3.5v3" />
@@ -504,18 +504,18 @@ const DateInputWithPicker = ({
     );
 };
 
-const HrCardUpdateModal = ({
-    isOpen,
-    userId = null,
-    onClose,
-    restrictEditToHrLead = false,
-}: Props) => {
+const LeaverCardUpdateModal = ({
+                               isOpen,
+                               userId = null,
+                               onClose,
+                               restrictEditToLeaverLead = false,
+                           }: Props) => {
     const { user } = useAuthStore();
-    const [form, setForm] = useState<HrCardFormState>(initialForm);
+    const [form, setForm] = useState<LeaverCardFormState>(initialForm);
     const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
 
-    const updateHrCard = useHrCardUpdate();
-    const { data: cardData, isLoading, isError } = useHrCardInfo(isOpen && userId ? userId : 0);
+    const updateLeaverCard = useLeaverCardUpdate();
+    const { data: cardData, isLoading, isError } = useLeaverCardInfo(isOpen && userId ? userId : 0);
 
     const { data: departmentOptions = [] } = useQuery<Department[]>({
         queryKey: ["departmentOptions"],
@@ -579,23 +579,23 @@ const HrCardUpdateModal = ({
         return getRoleOption(form.departmentId, resolvedDepartmentName, form.gradeName);
     }, [form.departmentId, resolvedDepartmentName, form.gradeName]);
 
-    const isHrLead = user?.roleId === 2;
-    const canEditCard = restrictEditToHrLead
-        ? isHrLead
-        : isHrLead || !isRestrictedEditGrade(form.gradeName);
-    const isReadOnly = updateHrCard.isPending || !canEditCard;
+    const isLeaverLead = user?.roleId === 2;
+    const canEditCard = restrictEditToLeaverLead
+        ? isLeaverLead
+        : isLeaverLead || !isRestrictedEditGrade(form.gradeName);
+    const isReadOnly = updateLeaverCard.isPending || !canEditCard;
     const inputClassName = isReadOnly
-        ? "hrCardAddModal-input hrCardAddModal-input--readonly"
-        : "hrCardAddModal-input";
+        ? "leaverCardAddModal-input leaverCardAddModal-input--readonly"
+        : "leaverCardAddModal-input";
     const textareaClassName = isReadOnly
-        ? "hrCardAddModal-textarea hrCardAddModal-input--readonly"
-        : "hrCardAddModal-textarea";
+        ? "leaverCardAddModal-textarea leaverCardAddModal-input--readonly"
+        : "leaverCardAddModal-textarea";
     const emailParts = useMemo(() => getEmailParts(form.email), [form.email]);
-    const formId = "hr-card-update-form";
+    const formId = "leaver-card-update-form";
     const initialComparableForm = useMemo(
         () =>
             buildComparableFormState(
-                cardData ? mapCardToForm(cardData as HrCardWithAccountOwner) : initialForm
+                cardData ? mapCardToForm(cardData as LeaverCardWithAccountOwner) : initialForm
             ),
         [cardData]
     );
@@ -617,7 +617,7 @@ const HrCardUpdateModal = ({
             return;
         }
 
-        setForm(mapCardToForm(cardData as HrCardWithAccountOwner));
+        setForm(mapCardToForm(cardData as LeaverCardWithAccountOwner));
     }, [cardData, isOpen]);
 
     useEffect(() => {
@@ -795,13 +795,13 @@ const HrCardUpdateModal = ({
 
     const handleCancelEdit = () => {
         setIsExitConfirmOpen(false);
-        setForm(cardData ? mapCardToForm(cardData as HrCardWithAccountOwner) : initialForm);
+        setForm(cardData ? mapCardToForm(cardData as LeaverCardWithAccountOwner) : initialForm);
 
         onClose();
     };
 
     const handleCloseAttempt = () => {
-        if (updateHrCard.isPending) {
+        if (updateLeaverCard.isPending) {
             return;
         }
 
@@ -829,15 +829,15 @@ const HrCardUpdateModal = ({
 
         if (!canEditCard) {
             alert(
-                restrictEditToHrLead
+                restrictEditToLeaverLead
                     ? "퇴사자 카드는 인사팀 팀장만 수정할 수 있습니다."
-                    : "부장급 이상 인사카드는 인사팀 팀장만 수정할 수 있습니다."
+                    : "부장급 이상 퇴사자 카드는 인사팀 팀장만 수정할 수 있습니다."
             );
             return;
         }
 
         try {
-            const request: HrCardUpdateRequest = {
+            const request: LeaverCardUpdateRequest = {
                 employeeId: form.employeeId.trim(),
                 userName: form.userName.trim(),
                 password: form.password.trim() || undefined,
@@ -858,7 +858,7 @@ const HrCardUpdateModal = ({
                 performance: toNullable(form.performance),
             };
 
-            await updateHrCard.mutateAsync({
+            await updateLeaverCard.mutateAsync({
                 userId,
                 request,
             });
@@ -867,7 +867,7 @@ const HrCardUpdateModal = ({
             alert("인사카드를 수정했습니다.");
         } catch (error) {
             const message =
-                error instanceof Error ? error.message : "인사카드 수정 중 오류가 발생했습니다.";
+                error instanceof Error ? error.message : "퇴사자 카드 수정 중 오류가 발생했습니다.";
 
             console.error(error);
             alert(message);
@@ -876,320 +876,320 @@ const HrCardUpdateModal = ({
 
     return (
         <>
-        <div className="hrCardAddModal-backdrop" onClick={handleCloseAttempt}>
-            <div className="hrCardAddModal-panel" onClick={(event) => event.stopPropagation()}>
-                <div className="hrCardAddModal-min-title">
-                    <span className="hrCardAddModal-min-text">인사카드 수정</span>
-                    <button
-                        type="button"
-                        className="hrCardAddModal-closeButton"
-                        onClick={handleCloseAttempt}
-                    >
-                        x
-                    </button>
-                </div>
-
-                <div className="hrCardAddModal-header">
-                    <h2 className="hrCardAddModal-title">인사카드 수정</h2>
-                </div>
-
-                {isLoading ? (
-                    <div className="hrCardAddModal-form">
-                        <div className="hrCardAddModal-row">기존 정보를 불러오는 중입니다.</div>
-                    </div>
-                ) : isError ? (
-                    <div className="hrCardAddModal-form">
-                        <div className="hrCardAddModal-row">인사카드 정보를 불러오지 못했습니다.</div>
-                    </div>
-                ) : !userId || !cardData ? (
-                    <div className="hrCardAddModal-form">
-                        <div className="hrCardAddModal-row">선택한 인사카드가 없습니다.</div>
-                    </div>
-                ) : (
-                    <>
-                    <form id={formId} className="hrCardAddModal-form" onSubmit={handleSubmit}>
-                        <div className="hrCardUpdateModal-topFields">
-                            <div className="hrCardAddModal-field hrCardUpdateModal-field--top">
-                                <label className="hrCardAddModal-label">권한 코드</label>
-                                <input
-                                    className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                    name="roleId"
-                                    type="text"
-                                    value={form.roleId}
-                                    readOnly
-                                    title="부서와 직급을 선택하면 자동으로 계산됩니다."
-                                />
-                            </div>
-
-                            <div className="hrCardAddModal-field hrCardUpdateModal-field--top">
-                                <label className="hrCardAddModal-label">사번번호</label>
-                                <input
-                                    name="employeeId"
-                                    className={inputClassName}
-                                    value={form.employeeId}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                />
-                            </div>
-
-                            <div className="hrCardAddModal-field hrCardUpdateModal-field--top">
-                                <label className="hrCardAddModal-label">이름</label>
-                                <input
-                                    name="userName"
-                                    className={inputClassName}
-                                    value={form.userName}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                />
-                            </div>
-
-                            <div className="hrCardAddModal-field hrCardUpdateModal-field--top">
-                                <label className="hrCardAddModal-label">비밀번호</label>
-                                <input
-                                    name="password"
-                                    type="password"
-                                    className={inputClassName}
-                                    value={form.password}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                    placeholder="변경 시에만 입력"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="hrCardAddModal-row hrCardAddModal-row--optionFields hrCardUpdateModal-inlineOptions">
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">부서</label>
-                                <select
-                                    name="departmentId"
-                                    className="hrCardAddModal-input hrCardAddModal-select"
-                                    value={form.departmentId}
-                                    onChange={handleChange}
-                                    disabled={isReadOnly}
-                                >
-                                    <option value="">부서를 선택하세요</option>
-                                    {selectableDepartments.map((department) => (
-                                        <option
-                                            key={department.departmentId}
-                                            value={String(department.departmentId)}
-                                        >
-                                            {department.departmentName}
-                                        </option>
-                                    ))}
-                                </select>
-                                <span className="hrCardAddModal-hint">
-                                    부서를 선택하면 코드가 자동으로 입력됩니다.
-                                </span>
-                            </div>
-
-                            <div className="hrCardAddModal-field hrCardAddModal-field--small">
-                                <label className="hrCardAddModal-label">부서 코드</label>
-                                <input
-                                    className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                    name="departmentCord"
-                                    type="text"
-                                    value={resolvedDepartmentCord}
-                                    readOnly
-                                    title="선택한 부서에 따라 자동 입력됩니다."
-                                />
-                            </div>
-
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">직급/직책</label>
-                                <select
-                                    name="gradeName"
-                                    className="hrCardAddModal-input hrCardAddModal-select"
-                                    value={form.gradeName}
-                                    onChange={handleChange}
-                                    disabled={isReadOnly}
-                                >
-                                    <option value="">직급을 선택하세요</option>
-                                    {selectableGrades.map((grade) => (
-                                        <option key={grade.gradeId} value={grade.gradeName}>
-                                            {grade.gradeName}
-                                        </option>
-                                    ))}
-                                </select>
-                                <span className="hrCardAddModal-hint">
-                                    직급을 선택하면 코드가 자동으로 입력됩니다.
-                                </span>
-                            </div>
-
-                            <div className="hrCardAddModal-field hrCardAddModal-field--small">
-                                <label className="hrCardAddModal-label">직급 코드</label>
-                                <input
-                                    className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                    name="gradeId"
-                                    type="text"
-                                    value={form.gradeId}
-                                    readOnly
-                                    title="선택한 직급에 따라 자동 입력됩니다."
-                                />
-                            </div>
-                        </div>
-                        <div className="hrCardAddModal-row">
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">이메일</label>
-                                <div className="hrCardAddModal-emailRow">
-                                    <input
-                                        className={inputClassName}
-                                        type="text"
-                                        value={emailParts.local}
-                                        onChange={(event) =>
-                                            updateEmail(event.target.value, emailParts.domain)
-                                        }
-                                        readOnly={isReadOnly}
-                                        placeholder="id"
-                                        inputMode="email"
-                                    />
-                                    <span className="hrCardAddModal-emailAt">@</span>
-                                    <input
-                                        className={inputClassName}
-                                        type="text"
-                                        value={emailParts.domain}
-                                        onChange={(event) =>
-                                            updateEmail(emailParts.local, event.target.value)
-                                        }
-                                        readOnly={isReadOnly}
-                                        placeholder="domain.com"
-                                        inputMode="email"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">연락처</label>
-                                <input
-                                    name="phone"
-                                    className={inputClassName}
-                                    value={form.phone}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="hrCardAddModal-row hrCardAddModal-row--dateFields">
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">입사일</label>
-                                <DateInputWithPicker
-                                    value={form.startDate}
-                                    onChange={(value) => setForm((prev) => ({ ...prev, startDate: value }))}
-                                    readOnly={isReadOnly}
-                                    calendarLabel="입사일 선택"
-                                />
-                            </div>
-
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">생년월일</label>
-                                <DateInputWithPicker
-                                    value={form.birth}
-                                    onChange={(value) => setForm((prev) => ({ ...prev, birth: value }))}
-                                    readOnly={isReadOnly}
-                                    calendarLabel="생년월일 선택"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="hrCardAddModal-row">
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">퇴사일</label>
-                                <DateInputWithPicker
-                                    value={form.quitDate}
-                                    onChange={(value) => setForm((prev) => ({ ...prev, quitDate: value }))}
-                                    readOnly={isReadOnly}
-                                    calendarLabel="퇴사일 선택"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="hrCardAddModal-row">
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">은행</label>
-                                <input
-                                    name="bank"
-                                    className={inputClassName}
-                                    value={form.bank}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                />
-                            </div>
-
-                            <div className="hrCardAddModal-field">
-                                <label className="hrCardAddModal-label">계좌번호</label>
-                                <input
-                                    name="accountNum"
-                                    className={inputClassName}
-                                    value={form.accountNum}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="hrCardAddModal-column">
-                            <label className="hrCardAddModal-label">주소</label>
-                            <div className="hrCardAddModal-addressRow">
-                                <input
-                                    name="address"
-                                    className={inputClassName}
-                                    value={form.address}
-                                    onChange={handleChange}
-                                    readOnly={isReadOnly}
-                                />
-                                <button
-                                    type="button"
-                                    className="hrCardAddModal-addressButton"
-                                    onClick={handleSearchAddress}
-                                    disabled={isReadOnly}
-                                >
-                                    주소검색
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="hrCardAddModal-column">
-                            <label className="hrCardAddModal-label">인사평가</label>
-                            <textarea
-                                name="performance"
-                                className={textareaClassName}
-                                value={form.performance}
-                                onChange={handleChange}
-                                readOnly={isReadOnly}
-                                rows={3}
-                            />
-                        </div>
-                    </form>
-                    <div className="hrCardAddModal-buttonRow">
-                        <button
-                            type="submit"
-                            form={formId}
-                            className="hrCardAddModal-button hrCardAddModal-button--primary"
-                            disabled={updateHrCard.isPending || !canEditCard}
-                        >
-                            {updateHrCard.isPending ? "저장 중..." : "저장"}
-                        </button>
+            <div className="leaverCardAddModal-backdrop" onClick={handleCloseAttempt}>
+                <div className="leaverCardAddModal-panel" onClick={(event) => event.stopPropagation()}>
+                    <div className="leaverCardAddModal-min-title">
+                        <span className="leaverCardAddModal-min-text">퇴사자 카드 수정</span>
                         <button
                             type="button"
-                            className="hrCardAddModal-button hrCardAddModal-button--secondary"
+                            className="leaverCardAddModal-closeButton"
                             onClick={handleCloseAttempt}
-                            disabled={updateHrCard.isPending}
                         >
-                            취소
+                            x
                         </button>
                     </div>
-                    </>
-                )}
+
+                    <div className="leaverCardAddModal-header">
+                        <h2 className="leaverCardAddModal-title">퇴사자 카드 수정</h2>
+                    </div>
+
+                    {isLoading ? (
+                        <div className="leaverCardAddModal-form">
+                            <div className="leaverCardAddModal-row">기존 정보를 불러오는 중입니다.</div>
+                        </div>
+                    ) : isError ? (
+                        <div className="leaverCardAddModal-form">
+                            <div className="leaverCardAddModal-row">인사카드 정보를 불러오지 못했습니다.</div>
+                        </div>
+                    ) : !userId || !cardData ? (
+                        <div className="leaverCardAddModal-form">
+                            <div className="leaverCardAddModal-row">선택한 인사카드가 없습니다.</div>
+                        </div>
+                    ) : (
+                        <>
+                            <form id={formId} className="leaverCardAddModal-form" onSubmit={handleSubmit}>
+                                <div className="leaverCardUpdateModal-topFields">
+                                    <div className="leaverCardAddModal-field leaverCardUpdateModal-field--top">
+                                        <label className="leaverCardAddModal-label">권한 코드</label>
+                                        <input
+                                            className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
+                                            name="roleId"
+                                            type="text"
+                                            value={form.roleId}
+                                            readOnly
+                                            title="부서와 직급을 선택하면 자동으로 계산됩니다."
+                                        />
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field leaverCardUpdateModal-field--top">
+                                        <label className="leaverCardAddModal-label">사번번호</label>
+                                        <input
+                                            name="employeeId"
+                                            className={inputClassName}
+                                            value={form.employeeId}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                        />
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field leaverCardUpdateModal-field--top">
+                                        <label className="leaverCardAddModal-label">이름</label>
+                                        <input
+                                            name="userName"
+                                            className={inputClassName}
+                                            value={form.userName}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                        />
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field leaverCardUpdateModal-field--top">
+                                        <label className="leaverCardAddModal-label">비밀번호</label>
+                                        <input
+                                            name="password"
+                                            type="password"
+                                            className={inputClassName}
+                                            value={form.password}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                            placeholder="변경 시에만 입력"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="leaverCardAddModal-row leaverCardAddModal-row--optionFields leaverCardUpdateModal-inlineOptions">
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">부서</label>
+                                        <select
+                                            name="departmentId"
+                                            className="leaverCardAddModal-input leaverCardAddModal-select"
+                                            value={form.departmentId}
+                                            onChange={handleChange}
+                                            disabled={isReadOnly}
+                                        >
+                                            <option value="">부서를 선택하세요</option>
+                                            {selectableDepartments.map((department) => (
+                                                <option
+                                                    key={department.departmentId}
+                                                    value={String(department.departmentId)}
+                                                >
+                                                    {department.departmentName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="leaverCardAddModal-hint">
+                                    부서를 선택하면 코드가 자동으로 입력됩니다.
+                                </span>
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field leaverCardAddModal-field--small">
+                                        <label className="leaverCardAddModal-label">부서 코드</label>
+                                        <input
+                                            className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
+                                            name="departmentCord"
+                                            type="text"
+                                            value={resolvedDepartmentCord}
+                                            readOnly
+                                            title="선택한 부서에 따라 자동 입력됩니다."
+                                        />
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">직급/직책</label>
+                                        <select
+                                            name="gradeName"
+                                            className="leaverCardAddModal-input leaverCardAddModal-select"
+                                            value={form.gradeName}
+                                            onChange={handleChange}
+                                            disabled={isReadOnly}
+                                        >
+                                            <option value="">직급을 선택하세요</option>
+                                            {selectableGrades.map((grade) => (
+                                                <option key={grade.gradeId} value={grade.gradeName}>
+                                                    {grade.gradeName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="leaverCardAddModal-hint">
+                                    직급을 선택하면 코드가 자동으로 입력됩니다.
+                                </span>
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field leaverCardAddModal-field--small">
+                                        <label className="leaverCardAddModal-label">직급 코드</label>
+                                        <input
+                                            className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
+                                            name="gradeId"
+                                            type="text"
+                                            value={form.gradeId}
+                                            readOnly
+                                            title="선택한 직급에 따라 자동 입력됩니다."
+                                        />
+                                    </div>
+                                </div>
+                                <div className="leaverCardAddModal-row">
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">이메일</label>
+                                        <div className="leaverCardAddModal-emailRow">
+                                            <input
+                                                className={inputClassName}
+                                                type="text"
+                                                value={emailParts.local}
+                                                onChange={(event) =>
+                                                    updateEmail(event.target.value, emailParts.domain)
+                                                }
+                                                readOnly={isReadOnly}
+                                                placeholder="id"
+                                                inputMode="email"
+                                            />
+                                            <span className="leaverCardAddModal-emailAt">@</span>
+                                            <input
+                                                className={inputClassName}
+                                                type="text"
+                                                value={emailParts.domain}
+                                                onChange={(event) =>
+                                                    updateEmail(emailParts.local, event.target.value)
+                                                }
+                                                readOnly={isReadOnly}
+                                                placeholder="domain.com"
+                                                inputMode="email"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">연락처</label>
+                                        <input
+                                            name="phone"
+                                            className={inputClassName}
+                                            value={form.phone}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="leaverCardAddModal-row leaverCardAddModal-row--dateFields">
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">입사일</label>
+                                        <DateInputWithPicker
+                                            value={form.startDate}
+                                            onChange={(value) => setForm((prev) => ({ ...prev, startDate: value }))}
+                                            readOnly={isReadOnly}
+                                            calendarLabel="입사일 선택"
+                                        />
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">생년월일</label>
+                                        <DateInputWithPicker
+                                            value={form.birth}
+                                            onChange={(value) => setForm((prev) => ({ ...prev, birth: value }))}
+                                            readOnly={isReadOnly}
+                                            calendarLabel="생년월일 선택"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="leaverCardAddModal-row">
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">퇴사일</label>
+                                        <DateInputWithPicker
+                                            value={form.quitDate}
+                                            onChange={(value) => setForm((prev) => ({ ...prev, quitDate: value }))}
+                                            readOnly={isReadOnly}
+                                            calendarLabel="퇴사일 선택"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="leaverCardAddModal-row">
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">은행</label>
+                                        <input
+                                            name="bank"
+                                            className={inputClassName}
+                                            value={form.bank}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                        />
+                                    </div>
+
+                                    <div className="leaverCardAddModal-field">
+                                        <label className="leaverCardAddModal-label">계좌번호</label>
+                                        <input
+                                            name="accountNum"
+                                            className={inputClassName}
+                                            value={form.accountNum}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="leaverCardAddModal-column">
+                                    <label className="leaverCardAddModal-label">주소</label>
+                                    <div className="leaverCardAddModal-addressRow">
+                                        <input
+                                            name="address"
+                                            className={inputClassName}
+                                            value={form.address}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="leaverCardAddModal-addressButton"
+                                            onClick={handleSearchAddress}
+                                            disabled={isReadOnly}
+                                        >
+                                            주소검색
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="leaverCardAddModal-column">
+                                    <label className="leaverCardAddModal-label">인사평가</label>
+                                    <textarea
+                                        name="performance"
+                                        className={textareaClassName}
+                                        value={form.performance}
+                                        onChange={handleChange}
+                                        readOnly={isReadOnly}
+                                        rows={3}
+                                    />
+                                </div>
+                            </form>
+                            <div className="leaverCardAddModal-buttonRow">
+                                <button
+                                    type="submit"
+                                    form={formId}
+                                    className="leaverCardAddModal-button leaverCardAddModal-button--primary"
+                                    disabled={updateLeaverCard.isPending || !canEditCard}
+                                >
+                                    {updateLeaverCard.isPending ? "저장 중..." : "저장"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="leaverCardAddModal-button leaverCardAddModal-button--secondary"
+                                    onClick={handleCloseAttempt}
+                                    disabled={updateLeaverCard.isPending}
+                                >
+                                    취소
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
-        <ConfirmModal
-            isOpen={isExitConfirmOpen}
-            message="수정 중인 내용이 있습니다. 나가시겠습니까?"
-            onConfirm={handleCancelEdit}
-            onClose={() => setIsExitConfirmOpen(false)}
-        />
+            <ConfirmModal
+                isOpen={isExitConfirmOpen}
+                message="수정 중인 내용이 있습니다. 나가시겠습니까?"
+                onConfirm={handleCancelEdit}
+                onClose={() => setIsExitConfirmOpen(false)}
+            />
         </>
     );
 };
 
-export default HrCardUpdateModal;
+export default LeaverCardUpdateModal;

@@ -45,6 +45,7 @@ const App = () => {
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/hr/cards" element={<HrCardListPage />} />
                         <Route path="/hr/leaver" element={<LeaverCardListPage />} />
+                        <Route path="/hr/leavers" element={<LeaverCardListPage />} />
                         <Route path="/base/:type" element={<Base />} />
                     </Route>
                 </Route>

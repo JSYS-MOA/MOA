@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import type { ChangeEvent, FormEvent } from "react";
-import type { HrCard } from "../../apis/HrCardService";
-import { useHrCardAdd } from "../../apis/HrCardService";
+import type { HrCard } from "../../apis/hr/HrCardService.tsx";
+import { useHrCardAdd } from "../../apis/hr/HrCardService.tsx";
 import "../../assets/styles/hr/hrCardAdd.css";
+import { createHrGradeOptions } from "../../constants/hrGradeOptions";
+import { openDaumPostcode } from "../../utils/daumPostcode";
 
 type Props = {
     isOpen: boolean;
@@ -78,23 +80,6 @@ type DateSelectInputProps = {
     calendarLabel: string;
 };
 
-type AddressSearchResult = {
-    address: string;
-    addressType: string;
-    bname: string;
-    buildingName: string;
-};
-
-declare global {
-    interface Window {
-        daum: {
-            Postcode: new (options: { oncomplete: (data: AddressSearchResult) => void }) => {
-                open: () => void;
-            };
-        };
-    }
-}
-
 const initialForm: HrCardFormState = {
     employeeId: "",
     userName: "",
@@ -127,11 +112,7 @@ const ROLE_OPTIONS: Record<string, RoleOption> = {
 
 const DEPARTMENT_QUERY_KEY = ["departmentOptions"] as const;
 const GRADE_QUERY_KEY = ["gradeOptions"] as const;
-const HR_CARD_LIST_QUERY_KEY = ["hrCardList"] as const;
-
 const DEPARTMENT_API_BASE = "/api/base/dept";
-const HR_CARD_API_BASE = "/api/hr/cards";
-
 const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
 const HIDDEN_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사"];
 const CURRENT_YEAR = new Date().getFullYear();
@@ -315,26 +296,7 @@ const findGradeByName = (grades: Grade[], value: string) => {
     return grades.find((grade) => normalizeGradeText(grade.gradeName) === normalizedValue);
 };
 
-const buildGradeOptions = (cards: HrCard[]) => {
-    const gradeMap = new Map<number, Grade>();
-
-    cards.forEach((card) => {
-        const gradeName = getCanonicalGradeName(card.gradeName);
-
-        if (!gradeName || !Number.isFinite(card.gradeId)) {
-            return;
-        }
-
-        if (!gradeMap.has(card.gradeId)) {
-            gradeMap.set(card.gradeId, {
-                gradeId: card.gradeId,
-                gradeName,
-            });
-        }
-    });
-
-    return Array.from(gradeMap.values()).sort((left, right) => left.gradeId - right.gradeId);
-};
+const buildGradeOptions = () => createHrGradeOptions();
 
 const getDepartmentKey = (
     departmentId: number | string | null | undefined,
@@ -602,7 +564,7 @@ const DateSelectInput = ({
 const HrCardAddModal = ({ isOpen, onClose }: Props) => {
     const [form, setForm] = useState<HrCardFormState>(initialForm);
     const addHrCard = useHrCardAdd();
-    const queryClient = useQueryClient();
+    const formId = "hr-card-add-form";
 
     const { data: departmentOptions = [] } = useQuery<Department[]>({
         queryKey: DEPARTMENT_QUERY_KEY,
@@ -621,17 +583,8 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
     const { data: gradeOptions = [] } = useQuery<Grade[]>({
         queryKey: GRADE_QUERY_KEY,
         enabled: isOpen,
-        initialData: () => {
-            const cachedCards = queryClient.getQueryData<HrCard[]>(HR_CARD_LIST_QUERY_KEY);
-            return cachedCards ? buildGradeOptions(cachedCards) : undefined;
-        },
-        queryFn: async () => {
-            const response = await axios.get<HrCard[]>(HR_CARD_API_BASE, {
-                withCredentials: true,
-            });
-
-            return buildGradeOptions(response.data ?? []);
-        },
+        initialData: buildGradeOptions,
+        queryFn: async () => buildGradeOptions(),
     });
 
     const searchableDepartments = useMemo(() => {
@@ -675,44 +628,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
         }
     }, [isOpen]);
 
-    useEffect(() => {
-        if (!selectedDepartment) {
-            return;
-        }
 
-        const nextDepartmentName = selectedDepartment.departmentName;
-        const nextDepartmentCord = getDepartmentCord(selectedDepartment);
-
-        setForm((prev) => {
-            if (
-                prev.departmentName === nextDepartmentName &&
-                prev.departmentCord === nextDepartmentCord
-            ) {
-                return prev;
-            }
-
-            return {
-                ...prev,
-                departmentName: nextDepartmentName,
-                departmentCord: nextDepartmentCord,
-            };
-        });
-    }, [selectedDepartment]);
-
-    useEffect(() => {
-        const nextRoleId = selectedRole ? String(selectedRole.roleId) : "";
-
-        setForm((prev) => {
-            if (prev.roleId === nextRoleId) {
-                return prev;
-            }
-
-            return {
-                ...prev,
-                roleId: nextRoleId,
-            };
-        });
-    }, [selectedRole]);
 
     if (!isOpen) {
         return null;
@@ -760,14 +676,16 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
         event.preventDefault();
 
         try {
+            const submitRoleId = selectedRole ? String(selectedRole.roleId) : form.roleId;
+
             const payload: Partial<HrCard> = {
                 employeeId: form.employeeId.trim(),
                 userName: form.userName.trim(),
                 password: form.password.trim(),
                 birth: toNullable(form.birth),
-                roleId: toRequiredNumber(form.roleId, "권한 코드"),
+                roleId: toRequiredNumber(submitRoleId, "권한 코드"),
                 departmentId: toRequiredNumber(form.departmentId, "부서 코드"),
-                departmentName: toNullable(form.departmentName),
+                departmentName: toNullable(resolvedDepartmentName),
                 gradeId: toRequiredNumber(form.gradeId, "직급 코드"),
                 gradeName: toNullable(form.gradeName),
                 email: toNullable(form.email),
@@ -779,9 +697,18 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                 performance: toNullable(form.performance),
             };
 
+            console.log("등록 payload:", payload);
+
             await addHrCard.mutateAsync(payload);
             onClose();
         } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error("상태코드:", error.response?.status);
+                console.error("서버응답:", error.response?.data);
+                alert(JSON.stringify(error.response?.data));
+                return;
+            }
+
             const message =
                 error instanceof Error ? error.message : "인사카드 등록에 실패했습니다.";
 
@@ -809,32 +736,22 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
         }));
     };
 
-    const handleSearchAddress = () => {
-        new window.daum.Postcode({
-            oncomplete: (data) => {
-                let fullAddress = data.address;
-                let extraAddress = "";
+    const handleSearchAddress = async () => {
+        try {
+            const selectedAddress = await openDaumPostcode();
 
-                if (data.addressType === "R") {
-                    if (data.bname) {
-                        extraAddress += data.bname;
-                    }
-                    if (data.buildingName) {
-                        extraAddress += extraAddress
-                            ? `, ${data.buildingName}`
-                            : data.buildingName;
-                    }
-                    if (extraAddress) {
-                        fullAddress += ` (${extraAddress})`;
-                    }
-                }
+            if (!selectedAddress) {
+                return;
+            }
 
-                setForm((prev) => ({
-                    ...prev,
-                    address: fullAddress,
-                }));
-            },
-        }).open();
+            setForm((prev) => ({
+                ...prev,
+                address: selectedAddress,
+            }));
+        } catch (error) {
+            console.error(error);
+            alert("주소 검색 서비스를 불러오지 못했습니다.");
+        }
     };
 
     const roleHintText = selectedRole
@@ -864,7 +781,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
 
                 </div>
 
-                <form className="hrCardAddModal-form" onSubmit={handleSubmit}>
+                <form id={formId} className="hrCardAddModal-form" onSubmit={handleSubmit}>
                     <div className="hrCardAddModal-row">
                         <div className="hrCardAddModal-field">
                             <label className="hrCardAddModal-label">사번번호</label>
@@ -884,7 +801,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                 className="hrCardAddModal-input hrCardAddModal-input--readonly"
                                 name="roleId"
                                 type="text"
-                                value={form.roleId}
+                                value={selectedRole ? String(selectedRole.roleId) : ""}
                                 readOnly
                                 required
                                 title="부서와 직급 선택 결과로 자동 입력됩니다."
@@ -1162,6 +1079,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                 <div className="hrCardAddModal-buttonRow">
                 <button
                     type="submit"
+                    form={formId}
                     className="hrCardAddModal-button hrCardAddModal-button--primary"
                     disabled={addHrCard.isPending}
                 >
