@@ -2,8 +2,11 @@ import { useState } from 'react';
 import {SlArrowLeft, SlArrowRight} from "react-icons/sl";
 import "../assets/styles/component/calendar.css";
 
+interface CalendarProps {
+    showHeader?: boolean;
+}
 
-const Calender = () => {
+const Calendar = ({showHeader = true}:CalendarProps ) => {
 
  const [viewDate, setViewDate] = useState(new Date());
 
@@ -23,13 +26,13 @@ const Calender = () => {
 
   return (
     <div>
-
-      <div className="calendar-Header" >
-        <button onClick={() => changeMonth(-1)}><SlArrowLeft /></button>
-        {year}년 {month + 1}월
-        <button onClick={() => changeMonth(1)}><SlArrowRight /></button>
-      </div>
-
+        {showHeader && (
+            <div className="calendar-Header" >
+                <button onClick={() => changeMonth(-1)}><SlArrowLeft /></button>
+                {year}년 {month + 1}월
+                <button onClick={() => changeMonth(1)}><SlArrowRight /></button>
+            </div>
+        )}
 
       <div className="calendar-DayCon">
         {['일', '월', '화', '수', '목', '금', '토'].map(d => <div className="day-Header" key={d} >{d}</div>)}
@@ -51,4 +54,4 @@ const Calender = () => {
   )
 }
 
-export default Calender
+export default Calendar

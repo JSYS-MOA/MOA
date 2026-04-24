@@ -1,0 +1,58 @@
+.myCalendar-Wrapper{
+    display: flex;
+    width: 100%;
+    gap: var(--spacing-sm);
+    height: 75vh;
+}
+.myCalendar-Side{
+    width: 220px;
+    background: var(--color-inverse);
+    border-radius: var(--radius-lg);
+    height: 100%;
+    padding: 15px 18px;
+    border: 1px solid var(--border);
+}
+.myCalendar-Main{
+    height: 100%;
+    width: 1170px;
+}
+.myCalendar-Year{
+    background: var(--color-gray-100);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.myCalendar-Year button {
+    padding: 6px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.myCalendar-Main .calendar-Date {
+    min-height: 90px;
+}
+
+.myCalendar-Main .calendar-EmptyDate {
+    min-height: 90px;
+}
+.myCalendar-Wrapper .myCalendar-Year input{
+    padding: 6px 12px;
+}
+.myCalendar-Months{
+    margin-top: var(--spacing-md);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+.myCalendar-Months button{
+    border-radius: var(--radius-lg);
+    padding: 4px 0;
+    font-size: var(--font-xs);
+    font-weight: 300;
+}
+.myCalendar-Months button:hover{
+    background: var(--color-danger);
+    color: var(--text-inverse);
+}

@@ -80,7 +80,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
     };
 
     return (
-        <aside className="sidebar">
+        <aside className="sidebar" style={{width:"273px", background:"red"}}>
             <div className="sidebar-notification">
                 <span className="icon-bell">🔔</span>
                 <span className="notif-text">1개의 새 알림이 있습니다</span>

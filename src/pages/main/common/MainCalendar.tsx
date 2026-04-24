@@ -1,4 +1,4 @@
-import Calender from "../../../components/Calender.tsx";
+import Calendar from "../../../components/Calendar.tsx";
 import {BiLinkExternal} from "react-icons/bi";
 import {MdRefresh} from "react-icons/md";
 import "../../../assets/styles/main/MainCalendar.css";
@@ -15,7 +15,7 @@ const MainCalendar = () => {
                 </div>
             </div>
             <div className="calendar-Body">
-                <Calender />
+                <Calendar />
             </div>
         </div>
     )

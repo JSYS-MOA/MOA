@@ -63,7 +63,7 @@
 /*----------------------------------------------*/
   /*선 색*/
   --border: #e6e6e6;
-  --border-dark: #a9a9a9;
+  --border-dark: rgba(169,169,169,0.5);
   /*----------------------------------------------*/
 
   --radius-sm: 4px;
@@ -321,3 +321,17 @@ button {
   display: flex !important;
   align-items: center !important;
 }
+
+/* main-Title */
+.favorite-Header{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--spacing-md);
+}
+.favorite-Header span{
+  font-size: 17px;
+  color: var(--text-accent);
+  font-weight: 700;
+}
+

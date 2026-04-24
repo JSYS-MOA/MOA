@@ -8,6 +8,8 @@ import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
 import Base from "./pages/Base.tsx";
+import MyInfo from "./pages/mypage/MyInfo.tsx";
+import MyCalendar from "./pages/mypage/MyCalendar.tsx";
 
 
 const App = () => {
@@ -39,9 +41,12 @@ const App = () => {
                 <Route path="/" element={<Login/>} />
 
                 <Route element={<PrivateRoute />}>
+                    {/* 메인페이지는 여기 있어야됨 -> 링크이동이 안 돼서 임시로 mainLayout안에 둠*/}
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
+                        <Route path="/my/profile" element={<MyInfo />} />
+                        <Route path="/my/calendars" element={<MyCalendar />} />
                     </Route>
                 </Route>
 

@@ -43,6 +43,7 @@
     color: var(--text-secondary);
     min-height: 56px;
     font-weight: 300;
+    background: var(--color-inverse);
 }
 .calendar-Date:nth-child(7n){border-right: 1px solid var(--border);}
 .calendar-Date:last-child{border-right: 1px solid var(--border);}

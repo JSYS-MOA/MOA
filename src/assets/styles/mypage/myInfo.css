@@ -1,0 +1,35 @@
+.myInfo-Section{
+    display: flex;
+    flex-direction: column;
+}
+.myInfo-Section:last-child{
+    margin-top: 21px;
+}
+.myInfo-Section-Header{
+    font-size: var(--font-sm);
+    border-bottom: 1px solid var(--border-dark);
+    padding-bottom: var(--spacing-xs);
+    color: #363636;
+}
+.myInfo-Table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-xs);
+    font-weight: 300;
+    margin-top: var(--spacing-sm);
+    table-layout: fixed;
+}
+.myInfo-Table tbody tr th, .myInfo-Table tbody tr td{
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-dark);
+}
+.myInfo-Table tbody tr th{
+    background: var(--color-gray-100);
+    width: 160px;
+}
+.myInfo-Table tbody tr td{
+    background: var(--color-inverse);
+}
