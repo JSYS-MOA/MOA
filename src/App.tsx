@@ -7,9 +7,9 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
-import Base from "./pages/Base.tsx";
 import MyInfo from "./pages/mypage/MyInfo.tsx";
 import MyCalendar from "./pages/mypage/MyCalendar.tsx";
+import Base from "./pages/base/Base.tsx";
 
 
 const App = () => {
@@ -47,6 +47,7 @@ const App = () => {
                         <Route path="/base/:type" element={<Base />} />
                         <Route path="/my/profile" element={<MyInfo />} />
                         <Route path="/my/calendars" element={<MyCalendar />} />
+                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                     </Route>
                 </Route>
 
