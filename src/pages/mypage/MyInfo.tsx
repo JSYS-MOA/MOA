@@ -2,7 +2,7 @@ import {useQuery} from "@tanstack/react-query";
 import type {MyPageInfo} from "../../types/myPageInfo.ts";
 import {getMyInfoApi} from "../../apis/MyPageService.tsx";
 import {FaStar} from "react-icons/fa";
-import "../../assets/styles/mypage/mypage.css";
+import "../../assets/styles/mypage/myInfo.css";
 
 const MyInfo = () => {
 

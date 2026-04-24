@@ -9,6 +9,7 @@ import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
 import Base from "./pages/Base.tsx";
 import MyInfo from "./pages/mypage/MyInfo.tsx";
+import MyCalendar from "./pages/mypage/MyCalendar.tsx";
 
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
                         <Route path="/my/profile" element={<MyInfo />} />
+                        <Route path="/my/calendars" element={<MyCalendar />} />
                     </Route>
                 </Route>
 

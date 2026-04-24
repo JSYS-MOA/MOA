@@ -51,7 +51,7 @@ const MainLayout = () => {
                         layoutData={layoutData}
                     />
                 )}
-                <main>
+                <main className="main">
                     <Outlet />
                 </main>
             </div>
