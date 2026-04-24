@@ -1,34 +1,41 @@
 
 
+export interface TableColumn<T> {
+    key: keyof T | string; // 데이터의 키값
+    label: string;         // 헤더 이름
+    render?: (val: any, item: T) => React.ReactNode;
+}
 
-
-interface TableProps {
-    items: any[];
-    columns: any[];
-    showCheckbox?: boolean;    // 추가: 체크박스 표시 여부
-    selectedIds?: any[];      // 추가: 선택된 ID 목록
-    onCheck?: (idOrIds: any, checked: boolean, isAll?: boolean) => void; // 추가: 체크 이벤트 핸들러
+interface TableProps<T> {
+    items: T[];
+    idKey?: string;
+    columns: TableColumn<T>[];
+    showCheckbox?: boolean;    // 체크박스 표시 여부
+    selectedIds?: any[];       // 선택된 ID 목록
+    onCheck?: (idOrIds: any, checked: boolean, isAll?: boolean) => void; // 체크 이벤트 핸들러
+    render?: (value: any) => React.ReactNode;
 }
 
 
 
-const Table = ({
+const Table = <T,>({
                    items,
                    columns,
+                   idKey='id',
                    showCheckbox = false,
                    selectedIds = [],
                    onCheck
-               }: TableProps) => {
+               }: TableProps<T>) => {
 
     //전체 선택 핸들러
     const handleAllCheck = (checked: boolean) => {
-        if (!onCheck) return; // onCheck가 없을 경우 대비 (공용 컴포넌트 필수 방어)
-        if (checked) {
-            const allIds = items.map((item: any) => item.id);
-            onCheck(allIds, true, true);
-        } else {
-            onCheck([], false, true);
-        }
+        if (!onCheck) return;
+
+        // items의 각 객체에서 실제 ID값을 추출
+        const allIds = items.map((item: any) => item[idKey]);
+
+        // 부모의 handleCheck(idOrIds, isChecked, isAll) 호출
+        onCheck(allIds, checked, true);
     };
 
     return (
@@ -46,8 +53,8 @@ const Table = ({
                 )}
                 {/* 컬럼 헤더 렌더링 로직 (col.label) 누락 해결 */}
                 {columns.map((col) => (
-                    <th key={col.key}>
-                        {col.label || col.key}
+                    <th key={String(col.key)}>
+                        {col.label || String(col.key)}
                     </th>
                 ))}
             </tr>
@@ -55,25 +62,25 @@ const Table = ({
 
             <tbody>
             {items.length > 0 ? (
-                items.map((item, idx) => (
-                    <tr key={idx}>
+                items.map((item: any, idx) => (
+                    <tr key={item[idKey] || idx}>
                         {showCheckbox === true && (
                             <td>
                                 <input
                                     type="checkbox"
-                                    checked={selectedIds?.includes(item.id)}
+                                    checked={selectedIds?.includes(item[idKey])}
                                     // 개별 체크 시 세 번째 인자(isAll)를 false로 전달
-                                    onChange={(e) => onCheck?.(item.id, e.target.checked, false)}
+                                    onChange={(e) => onCheck?.(item[idKey], e.target.checked, false)}
                                 />
                             </td>
                         )}
                         {columns.map((col) => (
-                            <td key={col.key}>
+                            <td key={String(col.key)}>
                                 {/* render 함수 호출 시 item 객체 전체를 두 번째 인자로 전달 (유연성 확보) */}
                                 {col.render
-                                    ? col.render(item[col.key], item)
-                                    : (item[col.key] !== undefined && item[col.key] !== null
-                                        ? String(item[col.key])
+                                    ? col.render((item as any)[col.key], item)
+                                    : ((item as any)[col.key] !== undefined && (item as any)[col.key] !== null
+                                        ? String((item as any)[col.key])
                                         : "-")
                                 }
                             </td>
