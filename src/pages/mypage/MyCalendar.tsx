@@ -3,12 +3,14 @@ import Calendar from "../../components/Calendar.tsx";
 import {useState} from "react";
 import "../../assets/styles/mypage/myCalendar.css";
 import DropdownSelect from "../../components/DropdownSelect.tsx";
+import CalendarWriteModal from "./CalendarWriteModal.tsx";
 
 const MyCalendar = () => {
 
     const [viewDate, setViewDate] = useState(new Date());
     const [showShared, setShowShared] = useState(true);
     const [showPersonal, setShowPersonal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
@@ -67,8 +69,19 @@ const MyCalendar = () => {
                     <Calendar
                         showHeader={false}
                     />
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="myCalendar-addBtn btn-Primary"
+                    >
+                        신규
+                    </button>
                 </div>
             </div>
+            <CalendarWriteModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={() => {}}
+            />
         </>
     )
 }

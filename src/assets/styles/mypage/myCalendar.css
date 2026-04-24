@@ -3,6 +3,7 @@
     width: 100%;
     gap: var(--spacing-sm);
     height: 75vh;
+    font-size: var(--font-xs);
 }
 .myCalendar-Side{
     width: 220px;
@@ -41,18 +42,36 @@
 }
 .myCalendar-Months{
     margin-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 7px;
     width: 100%;
+    color: var(--text-secondary);
 }
 .myCalendar-Months button{
     border-radius: var(--radius-lg);
-    padding: 4px 0;
-    font-size: var(--font-xs);
+    padding: 5px 0;
     font-weight: 300;
 }
 .myCalendar-Months button:hover{
     background: var(--color-danger);
     color: var(--text-inverse);
+    font-weight: 200;
 }
+.filter-Title{
+    padding: 9px 0;
+    border-bottom: 2px solid var(--border);
+    border-top: 2px solid var(--border);
+    margin-bottom: 11px;
+    color: var(--text-secondary);
+}
+.filter-Item{
+    display: flex;
+    padding: 5px 0;
+    gap: 3px;
+    color: var(--text-secondary);
+    user-select: none;
+    cursor: pointer;
+}
+.myCalendar-addBtn{margin-top: 12px;}

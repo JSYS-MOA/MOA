@@ -107,6 +107,7 @@
   background: var(--bg);
   overflow-y: hidden;
   overflow-x: hidden;
+  color: var(--text-primary);
 }
 
 .layout-wrapper {
