@@ -38,7 +38,7 @@ const InventoryTable = (
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleInbound?.(item , e); // 입고 처리 함수 실행
+                      handleInbound?.(item , e);
                     }}
                     style={{ marginLeft: '8px' }}
                   >

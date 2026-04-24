@@ -19,8 +19,6 @@ const InventoryOrder = () => {
   
   const [onAlert, setOnAlert] = useState('');
 
-  const [inboundItem, setInboundItem] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);
-
   const { data , refetch: refetchList } =  useGetOrder( search, page, 10);
   const {  mutate } = useGetOrderInfo()
 

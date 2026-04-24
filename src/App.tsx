@@ -14,6 +14,7 @@ import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import Base from "./pages/Base.tsx";
 import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
+import Approvals from './pages/approvals/Approvals.tsx';
 
 
 
@@ -53,21 +54,30 @@ const App = () => {
                     </Route>
                 </Route>
 
-          <Route element={<PrivateRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/home" element={<MainPage />} />
+                <Route element={<PrivateRoute />}>
+                    <Route element={<MainLayout />}>
+                    <Route path="/home" element={<MainPage />} />
 
-              <Route path="/inventory">
-                <Route index element={<Inventory/>} />
-                <Route path="status" element={<Inventory/>} />
-                <Route path="disposals" element={<InventoryDisposals/>} />
-                <Route path="orders" element={<InventoryOrder/>} />
-                <Route path="inbounds" element={<InventoryInbounds/>} />
-                <Route path="outbounds" element={<InventoryOutbound/>} />
-             </Route>
+                        <Route path="/inventory">
+                            <Route index element={<Inventory/>} />
+                            <Route path="status" element={<Inventory/>} />
+                            <Route path="disposals" element={<InventoryDisposals/>} />
+                            <Route path="orders" element={<InventoryOrder/>} />
+                            <Route path="inbounds" element={<InventoryInbounds/>} />
+                            <Route path="outbounds" element={<InventoryOutbound/>} />
+                        </Route>
+                        
+                        <Route path="/gw">
+                            <Route index element={<Approvals/>} />
+                            <Route path="approvals" element={<Approvals/>} />
+                        </Route>
 
-            </Route>
-          </Route>
+
+
+                    </Route>
+                </Route>
+
+                
 
       </Routes>
 

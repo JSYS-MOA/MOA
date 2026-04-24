@@ -3,7 +3,7 @@ import axios from "axios";
 
 const Api_BASE = "http://localhost/api/inventory/";
 
-// 조회 및 검색
+  // 조회 및 검색
   export function useGetInventory( search?: string , page? : number  ,  size? : number ) {
     return useQuery({
       queryKey: ["admin", search || '' , page , size ], 
@@ -20,7 +20,7 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-// 상세 조회
+  // 상세 조회
   export function useGetInventoryInfo () {
     return useMutation({
       mutationFn: async (info: number) => {
@@ -34,7 +34,7 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-// 불량페기조회
+  // 불량페기조회
   export function useGetDefect( search?: string , page? : number  ,  size? : number ) {
     return useQuery({
       queryKey: ["defect", search || '' , page , size ], 
@@ -51,7 +51,7 @@ const Api_BASE = "http://localhost/api/inventory/";
     });
   }
 
-// 불량폐기 상세조회
+  // 불량폐기 상세조회
     export function useGetDefectInfo () {
     return useMutation({
       mutationFn: async (info: number) => {
@@ -140,6 +140,23 @@ const Api_BASE = "http://localhost/api/inventory/";
         const { data } = await axios.get(`${Api_BASE}orders/select/storage`, {   
           params: {
             StorageCord : StorageCord 
+          }
+        });
+        return data;
+      },
+    });
+  }
+
+  // 선택용 인벤토리 리스트
+  export function useGetInventorySelect( search?: string , page? : number  ,  size? : number ) {
+    return useQuery({
+      queryKey: ["InventoryCord", search || '' , page , size ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}orders/select/inventory`, {   
+          params: {
+             page : page ,
+             size : size ,
+            search : search || ''
           }
         });
         return data;
@@ -237,6 +254,18 @@ const Api_BASE = "http://localhost/api/inventory/";
       payload: any[]; 
     }) => {
          const { data } = await axios.post(`${Api_BASE}inbounds/${orderformId}`, payload);
+      return data;
+      },
+    });
+  }
+
+  // 출고처리
+  export function postOutbounds () {
+    return useMutation({
+     mutationFn: async ({ payload }: { 
+      payload: any[]; 
+    }) => {
+         const { data } = await axios.post(`${Api_BASE}outbounds`, payload);
       return data;
       },
     });

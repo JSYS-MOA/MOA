@@ -54,9 +54,6 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   
     const nextList = [...itemList];
   
-    const currentSno = nextList[targetIdx][keySno as keyof ModalProps] || 0;
-    const existingOrdererId = nextList[targetIdx].ordererId; 
-
   nextList[targetIdx] = {
     ...nextList[targetIdx], // 기본 구조 보장
     storageId: storage.storageId, // ID 보존
@@ -74,7 +71,6 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   };
 
   const handleInputChange = (idx: number, key: string, value: string | number) => {
-     console.log(key)
     const nextList = [...itemList];
     const item = nextList[idx];
 
@@ -113,17 +109,15 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
     }, 0);
   }, [itemList]);
 
-
   const onSubmitPost = (e : React.SubmitEvent) => {
     e.preventDefault();
 
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString(); 
+    const today = now.split('T')[0];
     const finalPayload : any[] = [];
 
-    console.log(user?.userId)
-
     if( user?.userId === null ) {
-      return setOnAlert("다시 로그인 해주세요");
+      return setOnAlert("섹션이 만료되었습니다");
     }
 
     const inItems = itemList.filter(item => (item.logisticSno || 0) > 0).map(item => ({
@@ -135,13 +129,17 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
       memo: item.defectMemo || ""
     }));
 
-     const outItems = itemList.filter(item => (item.defectSno || 0) > 0).map(item => ({
+    const outItems = itemList.map(item => {
+      const calculatedDefect = Number(item.orderSno || 0) - Number(item.logisticSno || 0);
+      return { ...item, calculatedDefect };})
+      .filter(item => item.calculatedDefect > 0).map(item => ({
       productId: item.productId,
       storageId: item.storageId,
-      defectSno: Number(item.defectSno),
-      inventoryId: item.inventoryId, // 재고 ID
+      defectSno: item.calculatedDefect, // 계산된 값을 전송
+      price: item.unitPrice,
+      inventoryId: item.inventoryId || null,
       defectStatus: item.defectStatus || "불량",
-      disposalDate: today,
+      disposalDate: now,
       memo: item.defectMemo || ""
     }));
 
@@ -168,9 +166,21 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
     return;
    }
 
-    mutate({ 
+   mutate({ 
       orderformId: itemList[0].orderformId, 
       payload: finalPayload 
+    }, { 
+      onSuccess: () => {
+        setOnAlert("입고처리 되었습니다.");
+        onRefresh();
+        onClose()
+      },
+      onError: (error) => {
+        console.error(error);
+        setOnAlert("입고처리 중 오류가 발생했습니다.");
+        onRefresh();
+        onClose()
+      }
     });
 
   }

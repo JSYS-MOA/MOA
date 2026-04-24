@@ -91,7 +91,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
     setItemList(nextList);
   } ;
 
-   //  물품 전달을 위한 조회
+   // 물품 전달을 위한 조회
   const onselectProduct = (idx: number , item : any) => {
       setSelectMode('PRODUCT');
       setTargetIdx(idx);
@@ -173,7 +173,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
      mutate(payload, { 
       onSuccess: () => {
         setOnAlert("성공적으로 등록되었습니다.");
-        onRefresh(); // 부모 리스트 새로고침
+        onRefresh();
         onClose()
       },
       onError: (error) => {

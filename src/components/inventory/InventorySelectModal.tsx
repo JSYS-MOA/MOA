@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import type { ModalProps } from '../../types/ModalProps'
 
 const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }: {
@@ -9,6 +9,21 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
   onClose : any
  
   })  => {
+
+    const [page, setPage] = useState(0);
+
+    const changePage = (num: number) => {
+      const totalPage = maxPage ?? 1; 
+      const newPage : number = page + num
+    if( newPage <= 0 ) {
+      setPage(0);
+    } else if(  newPage >= totalPage -1) {
+        setPage(totalPage -1);
+    } else {
+      setPage( page => page + num);
+    }
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -43,8 +58,21 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
               ))
             ) : null }
 
+            {title === 'INVENTORY' ? (
+              items.map((inventory: any) => (
+                <tr key={inventory.inventoryId} onClick={() => onSelect(inventory)} >
+                  <td>{inventory.productName}</td>
+                  <td>{inventory.productCord}</td>
+                  <td>{inventory.storageName}</td>
+                  <td>{inventory.expirationDate}</td>
+                </tr>
+              ))
+            ) : null }
+
           </tbody>
         </table>
+        <button onClick={()=>{changePage(-1)}}>aa</button>
+      <button onClick={()=>{changePage(1)}}>aa</button>
         <button onClick={onClose}>닫기</button>
       </div>
     </div>

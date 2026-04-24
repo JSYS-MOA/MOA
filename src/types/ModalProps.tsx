@@ -98,7 +98,8 @@ export interface ModalProps {
   // 입고시 불량 처리 필요
   inventoryId : number;
   defectStatus : string;
-  defectMemo : string
+  defectMemo : string;
+  logisticsId : number;
 }
 
 export interface MColumn {
