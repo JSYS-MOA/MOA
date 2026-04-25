@@ -41,6 +41,11 @@ const InventoryModal = (  { items , maxPage , columns , keySno , keyPrice , keyt
           <td key={col.key}>    
           {(() => {
                 const targetItem = item as any;
+
+                if (col.key === 'incoming' && col.label === '출고수량' ) {
+                  return targetItem[keytype] === 'OUT' ? -targetItem[keySno] : "-";
+                }
+
                 // 입고수량 컬럼일 때: 타입이 'IN'일 때만 숫자 표시
                 if (col.key === 'incoming' ) {
                   return targetItem[keytype] === 'IN' ? targetItem[keySno] : "-";
