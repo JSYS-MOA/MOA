@@ -16,7 +16,9 @@ import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
 import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
-import Approvals from './pages/approvals/Approvals.tsx';
+import Approvals from './pages/approvals/Approvals.tsx';;
+import HrCardListPage from "./pages/HR/HrCardListPage.tsx";
+import LeaverCardListPage from "./pages/HR/LeaverCardListPage.tsx";
 
 
 
@@ -62,8 +64,17 @@ const App = () => {
 
                 <Route element={<PrivateRoute />}>
                     <Route element={<MainLayout />}>
-                    <Route path="/home" element={<MainPage />} />
+                        <Route path="/hr">
+                            <Route path="cards" element={<HrCardListPage />} />
+                            <Route path="leaver" element={<LeaverCardListPage />} />
+                            <Route path="leavers" element={<LeaverCardListPage />} />
+                        </Route>
+                    </Route>
+                </Route>
 
+
+                <Route element={<PrivateRoute />}>
+                    <Route element={<MainLayout />}>
                         <Route path="/inventory">
                             <Route index element={<Inventory/>} />
                             <Route path="status" element={<Inventory/>} />
@@ -72,7 +83,7 @@ const App = () => {
                             <Route path="inbounds" element={<InventoryInbounds/>} />
                             <Route path="outbounds" element={<InventoryOutbound/>} />
                         </Route>
-                        
+
                         <Route path="/gw">
                             <Route index element={<Approvals/>} />
                             <Route path="approvals" element={<Approvals/>} />
@@ -82,14 +93,11 @@ const App = () => {
 
                     </Route>
                 </Route>
+                </Routes>
+            </>
+            )
+            }
 
-                
+            export default App
 
-      </Routes>
 
-    
-    </>
-  )
-}
-
-export default App
