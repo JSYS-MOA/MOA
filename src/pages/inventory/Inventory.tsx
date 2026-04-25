@@ -4,11 +4,13 @@ import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryServi
 import Modal from "../../components/inventory/InventoryModal";
 import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Alert from "../../components/inventory/Alert";
 
 
 const Inventory = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
+  const [onAlert, setOnAlert] = useState('');
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
@@ -17,7 +19,7 @@ const Inventory = () => {
 
   const maxPage = data ? data.totalPages  : 0; 
   
-    const changePage = (num: number) => {
+  const changePage = (num: number) => {
         const newPage : number = page + num
       if( newPage <= 0 ) {
         setPage(0);
@@ -26,9 +28,9 @@ const Inventory = () => {
       } else {
         setPage( page => page + num);
       }
-    };
+  };
 
-    const onInventoryClick = ( item : any , e : React.MouseEvent) => {
+  const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
       if('productId' in item) {
         
@@ -38,15 +40,15 @@ const Inventory = () => {
           setModal(true)
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("정보를 가져오는데 실패했습니다.");
+          setOnAlert("정보를 가져오는데 실패했습니다.");
         }
       })
        
       }
       
-    }
+  }
 
-    const columns : Column[] = [
+  const columns : Column[] = [
     { key: 'productCord', label: '품목코드' },
     { key: 'productName', label: '품목명'  },
     { key: 'storageName', label: '창고명' },
@@ -79,7 +81,8 @@ const Inventory = () => {
       <button onClick={()=>{changePage(1)}}>aa</button>
        </> : "로딩중입니다." }
         
-      
+      { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
+
     </div>
   )
 }

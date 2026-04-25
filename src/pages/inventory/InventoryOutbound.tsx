@@ -5,14 +5,14 @@ import Modal from "../../components/inventory/InventoryModal";
 import OutboundModal from "../../components/inventory/InventoryOutboundModalForm"
 import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
-
+import Alert from "../../components/inventory/Alert";
 
 const InventoryOutbound = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
+  const [onAlert, setOnAlert] = useState('');
   const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
-  const [onAlert, setOnAlert] = useState('');
   const { data , refetch: refetchList} =  useGetOutbounds( search, page, 50);
   const {  mutate } = useGetOutboundsInfo()
 
@@ -103,7 +103,7 @@ const InventoryOutbound = () => {
 
        </> : "로딩중입니다." }
         
-      
+      {onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>
   )
 }

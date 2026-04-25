@@ -12,12 +12,12 @@ import Alert from "../../components/inventory/Alert";
 const InventoryOrder = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
+  const [onAlert, setOnAlert] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);
   const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
 
   const [modalMode, setModalMode] = useState('');
   
-  const [onAlert, setOnAlert] = useState('');
 
   const { data , refetch: refetchList } =  useGetOrder( search, page, 10);
   const {  mutate } = useGetOrderInfo()
@@ -147,6 +147,7 @@ const InventoryOrder = () => {
        
 
        <button onClick={()=>{setModalMode('ADD')}}>발주하기</button> 
+
       {onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>
   )

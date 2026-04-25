@@ -5,6 +5,7 @@ import Modal from "../../components/inventory/InventoryModal";
 import OutboundModal from "../../components/inventory/InventoryOutboundModalForm"
 import { type ModalProps , type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Alert from "../../components/inventory/Alert";
 
 
 const InventoryDisposals = () => {
@@ -40,7 +41,7 @@ const InventoryDisposals = () => {
           setModalMode('LIST')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("정보를 가져오는데 실패했습니다.");
+          setOnAlert("정보를 가져오는데 실패했습니다.");
         }
       })
        
@@ -112,7 +113,7 @@ const InventoryDisposals = () => {
        </> : "로딩중입니다." }
         
       
-
+        { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>
   )
 }
