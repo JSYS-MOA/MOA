@@ -21,7 +21,7 @@ const Api_BASE = "http://localhost/api/gw/";
     });
   }
 
-// 결재 상보정보
+// 결재 상제정보 및 팀장 결제 내역 상세조회 
  export function useGetApprovaInfo () {
     return useMutation({
       mutationFn: async (  approvaId: number ) => {
@@ -33,24 +33,15 @@ const Api_BASE = "http://localhost/api/gw/";
   }
 
 
-// 결재 요청
+// 결재 요청 post /api/gw/approvals
 
-// 미결재 결재 삭제
+// 미결재 결재 삭제 DELETE /api/gw/approvals/{approva_id}
 
-// 양식 리스트 1
+// 팀장 결제 내역 조회 GET /api/gw/approvalWait
+// 팀장 결제 내역 반려 / 결재 처리 PATCH /api/gw/approvalAct/{approva_id}
 
-// 양식 추가
+// 팀원 조회  GET /api/gw/teamMembers
+// 팀원 상세 조회  GET /api/gw/teamMembers/{department_id} <= {user_id} 유저로 변경
+// 인사 평가 추가 PUT /api/gw/teamMembers/{user_id}
 
-// 양식 삭제
-
-// 양식 수정
-
-// 팀장 결제 내역 조회 2
-
-// 팀장 결제 내역 상세조회 3
-
-// 팀장 결제 내역 반려 / 결재 처리
-
-// 팀원 조회 4
-
-// 인사 평가 추가
+// 결재 문서 양식 리스트 양식 추가 ,양식 삭제, 양식 수정 <= 윤아님이 만든 기본사항 > 그룹웨어 >  공통양식 리스트로 이동시키기
