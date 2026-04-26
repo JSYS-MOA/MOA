@@ -1,5 +1,5 @@
-/* ====================== 모달 배경 ====================== */
-.hrCardAddModal-backdrop {
+/* ====================== Modal Backdrop ====================== */
+.leaverCardAddModal-backdrop {
     position: fixed;
     inset: 0;
     z-index: 999;
@@ -10,8 +10,8 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* ====================== 모달 본체 ====================== */
-.hrCardAddModal-panel {
+/* ====================== Modal Panel ====================== */
+.leaverCardAddModal-panel {
     width: min(800px, 100%);
     max-height: 900px;
     overflow-y: auto;
@@ -21,8 +21,8 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* ====================== 상단 타이틀 바 ====================== */
-.hrCardAddModal-min-title {
+/* ====================== Header Bar ====================== */
+.leaverCardAddModal-min-title {
     height: var(--spacing-lg);
     display: flex;
     align-items: center;
@@ -31,12 +31,12 @@
     color: var(--text-inverse);
 }
 
-.hrCardAddModal-min-text {
+.leaverCardAddModal-min-text {
     margin-left: var(--spacing-sm);
     font-size: var(--font-xs);
 }
 
-.hrCardAddModal-closeButton {
+.leaverCardAddModal-closeButton {
     margin-right: var(--spacing-sm);
     border: 0;
     background: transparent;
@@ -47,15 +47,15 @@
     box-sizing: border-box;
 }
 
-/* ====================== 헤더 ====================== */
-.hrCardAddModal-header {
+/* ====================== Title ====================== */
+.leaverCardAddModal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-sm);
 }
 
-.hrCardAddModal-title {
+.leaverCardAddModal-title {
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
     margin-left: var(--spacing-sm);
@@ -64,25 +64,39 @@
     font-weight: 700;
 }
 
-/* 공통 버튼 기본 */
-.hrCardAddModal-addressButton,
-.hrCardAddModal-button {
+/* Shared button base */
+.leaverCardAddModal-addressButton,
+.leaverCardAddModal-button {
     border-radius: var(--radius-md);
     cursor: pointer;
     box-sizing: border-box;
 }
 
-/* ====================== 폼 ====================== */
-.hrCardAddModal-form {
+/* ====================== Form Layout ====================== */
+.leaverCardAddModal-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     margin: 0 var(--spacing-sm);
     border-radius: var(--radius-lg);
+    background: var(--bg);
+}
+
+.leaverCardAddModal-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
     background: var(--color-inverse);
 }
 
-.hrCardAddModal-row {
+.leaverCardAddModal-section > .leaverCardAddModal-row {
+    padding: 0;
+}
+
+.leaverCardAddModal-row {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -92,24 +106,30 @@
     padding: var(--spacing-xs);
 }
 
-.hrCardAddModal-row--optionFields {
+.leaverCardAddModal-row--optionFields {
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(140px, 1fr) minmax(0, 1.6fr) minmax(140px, 1fr);
     gap: var(--spacing-xs);
 }
 
-.hrCardAddModal-row--dateFields {
+.leaverCardAddModal-row--dateFields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-xs);
 }
 
-.hrCardAddModal-field {
+.leaverCardAddModal-row--stackedDateFields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+}
+
+.leaverCardAddModal-field {
     flex: 1 1 150px;
 }
 
-.hrCardAddModal-field,
-.hrCardAddModal-column {
+.leaverCardAddModal-field,
+.leaverCardAddModal-column {
     display: grid;
     grid-template-columns: 60px minmax(0, 1fr);
     align-items: center;
@@ -119,39 +139,109 @@
     text-align: center;
 }
 
-.hrCardAddModal-column {
+.leaverCardAddModal-column {
     width: 100%;
     box-sizing: border-box;
     padding: var(--spacing-xs);
 }
 
-.hrCardAddModal-field--small {
+.leaverCardAddModal-field--small {
     min-width: 140px;
 }
 
-.hrCardAddModal-label {
+.leaverCardAddModal-label {
     margin: 0;
     color: var(--text-primary);
     font-size: var(--font-sm);
     white-space: nowrap;
 }
 
-.hrCardAddModal-field > :not(.hrCardAddModal-label),
-.hrCardAddModal-column > :not(.hrCardAddModal-label) {
+.leaverCardAddModal-field > :not(.leaverCardAddModal-label),
+.leaverCardAddModal-column > :not(.leaverCardAddModal-label) {
     grid-column: 2;
     min-width: 0;
 }
 
-.hrCardAddModal-hint {
+.leaverCardAddModal-hint {
     grid-column: 2;
     color: var(--text-secondary-70);
     font-size: var(--font-xs);
 }
 
-/* ====================== 입력 요소 공통 ====================== */
-.hrCardAddModal-input,
-.hrCardAddModal-textarea,
-.hrCardAddModal-dateSelect {
+.leaverCardAddModal-employeeSelector {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.leaverCardAddModal-employeeHint,
+.leaverCardAddModal-employeeList,
+.leaverCardAddModal-employeeEmpty {
+    grid-column: 2;
+}
+
+.leaverCardAddModal-employeeHint {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+.leaverCardAddModal-employeeList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.leaverCardAddModal-employeeEmpty {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary-70);
+    font-size: var(--font-sm);
+    background-color: var(--bg);
+}
+
+.leaverCardAddModal-employeeChip {
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    text-align: left;
+    cursor: pointer;
+}
+
+.leaverCardAddModal-employeeChip.is-selected {
+    border-color: var(--color-primary);
+    background-color: rgba(33, 74, 168, 0.08);
+}
+
+.leaverCardAddModal-employeeName {
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 600;
+}
+
+.leaverCardAddModal-employeeMeta {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+/* ====================== Inputs ====================== */
+.leaverCardAddModal-input,
+.leaverCardAddModal-textarea,
+.leaverCardAddModal-dateSelect {
     width: 100%;
     min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
@@ -162,71 +252,74 @@
     color: var(--text-primary);
 }
 
-.hrCardAddModal-input::placeholder,
-.hrCardAddModal-textarea::placeholder {
+.leaverCardAddModal-input::placeholder,
+.leaverCardAddModal-textarea::placeholder {
     color: var(--text-secondary-30);
 }
 
-.hrCardAddModal-select {
+.leaverCardAddModal-select {
     appearance: auto;
     padding-right: var(--spacing-sm);
 }
 
-.hrCardAddModal-select:invalid {
+.leaverCardAddModal-select:invalid {
     color: var(--text-secondary-30);
 }
 
-.hrCardAddModal-input--readonly {
+.leaverCardAddModal-input--readonly {
     background-color: var(--color-inverse);
     color: var(--text-secondary-70);
 }
 
-.hrCardAddModal-textarea {
+.leaverCardAddModal-textarea {
     min-height: 72px;
     resize: vertical;
 }
 
-/* ====================== 이메일 ====================== */
-.hrCardAddModal-emailRow {
+/* ====================== Email ====================== */
+.leaverCardAddModal-emailRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     width: 100%;
 }
 
-.hrCardAddModal-emailAt {
+.leaverCardAddModal-emailAt {
     color: var(--text-secondary-70);
     font-size: var(--font-lg);
     font-weight: 600;
     line-height: 1;
 }
 
-/* ====================== 전화번호 ====================== */
-.hrCardAddModal-phoneRow {
+/* ====================== Phone ====================== */
+.leaverCardAddModal-phoneRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
+    justify-self: start;
     width: 100%;
+    max-width: 280px;
 }
 
-.hrCardAddModal-phoneBox {
-    flex: 1 1 0;
-    min-width: 0;
+.leaverCardAddModal-phoneBox {
+    flex: 0 0 84px;
+    min-width: 84px;
 }
 
-.hrCardAddModal-phoneBox--short {
-    flex: 0 0 96px;
+.leaverCardAddModal-phoneBox--short {
+    flex: 0 0 64px;
+    min-width: 64px;
 }
 
-.hrCardAddModal-phoneDash {
+.leaverCardAddModal-phoneDash {
     color: #57606a;
     font-size: var(--font-sm);
     font-weight: 600;
     line-height: 1;
 }
 
-/* ====================== 날짜 ====================== */
-.hrCardAddModal-dateRow {
+/* ====================== Date ====================== */
+.leaverCardAddModal-dateRow {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -235,22 +328,22 @@
     min-width: 0;
 }
 
-.hrCardAddModal-dateBox {
+.leaverCardAddModal-dateBox {
     position: relative;
     flex: 0 0 auto;
     min-width: 0;
 }
 
-.hrCardAddModal-dateBox--year {
+.leaverCardAddModal-dateBox--year {
     width: 88px;
 }
 
-.hrCardAddModal-dateBox--month,
-.hrCardAddModal-dateBox--day {
+.leaverCardAddModal-dateBox--month,
+.leaverCardAddModal-dateBox--day {
     width: 64px;
 }
 
-.hrCardAddModal-dateSelect {
+.leaverCardAddModal-dateSelect {
     width: 100%;
     padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
     appearance: none;
@@ -258,7 +351,7 @@
     -moz-appearance: none;
 }
 
-.hrCardAddModal-dateArrow {
+.leaverCardAddModal-dateArrow {
     position: absolute;
     top: 50%;
     right: 8px;
@@ -268,26 +361,38 @@
     font-size: var(--font-xs);
 }
 
-.hrCardAddModal-dateDivider {
+.leaverCardAddModal-dateDivider {
     color: var(--text-secondary-50);
     font-size: var(--font-sm);
     line-height: 1;
 }
 
-.hrCardAddModal-dateCalendarWrap {
+.leaverCardAddModal-dateCalendarWrap {
     position: relative;
     width: 40px;
     height: 40px;
 }
 
-.hrCardAddModal-dateNativeInput {
+.leaverCardAddModal-dateNativeInput {
     position: absolute;
     inset: 0;
     opacity: 0;
     pointer-events: none;
 }
 
-.hrCardAddModal-dateCalendarButton {
+.leaverCardAddModal-dateInputRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.leaverCardAddModal-dateInputField {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.leaverCardAddModal-dateCalendarButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -300,7 +405,12 @@
     cursor: pointer;
 }
 
-.hrCardAddModal-dateCalendarIcon {
+.leaverCardAddModal-dateCalendarButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.leaverCardAddModal-dateCalendarIcon {
     display: block;
     width: 16px;
     height: 16px;
@@ -311,20 +421,20 @@
     stroke-linejoin: round;
 }
 
-/* ====================== 주소 ====================== */
-.hrCardAddModal-addressRow {
+/* ====================== Address ====================== */
+.leaverCardAddModal-addressRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
     width: 100%;
 }
 
-.hrCardAddModal-addressRow .hrCardAddModal-input {
+.leaverCardAddModal-addressRow .leaverCardAddModal-input {
     flex: 1;
     min-width: 0;
 }
 
-.hrCardAddModal-addressButton {
+.leaverCardAddModal-addressButton {
     flex: 0 0 auto;
     min-height: 40px;
     padding: var(--spacing-xs) 14px;
@@ -333,8 +443,8 @@
     white-space: nowrap;
 }
 
-/* ====================== 하단 버튼 ====================== */
-.hrCardAddModal-buttonRow {
+/* ====================== Footer Buttons ====================== */
+.leaverCardAddModal-buttonRow {
     display: flex;
     width: 100%;
     box-sizing: border-box;
@@ -344,64 +454,64 @@
     padding: 0 var(--spacing-xs) var(--spacing-xs);
 }
 
-.hrCardAddModal-button {
+.leaverCardAddModal-button {
     min-width: 50px;
     min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
     border: 1px solid var(--border);
 }
 
-.hrCardAddModal-button--secondary {
+.leaverCardAddModal-button--secondary {
     border-color: var(--border);
     background-color: var(--color-inverse);
     color: var(--text-primary);
 }
 
-.hrCardAddModal-button--primary {
+.leaverCardAddModal-button--primary {
     border-color: var(--border);
     background-color: var(--color-primary);
     color: var(--text-inverse);
 }
 
-.hrCardAddModal-button:disabled {
+.leaverCardAddModal-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* ====================== 수정 모달 상단 ====================== */
-.hrCardUpdateModal-topFields {
+/* ====================== Update Modal ====================== */
+.leaverCardUpdateModal-topFields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-xs);
     padding: var(--spacing-xs);
 }
 
-.hrCardUpdateModal-field--top {
+.leaverCardUpdateModal-field--top {
     grid-template-columns: 60px minmax(0, 1fr);
 }
 
-.hrCardUpdateModal-inlineOptions {
+.leaverCardUpdateModal-inlineOptions {
     margin-top: 0;
 }
 
 @media (max-width: 768px) {
-    .hrCardUpdateModal-topFields,
-    .hrCardAddModal-row--optionFields,
-    .hrCardAddModal-row--dateFields {
+    .leaverCardUpdateModal-topFields,
+    .leaverCardAddModal-row--optionFields,
+    .leaverCardAddModal-row--dateFields {
         grid-template-columns: 1fr;
     }
 }
 
-.hrCardModalScope .modal-Overlay {
+.leaverCardModalScope .modal-Overlay {
     z-index: 999;
     padding: var(--spacing-md);
     box-sizing: border-box;
 }
 
-.hrCardModalScope .modal-Container {
+.leaverCardModalScope .modal-Container {
     width: min(800px, 100%);
     max-height: min(900px, calc(100vh - (var(--spacing-md) * 2)));
-    height: auto;
+    height: 800px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -410,25 +520,25 @@
     overflow: hidden;
 }
 
-.hrCardModalScope .modal-Header p,
-.hrCardModalScope .modal-Title p {
+.leaverCardModalScope .modal-Header p,
+.leaverCardModalScope .modal-Title p {
     margin: 0;
 }
 
-.hrCardModalScope .modal-Header button {
+.leaverCardModalScope .modal-Header button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
-.hrCardModalScope .modal-Title {
+.leaverCardModalScope .modal-Title {
     margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
     color: var(--text-accent);
     font-size: var(--font-xl);
     font-weight: 700;
 }
 
-.hrCardModalScope .modal-Body {
+.leaverCardModalScope .modal-Body {
     flex: 1 1 auto;
     min-height: 0;
     margin: 0;
@@ -437,42 +547,7 @@
     overflow-y: auto;
 }
 
-.hrCardModalScope .modal-Footer {
+.leaverCardModalScope .modal-Footer {
     padding: 0 var(--spacing-sm) var(--spacing-sm);
     background: transparent;
-}
-
-.hrCardModalScope .hrCardAddModal-form {
-    padding-bottom: var(--spacing-sm);
-}
-
-.hrCardModalScope .hrCardUpdateModal-topFields,
-.hrCardModalScope .hrCardAddModal-row {
-    gap: var(--spacing-sm);
-}
-
-.hrCardModalScope .hrCardAddModal-field,
-.hrCardModalScope .hrCardAddModal-column,
-.hrCardModalScope .hrCardUpdateModal-field--top {
-    grid-template-columns: 96px minmax(0, 1fr);
-    text-align: left;
-}
-
-.hrCardModalScope .hrCardAddModal-label {
-    font-weight: 600;
-    text-align: left;
-}
-
-.hrCardModalScope .hrCardAddModal-hint {
-    line-height: 1.45;
-}
-
-.hrCardModalScope .hrCardAddModal-row--optionFields {
-    grid-template-columns: minmax(0, 1.6fr) minmax(160px, 1fr) minmax(0, 1.6fr) minmax(160px, 1fr);
-}
-
-.hrCardModalScope .hrCardAddModal-input,
-.hrCardModalScope .hrCardAddModal-textarea,
-.hrCardModalScope .hrCardAddModal-dateSelect {
-    min-height: 42px;
 }

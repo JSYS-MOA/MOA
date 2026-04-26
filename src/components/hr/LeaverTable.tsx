@@ -1,4 +1,3 @@
-import type { LeaverTableProps } from "../../types/LeaverTableProps";
 import "../../assets/styles/hr/leaverCardList.css";
 
 type LeaverTableSelectionProps = {

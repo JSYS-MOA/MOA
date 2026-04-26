@@ -17,8 +17,10 @@ import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
 import Approvals from './pages/approvals/Approvals.tsx';;
-import HrCardListPage from "./pages/HR/HrCardListPage.tsx";
-import LeaverCardListPage from "./pages/HR/LeaverCardListPage.tsx";
+import HrCardListPage from "./pages/hr/HrCardListPage.tsx";
+import LeaverCardListPage from "./pages/hr/LeaverCardListPage.tsx";
+import CertificatesCardListPage from "./pages/hr/CertificatesCardListPage.tsx";
+import EvaluationsCardListPage from "./pages/hr/EvaluationsCardListPage.tsx";
 
 
 
@@ -66,8 +68,9 @@ const App = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/hr">
                             <Route path="cards" element={<HrCardListPage />} />
-                            <Route path="leaver" element={<LeaverCardListPage />} />
                             <Route path="leavers" element={<LeaverCardListPage />} />
+                            <Route path="certificates" element={<CertificatesCardListPage />} />
+                            <Route path="evaluations" element={<EvaluationsCardListPage />} />
                         </Route>
                     </Route>
                 </Route>

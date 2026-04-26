@@ -1,5 +1,5 @@
 /* ====================== Modal Backdrop ====================== */
-.leaverCardAddModal-backdrop {
+.evaluationsCardAddModal-backdrop {
     position: fixed;
     inset: 0;
     z-index: 999;
@@ -11,7 +11,7 @@
 }
 
 /* ====================== Modal Panel ====================== */
-.leaverCardAddModal-panel {
+.evaluationsCardAddModal-panel {
     width: min(800px, 100%);
     max-height: 900px;
     overflow-y: auto;
@@ -22,7 +22,7 @@
 }
 
 /* ====================== Header Bar ====================== */
-.leaverCardAddModal-min-title {
+.evaluationsCardAddModal-min-title {
     height: var(--spacing-lg);
     display: flex;
     align-items: center;
@@ -31,12 +31,12 @@
     color: var(--text-inverse);
 }
 
-.leaverCardAddModal-min-text {
+.evaluationsCardAddModal-min-text {
     margin-left: var(--spacing-sm);
     font-size: var(--font-xs);
 }
 
-.leaverCardAddModal-closeButton {
+.evaluationsCardAddModal-closeButton {
     margin-right: var(--spacing-sm);
     border: 0;
     background: transparent;
@@ -48,14 +48,14 @@
 }
 
 /* ====================== Title ====================== */
-.leaverCardAddModal-header {
+.evaluationsCardAddModal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-sm);
 }
 
-.leaverCardAddModal-title {
+.evaluationsCardAddModal-title {
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
     margin-left: var(--spacing-sm);
@@ -65,15 +65,15 @@
 }
 
 /* Shared button base */
-.leaverCardAddModal-addressButton,
-.leaverCardAddModal-button {
+.evaluationsCardAddModal-addressButton,
+.evaluationsCardAddModal-button {
     border-radius: var(--radius-md);
     cursor: pointer;
     box-sizing: border-box;
 }
 
 /* ====================== Form Layout ====================== */
-.leaverCardAddModal-form {
+.evaluationsCardAddModal-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
@@ -82,7 +82,7 @@
     background: var(--bg);
 }
 
-.leaverCardAddModal-section {
+.evaluationsCardAddModal-section {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
@@ -92,11 +92,11 @@
     background: var(--color-inverse);
 }
 
-.leaverCardAddModal-section > .leaverCardAddModal-row {
+.evaluationsCardAddModal-section > .evaluationsCardAddModal-row {
     padding: 0;
 }
 
-.leaverCardAddModal-row {
+.evaluationsCardAddModal-row {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -106,30 +106,30 @@
     padding: var(--spacing-xs);
 }
 
-.leaverCardAddModal-row--optionFields {
+.evaluationsCardAddModal-row--optionFields {
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(140px, 1fr) minmax(0, 1.6fr) minmax(140px, 1fr);
     gap: var(--spacing-xs);
 }
 
-.leaverCardAddModal-row--dateFields {
+.evaluationsCardAddModal-row--dateFields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-xs);
 }
 
-.leaverCardAddModal-row--stackedDateFields {
+.evaluationsCardAddModal-row--stackedDateFields {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-xs);
 }
 
-.leaverCardAddModal-field {
+.evaluationsCardAddModal-field {
     flex: 1 1 150px;
 }
 
-.leaverCardAddModal-field,
-.leaverCardAddModal-column {
+.evaluationsCardAddModal-field,
+.evaluationsCardAddModal-column {
     display: grid;
     grid-template-columns: 60px minmax(0, 1fr);
     align-items: center;
@@ -139,36 +139,36 @@
     text-align: center;
 }
 
-.leaverCardAddModal-column {
+.evaluationsCardAddModal-column {
     width: 100%;
     box-sizing: border-box;
     padding: var(--spacing-xs);
 }
 
-.leaverCardAddModal-field--small {
+.evaluationsCardAddModal-field--small {
     min-width: 140px;
 }
 
-.leaverCardAddModal-label {
+.evaluationsCardAddModal-label {
     margin: 0;
     color: var(--text-primary);
     font-size: var(--font-sm);
     white-space: nowrap;
 }
 
-.leaverCardAddModal-field > :not(.leaverCardAddModal-label),
-.leaverCardAddModal-column > :not(.leaverCardAddModal-label) {
+.evaluationsCardAddModal-field > :not(.evaluationsCardAddModal-label),
+.evaluationsCardAddModal-column > :not(.evaluationsCardAddModal-label) {
     grid-column: 2;
     min-width: 0;
 }
 
-.leaverCardAddModal-hint {
+.evaluationsCardAddModal-hint {
     grid-column: 2;
     color: var(--text-secondary-70);
     font-size: var(--font-xs);
 }
 
-.leaverCardAddModal-employeeSelector {
+.evaluationsCardAddModal-employeeSelector {
     display: grid;
     grid-template-columns: 60px minmax(0, 1fr);
     align-items: start;
@@ -177,18 +177,18 @@
     padding: var(--spacing-xs);
 }
 
-.leaverCardAddModal-employeeHint,
-.leaverCardAddModal-employeeList,
-.leaverCardAddModal-employeeEmpty {
+.evaluationsCardAddModal-employeeHint,
+.evaluationsCardAddModal-employeeList,
+.evaluationsCardAddModal-employeeEmpty {
     grid-column: 2;
 }
 
-.leaverCardAddModal-employeeHint {
+.evaluationsCardAddModal-employeeHint {
     color: var(--text-secondary-70);
     font-size: var(--font-xs);
 }
 
-.leaverCardAddModal-employeeList {
+.evaluationsCardAddModal-employeeList {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-xs);
@@ -196,7 +196,7 @@
     overflow-y: auto;
 }
 
-.leaverCardAddModal-employeeEmpty {
+.evaluationsCardAddModal-employeeEmpty {
     min-height: 40px;
     display: flex;
     align-items: center;
@@ -208,7 +208,7 @@
     background-color: var(--bg);
 }
 
-.leaverCardAddModal-employeeChip {
+.evaluationsCardAddModal-employeeChip {
     min-width: 120px;
     display: flex;
     flex-direction: column;
@@ -222,26 +222,26 @@
     cursor: pointer;
 }
 
-.leaverCardAddModal-employeeChip.is-selected {
+.evaluationsCardAddModal-employeeChip.is-selected {
     border-color: var(--color-primary);
     background-color: rgba(33, 74, 168, 0.08);
 }
 
-.leaverCardAddModal-employeeName {
+.evaluationsCardAddModal-employeeName {
     color: var(--text-primary);
     font-size: var(--font-sm);
     font-weight: 600;
 }
 
-.leaverCardAddModal-employeeMeta {
+.evaluationsCardAddModal-employeeMeta {
     color: var(--text-secondary-70);
     font-size: var(--font-xs);
 }
 
 /* ====================== Inputs ====================== */
-.leaverCardAddModal-input,
-.leaverCardAddModal-textarea,
-.leaverCardAddModal-dateSelect {
+.evaluationsCardAddModal-input,
+.evaluationsCardAddModal-textarea,
+.evaluationsCardAddModal-dateSelect {
     width: 100%;
     min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
@@ -252,39 +252,39 @@
     color: var(--text-primary);
 }
 
-.leaverCardAddModal-input::placeholder,
-.leaverCardAddModal-textarea::placeholder {
+.evaluationsCardAddModal-input::placeholder,
+.evaluationsCardAddModal-textarea::placeholder {
     color: var(--text-secondary-30);
 }
 
-.leaverCardAddModal-select {
+.evaluationsCardAddModal-select {
     appearance: auto;
     padding-right: var(--spacing-sm);
 }
 
-.leaverCardAddModal-select:invalid {
+.evaluationsCardAddModal-select:invalid {
     color: var(--text-secondary-30);
 }
 
-.leaverCardAddModal-input--readonly {
+.evaluationsCardAddModal-input--readonly {
     background-color: var(--color-inverse);
     color: var(--text-secondary-70);
 }
 
-.leaverCardAddModal-textarea {
+.evaluationsCardAddModal-textarea {
     min-height: 72px;
     resize: vertical;
 }
 
 /* ====================== Email ====================== */
-.leaverCardAddModal-emailRow {
+.evaluationsCardAddModal-emailRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     width: 100%;
 }
 
-.leaverCardAddModal-emailAt {
+.evaluationsCardAddModal-emailAt {
     color: var(--text-secondary-70);
     font-size: var(--font-lg);
     font-weight: 600;
@@ -292,7 +292,7 @@
 }
 
 /* ====================== Phone ====================== */
-.leaverCardAddModal-phoneRow {
+.evaluationsCardAddModal-phoneRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -301,17 +301,17 @@
     max-width: 280px;
 }
 
-.leaverCardAddModal-phoneBox {
+.evaluationsCardAddModal-phoneBox {
     flex: 0 0 84px;
     min-width: 84px;
 }
 
-.leaverCardAddModal-phoneBox--short {
+.evaluationsCardAddModal-phoneBox--short {
     flex: 0 0 64px;
     min-width: 64px;
 }
 
-.leaverCardAddModal-phoneDash {
+.evaluationsCardAddModal-phoneDash {
     color: #57606a;
     font-size: var(--font-sm);
     font-weight: 600;
@@ -319,7 +319,7 @@
 }
 
 /* ====================== Date ====================== */
-.leaverCardAddModal-dateRow {
+.evaluationsCardAddModal-dateRow {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -328,22 +328,22 @@
     min-width: 0;
 }
 
-.leaverCardAddModal-dateBox {
+.evaluationsCardAddModal-dateBox {
     position: relative;
     flex: 0 0 auto;
     min-width: 0;
 }
 
-.leaverCardAddModal-dateBox--year {
+.evaluationsCardAddModal-dateBox--year {
     width: 88px;
 }
 
-.leaverCardAddModal-dateBox--month,
-.leaverCardAddModal-dateBox--day {
+.evaluationsCardAddModal-dateBox--month,
+.evaluationsCardAddModal-dateBox--day {
     width: 64px;
 }
 
-.leaverCardAddModal-dateSelect {
+.evaluationsCardAddModal-dateSelect {
     width: 100%;
     padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
     appearance: none;
@@ -351,7 +351,7 @@
     -moz-appearance: none;
 }
 
-.leaverCardAddModal-dateArrow {
+.evaluationsCardAddModal-dateArrow {
     position: absolute;
     top: 50%;
     right: 8px;
@@ -361,38 +361,38 @@
     font-size: var(--font-xs);
 }
 
-.leaverCardAddModal-dateDivider {
+.evaluationsCardAddModal-dateDivider {
     color: var(--text-secondary-50);
     font-size: var(--font-sm);
     line-height: 1;
 }
 
-.leaverCardAddModal-dateCalendarWrap {
+.evaluationsCardAddModal-dateCalendarWrap {
     position: relative;
     width: 40px;
     height: 40px;
 }
 
-.leaverCardAddModal-dateNativeInput {
+.evaluationsCardAddModal-dateNativeInput {
     position: absolute;
     inset: 0;
     opacity: 0;
     pointer-events: none;
 }
 
-.leaverCardAddModal-dateInputRow {
+.evaluationsCardAddModal-dateInputRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     width: 100%;
 }
 
-.leaverCardAddModal-dateInputField {
+.evaluationsCardAddModal-dateInputField {
     flex: 1 1 auto;
     min-width: 0;
 }
 
-.leaverCardAddModal-dateCalendarButton {
+.evaluationsCardAddModal-dateCalendarButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -405,12 +405,12 @@
     cursor: pointer;
 }
 
-.leaverCardAddModal-dateCalendarButton:disabled {
+.evaluationsCardAddModal-dateCalendarButton:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.leaverCardAddModal-dateCalendarIcon {
+.evaluationsCardAddModal-dateCalendarIcon {
     display: block;
     width: 16px;
     height: 16px;
@@ -422,19 +422,19 @@
 }
 
 /* ====================== Address ====================== */
-.leaverCardAddModal-addressRow {
+.evaluationsCardAddModal-addressRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
     width: 100%;
 }
 
-.leaverCardAddModal-addressRow .leaverCardAddModal-input {
+.evaluationsCardAddModal-addressRow .evaluationsCardAddModal-input {
     flex: 1;
     min-width: 0;
 }
 
-.leaverCardAddModal-addressButton {
+.evaluationsCardAddModal-addressButton {
     flex: 0 0 auto;
     min-height: 40px;
     padding: var(--spacing-xs) 14px;
@@ -444,7 +444,7 @@
 }
 
 /* ====================== Footer Buttons ====================== */
-.leaverCardAddModal-buttonRow {
+.evaluationsCardAddModal-buttonRow {
     display: flex;
     width: 100%;
     box-sizing: border-box;
@@ -454,64 +454,64 @@
     padding: 0 var(--spacing-xs) var(--spacing-xs);
 }
 
-.leaverCardAddModal-button {
+.evaluationsCardAddModal-button {
     min-width: 50px;
     min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
     border: 1px solid var(--border);
 }
 
-.leaverCardAddModal-button--secondary {
+.evaluationsCardAddModal-button--secondary {
     border-color: var(--border);
     background-color: var(--color-inverse);
     color: var(--text-primary);
 }
 
-.leaverCardAddModal-button--primary {
+.evaluationsCardAddModal-button--primary {
     border-color: var(--border);
     background-color: var(--color-primary);
     color: var(--text-inverse);
 }
 
-.leaverCardAddModal-button:disabled {
+.evaluationsCardAddModal-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
 /* ====================== Update Modal ====================== */
-.leaverCardUpdateModal-topFields {
+.evaluationsCardUpdateModal-topFields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-xs);
     padding: var(--spacing-xs);
 }
 
-.leaverCardUpdateModal-field--top {
+.evaluationsCardUpdateModal-field--top {
     grid-template-columns: 60px minmax(0, 1fr);
 }
 
-.leaverCardUpdateModal-inlineOptions {
+.evaluationsCardUpdateModal-inlineOptions {
     margin-top: 0;
 }
 
 @media (max-width: 768px) {
-    .leaverCardUpdateModal-topFields,
-    .leaverCardAddModal-row--optionFields,
-    .leaverCardAddModal-row--dateFields {
+    .evaluationsCardUpdateModal-topFields,
+    .evaluationsCardAddModal-row--optionFields,
+    .evaluationsCardAddModal-row--dateFields {
         grid-template-columns: 1fr;
     }
 }
 
-.leaverCardModalScope .modal-Overlay {
+.evaluationsCardModalScope .modal-Overlay {
     z-index: 999;
     padding: var(--spacing-md);
     box-sizing: border-box;
 }
 
-.leaverCardModalScope .modal-Container {
+.evaluationsCardModalScope .modal-Container {
     width: min(800px, 100%);
     max-height: min(900px, calc(100vh - (var(--spacing-md) * 2)));
-    height: auto;
+    height: 800px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -520,25 +520,25 @@
     overflow: hidden;
 }
 
-.leaverCardModalScope .modal-Header p,
-.leaverCardModalScope .modal-Title p {
+.evaluationsCardModalScope .modal-Header p,
+.evaluationsCardModalScope .modal-Title p {
     margin: 0;
 }
 
-.leaverCardModalScope .modal-Header button {
+.evaluationsCardModalScope .modal-Header button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
-.leaverCardModalScope .modal-Title {
+.evaluationsCardModalScope .modal-Title {
     margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
     color: var(--text-accent);
     font-size: var(--font-xl);
     font-weight: 700;
 }
 
-.leaverCardModalScope .modal-Body {
+.evaluationsCardModalScope .modal-Body {
     flex: 1 1 auto;
     min-height: 0;
     margin: 0;
@@ -547,7 +547,7 @@
     overflow-y: auto;
 }
 
-.leaverCardModalScope .modal-Footer {
+.evaluationsCardModalScope .modal-Footer {
     padding: 0 var(--spacing-sm) var(--spacing-sm);
     background: transparent;
 }
