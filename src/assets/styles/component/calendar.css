@@ -35,6 +35,9 @@
     background: var(--color-gray-50);
     min-height: 56px;
 }
+.calendar-EmptyDate:last-child{
+    border-right: 1px solid var(--border);
+}
 .calendar-Date{
     padding: 6px 4px;
     border-left: 1px solid var(--border);
