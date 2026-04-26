@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useAuthStore } from "../../stores/useAuthStore";
+import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import Table from "../../components/approvals/ApprovalsTable.tsx"
-import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
-import { type Column } from "../../types/TableProps";
-import { useGetApprovaUserList , useGetApprovaInfo } from "../../apis/ApprovalsService.tsx";
+import { type ModalProps ,  type MColumn } from "../../types/ModalProps.tsx";
+import { type Column } from "../../types/TableProps.tsx";
+import { useGetMembersList , useGetMembersInfo } from "../../apis/ApprovalsService.tsx";
 import Alert from '../../components/inventory/Alert.tsx';
 
-const Approvals = () => {
+const TeamMembers = () => {
 
   const { user } = useAuthStore();
   const [page, setPage] = useState(0);
@@ -15,8 +15,8 @@ const Approvals = () => {
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
-  const { data } =  useGetApprovaUserList( user?.userId! ,search, page, 10);
-  const { mutate } = useGetApprovaInfo()
+  const { data } =  useGetMembersList( user?.departmentId! ,search, page, 10);
+  const { mutate } = useGetMembersInfo()
 
   const maxPage = data ? data.totalPages  : 0; 
     
@@ -35,8 +35,10 @@ const Approvals = () => {
   
 
   const onApprovaUserClick = ( item : any , e : React.MouseEvent) => {
+    console.log(item)
 
-        if('approvaId' in item) {          
+        if('approvaId' in item) {
+          
           mutate (item.approvaId, {
           onSuccess: (data) => {
             setInfo(data);
@@ -52,23 +54,20 @@ const Approvals = () => {
   }
   
   const columns : Column[] = [
-      { key: 'approvaDate', label: '일자' },
-      { key: 'approvaKind', label: '문서번호'  },
-      { key: 'approvaTitle', label: '창고명' },
-      { key: 'approver', label: '결재자' },
-      { key: 'approvaStatus', label: '결제상태' },
-      { key: 'approvaMemu', label: '비고' },
-      { key: 'approvaInfo', label: '결재' }
-       
+    { key: 'employeeId', label: '사원번호' },
+    { key: 'userName', label: '이름'  },
+    { key: 'departmentName', label: '부서' },
+    { key: 'roleName', label: '직책' },
+    { key: 'startDate', label: '근무시작일' }, 
   ]
   
   const ModalColumns : MColumn[] = [
-      { key: 'logisticDate', label: '일자' },
-      { key: 'productName', label: '품목명'  },
-      { key: 'incoming', label: '입고수량'  },
-      { key: 'outgoing', label: '출고수량' },
-      { key: 'productPrice', label: '개별가격' },
-      { key: 'totallogisticsPrice', label: '합계' }
+    { key: 'employeeId', label: '사원번호' },
+    { key: 'userName', label: '이름'  },
+    { key: 'departmentName', label: '부서' },
+    { key: 'roleName', label: '직책' },
+    { key: 'startDate', label: '근무시작일' }, 
+    { key: 'performance', label: '평가' },
   ]
 
 
@@ -95,4 +94,4 @@ const Approvals = () => {
   )
 }
 
-export default Approvals
+export default TeamMembers

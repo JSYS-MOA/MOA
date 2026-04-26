@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useAuthStore } from "../../stores/useAuthStore";
+import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import Table from "../../components/approvals/ApprovalsTable.tsx"
-import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
-import { type Column } from "../../types/TableProps";
-import { useGetApprovaUserList , useGetApprovaInfo } from "../../apis/ApprovalsService.tsx";
+import { type ModalProps ,  type MColumn } from "../../types/ModalProps.tsx";
+import { type Column } from "../../types/TableProps.tsx";
+import { useGetApprovaWaitList , useGetApprovaInfo } from "../../apis/ApprovalsService.tsx";
 import Alert from '../../components/inventory/Alert.tsx';
 
-const Approvals = () => {
+const ApprovalsWait = () => {
 
   const { user } = useAuthStore();
   const [page, setPage] = useState(0);
@@ -15,7 +15,7 @@ const Approvals = () => {
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
-  const { data } =  useGetApprovaUserList( user?.userId! ,search, page, 10);
+  const { data } =  useGetApprovaWaitList( user?.userId! ,search, page, 10);
   const { mutate } = useGetApprovaInfo()
 
   const maxPage = data ? data.totalPages  : 0; 
@@ -36,8 +36,8 @@ const Approvals = () => {
 
   const onApprovaUserClick = ( item : any , e : React.MouseEvent) => {
 
-        if('approvaId' in item) {          
-          mutate (item.approvaId, {
+        if('approver' in item) {          
+          mutate (item.approver, {
           onSuccess: (data) => {
             setInfo(data);
             setModal(true)
@@ -95,4 +95,4 @@ const Approvals = () => {
   )
 }
 
-export default Approvals
+export default ApprovalsWait

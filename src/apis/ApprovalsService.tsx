@@ -4,7 +4,7 @@ import axios from "axios";
 const Api_BASE = "http://localhost/api/gw/";
 
 // 내 결재내역 조회
-  export function useGetApprovaUserList(  writer : number , search?: string , page? : number  ,  size? : number ) {
+export function useGetApprovaUserList(  writer : number , search?: string , page? : number  ,  size? : number ) {
     return useQuery({
       queryKey: ["ApprovaUser",  writer ,search || '' , page , size ], 
       queryFn: async () => {
@@ -19,10 +19,10 @@ const Api_BASE = "http://localhost/api/gw/";
         return data;
       },
     });
-  }
+}
 
 // 결재 상제정보 및 팀장 결제 내역 상세조회 
- export function useGetApprovaInfo () {
+export function useGetApprovaInfo () {
     return useMutation({
       mutationFn: async (  approvaId: number ) => {
         const { data } = await axios.get(`${Api_BASE}approvals/${approvaId}`, {   
@@ -30,13 +30,22 @@ const Api_BASE = "http://localhost/api/gw/";
         return data;
       },
     });
-  }
+}
 
 // 결재라인 선택
-    // @GetMapping("/orders/select/approvaLine")
-    // public Page<?> getApprovaLineList ( @PageableDefault(page = 0, size = 10 )Pageable pageable) {
-    //     return approvalService.getApprovaLineCord( pageable);
-    // }
+export function useGetApprovaLineSelect( approvalLineCord?: string ) {
+    return useQuery({
+      queryKey: ["approvalLineCord", approvalLineCord ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}select/approvaLine`, {   
+          params: {
+            approvalLineCord : approvalLineCord 
+          }
+        });
+        return data;
+      },
+    });
+}
 
 
 // 결재 요청 post /api/gw/approvals
@@ -55,11 +64,22 @@ const Api_BASE = "http://localhost/api/gw/";
 
 
 // 팀장 결제 내역 조회 GET /api/gw/approvalWait
-// @GetMapping("/approvalWait")
-//     public Page<ApprovaUserDTO> getApproverList(@Param("approver") Integer approver, @Param("search") String search, @PageableDefault(page = 0, size = 10 )Pageable pageable) {
-//         return approvalService.getApproverList(approver, pageable);
-//     }
-
+export function useGetApprovaWaitList(  approver : number , search?: string , page? : number  ,  size? : number ) {
+    return useQuery({
+      queryKey: ["ApprovaUser",  approver ,search || '' , page , size ], 
+      queryFn: async () => {
+        const { data } = await axios.get(`${Api_BASE}approvalWait`, {   
+          params: {
+            approver : approver,
+            page : page ,
+            size : size ,
+            search : search || ''
+          }
+        });
+        return data;
+      },
+    });
+}
 
 
 // 팀장 결제 내역 반려 / 결재 처리 PATCH /api/gw/approvalAct/{approva_id}
@@ -71,19 +91,34 @@ const Api_BASE = "http://localhost/api/gw/";
 
 
 // 팀원 조회  GET /api/gw/teamMembers
-    // @GetMapping("/teamMembers")
-    // public ResponseEntity<?> getTeamMembers( Integer departmentId ,@PageableDefault(page = 0, size = 10, sort = "UserId", direction = Sort.Direction.ASC) Pageable pageable,  @RequestParam(defaultValue = "") String search) {
-    //     Page<TeamUserDTO> result = adminService.findByDepartmentIdAndUserNameContaining(departmentId, search, pageable);
-    //     return ResponseEntity.ok(result);
-    // }
-
+export function useGetMembersList(  departmentId : number , search?: string , page? : number  ,  size? : number ) {
+  return useQuery({
+    queryKey: ["Members",  departmentId ,search || '' , page , size ], 
+    queryFn: async () => {
+      const { data } = await axios.get(`${Api_BASE}teamMembers`, {   
+        params: {
+          departmentId : departmentId,
+          page : page ,
+          size : size ,
+          search : search || ''
+        }
+      });
+      return data;
+    },
+  });
+}
 
 // 팀원 상세 조회  GET /api/gw/teamMembers/{department_id} <= {user_id} 유저로 변경
-// @GetMapping("/teamMembers/{userId}")
-//     public ResponseEntity<?> getTeamMemberInfo ( @PathVariable("userId") Integer userId ) {
-//         TeamUserDTO result = adminService.findTeamByUserId( userId );
-//         return ResponseEntity.ok(result);
-//     }
+export function useGetMembersInfo () {
+    return useMutation({
+      mutationFn: async (  userId: number ) => {
+        const { data } = await axios.get(`${Api_BASE}teamMembers/${userId}`, {   
+        });
+        return data;
+      },
+    });
+}
+
 
 
 // 인사 평가 추가 PUT /api/gw/teamMembers/{user_id}
