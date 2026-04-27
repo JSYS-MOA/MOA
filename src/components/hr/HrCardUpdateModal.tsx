@@ -10,7 +10,7 @@ import {
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
 import { useAuthStore } from "../../stores/useAuthStore";
-import "../../assets/styles/hr/hrCardUpdate.css";
+import "../../assets/styles/hr/hrCardUpdateModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
 import type { HrCard } from "../../types/HrCard";

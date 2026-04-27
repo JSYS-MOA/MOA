@@ -1,5 +1,5 @@
-/* ====================== Modal Backdrop ====================== */
-.evaluationsCardAddModal-backdrop {
+/* ====================== 모달 배경 ====================== */
+.leaverCardAddModal-backdrop {
     position: fixed;
     inset: 0;
     z-index: 999;
@@ -10,8 +10,8 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* ====================== Modal Panel ====================== */
-.evaluationsCardAddModal-panel {
+/* ====================== 모달 본체 ====================== */
+.leaverCardAddModal-panel {
     width: min(800px, 100%);
     max-height: 900px;
     overflow-y: auto;
@@ -21,8 +21,8 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* ====================== Header Bar ====================== */
-.evaluationsCardAddModal-min-title {
+/* ====================== 상단 타이틀 바 ====================== */
+.leaverCardAddModal-min-title {
     height: var(--spacing-lg);
     display: flex;
     align-items: center;
@@ -31,12 +31,12 @@
     color: var(--text-inverse);
 }
 
-.evaluationsCardAddModal-min-text {
+.leaverCardAddModal-min-text {
     margin-left: var(--spacing-sm);
     font-size: var(--font-xs);
 }
 
-.evaluationsCardAddModal-closeButton {
+.leaverCardAddModal-closeButton {
     margin-right: var(--spacing-sm);
     border: 0;
     background: transparent;
@@ -47,15 +47,15 @@
     box-sizing: border-box;
 }
 
-/* ====================== Title ====================== */
-.evaluationsCardAddModal-header {
+/* ====================== 헤더 ====================== */
+.leaverCardAddModal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-sm);
 }
 
-.evaluationsCardAddModal-title {
+.leaverCardAddModal-title {
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
     margin-left: var(--spacing-sm);
@@ -64,16 +64,16 @@
     font-weight: 700;
 }
 
-/* Shared button base */
-.evaluationsCardAddModal-addressButton,
-.evaluationsCardAddModal-button {
+/* 공통 버튼 기본 */
+.leaverCardAddModal-addressButton,
+.leaverCardAddModal-button {
     border-radius: var(--radius-md);
     cursor: pointer;
     box-sizing: border-box;
 }
 
-/* ====================== Form Layout ====================== */
-.evaluationsCardAddModal-form {
+/* ====================== 폼 ====================== */
+.leaverCardAddModal-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
@@ -82,21 +82,7 @@
     background: var(--color-inverse);
 }
 
-.evaluationsCardAddModal-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-xs);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--color-inverse);
-}
-
-.evaluationsCardAddModal-section > .evaluationsCardAddModal-row {
-    padding: 0;
-}
-
-.evaluationsCardAddModal-row {
+.leaverCardAddModal-row {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -106,30 +92,24 @@
     padding: var(--spacing-xs);
 }
 
-.evaluationsCardAddModal-row--optionFields {
+.leaverCardAddModal-row--optionFields {
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(140px, 1fr) minmax(0, 1.6fr) minmax(140px, 1fr);
     gap: var(--spacing-xs);
 }
 
-.evaluationsCardAddModal-row--dateFields {
+.leaverCardAddModal-row--dateFields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-xs);
 }
 
-.evaluationsCardAddModal-row--stackedDateFields {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-xs);
-}
-
-.evaluationsCardAddModal-field {
+.leaverCardAddModal-field {
     flex: 1 1 150px;
 }
 
-.evaluationsCardAddModal-field,
-.evaluationsCardAddModal-column {
+.leaverCardAddModal-field,
+.leaverCardAddModal-column {
     display: grid;
     grid-template-columns: 60px minmax(0, 1fr);
     align-items: center;
@@ -139,109 +119,39 @@
     text-align: center;
 }
 
-.evaluationsCardAddModal-column {
+.leaverCardAddModal-column {
     width: 100%;
     box-sizing: border-box;
     padding: var(--spacing-xs);
 }
 
-.evaluationsCardAddModal-field--small {
+.leaverCardAddModal-field--small {
     min-width: 140px;
 }
 
-.evaluationsCardAddModal-label {
+.leaverCardAddModal-label {
     margin: 0;
     color: var(--text-primary);
     font-size: var(--font-sm);
     white-space: nowrap;
 }
 
-.evaluationsCardAddModal-field > :not(.evaluationsCardAddModal-label),
-.evaluationsCardAddModal-column > :not(.evaluationsCardAddModal-label) {
+.leaverCardAddModal-field > :not(.leaverCardAddModal-label),
+.leaverCardAddModal-column > :not(.leaverCardAddModal-label) {
     grid-column: 2;
     min-width: 0;
 }
 
-.evaluationsCardAddModal-hint {
+.leaverCardAddModal-hint {
     grid-column: 2;
     color: var(--text-secondary-70);
     font-size: var(--font-xs);
 }
 
-.evaluationsCardAddModal-employeeSelector {
-    display: grid;
-    grid-template-columns: 60px minmax(0, 1fr);
-    align-items: start;
-    column-gap: var(--spacing-sm);
-    row-gap: var(--spacing-xs);
-    padding: var(--spacing-xs);
-}
-
-.evaluationsCardAddModal-employeeHint,
-.evaluationsCardAddModal-employeeList,
-.evaluationsCardAddModal-employeeEmpty {
-    grid-column: 2;
-}
-
-.evaluationsCardAddModal-employeeHint {
-    color: var(--text-secondary-70);
-    font-size: var(--font-xs);
-}
-
-.evaluationsCardAddModal-employeeList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    max-height: 180px;
-    overflow-y: auto;
-}
-
-.evaluationsCardAddModal-employeeEmpty {
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border: 1px dashed var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text-secondary-70);
-    font-size: var(--font-sm);
-    background-color: var(--bg);
-}
-
-.evaluationsCardAddModal-employeeChip {
-    min-width: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background-color: var(--color-inverse);
-    text-align: left;
-    cursor: pointer;
-}
-
-.evaluationsCardAddModal-employeeChip.is-selected {
-    border-color: var(--color-primary);
-    background-color: rgba(33, 74, 168, 0.08);
-}
-
-.evaluationsCardAddModal-employeeName {
-    color: var(--text-primary);
-    font-size: var(--font-sm);
-    font-weight: 600;
-}
-
-.evaluationsCardAddModal-employeeMeta {
-    color: var(--text-secondary-70);
-    font-size: var(--font-xs);
-}
-
-/* ====================== Inputs ====================== */
-.evaluationsCardAddModal-input,
-.evaluationsCardAddModal-textarea,
-.evaluationsCardAddModal-dateSelect {
+/* ====================== 입력 요소 공통 ====================== */
+.leaverCardAddModal-input,
+.leaverCardAddModal-textarea,
+.leaverCardAddModal-dateSelect {
     width: 100%;
     min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
@@ -252,74 +162,71 @@
     color: var(--text-primary);
 }
 
-.evaluationsCardAddModal-input::placeholder,
-.evaluationsCardAddModal-textarea::placeholder {
+.leaverCardAddModal-input::placeholder,
+.leaverCardAddModal-textarea::placeholder {
     color: var(--text-secondary-30);
 }
 
-.evaluationsCardAddModal-select {
+.leaverCardAddModal-select {
     appearance: auto;
     padding-right: var(--spacing-sm);
 }
 
-.evaluationsCardAddModal-select:invalid {
+.leaverCardAddModal-select:invalid {
     color: var(--text-secondary-30);
 }
 
-.evaluationsCardAddModal-input--readonly {
+.leaverCardAddModal-input--readonly {
     background-color: var(--color-inverse);
     color: var(--text-secondary-70);
 }
 
-.evaluationsCardAddModal-textarea {
+.leaverCardAddModal-textarea {
     min-height: 72px;
     resize: vertical;
 }
 
-/* ====================== Email ====================== */
-.evaluationsCardAddModal-emailRow {
+/* ====================== 이메일 ====================== */
+.leaverCardAddModal-emailRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     width: 100%;
 }
 
-.evaluationsCardAddModal-emailAt {
+.leaverCardAddModal-emailAt {
     color: var(--text-secondary-70);
     font-size: var(--font-lg);
     font-weight: 600;
     line-height: 1;
 }
 
-/* ====================== Phone ====================== */
-.evaluationsCardAddModal-phoneRow {
+/* ====================== 전화번호 ====================== */
+.leaverCardAddModal-phoneRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    justify-self: start;
     width: 100%;
-    max-width: 280px;
 }
 
-.evaluationsCardAddModal-phoneBox {
-    flex: 0 0 84px;
-    min-width: 84px;
+.leaverCardAddModal-phoneBox {
+    flex: 1 1 0;
+    min-width: 0;
 }
 
-.evaluationsCardAddModal-phoneBox--short {
-    flex: 0 0 64px;
-    min-width: 64px;
+.leaverCardAddModal-phoneBox--short {
+    flex: 0 0 96px;
 }
 
-.evaluationsCardAddModal-phoneDash {
+.leaverCardAddModal-phoneDash {
     color: #57606a;
     font-size: var(--font-sm);
     font-weight: 600;
     line-height: 1;
 }
 
-/* ====================== Date ====================== */
-.evaluationsCardAddModal-dateRow {
+/* ====================== 날짜 ====================== */
+.leaverCardAddModal-dateRow {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -328,22 +235,22 @@
     min-width: 0;
 }
 
-.evaluationsCardAddModal-dateBox {
+.leaverCardAddModal-dateBox {
     position: relative;
     flex: 0 0 auto;
     min-width: 0;
 }
 
-.evaluationsCardAddModal-dateBox--year {
+.leaverCardAddModal-dateBox--year {
     width: 88px;
 }
 
-.evaluationsCardAddModal-dateBox--month,
-.evaluationsCardAddModal-dateBox--day {
+.leaverCardAddModal-dateBox--month,
+.leaverCardAddModal-dateBox--day {
     width: 64px;
 }
 
-.evaluationsCardAddModal-dateSelect {
+.leaverCardAddModal-dateSelect {
     width: 100%;
     padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
     appearance: none;
@@ -351,7 +258,7 @@
     -moz-appearance: none;
 }
 
-.evaluationsCardAddModal-dateArrow {
+.leaverCardAddModal-dateArrow {
     position: absolute;
     top: 50%;
     right: 8px;
@@ -361,38 +268,26 @@
     font-size: var(--font-xs);
 }
 
-.evaluationsCardAddModal-dateDivider {
+.leaverCardAddModal-dateDivider {
     color: var(--text-secondary-50);
     font-size: var(--font-sm);
     line-height: 1;
 }
 
-.evaluationsCardAddModal-dateCalendarWrap {
+.leaverCardAddModal-dateCalendarWrap {
     position: relative;
     width: 40px;
     height: 40px;
 }
 
-.evaluationsCardAddModal-dateNativeInput {
+.leaverCardAddModal-dateNativeInput {
     position: absolute;
     inset: 0;
     opacity: 0;
     pointer-events: none;
 }
 
-.evaluationsCardAddModal-dateInputRow {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    width: 100%;
-}
-
-.evaluationsCardAddModal-dateInputField {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.evaluationsCardAddModal-dateCalendarButton {
+.leaverCardAddModal-dateCalendarButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -405,12 +300,7 @@
     cursor: pointer;
 }
 
-.evaluationsCardAddModal-dateCalendarButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.evaluationsCardAddModal-dateCalendarIcon {
+.leaverCardAddModal-dateCalendarIcon {
     display: block;
     width: 16px;
     height: 16px;
@@ -421,20 +311,20 @@
     stroke-linejoin: round;
 }
 
-/* ====================== Address ====================== */
-.evaluationsCardAddModal-addressRow {
+/* ====================== 주소 ====================== */
+.leaverCardAddModal-addressRow {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
     width: 100%;
 }
 
-.evaluationsCardAddModal-addressRow .evaluationsCardAddModal-input {
+.leaverCardAddModal-addressRow .leaverCardAddModal-input {
     flex: 1;
     min-width: 0;
 }
 
-.evaluationsCardAddModal-addressButton {
+.leaverCardAddModal-addressButton {
     flex: 0 0 auto;
     min-height: 40px;
     padding: var(--spacing-xs) 14px;
@@ -443,8 +333,8 @@
     white-space: nowrap;
 }
 
-/* ====================== Footer Buttons ====================== */
-.evaluationsCardAddModal-buttonRow {
+/* ====================== 하단 버튼 ====================== */
+.leaverCardAddModal-buttonRow {
     display: flex;
     width: 100%;
     box-sizing: border-box;
@@ -454,64 +344,64 @@
     padding: 0 var(--spacing-xs) var(--spacing-xs);
 }
 
-.evaluationsCardAddModal-button {
+.leaverCardAddModal-button {
     min-width: 50px;
     min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
     border: 1px solid var(--border);
 }
 
-.evaluationsCardAddModal-button--secondary {
+.leaverCardAddModal-button--secondary {
     border-color: var(--border);
     background-color: var(--color-inverse);
     color: var(--text-primary);
 }
 
-.evaluationsCardAddModal-button--primary {
+.leaverCardAddModal-button--primary {
     border-color: var(--border);
     background-color: var(--color-primary);
     color: var(--text-inverse);
 }
 
-.evaluationsCardAddModal-button:disabled {
+.leaverCardAddModal-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* ====================== Update Modal ====================== */
-.evaluationsCardUpdateModal-topFields {
+/* ====================== 수정 모달 상단 ====================== */
+.leaverCardUpdateModal-topFields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-xs);
     padding: var(--spacing-xs);
 }
 
-.evaluationsCardUpdateModal-field--top {
+.leaverCardUpdateModal-field--top {
     grid-template-columns: 60px minmax(0, 1fr);
 }
 
-.evaluationsCardUpdateModal-inlineOptions {
+.leaverCardUpdateModal-inlineOptions {
     margin-top: 0;
 }
 
 @media (max-width: 768px) {
-    .evaluationsCardUpdateModal-topFields,
-    .evaluationsCardAddModal-row--optionFields,
-    .evaluationsCardAddModal-row--dateFields {
+    .leaverCardUpdateModal-topFields,
+    .leaverCardAddModal-row--optionFields,
+    .leaverCardAddModal-row--dateFields {
         grid-template-columns: 1fr;
     }
 }
 
-.evaluationsCardModalScope .modal-Overlay {
+.leaverCardModalScope .modal-Overlay {
     z-index: 999;
     padding: var(--spacing-md);
     box-sizing: border-box;
 }
 
-.evaluationsCardModalScope .modal-Container {
+.leaverCardModalScope .modal-Container {
     width: min(800px, 100%);
     max-height: min(900px, calc(100vh - (var(--spacing-md) * 2)));
-    height: 800px;
+    height: auto;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -520,25 +410,25 @@
     overflow: hidden;
 }
 
-.evaluationsCardModalScope .modal-Header p,
-.evaluationsCardModalScope .modal-Title p {
+.leaverCardModalScope .modal-Header p,
+.leaverCardModalScope .modal-Title p {
     margin: 0;
 }
 
-.evaluationsCardModalScope .modal-Header button {
+.leaverCardModalScope .modal-Header button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
-.evaluationsCardModalScope .modal-Title {
+.leaverCardModalScope .modal-Title {
     margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
     color: var(--text-accent);
     font-size: var(--font-xl);
     font-weight: 700;
 }
 
-.evaluationsCardModalScope .modal-Body {
+.leaverCardModalScope .modal-Body {
     flex: 1 1 auto;
     min-height: 0;
     margin: 0;
@@ -547,7 +437,42 @@
     overflow-y: auto;
 }
 
-.evaluationsCardModalScope .modal-Footer {
+.leaverCardModalScope .modal-Footer {
     padding: 0 var(--spacing-sm) var(--spacing-sm);
     background: transparent;
+}
+
+.leaverCardModalScope .leaverCardAddModal-form {
+    padding-bottom: var(--spacing-sm);
+}
+
+.leaverCardModalScope .leaverCardUpdateModal-topFields,
+.leaverCardModalScope .leaverCardAddModal-row {
+    gap: var(--spacing-sm);
+}
+
+.leaverCardModalScope .leaverCardAddModal-field,
+.leaverCardModalScope .leaverCardAddModal-column,
+.leaverCardModalScope .leaverCardUpdateModal-field--top {
+    grid-template-columns: 96px minmax(0, 1fr);
+    text-align: left;
+}
+
+.leaverCardModalScope .leaverCardAddModal-label {
+    font-weight: 600;
+    text-align: left;
+}
+
+.leaverCardModalScope .leaverCardAddModal-hint {
+    line-height: 1.45;
+}
+
+.leaverCardModalScope .leaverCardAddModal-row--optionFields {
+    grid-template-columns: minmax(0, 1.6fr) minmax(160px, 1fr) minmax(0, 1.6fr) minmax(160px, 1fr);
+}
+
+.leaverCardModalScope .leaverCardAddModal-input,
+.leaverCardModalScope .leaverCardAddModal-textarea,
+.leaverCardModalScope .leaverCardAddModal-dateSelect {
+    min-height: 42px;
 }

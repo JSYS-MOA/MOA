@@ -17,6 +17,7 @@ import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
 import Approvals from './pages/approvals/Approvals.tsx';;
+
 import HrCardListPage from "./pages/hr/HrCardListPage.tsx";
 import LeaverCardListPage from "./pages/hr/LeaverCardListPage.tsx";
 import CertificatesCardListPage from "./pages/hr/CertificatesCardListPage.tsx";

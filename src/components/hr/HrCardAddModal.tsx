@@ -7,7 +7,7 @@ import {
     type HrCardMutationPayload,
 } from "../../apis/hr/HrCardService";
 import Modal from "../Modal";
-import "../../assets/styles/hr/hrCardUpdate.css";
+import "../../assets/styles/hr/hrCardAddModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { openDaumPostcode } from "../../utils/daumPostcode";
 

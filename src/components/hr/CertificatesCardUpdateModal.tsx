@@ -44,6 +44,7 @@ type CardDetail = CertificatesCardRecord & Record<string, unknown>;
 type FormState = {
     employeeId: string;
     userName: string;
+    roleId: string;
     departmentId: string;
     departmentName: string;
     departmentCord: string;
@@ -53,6 +54,10 @@ type FormState = {
     phone: string;
     address: string;
 };
+
+type DepartmentKey = "HR" | "WML" | "ACLE";
+type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
+type RoleOption = { roleId: number; code: string; label: string };
 
 const DEPARTMENT_API_BASE = "/api/base/dept";
 const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
@@ -65,9 +70,27 @@ const DEPARTMENT_CODE_BY_ID: Record<number, string> = {
     4: "ACLE-1",
 };
 
+const ROLE_OPTIONS: Record<string, RoleOption> = {
+    EXECUTIVE: { roleId: 1, code: "C", label: "임원" },
+    "HR:LEAD": { roleId: 2, code: "HR-R", label: "인사팀장" },
+    "WML:LEAD": { roleId: 3, code: "WML-R", label: "물류팀장" },
+    "ACLE:LEAD": { roleId: 4, code: "ACLE-R", label: "회계팀장" },
+    "HR:STAFF": { roleId: 5, code: "HR-E", label: "인사 사원" },
+    "WML:STAFF": { roleId: 6, code: "WML-E", label: "물류 사원" },
+    "ACLE:STAFF": { roleId: 7, code: "ACLE-E", label: "영업 사원" },
+};
+
+const DEPARTMENT_KEY_BY_ID: Record<number, DepartmentKey> = {
+    1: "HR",
+    2: "HR",
+    3: "WML",
+    4: "ACLE",
+};
+
 const initialForm: FormState = {
     employeeId: "",
     userName: "",
+    roleId: "",
     departmentId: "",
     departmentName: "",
     departmentCord: "",
@@ -125,6 +148,7 @@ const isVisibleDepartment = (department: Department) => {
     }
 
     const normalizedName = normalizeText(department.departmentName);
+
     return !EXCLUDED_DEPARTMENT_KEYWORDS.some((keyword) =>
         normalizedName.includes(normalizeText(keyword))
     );
@@ -151,6 +175,89 @@ const findGradeById = (grades: GradeOption[], gradeId: string) =>
     grades.find((grade) => String(grade.gradeId) === gradeId.trim());
 
 const isVisibleGradeOption = (grade: GradeOption) => grade.gradeId >= MIN_VISIBLE_GRADE_ID;
+
+const getDepartmentKey = (
+    departmentId: string,
+    departmentName: string
+): DepartmentKey | undefined => {
+    const normalizedDepartment = normalizeText(departmentName);
+
+    if (normalizedDepartment.includes("인사") || normalizedDepartment.includes("hr")) {
+        return "HR";
+    }
+
+    if (normalizedDepartment.includes("물류") || normalizedDepartment.includes("wml")) {
+        return "WML";
+    }
+
+    if (
+        normalizedDepartment.includes("영업") ||
+        normalizedDepartment.includes("회계") ||
+        normalizedDepartment.includes("acle")
+    ) {
+        return "ACLE";
+    }
+
+    const parsedDepartmentId = Number(departmentId);
+
+    return Number.isFinite(parsedDepartmentId)
+        ? DEPARTMENT_KEY_BY_ID[parsedDepartmentId]
+        : undefined;
+};
+
+const getGradeGroup = (gradeName: string): GradeGroup | undefined => {
+    const normalizedGrade = normalizeText(gradeName);
+
+    if (!normalizedGrade) {
+        return undefined;
+    }
+
+    if (
+        ["임원", "사장", "부사장", "상무"].some((keyword) =>
+            normalizedGrade.includes(normalizeText(keyword))
+        )
+    ) {
+        return "EXECUTIVE";
+    }
+
+    if (
+        ["팀장", "부장"].some((keyword) =>
+            normalizedGrade.includes(normalizeText(keyword))
+        )
+    ) {
+        return "LEAD";
+    }
+
+    if (
+        ["사원", "대리", "과장"].some((keyword) =>
+            normalizedGrade.includes(normalizeText(keyword))
+        )
+    ) {
+        return "STAFF";
+    }
+
+    return undefined;
+};
+
+const getRoleOption = (
+    departmentId: string,
+    departmentName: string,
+    gradeName: string
+) => {
+    const gradeGroup = getGradeGroup(gradeName);
+
+    if (!gradeGroup) {
+        return undefined;
+    }
+
+    if (gradeGroup === "EXECUTIVE") {
+        return ROLE_OPTIONS.EXECUTIVE;
+    }
+
+    const departmentKey = getDepartmentKey(departmentId, departmentName);
+
+    return departmentKey ? ROLE_OPTIONS[`${departmentKey}:${gradeGroup}`] : undefined;
+};
 
 const ensureDepartmentOption = (
     departments: Department[],
@@ -220,11 +327,14 @@ const ensureGradeOption = (grades: GradeOption[], gradeId: string, gradeName: st
 
 const mapCardToForm = (card: CardDetail): FormState => {
     const resolvedGradeId = resolveHrGradeId(getNumberField(card, "gradeId", "grade_id"));
-    const gradeName = getStringField(card, "gradeName", "grade_name") || getHrGradeNameById(resolvedGradeId);
+    const gradeName =
+        getStringField(card, "gradeName", "grade_name") ||
+        getHrGradeNameById(resolvedGradeId);
 
     return {
         employeeId: getStringField(card, "employeeId", "employee_id"),
         userName: getStringField(card, "userName", "user_name"),
+        roleId: getStringField(card, "roleId", "role_id"),
         departmentId: getStringField(card, "departmentId", "department_id"),
         departmentName: getStringField(card, "departmentName", "department_name"),
         departmentCord: getStringField(card, "departmentCord", "department_cord"),
@@ -263,20 +373,23 @@ const formatGradeDisplay = (gradeName: string, gradeId: string) => {
 const buildPayload = (form: FormState) => ({
     employeeId: form.employeeId.trim(),
     userName: form.userName.trim(),
+    roleId: Number(form.roleId),
     departmentId: Number(form.departmentId),
     departmentName: form.departmentName.trim(),
+    departmentCord: form.departmentCord.trim(),
     gradeId: Number(form.gradeId),
     gradeName: form.gradeName.trim(),
 });
 
-const areSameForm = (left: FormState, right: FormState) => JSON.stringify(left) === JSON.stringify(right);
+const areSameForm = (left: FormState, right: FormState) =>
+    JSON.stringify(left) === JSON.stringify(right);
 
 const CertificatesCardUpdateModal = ({
-    isOpen,
-    userId,
-    onClose,
-    restrictEditToHrLead = false,
-}: Props) => {
+                                         isOpen,
+                                         userId,
+                                         onClose,
+                                         restrictEditToHrLead = false,
+                                     }: Props) => {
     const queryClient = useQueryClient();
     const user = useAuthStore((state) => state.user);
     const isCreateMode = userId === null || userId === undefined;
@@ -298,10 +411,14 @@ const CertificatesCardUpdateModal = ({
 
     const isSaving = postCertificatesCard.isPending || putCertificatesCard.isPending;
     const canEdit = !restrictEditToHrLead || user?.roleId === 2;
-    const inputClassName = isSaving || !canEdit
-        ? "certificatesCardAddModal-input certificatesCardAddModal-input--readonly"
-        : "certificatesCardAddModal-input";
-    const readOnlyInputClassName = "certificatesCardAddModal-input certificatesCardAddModal-input--readonly";
+
+    const inputClassName =
+        isSaving || !canEdit
+            ? "certificatesCardAddModal-input certificatesCardAddModal-input--readonly"
+            : "certificatesCardAddModal-input";
+
+    const readOnlyInputClassName =
+        "certificatesCardAddModal-input certificatesCardAddModal-input--readonly";
 
     const selectableDepartments = useMemo(
         () =>
@@ -335,11 +452,18 @@ const CertificatesCardUpdateModal = ({
     );
 
     const resolvedDepartmentName = selectedDepartment?.departmentName ?? form.departmentName;
+
     const resolvedDepartmentCord = selectedDepartment
         ? getDepartmentCord(selectedDepartment)
         : form.departmentCord;
+
     const resolvedGradeName = selectedGrade?.gradeName ?? form.gradeName;
+
     const resolvedGradeId = selectedGrade ? String(selectedGrade.gradeId) : form.gradeId;
+
+    const calculatedRole = useMemo(() => {
+        return getRoleOption(form.departmentId, resolvedDepartmentName, resolvedGradeName);
+    }, [form.departmentId, resolvedDepartmentName, resolvedGradeName]);
 
     const originalDepartmentDisplay = useMemo(() => {
         if (isCreateMode) {
@@ -382,6 +506,7 @@ const CertificatesCardUpdateModal = ({
     ]);
 
     const hasReferenceInfo = Boolean(form.email || form.phone || form.address);
+
     const hasUnsavedChanges = useMemo(
         () => !areSameForm(form, initialSnapshot),
         [form, initialSnapshot]
@@ -490,7 +615,9 @@ const CertificatesCardUpdateModal = ({
 
         let isCancelled = false;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingDetail(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoadError("");
 
         fetchCertificatesCardInfo(userId)
@@ -552,6 +679,7 @@ const CertificatesCardUpdateModal = ({
         if (!selectedGrade) {
             return;
         }
+
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (prev.gradeName === selectedGrade.gradeName) {
@@ -565,6 +693,22 @@ const CertificatesCardUpdateModal = ({
         });
     }, [selectedGrade]);
 
+    useEffect(() => {
+        const nextRoleId = calculatedRole ? String(calculatedRole.roleId) : "";
+
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setForm((prev) => {
+            if (prev.roleId === nextRoleId) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                roleId: nextRoleId,
+            };
+        });
+    }, [calculatedRole]);
+
     if (!isOpen) {
         return null;
     }
@@ -575,6 +719,10 @@ const CertificatesCardUpdateModal = ({
         const { name, value } = event.target;
 
         setSaveError("");
+
+        if (name === "employeeId" || name === "userName" || name === "roleId") {
+            return;
+        }
 
         if (name === "departmentId") {
             const department = findDepartmentById(selectableDepartments, value);
@@ -610,6 +758,7 @@ const CertificatesCardUpdateModal = ({
             setIsExitConfirmOpen(true);
             return;
         }
+
         resetModalState();
         onClose();
     };
@@ -617,6 +766,10 @@ const CertificatesCardUpdateModal = ({
     const validateForm = () => {
         if (!form.employeeId.trim() || !form.userName.trim()) {
             return "사번과 이름은 필수입니다.";
+        }
+
+        if (!form.roleId || !Number.isFinite(Number(form.roleId))) {
+            return "권한을 계산하지 못했습니다. 부서와 직급을 다시 선택해 주세요.";
         }
 
         if (!resolvedDepartmentName || !resolvedDepartmentCord || !form.departmentId) {
@@ -650,6 +803,7 @@ const CertificatesCardUpdateModal = ({
 
         const payload = buildPayload({
             ...form,
+            roleId: calculatedRole ? String(calculatedRole.roleId) : form.roleId,
             departmentName: resolvedDepartmentName,
             departmentCord: resolvedDepartmentCord,
             gradeId: resolvedGradeId,
@@ -666,10 +820,30 @@ const CertificatesCardUpdateModal = ({
                 });
             }
 
-            await queryClient.invalidateQueries({ queryKey: ["certificatesCardList"] });
+            await queryClient.invalidateQueries({
+                queryKey: ["certificatesCardList"],
+                exact: false,
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["hrCards"],
+                exact: false,
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["hrCardList"],
+                exact: false,
+            });
+
             resetModalState();
             onClose();
-        } catch {
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.log("발령 저장 실패 상태:", error.response?.status);
+                console.log("발령 저장 실패 응답:", error.response?.data);
+                console.log("발령 저장 요청 payload:", payload);
+            }
+
             setSaveError(
                 isCreateMode
                     ? "인사 발령을 등록하지 못했습니다."
@@ -683,8 +857,8 @@ const CertificatesCardUpdateModal = ({
             ? "등록 중..."
             : "저장 중..."
         : isCreateMode
-          ? "발령 등록"
-          : "발령 저장";
+            ? "발령 등록"
+            : "발령 저장";
 
     return (
         <>
@@ -703,6 +877,7 @@ const CertificatesCardUpdateModal = ({
                             >
                                 {submitLabel}
                             </button>
+
                             <button
                                 type="button"
                                 className="certificatesCardAddModal-button certificatesCardAddModal-button--secondary"
@@ -721,7 +896,10 @@ const CertificatesCardUpdateModal = ({
                     >
                         <div className="certificatesCardUpdateModal-topFields">
                             <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                <label className="certificatesCardAddModal-label" htmlFor="certificates-employeeId">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-employeeId"
+                                >
                                     사번
                                 </label>
                                 <input
@@ -729,12 +907,16 @@ const CertificatesCardUpdateModal = ({
                                     name="employeeId"
                                     value={form.employeeId}
                                     onChange={handleChange}
-                                    className={inputClassName}
+                                    className={readOnlyInputClassName}
                                     readOnly
                                 />
                             </div>
+
                             <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                <label className="certificatesCardAddModal-label" htmlFor="certificates-userName">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-userName"
+                                >
                                     이름
                                 </label>
                                 <input
@@ -742,8 +924,29 @@ const CertificatesCardUpdateModal = ({
                                     name="userName"
                                     value={form.userName}
                                     onChange={handleChange}
-                                    className={inputClassName}
+                                    className={readOnlyInputClassName}
                                     readOnly
+                                />
+                            </div>
+
+                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-roleId"
+                                >
+                                    권한
+                                </label>
+                                <input
+                                    id="certificates-roleId"
+                                    name="roleId"
+                                    value={
+                                        calculatedRole
+                                            ? `${calculatedRole.roleId} / ${calculatedRole.label}`
+                                            : form.roleId
+                                    }
+                                    className={readOnlyInputClassName}
+                                    readOnly
+                                    title="부서와 직급을 선택하면 자동으로 계산됩니다."
                                 />
                             </div>
                         </div>
@@ -751,7 +954,9 @@ const CertificatesCardUpdateModal = ({
                         {!isCreateMode && (
                             <div className="certificatesCardUpdateModal-topFields">
                                 <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                    <label className="certificatesCardAddModal-label">원래 부서</label>
+                                    <label className="certificatesCardAddModal-label">
+                                        원래 부서
+                                    </label>
                                     <input
                                         value={originalDepartmentDisplay}
                                         readOnly
@@ -760,7 +965,9 @@ const CertificatesCardUpdateModal = ({
                                 </div>
 
                                 <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                    <label className="certificatesCardAddModal-label">원래 직급</label>
+                                    <label className="certificatesCardAddModal-label">
+                                        원래 직급
+                                    </label>
                                     <input
                                         value={originalGradeDisplay}
                                         readOnly
@@ -772,8 +979,11 @@ const CertificatesCardUpdateModal = ({
 
                         <div className="certificatesCardAddModal-row certificatesCardAddModal-row--optionFields">
                             <div className="certificatesCardAddModal-column">
-                                <label className="certificatesCardAddModal-label" htmlFor="certificates-departmentId">
-                                    부서
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-departmentId"
+                                >
+                                    발령 부서
                                 </label>
                                 <select
                                     id="certificates-departmentId"
@@ -784,6 +994,7 @@ const CertificatesCardUpdateModal = ({
                                     disabled={isSaving || !canEdit || isLoadingDepartments}
                                 >
                                     <option value="">부서를 선택하세요</option>
+
                                     {selectableDepartments.map((department) => (
                                         <option
                                             key={department.departmentId}
@@ -796,7 +1007,9 @@ const CertificatesCardUpdateModal = ({
                             </div>
 
                             <div className="certificatesCardAddModal-column">
-                                <label className="certificatesCardAddModal-label">부서코드</label>
+                                <label className="certificatesCardAddModal-label">
+                                    부서코드
+                                </label>
                                 <input
                                     value={resolvedDepartmentCord}
                                     readOnly
@@ -805,8 +1018,11 @@ const CertificatesCardUpdateModal = ({
                             </div>
 
                             <div className="certificatesCardAddModal-column">
-                                <label className="certificatesCardAddModal-label" htmlFor="certificates-gradeId">
-                                    직급
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-gradeId"
+                                >
+                                    발령 직급
                                 </label>
                                 <select
                                     id="certificates-gradeId"
@@ -817,6 +1033,7 @@ const CertificatesCardUpdateModal = ({
                                     disabled={isSaving || !canEdit}
                                 >
                                     <option value="">직급을 선택하세요</option>
+
                                     {selectableGrades.map((grade) => (
                                         <option key={grade.gradeId} value={grade.gradeId}>
                                             {grade.gradeName}
@@ -826,7 +1043,9 @@ const CertificatesCardUpdateModal = ({
                             </div>
 
                             <div className="certificatesCardAddModal-column">
-                                <label className="certificatesCardAddModal-label">직급코드</label>
+                                <label className="certificatesCardAddModal-label">
+                                    직급코드
+                                </label>
                                 <input
                                     value={resolvedGradeId}
                                     readOnly
@@ -839,7 +1058,9 @@ const CertificatesCardUpdateModal = ({
                             <>
                                 <div className="certificatesCardAddModal-row">
                                     <div className="certificatesCardAddModal-field">
-                                        <label className="certificatesCardAddModal-label">이메일</label>
+                                        <label className="certificatesCardAddModal-label">
+                                            이메일
+                                        </label>
                                         <input
                                             value={form.email}
                                             readOnly
@@ -848,7 +1069,9 @@ const CertificatesCardUpdateModal = ({
                                     </div>
 
                                     <div className="certificatesCardAddModal-field">
-                                        <label className="certificatesCardAddModal-label">연락처</label>
+                                        <label className="certificatesCardAddModal-label">
+                                            연락처
+                                        </label>
                                         <input
                                             value={form.phone}
                                             readOnly
@@ -859,7 +1082,9 @@ const CertificatesCardUpdateModal = ({
 
                                 <div className="certificatesCardAddModal-row">
                                     <div className="certificatesCardAddModal-column">
-                                        <label className="certificatesCardAddModal-label">주소</label>
+                                        <label className="certificatesCardAddModal-label">
+                                            주소
+                                        </label>
                                         <input
                                             value={form.address}
                                             readOnly
@@ -876,14 +1101,19 @@ const CertificatesCardUpdateModal = ({
                         {noticeMessage && (
                             <div className="certificatesCardAddModal-row">
                                 <div className="certificatesCardAddModal-column">
-                                    <label className="certificatesCardAddModal-label">안내</label>
-                                    <div className="certificatesCardAddModal-hint">{noticeMessage}</div>
+                                    <label className="certificatesCardAddModal-label">
+                                        안내
+                                    </label>
+                                    <div className="certificatesCardAddModal-hint">
+                                        {noticeMessage}
+                                    </div>
                                 </div>
                             </div>
                         )}
                     </form>
                 </Modal>
             </div>
+
             <ConfirmModal
                 isOpen={isExitConfirmOpen}
                 message="작성 중인 내용이 있습니다. 닫으시겠습니까?"

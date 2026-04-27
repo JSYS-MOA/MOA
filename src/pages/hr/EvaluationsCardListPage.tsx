@@ -15,7 +15,7 @@ import type { HrTableProps } from "../../types/HrTableProps";
 import { FaStar } from "react-icons/fa";
 
 const ITEMS_PER_PAGE = 10;
-const MANAGER_GRADE_ID = 4;
+const MANAGER_GRADE_ID = 3;
 
 type EvaluationsModalTarget = number | "create";
 

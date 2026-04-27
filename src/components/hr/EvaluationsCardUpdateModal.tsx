@@ -58,7 +58,7 @@ type FormState = {
 
 type ComparableFormState = Pick<
     FormState,
-    "employeeId" | "userName" | "departmentName" | "gradeName"
+    "employeeId" | "userName" | "departmentName" | "gradeName" | "performance"
 >;
 
 const DEPARTMENT_API_BASE = "/api/base/dept";
@@ -223,25 +223,28 @@ const buildComparableFormState = (form: FormState): ComparableFormState => ({
     userName: form.userName,
     departmentName: form.departmentName,
     gradeName: form.gradeName,
+    performance: form.performance,
 });
 
 const areSameForm = (left: ComparableFormState, right: ComparableFormState) =>
     JSON.stringify(left) === JSON.stringify(right);
 
 const buildPayload = ({
-    employeeId,
-    userName,
-    departmentId,
-    departmentName,
-    gradeId,
-    gradeName,
-}: {
+                          employeeId,
+                          userName,
+                          departmentId,
+                          departmentName,
+                          gradeId,
+                          gradeName,
+                          performance,
+                      }: {
     employeeId: string;
     userName: string;
     departmentId: string;
     departmentName: string;
     gradeId: string;
     gradeName: string;
+    performance: string;
 }): EvaluationsCardMutationPayload => ({
     employeeId: employeeId.trim(),
     userName: userName.trim(),
@@ -249,14 +252,15 @@ const buildPayload = ({
     departmentName: departmentName.trim(),
     gradeId: Number(gradeId),
     gradeName: gradeName.trim(),
+    performance: performance.trim(),
 });
 
 const EvaluationsCardUpdateModal = ({
-    isOpen,
-    userId,
-    onClose,
-    restrictEditToEvaluationsLead = false,
-}: Props) => {
+                                        isOpen,
+                                        userId,
+                                        onClose,
+                                        restrictEditToEvaluationsLead = false,
+                                    }: Props) => {
     const queryClient = useQueryClient();
     const user = useAuthStore((state) => state.user);
     const isCreateMode = userId === null || userId === undefined;
@@ -290,6 +294,7 @@ const EvaluationsCardUpdateModal = ({
     const isSaving = postEvaluationsCard.isPending || putEvaluationsCard.isPending;
     const canEdit = !restrictEditToEvaluationsLead || user?.roleId === 2;
     const isFormReadOnly = isSaving || isLoadingDetail || !canEdit;
+
     const isSubmitDisabled =
         isSaving ||
         isLoadingDetail ||
@@ -297,13 +302,13 @@ const EvaluationsCardUpdateModal = ({
         !canEdit ||
         Boolean(loadError) ||
         Boolean(departmentError);
-    const inputClassName = isFormReadOnly
-        ? "evaluationsCardAddModal-input evaluationsCardAddModal-input--readonly"
-        : "evaluationsCardAddModal-input";
+
     const readOnlyInputClassName =
         "evaluationsCardAddModal-input evaluationsCardAddModal-input--readonly";
-    const textareaClassName =
-        "evaluationsCardAddModal-textarea evaluationsCardAddModal-input--readonly";
+
+    const textareaClassName = isFormReadOnly
+        ? "evaluationsCardAddModal-textarea evaluationsCardAddModal-input--readonly"
+        : "evaluationsCardAddModal-textarea";
 
     const matchedDepartment = useMemo(
         () =>
@@ -320,18 +325,23 @@ const EvaluationsCardUpdateModal = ({
     );
 
     const resolvedDepartmentName = matchedDepartment?.departmentName ?? form.departmentName.trim();
+
     const resolvedDepartmentId = matchedDepartment
         ? String(matchedDepartment.departmentId)
         : form.departmentId.trim();
+
     const resolvedDepartmentCord = matchedDepartment
         ? getDepartmentCord(matchedDepartment)
         : form.departmentCord.trim();
+
     const resolvedGradeName = matchedGrade?.gradeName ?? getCanonicalGradeName(form.gradeName);
+
     const resolvedGradeId = matchedGrade ? String(matchedGrade.gradeId) : form.gradeId.trim();
 
     const hasReferenceInfo = Boolean(
         form.email || form.phone || form.address || form.performance
     );
+
     const hasUnsavedChanges = useMemo(
         () =>
             !areSameForm(
@@ -371,6 +381,8 @@ const EvaluationsCardUpdateModal = ({
         return messages.join(" ");
     }, [canEdit, departmentError, isLoadingDepartments, isLoadingDetail, loadError, saveError]);
 
+
+
     useEffect(() => {
         if (!isOpen) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -391,7 +403,6 @@ const EvaluationsCardUpdateModal = ({
         }
 
         let isCancelled = false;
-
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingDepartments(true);
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -439,18 +450,14 @@ const EvaluationsCardUpdateModal = ({
         if (isCreateMode) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setInitialSnapshot(initialForm);
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLoadError("");
             return;
         }
 
         let isCancelled = false;
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingDetail(true);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoadError("");
 
         fetchEvaluationsCardInfo(userId)
@@ -579,6 +586,7 @@ const EvaluationsCardUpdateModal = ({
             departmentName: resolvedDepartmentName,
             gradeId: resolvedGradeId,
             gradeName: resolvedGradeName,
+            performance: form.performance,
         });
 
         try {
@@ -607,8 +615,8 @@ const EvaluationsCardUpdateModal = ({
             ? "등록 중..."
             : "저장 중..."
         : isCreateMode
-          ? "평가 등록"
-          : "평가 저장";
+            ? "평가 등록"
+            : "평가 저장";
 
     return (
         <>
@@ -627,6 +635,7 @@ const EvaluationsCardUpdateModal = ({
                             >
                                 {submitLabel}
                             </button>
+
                             <button
                                 type="button"
                                 className="evaluationsCardAddModal-button evaluationsCardAddModal-button--secondary"
@@ -635,7 +644,6 @@ const EvaluationsCardUpdateModal = ({
                             >
                                 취소
                             </button>
-
                         </div>
                     }
                 >
@@ -652,15 +660,17 @@ const EvaluationsCardUpdateModal = ({
                                 >
                                     사번
                                 </label>
+
                                 <input
                                     id="evaluations-employeeId"
                                     name="employeeId"
                                     value={form.employeeId}
                                     onChange={handleChange}
-                                    className={inputClassName}
+                                    className={readOnlyInputClassName}
                                     readOnly
                                 />
                             </div>
+
                             <div className="evaluationsCardAddModal-field evaluationsCardUpdateModal-field--top">
                                 <label
                                     className="evaluationsCardAddModal-label"
@@ -668,16 +678,18 @@ const EvaluationsCardUpdateModal = ({
                                 >
                                     이름
                                 </label>
+
                                 <input
                                     id="evaluations-userName"
                                     name="userName"
                                     value={form.userName}
                                     onChange={handleChange}
-                                    className={inputClassName}
+                                    className={readOnlyInputClassName}
                                     readOnly
                                 />
                             </div>
                         </div>
+
                         <div className="evaluationsCardAddModal-row evaluationsCardAddModal-row--optionFields">
                             <div className="evaluationsCardAddModal-column">
                                 <label
@@ -686,12 +698,13 @@ const EvaluationsCardUpdateModal = ({
                                 >
                                     부서
                                 </label>
+
                                 <input
                                     id="evaluations-departmentName"
                                     name="departmentName"
                                     value={form.departmentName}
                                     onChange={handleChange}
-                                    className={inputClassName}
+                                    className={readOnlyInputClassName}
                                     readOnly
                                 />
                             </div>
@@ -703,12 +716,13 @@ const EvaluationsCardUpdateModal = ({
                                 >
                                     직급
                                 </label>
+
                                 <input
                                     id="evaluations-gradeName"
                                     name="gradeName"
                                     value={form.gradeName}
                                     onChange={handleChange}
-                                    className={inputClassName}
+                                    className={readOnlyInputClassName}
                                     readOnly
                                 />
                             </div>
@@ -719,7 +733,10 @@ const EvaluationsCardUpdateModal = ({
                                 {(form.email || form.phone) && (
                                     <div className="evaluationsCardAddModal-row">
                                         <div className="evaluationsCardAddModal-field">
-                                            <label className="evaluationsCardAddModal-label">이메일</label>
+                                            <label className="evaluationsCardAddModal-label">
+                                                이메일
+                                            </label>
+
                                             <input
                                                 value={form.email}
                                                 readOnly
@@ -728,7 +745,10 @@ const EvaluationsCardUpdateModal = ({
                                         </div>
 
                                         <div className="evaluationsCardAddModal-field">
-                                            <label className="evaluationsCardAddModal-label">연락처</label>
+                                            <label className="evaluationsCardAddModal-label">
+                                                연락처
+                                            </label>
+
                                             <input
                                                 value={form.phone}
                                                 readOnly
@@ -741,7 +761,10 @@ const EvaluationsCardUpdateModal = ({
                                 {form.address && (
                                     <div className="evaluationsCardAddModal-row">
                                         <div className="evaluationsCardAddModal-column">
-                                            <label className="evaluationsCardAddModal-label">주소</label>
+                                            <label className="evaluationsCardAddModal-label">
+                                                주소
+                                            </label>
+
                                             <input
                                                 value={form.address}
                                                 readOnly
@@ -751,27 +774,62 @@ const EvaluationsCardUpdateModal = ({
                                     </div>
                                 )}
 
-                                {form.performance && (
-                                    <div className="evaluationsCardAddModal-row">
-                                        <div className="evaluationsCardAddModal-column">
-                                            <label className="evaluationsCardAddModal-label">평가</label>
-                                            <textarea
-                                                value={form.performance}
-                                                readOnly={isFormReadOnly}
-                                                className={textareaClassName}
-                                                rows={3}
-                                            />
-                                        </div>
+                                <div className="evaluationsCardAddModal-row">
+                                    <div className="evaluationsCardAddModal-column">
+                                        <label
+                                            className="evaluationsCardAddModal-label"
+                                            htmlFor="evaluations-performance"
+                                        >
+                                            평가
+                                        </label>
+
+                                        <textarea
+                                            id="evaluations-performance"
+                                            name="performance"
+                                            value={form.performance}
+                                            onChange={handleChange}
+                                            readOnly={isFormReadOnly}
+                                            className={textareaClassName}
+                                            rows={3}
+                                        />
                                     </div>
-                                )}
+                                </div>
                             </>
+                        )}
+
+                        {!hasReferenceInfo && (
+                            <div className="evaluationsCardAddModal-row">
+                                <div className="evaluationsCardAddModal-column">
+                                    <label
+                                        className="evaluationsCardAddModal-label"
+                                        htmlFor="evaluations-performance"
+                                    >
+                                        평가
+                                    </label>
+
+                                    <textarea
+                                        id="evaluations-performance"
+                                        name="performance"
+                                        value={form.performance}
+                                        onChange={handleChange}
+                                        readOnly={isFormReadOnly}
+                                        className={textareaClassName}
+                                        rows={3}
+                                    />
+                                </div>
+                            </div>
                         )}
 
                         {noticeMessage && (
                             <div className="evaluationsCardAddModal-row">
                                 <div className="evaluationsCardAddModal-column">
-                                    <label className="evaluationsCardAddModal-label">안내</label>
-                                    <div className="evaluationsCardAddModal-hint">{noticeMessage}</div>
+                                    <label className="evaluationsCardAddModal-label">
+                                        안내
+                                    </label>
+
+                                    <div className="evaluationsCardAddModal-hint">
+                                        {noticeMessage}
+                                    </div>
                                 </div>
                             </div>
                         )}

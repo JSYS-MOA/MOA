@@ -28,18 +28,6 @@
     font-weight: bolder;
 }
 
-.leaverCardListPage-star {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-}
-
 .leaverCardListPage-top-search-btn {
     margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
 }
@@ -415,52 +403,63 @@
 }
 
 /* 열 너비 */
+
+/* 1. 체크박스 */
 .leaverTable th:nth-child(1),
 .leaverTable td:nth-child(1) {
-    width: 32px;
+    width: 4%;
 }
 
+/* 2. 입사일 */
 .leaverTable th:nth-child(2),
 .leaverTable td:nth-child(2) {
-    width: 25px;
+    width: 13%;
 }
 
+/* 3. 퇴사일 */
 .leaverTable th:nth-child(3),
 .leaverTable td:nth-child(3) {
-    width: 25px;
+    width: 13%;
 }
 
+/* 4. 사원번호 */
 .leaverTable th:nth-child(4),
 .leaverTable td:nth-child(4) {
-    width: 25px;
+    width: 11%;
 }
 
+/* 5. 이름 */
 .leaverTable th:nth-child(5),
 .leaverTable td:nth-child(5) {
-    width: 15px;
+    width: 8%;
 }
 
+/* 6. 부서 */
 .leaverTable th:nth-child(6),
 .leaverTable td:nth-child(6) {
-    width: 15px;
+    width: 10%;
 }
 
+/* 7. 직급 */
 .leaverTable th:nth-child(7),
 .leaverTable td:nth-child(7) {
-    width: 5px;
+    width: 5%;
 }
 
+/* 8. 연락처 */
 .leaverTable th:nth-child(8),
 .leaverTable td:nth-child(8) {
-    width: 30px;
+    width: 11%;
 }
 
+/* 9. 이메일 */
 .leaverTable th:nth-child(9),
 .leaverTable td:nth-child(9) {
-    width: 50px;
+    width: 14%;
 }
 
+/* 10. 주소 */
 .leaverTable th:nth-child(10),
 .leaverTable td:nth-child(10) {
-    width: 60px;
+    width: 11%;
 }
