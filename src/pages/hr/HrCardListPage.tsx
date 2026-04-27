@@ -1,42 +1,86 @@
 import { useEffect, useMemo, useState } from "react";
-import type { KeyboardEvent } from "react";
-import { useDeleteHrCard, useGetHrCardList } from "../../apis/hr/HrCardService";
-import "../../assets/styles/hr/hrCardList.css";
-import {hrCard}
-import HrCardAddModal from "../../components/hr/HrCardAddModal";
-import HrCardUpdateModal from "../../components/hr/HrCardUpdateModal";
-import HrTable from "../../components/hr/HrTable.tsx";
-import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
-import { useAuthStore } from "../../stores/useAuthStore";
-import type { HrTableProps } from "../../types/HrTableProps";
-import {FaStar} from "react-icons/fa";
+import type { ChangeEvent, FormEvent } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import {
+    type CertificatesCardRecord,
+    useGetCertificatesCardInfo,
+    usePostCertificatesCard as usePostCertificatesCardHook,
+    usePutCertificatesCard as usePutCertificatesCardHook,
+} from "../../apis/hr/CertificatesCardService";
+import ConfirmModal from "../../components/ConfirmModal.tsx";
+import Modal from "../../components/Modal.tsx";
+import "../../assets/styles/hr/certificatesUpdateCardModal.css";
+import {
+    createHrGradeOptions,
+    getHrGradeNameById,
+    resolveHrGradeId,
+} from "../../constants/hrGradeOptions";
 
-const ITEMS_PER_PAGE = 10;
-
-type FilterChipInputProps = {
-    label: string;
-    placeholder: string;
-    draftValue: string;
-    appliedValue: string;
-    onDraftChange: (value: string) => void;
-    onClear: () => void;
-    onSubmit: () => void;
+type Props = {
+    isOpen: boolean;
+    userId?: number | null;
+    mode?: "create" | "edit";
+    onClose: () => void;
+    restrictEditToHrLead?: boolean;
 };
 
-type LooseHrCard = HrCard & Record<string, unknown>;
-
-const normalizeText = (value: string) => value.trim().toLowerCase();
-
-const parseDateValue = (value: unknown) => {
-    if (!value || typeof value !== "string") {
-        return undefined;
-    }
-
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+type Department = {
+    departmentId: number;
+    departmentCord?: string | null;
+    departmentName: string;
+    departmentIsUse?: number | null;
 };
 
-const getStringValue = (record: Record<string, unknown>, ...keys: string[]) => {
+type DepartmentResponse = Department[] | { content?: Department[]; value?: Department[] };
+
+type GradeOption = {
+    gradeId: number;
+    gradeName: string;
+};
+
+type CardDetail = CertificatesCardRecord & Record<string, unknown>;
+
+type FormState = {
+    employeeId: string;
+    userName: string;
+    departmentId: string;
+    departmentName: string;
+    departmentCord: string;
+    gradeId: string;
+    gradeName: string;
+    email: string;
+    phone: string;
+    address: string;
+};
+
+const DEPARTMENT_API_BASE = "/api/base/dept";
+const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
+const MIN_VISIBLE_GRADE_ID = 5;
+
+const DEPARTMENT_CODE_BY_ID: Record<number, string> = {
+    1: "council",
+    2: "HR-1",
+    3: "WML-1",
+    4: "ACLE-1",
+};
+
+const initialForm: FormState = {
+    employeeId: "",
+    userName: "",
+    departmentId: "",
+    departmentName: "",
+    departmentCord: "",
+    gradeId: "",
+    gradeName: "",
+    email: "",
+    phone: "",
+    address: "",
+};
+
+const normalizeText = (value: string) => value.trim().replace(/\s+/g, "").toLowerCase();
+
+const getStringField = (record: Record<string, unknown>, ...keys: string[]) => {
     for (const key of keys) {
         const value = record[key];
 
@@ -52,7 +96,7 @@ const getStringValue = (record: Record<string, unknown>, ...keys: string[]) => {
     return "";
 };
 
-const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
+const getNumberField = (record: Record<string, unknown>, ...keys: string[]) => {
     for (const key of keys) {
         const value = record[key];
 
@@ -72,440 +116,867 @@ const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
     return undefined;
 };
 
-const includesText = (source: string | number | undefined, keyword: string) =>
-    normalizeText(String(source ?? "")).includes(normalizeText(keyword));
+const extractDepartments = (response: DepartmentResponse) =>
+    Array.isArray(response) ? response : response.content ?? response.value ?? [];
 
-const getGradeName = (record: Record<string, unknown>, gradeId: number) => {
-    const rawGradeName = getStringValue(record, "gradeName", "grade_name");
-
-    if (rawGradeName) {
-        return rawGradeName;
+const isVisibleDepartment = (department: Department) => {
+    if (department.departmentIsUse === 0) {
+        return false;
     }
 
-    return getHrGradeNameById(gradeId) || (gradeId > 0 ? `직급 ${gradeId}` : "");
+    const normalizedName = normalizeText(department.departmentName);
+
+    return !EXCLUDED_DEPARTMENT_KEYWORDS.some((keyword) =>
+        normalizedName.includes(normalizeText(keyword))
+    );
 };
 
-const mapCardToRow = (card: HrCard): HrTableProps | null => {
-    const record = card as LooseHrCard;
-    const userId = getNumberValue(record, "userId", "user_id");
+const getDepartmentCord = (department?: Department) => {
+    if (!department) {
+        return "";
+    }
 
-    if (userId === undefined) {
+    const code = department.departmentCord?.trim();
+
+    if (code) {
+        return code;
+    }
+
+    return DEPARTMENT_CODE_BY_ID[department.departmentId] ?? "";
+};
+
+const findDepartmentById = (departments: Department[], departmentId: string) =>
+    departments.find((department) => String(department.departmentId) === departmentId.trim());
+
+const findGradeById = (grades: GradeOption[], gradeId: string) =>
+    grades.find((grade) => String(grade.gradeId) === gradeId.trim());
+
+const isVisibleGradeOption = (grade: GradeOption) => grade.gradeId >= MIN_VISIBLE_GRADE_ID;
+
+const ensureDepartmentOption = (
+    departments: Department[],
+    departmentId: string,
+    departmentName: string,
+    departmentCord: string
+) => {
+    const trimmedDepartmentName = departmentName.trim();
+
+    if (!trimmedDepartmentName) {
+        return departments;
+    }
+
+    const hasCurrentDepartment = departments.some(
+        (department) =>
+            String(department.departmentId) === departmentId ||
+            normalizeText(department.departmentName) === normalizeText(trimmedDepartmentName)
+    );
+
+    if (hasCurrentDepartment) {
+        return departments;
+    }
+
+    const parsedDepartmentId = Number(departmentId);
+
+    return [
+        ...departments,
+        {
+            departmentId: Number.isFinite(parsedDepartmentId) ? parsedDepartmentId : -1,
+            departmentCord: departmentCord || undefined,
+            departmentName: trimmedDepartmentName,
+            departmentIsUse: 1,
+        },
+    ];
+};
+
+const ensureGradeOption = (grades: GradeOption[], gradeId: string, gradeName: string) => {
+    const trimmedGradeName = gradeName.trim();
+    const parsedGradeId = Number(gradeId);
+
+    if (
+        !trimmedGradeName ||
+        !Number.isFinite(parsedGradeId) ||
+        parsedGradeId < MIN_VISIBLE_GRADE_ID
+    ) {
+        return grades;
+    }
+
+    const hasCurrentGrade = grades.some(
+        (grade) =>
+            String(grade.gradeId) === gradeId ||
+            normalizeText(grade.gradeName) === normalizeText(trimmedGradeName)
+    );
+
+    if (hasCurrentGrade) {
+        return grades;
+    }
+
+    return [
+        ...grades,
+        {
+            gradeId: parsedGradeId,
+            gradeName: trimmedGradeName,
+        },
+    ].sort((left, right) => left.gradeId - right.gradeId);
+};
+
+const mapCardToForm = (card: CardDetail): FormState => {
+    const resolvedGradeId = resolveHrGradeId(getNumberField(card, "gradeId", "grade_id"));
+    const gradeName =
+        getStringField(card, "gradeName", "grade_name") || getHrGradeNameById(resolvedGradeId);
+
+    return {
+        employeeId: getStringField(card, "employeeId", "employee_id"),
+        userName: getStringField(card, "userName", "user_name"),
+        departmentId: getStringField(card, "departmentId", "department_id"),
+        departmentName: getStringField(card, "departmentName", "department_name"),
+        departmentCord: getStringField(card, "departmentCord", "department_cord"),
+        gradeId: resolvedGradeId ? String(resolvedGradeId) : "",
+        gradeName,
+        email: getStringField(card, "email"),
+        phone: getStringField(card, "phone"),
+        address: getStringField(card, "address"),
+    };
+};
+
+const formatDepartmentDisplay = (departmentName: string, departmentCord: string) => {
+    if (!departmentName) {
+        return departmentCord;
+    }
+
+    if (!departmentCord) {
+        return departmentName;
+    }
+
+    return `${departmentName} (${departmentCord})`;
+};
+
+const formatGradeDisplay = (gradeName: string, gradeId: string) => {
+    if (!gradeName) {
+        return gradeId;
+    }
+
+    if (!gradeId) {
+        return gradeName;
+    }
+
+    return `${gradeName} (${gradeId})`;
+};
+
+const buildPayload = (form: FormState) => ({
+    employeeId: form.employeeId.trim(),
+    userName: form.userName.trim(),
+    departmentId: Number(form.departmentId),
+    departmentName: form.departmentName.trim(),
+    gradeId: Number(form.gradeId),
+    gradeName: form.gradeName.trim(),
+});
+
+const areSameForm = (left: FormState, right: FormState) =>
+    JSON.stringify(left) === JSON.stringify(right);
+
+const CertificatesCardUpdateModal = ({
+                                         isOpen,
+                                         userId,
+                                         mode = "edit",
+                                         onClose,
+                                     }: Props) => {
+    const queryClient = useQueryClient();
+
+    /**
+     * 중요:
+     * userId는 직원 정보를 불러오기 위한 값.
+     * mode가 create면 POST 등록.
+     * mode가 edit이면 PUT 수정.
+     */
+    const isCreateMode = mode === "create";
+    const formId = "certificates-card-update-form";
+
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [form, setForm] = useState<FormState>(initialForm);
+    const [initialSnapshot, setInitialSnapshot] = useState<FormState>(initialForm);
+    const [isLoadingDepartments, setIsLoadingDepartments] = useState(false);
+    const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+    const [departmentError, setDepartmentError] = useState("");
+    const [loadError, setLoadError] = useState("");
+    const [saveError, setSaveError] = useState("");
+    const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+
+    const { mutateAsync: fetchCertificatesCardInfo } = useGetCertificatesCardInfo();
+    const postCertificatesCard = usePostCertificatesCardHook();
+    const putCertificatesCard = usePutCertificatesCardHook();
+
+    const isSaving = postCertificatesCard.isPending || putCertificatesCard.isPending;
+
+    /**
+     * 저장 버튼은 모두 사용 가능.
+     * 기존 roleId 제한 제거.
+     */
+    const canEdit = true;
+
+    const editableInputClassName = isSaving
+        ? "certificatesCardAddModal-input certificatesCardAddModal-input--readonly"
+        : "certificatesCardAddModal-input";
+
+    const readOnlyInputClassName =
+        "certificatesCardAddModal-input certificatesCardAddModal-input--readonly";
+
+    const selectableDepartments = useMemo(
+        () =>
+            ensureDepartmentOption(
+                departments,
+                form.departmentId,
+                form.departmentName,
+                form.departmentCord
+            ),
+        [departments, form.departmentId, form.departmentName, form.departmentCord]
+    );
+
+    const selectableGrades = useMemo(
+        () =>
+            ensureGradeOption(
+                createHrGradeOptions().filter(isVisibleGradeOption),
+                form.gradeId,
+                form.gradeName
+            ),
+        [form.gradeId, form.gradeName]
+    );
+
+    const selectedDepartment = useMemo(
+        () => findDepartmentById(selectableDepartments, form.departmentId),
+        [selectableDepartments, form.departmentId]
+    );
+
+    const selectedGrade = useMemo(
+        () => findGradeById(selectableGrades, form.gradeId),
+        [selectableGrades, form.gradeId]
+    );
+
+    const resolvedDepartmentName = selectedDepartment?.departmentName ?? form.departmentName;
+
+    const resolvedDepartmentCord = selectedDepartment
+        ? getDepartmentCord(selectedDepartment)
+        : form.departmentCord;
+
+    const resolvedGradeName = selectedGrade?.gradeName ?? form.gradeName;
+    const resolvedGradeId = selectedGrade ? String(selectedGrade.gradeId) : form.gradeId;
+
+    const originalDepartmentDisplay = useMemo(() => {
+        const originalDepartment = findDepartmentById(
+            selectableDepartments,
+            initialSnapshot.departmentId
+        );
+
+        return formatDepartmentDisplay(
+            initialSnapshot.departmentName || (originalDepartment?.departmentName ?? ""),
+            initialSnapshot.departmentCord || getDepartmentCord(originalDepartment)
+        );
+    }, [
+        initialSnapshot.departmentCord,
+        initialSnapshot.departmentId,
+        initialSnapshot.departmentName,
+        selectableDepartments,
+    ]);
+
+    const originalGradeDisplay = useMemo(() => {
+        const originalGrade = findGradeById(selectableGrades, initialSnapshot.gradeId);
+
+        return formatGradeDisplay(
+            initialSnapshot.gradeName || (originalGrade?.gradeName ?? ""),
+            initialSnapshot.gradeId
+        );
+    }, [initialSnapshot.gradeId, initialSnapshot.gradeName, selectableGrades]);
+
+    const hasReferenceInfo = Boolean(form.email || form.phone || form.address);
+
+    const hasUnsavedChanges = useMemo(
+        () => !areSameForm(form, initialSnapshot),
+        [form, initialSnapshot]
+    );
+
+    const noticeMessage = useMemo(() => {
+        const messages: string[] = [];
+
+        if (isLoadingDetail) {
+            messages.push("인사 발령 정보를 불러오는 중입니다.");
+        }
+
+        if (isLoadingDepartments) {
+            messages.push("부서 목록을 불러오는 중입니다.");
+        }
+
+        if (departmentError) {
+            messages.push(departmentError);
+        }
+
+        if (loadError) {
+            messages.push(loadError);
+        }
+
+        if (saveError) {
+            messages.push(saveError);
+        }
+
+        return messages.join(" ");
+    }, [departmentError, isLoadingDepartments, isLoadingDetail, loadError, saveError]);
+
+    const resetModalState = () => {
+        setDepartments([]);
+        setForm(initialForm);
+        setInitialSnapshot(initialForm);
+        setIsLoadingDepartments(false);
+        setIsLoadingDetail(false);
+        setDepartmentError("");
+        setLoadError("");
+        setSaveError("");
+        setIsExitConfirmOpen(false);
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+
+        let isCancelled = false;
+
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsLoadingDepartments(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setDepartmentError("");
+
+        axios
+            .get<DepartmentResponse>(DEPARTMENT_API_BASE, { withCredentials: true })
+            .then(({ data }) => {
+                if (isCancelled) {
+                    return;
+                }
+
+                const nextDepartments = extractDepartments(data)
+                    .filter(isVisibleDepartment)
+                    .sort((left, right) =>
+                        left.departmentName.localeCompare(right.departmentName, "ko")
+                    );
+
+                setDepartments(nextDepartments);
+            })
+            .catch(() => {
+                if (isCancelled) {
+                    return;
+                }
+
+                setDepartments([]);
+                setDepartmentError("부서 목록을 불러오지 못했습니다.");
+            })
+            .finally(() => {
+                if (!isCancelled) {
+                    setIsLoadingDepartments(false);
+                }
+            });
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+
+        /**
+         * 등록/수정 둘 다 userId로 직원 정보를 먼저 불러옴.
+         * 단, 저장 방식만 mode로 구분함.
+         */
+        if (userId === null || userId === undefined) {
+
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setForm(initialForm);
+            setInitialSnapshot(initialForm);
+            setLoadError("선택된 직원 정보가 없습니다.");
+            return;
+        }
+
+        let isCancelled = false;
+
+        setIsLoadingDetail(true);
+        setLoadError("");
+
+        fetchCertificatesCardInfo(userId)
+            .then((card) => {
+                if (isCancelled) {
+                    return;
+                }
+
+                const nextForm = mapCardToForm(card as CardDetail);
+
+                setForm(nextForm);
+                setInitialSnapshot(nextForm);
+            })
+            .catch(() => {
+                if (isCancelled) {
+                    return;
+                }
+
+                setForm(initialForm);
+                setInitialSnapshot(initialForm);
+                setLoadError("직원 정보를 불러오지 못했습니다.");
+            })
+            .finally(() => {
+                if (!isCancelled) {
+                    setIsLoadingDetail(false);
+                }
+            });
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [fetchCertificatesCardInfo, isOpen, userId]);
+
+    useEffect(() => {
+        if (!selectedDepartment) {
+            return;
+        }
+
+        const nextDepartmentName = selectedDepartment.departmentName;
+        const nextDepartmentCord = getDepartmentCord(selectedDepartment);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setForm((prev) => {
+            if (
+                prev.departmentName === nextDepartmentName &&
+                prev.departmentCord === nextDepartmentCord
+            ) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                departmentName: nextDepartmentName,
+                departmentCord: nextDepartmentCord,
+            };
+        });
+    }, [selectedDepartment]);
+
+    useEffect(() => {
+        if (!selectedGrade) {
+            return;
+        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setForm((prev) => {
+            if (prev.gradeName === selectedGrade.gradeName) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                gradeName: selectedGrade.gradeName,
+            };
+        });
+    }, [selectedGrade]);
+
+    if (!isOpen) {
         return null;
     }
 
-    const departmentId = getNumberValue(record, "departmentId", "department_id") ?? 0;
-    const rawGradeId = getNumberValue(record, "gradeId", "grade_id") ?? 0;
-    const gradeId = resolveHrGradeId(rawGradeId) ?? rawGradeId;
-    const departmentName =
-        getStringValue(record, "departmentName", "department_name") ||
-        (departmentId > 0 ? `부서 ${departmentId}` : "");
+    const handleChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = event.target;
 
-    return {
-        userId,
-        userName: getStringValue(record, "userName", "user_name") || `사용자 ${userId}`,
-        employeeId: getStringValue(record, "employeeId", "employee_id"),
-        phone: getStringValue(record, "phone"),
-        email: getStringValue(record, "email"),
-        address: getStringValue(record, "address"),
-        startDate: parseDateValue(record.startDate ?? record.start_date) ?? new Date(0),
-        quitDate: parseDateValue(record.quitDate ?? record.quit_date),
-        departmentId,
-        departmentName,
-        gradeId,
-        gradeName: getGradeName(record, gradeId),
-        birth: parseDateValue(record.birth),
-        performance: getStringValue(record, "performance"),
-        bank: getStringValue(record, "bank"),
-        accountNum: getStringValue(record, "accountNum", "account_num"),
-        profileUrl: getStringValue(record, "profileUrl", "profile_url"),
-    };
-};
+        setSaveError("");
 
-const FilterChipInput = ({
-                             label,
-                             placeholder,
-                             draftValue,
-                             appliedValue,
-                             onDraftChange,
-                             onClear,
-                             onSubmit,
-                         }: FilterChipInputProps) => {
-    const hasAppliedValue = appliedValue.trim() !== "";
-    const hasAnyValue = hasAppliedValue || draftValue.trim() !== "";
-
-    const handleClear = () => {
-        if (hasAppliedValue) {
-            onClear();
+        /**
+         * 사번/이름은 작성자가 수정하면 안 되므로 무시.
+         */
+        if (name === "employeeId" || name === "userName") {
             return;
         }
 
-        onDraftChange("");
-    };
+        if (name === "departmentId") {
+            const department = findDepartmentById(selectableDepartments, value);
 
-    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            onSubmit();
+            setForm((prev) => ({
+                ...prev,
+                departmentId: value,
+                departmentName: department?.departmentName ?? "",
+                departmentCord: getDepartmentCord(department),
+            }));
+
+            return;
         }
+
+        if (name === "gradeId") {
+            const grade = findGradeById(selectableGrades, value);
+
+            setForm((prev) => ({
+                ...prev,
+                gradeId: value,
+                gradeName: grade?.gradeName ?? "",
+            }));
+
+            return;
+        }
+
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
-    return (
-        <div className="hrCardListPage-filter-group">
-            <label>{label}</label>
-            <div className={`hrCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="hrCardListPage-chip-input-icon" aria-hidden="true" />
+    const handleRequestClose = () => {
+        if (hasUnsavedChanges && !isSaving) {
+            setIsExitConfirmOpen(true);
+            return;
+        }
 
-                {hasAppliedValue && (
-                    <span className="hrCardListPage-chip">
-                        <span>{appliedValue}</span>
-                        <button
-                            type="button"
-                            className="hrCardListPage-chip-x"
-                            onClick={onClear}
-                        >
-                            x
-                        </button>
-                    </span>
-                )}
+        resetModalState();
+        onClose();
+    };
 
-                <input
-                    type="text"
-                    placeholder={hasAppliedValue ? "" : placeholder}
-                    value={hasAppliedValue ? "" : draftValue}
-                    onChange={(event) => onDraftChange(event.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
+    const validateForm = () => {
+        if (!form.employeeId.trim() || !form.userName.trim()) {
+            return "직원 정보가 불러와지지 않았습니다. 직원을 다시 선택해 주세요.";
+        }
 
-                <button
-                    type="button"
-                    className="hrCardListPage-chip-clear"
-                    aria-label={`${label} 초기화`}
-                    onClick={handleClear}
-                    disabled={!hasAnyValue}
-                >
-                    x
-                </button>
-            </div>
-        </div>
-    );
-};
+        if (!resolvedDepartmentName || !resolvedDepartmentCord || !form.departmentId) {
+            return "부서를 선택해 주세요.";
+        }
 
-const HrCardListPage = () => {
-    const { user } = useAuthStore();
-    const { data: cards = [], isLoading, isError } = useGetHrCardList();
-    const deleteHrCard =useDeleteHrCard();
+        if (!resolvedGradeName || !resolvedGradeId || !form.gradeId) {
+            return "직급을 선택해 주세요.";
+        }
 
-    const [isSearchOpen, setIsSearchOpen] = useState(true);
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [selectedDetailUserId, setSelectedDetailUserId] = useState<number | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
+        if (!Number.isFinite(Number(form.departmentId)) || !Number.isFinite(Number(form.gradeId))) {
+            return "부서와 직급 정보를 다시 확인해 주세요.";
+        }
 
-    const [keywordDraft, setKeywordDraft] = useState("");
-    const [departmentDraft, setDepartmentDraft] = useState("");
-    const [gradeDraft, setGradeDraft] = useState("");
+        return "";
+    };
 
-    const [keywordFilter, setKeywordFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [gradeFilter, setGradeFilter] = useState("");
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-    const items = useMemo(
-        () =>
-            cards
-                .map(mapCardToRow)
-                .filter((item): item is HrTableProps => item !== null)
-                .filter((item) => item.quitDate === undefined),
-        [cards]
-    );
+        if (!canEdit) {
+            return;
+        }
 
-    const canDeleteHrCard = user?.roleId === 2;
+        const validationMessage = validateForm();
 
-    useEffect(() => {
-        const validUserIds = new Set(items.map((item) => item.userId));
-        setSelectedUserIds((prev) => prev.filter((userId) => validUserIds.has(userId)));
-    }, [items]);
+        if (validationMessage) {
+            setSaveError(validationMessage);
+            return;
+        }
 
-    const filteredItems = useMemo(() => {
-        return items.filter((item) => {
-            const matchesKeyword =
-                keywordFilter.trim() === "" ||
-                includesText(item.userName, keywordFilter) ||
-                includesText(item.employeeId, keywordFilter) ||
-                includesText(item.email, keywordFilter);
-
-            const matchesDepartment =
-                departmentFilter.trim() === "" ||
-                includesText(item.departmentName, departmentFilter);
-
-            const matchesGrade =
-                gradeFilter.trim() === "" || includesText(item.gradeName, gradeFilter);
-
-            return matchesKeyword && matchesDepartment && matchesGrade;
+        const payload = buildPayload({
+            ...form,
+            departmentName: resolvedDepartmentName,
+            departmentCord: resolvedDepartmentCord,
+            gradeId: resolvedGradeId,
+            gradeName: resolvedGradeName,
         });
-    }, [items, keywordFilter, departmentFilter, gradeFilter]);
-
-    const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
-    const resolvedCurrentPage = Math.min(currentPage, totalPages);
-
-    const paginatedItems = useMemo(() => {
-        const startIndex = (resolvedCurrentPage - 1) * ITEMS_PER_PAGE;
-        return filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-    }, [filteredItems, resolvedCurrentPage]);
-
-    const pageNumbers = useMemo(
-        () => Array.from({ length: totalPages }, (_, index) => index + 1),
-        [totalPages]
-    );
-
-    const applyFilters = () => {
-        setKeywordFilter(keywordDraft.trim());
-        setDepartmentFilter(departmentDraft.trim());
-        setGradeFilter(gradeDraft.trim());
-        setCurrentPage(1);
-    };
-
-    const clearKeywordFilter = () => {
-        setKeywordDraft("");
-        setKeywordFilter("");
-        setCurrentPage(1);
-    };
-
-    const clearDepartmentFilter = () => {
-        setDepartmentDraft("");
-        setDepartmentFilter("");
-        setCurrentPage(1);
-    };
-
-    const clearGradeFilter = () => {
-        setGradeDraft("");
-        setGradeFilter("");
-        setCurrentPage(1);
-    };
-
-    const handleToggleItem = (userId: number) => {
-        setSelectedUserIds((prev) =>
-            prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
-        );
-    };
-
-    const handleToggleAll = () => {
-        const visibleUserIds = paginatedItems.map((item) => item.userId);
-        const isAllSelected =
-            visibleUserIds.length > 0 &&
-            visibleUserIds.every((id) => selectedUserIds.includes(id));
-
-        setSelectedUserIds((prev) => {
-            if (isAllSelected) {
-                return prev.filter((id) => !visibleUserIds.includes(id));
-            }
-
-            return Array.from(new Set([...prev, ...visibleUserIds]));
-        });
-    };
-
-    const handleDeleteSelected = async () => {
-        if (selectedUserIds.length === 0 || isDeleting) {
-            return;
-        }
-
-        if (!canDeleteHrCard) {
-            alert("인사팀장만 인사카드를 삭제할 수 있습니다.");
-            return;
-        }
-
-        const confirmed = window.confirm(
-            `선택한 인사카드 ${selectedUserIds.length}건을 삭제하시겠습니까?`
-        );
-
-        if (!confirmed) {
-            return;
-        }
-
-        setIsDeleting(true);
 
         try {
-            for (const userId of selectedUserIds) {
-                await deleteHrCard.mutateAsync(userId);
+            if (isCreateMode) {
+                await postCertificatesCard.mutateAsync(payload);
+            } else {
+                if (userId === null || userId === undefined) {
+                    setSaveError("수정할 직원 정보가 없습니다.");
+                    return;
+                }
+
+                await putCertificatesCard.mutateAsync({
+                    userId,
+                    payload,
+                });
             }
 
-            setSelectedUserIds([]);
-            alert("선택한 인사카드를 삭제했습니다.");
-        } catch (error) {
-            const message =
-                error instanceof Error
-                    ? error.message
-                    : "인사카드 삭제 중 오류가 발생했습니다.";
+            await queryClient.invalidateQueries({
+                queryKey: ["certificatesCardList"],
+                exact: false,
+            });
 
-            console.error(error);
-            alert(message);
-        } finally {
-            setIsDeleting(false);
+            await queryClient.invalidateQueries({
+                queryKey: ["hrCards"],
+                exact: false,
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["hrCardList"],
+                exact: false,
+            });
+
+            resetModalState();
+            onClose();
+        } catch {
+            setSaveError(
+                isCreateMode
+                    ? "인사 발령을 등록하지 못했습니다."
+                    : "인사 발령을 저장하지 못했습니다."
+            );
         }
     };
 
-    const handleOpenUpdateModal = (userId: number) => {
-        setSelectedDetailUserId(userId);
-    };
-
-    const handleCloseUpdateModal = () => {
-        setSelectedDetailUserId(null);
-    };
+    const submitLabel = isSaving
+        ? isCreateMode
+            ? "등록 중..."
+            : "저장 중..."
+        : isCreateMode
+            ? "발령 등록"
+            : "발령 저장";
 
     return (
-        <div className="hrCardListPage-page">
-            <div className="favorite-Header">
-                <FaStar size={18} color="#C4C4C4"/>
-                <span>인사카드 목록</span>
+        <>
+            <div className="certificatesCardModalScope">
+                <Modal
+                    title={isCreateMode ? "인사 발령 등록" : "인사 발령 수정"}
+                    isOpen={isOpen}
+                    onClose={handleRequestClose}
+                    footer={
+                        <div className="certificatesCardAddModal-buttonRow">
+                            <button
+                                type="submit"
+                                form={formId}
+                                className="certificatesCardAddModal-button certificatesCardAddModal-button--primary"
+                                disabled={isSaving}
+                            >
+                                {submitLabel}
+                            </button>
 
-                <button
-                    type="button"
-                    className="hrCardListPage-top-search-btn"
-                    aria-expanded={isSearchOpen}
-                    onClick={() => setIsSearchOpen((prev) => !prev)}
-                >
-                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
-                </button>
-            </div>
-
-            <div className={`hrCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="hrCardListPage-filter-row">
-                    <div className="hrCardListPage-filter-1">
-                        <FilterChipInput
-                            label="부서"
-                            placeholder="부서명 입력"
-                            draftValue={departmentDraft}
-                            appliedValue={departmentFilter}
-                            onDraftChange={setDepartmentDraft}
-                            onClear={clearDepartmentFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-
-                    <div className="hrCardListPage-filter-2">
-                        <FilterChipInput
-                            label="직급"
-                            placeholder="직급명 입력"
-                            draftValue={gradeDraft}
-                            appliedValue={gradeFilter}
-                            onDraftChange={setGradeDraft}
-                            onClear={clearGradeFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-
-                    <div className="hrCardListPage-filter-3">
-                        <FilterChipInput
-                            label="검색어"
-                            placeholder="이름, 사번, 이메일"
-                            draftValue={keywordDraft}
-                            appliedValue={keywordFilter}
-                            onDraftChange={setKeywordDraft}
-                            onClear={clearKeywordFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-                </div>
-
-                <div className="hrCardListPage-filter-actions">
-                    <button
-                        type="button"
-                        className="hrCardListPage-search-btn"
-                        onClick={applyFilters}
-                    >
-                        검색
-                    </button>
-                </div>
-            </div>
-
-            <div className="hrCardListPage-table-box">
-                <div className="hrCardListPage-table-info">
-                    <span>전체 {filteredItems.length}건</span>
-                </div>
-
-                {isLoading ? (
-                    <div>인사카드 목록을 불러오는 중입니다.</div>
-                ) : isError ? (
-                    <div>인사카드 목록을 불러오지 못했습니다.</div>
-                ) : (
-                    <HrTable
-                        items={paginatedItems}
-                        selectedUserIds={selectedUserIds}
-                        onToggleItem={handleToggleItem}
-                        onToggleAll={handleToggleAll}
-                        onSelectItem={handleOpenUpdateModal}
-                    />
-                )}
-
-                <div className="hrCardListPage-bottom-actions">
-                    {user && (
-                        <button
-                            type="button"
-                            className="hrCardListPage-add-btn"
-                            onClick={() => setIsAddModalOpen(true)}
-                        >
-                            추가
-                        </button>
-                    )}
-
-                    <button
-                        type="button"
-                        className="hrCardListPage-disabled-btn"
-                        disabled={selectedUserIds.length === 0 || isDeleting}
-                        onClick={handleDeleteSelected}
-                    >
-                        {isDeleting ? "삭제 중..." : "삭제"}
-                    </button>
-                </div>
-
-                <div className="hrCardListPage-paging-group">
-                    <div className="hrCardListPage-paging-group-min">
-                        <button
-                            type="button"
-                            className="hrCardListPage-paging-prev-btn"
-                            onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
-                            disabled={resolvedCurrentPage === 1}
-                        >
-                            이전
-                        </button>
-
-                        {pageNumbers.map((pageNumber) => (
                             <button
                                 type="button"
-                                className="hrCardListPage-paging-num-btn"
-                                key={pageNumber}
-                                onClick={() => setCurrentPage(pageNumber)}
-                                disabled={pageNumber === resolvedCurrentPage}
+                                className="certificatesCardAddModal-button certificatesCardAddModal-button--secondary"
+                                onClick={handleRequestClose}
+                                disabled={isSaving}
                             >
-                                {pageNumber}
+                                취소
                             </button>
-                        ))}
+                        </div>
+                    }
+                >
+                    <form
+                        id={formId}
+                        className="certificatesCardAddModal-form"
+                        onSubmit={handleSubmit}
+                    >
+                        <div className="certificatesCardUpdateModal-topFields">
+                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-employeeId"
+                                >
+                                    사번
+                                </label>
 
-                        <button
-                            type="button"
-                            className="hrCardListPage-paging-next-btn"
-                            onClick={() =>
-                                setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
-                            }
-                            disabled={resolvedCurrentPage === totalPages}
-                        >
-                            다음
-                        </button>
-                    </div>
-                </div>
+                                <input
+                                    id="certificates-employeeId"
+                                    name="employeeId"
+                                    value={form.employeeId}
+                                    onChange={handleChange}
+                                    className={readOnlyInputClassName}
+                                    readOnly
+                                />
+                            </div>
+
+                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-userName"
+                                >
+                                    이름
+                                </label>
+
+                                <input
+                                    id="certificates-userName"
+                                    name="userName"
+                                    value={form.userName}
+                                    onChange={handleChange}
+                                    className={readOnlyInputClassName}
+                                    readOnly
+                                />
+                            </div>
+                        </div>
+
+                        <div className="certificatesCardUpdateModal-topFields">
+                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
+                                <label className="certificatesCardAddModal-label">
+                                    원래 부서
+                                </label>
+
+                                <input
+                                    value={originalDepartmentDisplay}
+                                    readOnly
+                                    className={readOnlyInputClassName}
+                                />
+                            </div>
+
+                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
+                                <label className="certificatesCardAddModal-label">
+                                    원래 직급
+                                </label>
+
+                                <input
+                                    value={originalGradeDisplay}
+                                    readOnly
+                                    className={readOnlyInputClassName}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="certificatesCardAddModal-row certificatesCardAddModal-row--optionFields">
+                            <div className="certificatesCardAddModal-column">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-departmentId"
+                                >
+                                    발령 부서
+                                </label>
+
+                                <select
+                                    id="certificates-departmentId"
+                                    name="departmentId"
+                                    value={form.departmentId}
+                                    onChange={handleChange}
+                                    className={`${editableInputClassName} certificatesCardAddModal-select`}
+                                    disabled={isSaving || isLoadingDepartments}
+                                >
+                                    <option value="">부서를 선택하세요</option>
+
+                                    {selectableDepartments.map((department) => (
+                                        <option
+                                            key={department.departmentId}
+                                            value={department.departmentId}
+                                        >
+                                            {department.departmentName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="certificatesCardAddModal-column">
+                                <label className="certificatesCardAddModal-label">
+                                    부서코드
+                                </label>
+
+                                <input
+                                    value={resolvedDepartmentCord}
+                                    readOnly
+                                    className={readOnlyInputClassName}
+                                />
+                            </div>
+
+                            <div className="certificatesCardAddModal-column">
+                                <label
+                                    className="certificatesCardAddModal-label"
+                                    htmlFor="certificates-gradeId"
+                                >
+                                    발령 직급
+                                </label>
+
+                                <select
+                                    id="certificates-gradeId"
+                                    name="gradeId"
+                                    value={form.gradeId}
+                                    onChange={handleChange}
+                                    className={`${editableInputClassName} certificatesCardAddModal-select`}
+                                    disabled={isSaving}
+                                >
+                                    <option value="">직급을 선택하세요</option>
+
+                                    {selectableGrades.map((grade) => (
+                                        <option key={grade.gradeId} value={grade.gradeId}>
+                                            {grade.gradeName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="certificatesCardAddModal-column">
+                                <label className="certificatesCardAddModal-label">
+                                    직급코드
+                                </label>
+
+                                <input
+                                    value={resolvedGradeId}
+                                    readOnly
+                                    className={readOnlyInputClassName}
+                                />
+                            </div>
+                        </div>
+
+                        {hasReferenceInfo && (
+                            <>
+                                <div className="certificatesCardAddModal-row">
+                                    <div className="certificatesCardAddModal-field">
+                                        <label className="certificatesCardAddModal-label">
+                                            이메일
+                                        </label>
+
+                                        <input
+                                            value={form.email}
+                                            readOnly
+                                            className={readOnlyInputClassName}
+                                        />
+                                    </div>
+
+                                    <div className="certificatesCardAddModal-field">
+                                        <label className="certificatesCardAddModal-label">
+                                            연락처
+                                        </label>
+
+                                        <input
+                                            value={form.phone}
+                                            readOnly
+                                            className={readOnlyInputClassName}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="certificatesCardAddModal-row">
+                                    <div className="certificatesCardAddModal-column">
+                                        <label className="certificatesCardAddModal-label">
+                                            주소
+                                        </label>
+
+                                        <input
+                                            value={form.address}
+                                            readOnly
+                                            className={readOnlyInputClassName}
+                                        />
+
+                                        <span className="certificatesCardAddModal-hint">
+                                            사번, 이름, 주소, 연락처, 이메일은 이 화면에서 변경하지 않습니다.
+                                        </span>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {noticeMessage && (
+                            <div className="certificatesCardAddModal-row">
+                                <div className="certificatesCardAddModal-column">
+                                    <label className="certificatesCardAddModal-label">
+                                        안내
+                                    </label>
+
+                                    <div className="certificatesCardAddModal-hint">
+                                        {noticeMessage}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </form>
+                </Modal>
             </div>
 
-            <HrCardAddModal
-                isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
+            <ConfirmModal
+                isOpen={isExitConfirmOpen}
+                message="작성 중인 내용이 있습니다. 닫으시겠습니까?"
+                onConfirm={() => {
+                    resetModalState();
+                    onClose();
+                }}
+                onClose={() => setIsExitConfirmOpen(false)}
             />
-
-            <HrCardUpdateModal
-                isOpen={selectedDetailUserId !== null}
-                userId={selectedDetailUserId}
-                onClose={handleCloseUpdateModal}
-            />
-        </div>
+        </>
     );
 };
 
-export default HrCardListPage;
+export default CertificatesCardUpdateModal;

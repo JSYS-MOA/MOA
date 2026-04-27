@@ -417,19 +417,17 @@ const CertificatesCardUpdateModal = ({
         return messages.join(" ");
     }, [canEdit, departmentError, isLoadingDepartments, isLoadingDetail, loadError, saveError]);
 
-    useEffect(() => {
-        if (!isOpen) {
-            setDepartments([]);
-            setForm(initialForm);
-            setInitialSnapshot(initialForm);
-            setIsLoadingDepartments(false);
-            setIsLoadingDetail(false);
-            setDepartmentError("");
-            setLoadError("");
-            setSaveError("");
-            setIsExitConfirmOpen(false);
-        }
-    }, [isOpen]);
+    const resetModalState = () => {
+        setDepartments([]);
+        setForm(initialForm);
+        setInitialSnapshot(initialForm);
+        setIsLoadingDepartments(false);
+        setIsLoadingDetail(false);
+        setDepartmentError("");
+        setLoadError("");
+        setSaveError("");
+        setIsExitConfirmOpen(false);
+    };
 
     useEffect(() => {
         if (!isOpen) {
@@ -438,7 +436,9 @@ const CertificatesCardUpdateModal = ({
 
         let isCancelled = false;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingDepartments(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDepartmentError("");
 
         axios
@@ -481,6 +481,7 @@ const CertificatesCardUpdateModal = ({
         }
 
         if (isCreateMode) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
             setInitialSnapshot(initialForm);
             setLoadError("");
@@ -530,6 +531,7 @@ const CertificatesCardUpdateModal = ({
         const nextDepartmentName = selectedDepartment.departmentName;
         const nextDepartmentCord = getDepartmentCord(selectedDepartment);
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (
                 prev.departmentName === nextDepartmentName &&
@@ -550,7 +552,7 @@ const CertificatesCardUpdateModal = ({
         if (!selectedGrade) {
             return;
         }
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (prev.gradeName === selectedGrade.gradeName) {
                 return prev;
@@ -608,7 +610,7 @@ const CertificatesCardUpdateModal = ({
             setIsExitConfirmOpen(true);
             return;
         }
-
+        resetModalState();
         onClose();
     };
 
@@ -665,6 +667,7 @@ const CertificatesCardUpdateModal = ({
             }
 
             await queryClient.invalidateQueries({ queryKey: ["certificatesCardList"] });
+            resetModalState();
             onClose();
         } catch {
             setSaveError(
@@ -881,11 +884,13 @@ const CertificatesCardUpdateModal = ({
                     </form>
                 </Modal>
             </div>
-
             <ConfirmModal
                 isOpen={isExitConfirmOpen}
                 message="작성 중인 내용이 있습니다. 닫으시겠습니까?"
-                onConfirm={onClose}
+                onConfirm={() => {
+                    resetModalState();
+                    onClose();
+                }}
                 onClose={() => setIsExitConfirmOpen(false)}
             />
         </>

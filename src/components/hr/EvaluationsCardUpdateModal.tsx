@@ -228,30 +228,6 @@ const buildComparableFormState = (form: FormState): ComparableFormState => ({
 const areSameForm = (left: ComparableFormState, right: ComparableFormState) =>
     JSON.stringify(left) === JSON.stringify(right);
 
-const formatDepartmentDisplay = (departmentName: string, departmentCord: string) => {
-    if (!departmentName) {
-        return departmentCord;
-    }
-
-    if (!departmentCord) {
-        return departmentName;
-    }
-
-    return `${departmentName} (${departmentCord})`;
-};
-
-const formatGradeDisplay = (gradeName: string, gradeId: string) => {
-    if (!gradeName) {
-        return gradeId;
-    }
-
-    if (!gradeId) {
-        return gradeName;
-    }
-
-    return `${gradeName} (${gradeId})`;
-};
-
 const buildPayload = ({
     employeeId,
     userName,
@@ -353,44 +329,6 @@ const EvaluationsCardUpdateModal = ({
     const resolvedGradeName = matchedGrade?.gradeName ?? getCanonicalGradeName(form.gradeName);
     const resolvedGradeId = matchedGrade ? String(matchedGrade.gradeId) : form.gradeId.trim();
 
-    const originalDepartmentDisplay = useMemo(() => {
-        if (isCreateMode) {
-            return "";
-        }
-
-        const originalDepartment =
-            findDepartmentByName(departments, initialSnapshot.departmentName) ??
-            findDepartmentById(departments, initialSnapshot.departmentId);
-
-        return formatDepartmentDisplay(
-            originalDepartment?.departmentName ?? initialSnapshot.departmentName,
-            originalDepartment?.departmentCord?.trim() ||
-                getDepartmentCord(originalDepartment) ||
-                initialSnapshot.departmentCord
-        );
-    }, [
-        departments,
-        initialSnapshot.departmentCord,
-        initialSnapshot.departmentId,
-        initialSnapshot.departmentName,
-        isCreateMode,
-    ]);
-
-    const originalGradeDisplay = useMemo(() => {
-        if (isCreateMode) {
-            return "";
-        }
-
-        const originalGrade =
-            findGradeByName(gradeOptions, initialSnapshot.gradeName) ??
-            findGradeById(gradeOptions, initialSnapshot.gradeId);
-
-        return formatGradeDisplay(
-            originalGrade?.gradeName ?? getCanonicalGradeName(initialSnapshot.gradeName),
-            originalGrade ? String(originalGrade.gradeId) : initialSnapshot.gradeId
-        );
-    }, [gradeOptions, initialSnapshot.gradeId, initialSnapshot.gradeName, isCreateMode]);
-
     const hasReferenceInfo = Boolean(
         form.email || form.phone || form.address || form.performance
     );
@@ -435,7 +373,7 @@ const EvaluationsCardUpdateModal = ({
 
     useEffect(() => {
         if (!isOpen) {
-            setDepartments([]);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
             setInitialSnapshot(initialForm);
             setIsLoadingDepartments(false);
@@ -454,7 +392,9 @@ const EvaluationsCardUpdateModal = ({
 
         let isCancelled = false;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingDepartments(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDepartmentError("");
 
         axios
@@ -497,15 +437,20 @@ const EvaluationsCardUpdateModal = ({
         }
 
         if (isCreateMode) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setInitialSnapshot(initialForm);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLoadError("");
             return;
         }
 
         let isCancelled = false;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingDetail(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoadError("");
 
         fetchEvaluationsCardInfo(userId)
@@ -537,49 +482,6 @@ const EvaluationsCardUpdateModal = ({
             isCancelled = true;
         };
     }, [fetchEvaluationsCardInfo, isCreateMode, isOpen, userId]);
-
-    useEffect(() => {
-        if (!matchedDepartment) {
-            return;
-        }
-
-        const nextDepartmentId = String(matchedDepartment.departmentId);
-        const nextDepartmentCord = getDepartmentCord(matchedDepartment);
-
-        setForm((prev) => {
-            if (
-                prev.departmentId === nextDepartmentId &&
-                prev.departmentCord === nextDepartmentCord
-            ) {
-                return prev;
-            }
-
-            return {
-                ...prev,
-                departmentId: nextDepartmentId,
-                departmentCord: nextDepartmentCord,
-            };
-        });
-    }, [matchedDepartment]);
-
-    useEffect(() => {
-        if (!matchedGrade) {
-            return;
-        }
-
-        const nextGradeId = String(matchedGrade.gradeId);
-
-        setForm((prev) => {
-            if (prev.gradeId === nextGradeId) {
-                return prev;
-            }
-
-            return {
-                ...prev,
-                gradeId: nextGradeId,
-            };
-        });
-    }, [matchedGrade]);
 
     if (!isOpen) {
         return null;

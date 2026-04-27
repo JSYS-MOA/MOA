@@ -1,4 +1,7 @@
 import "../../assets/styles/hr/leaverCardList.css";
+import type {HrTableProps} from "../../types/HrTableProps.ts";
+
+type LeaverTableProps = HrTableProps;
 
 type LeaverTableSelectionProps = {
     items: LeaverTableProps[];

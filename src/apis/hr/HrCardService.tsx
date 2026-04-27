@@ -1,49 +1,99 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const Api_BASE = "http://localhost/api/hr/cards";
+const API_BASE = "http://localhost/api/hr/cards";
 
-type HrCardMutationPayload = {
-    userName?: string;
-    employeeId?: string | number;
-    password?: string;
-    phone?: string;
-    email?: string;
-    address?: string;
-    startDate?: string;
+export type HrCardRecord = {
+    userId?: number;
+    user_id?: number;
+
+    userName?: string | null;
+    user_name?: string | null;
+
+    employeeId?: string | number | null;
+    employee_id?: string | number | null;
+
+    password?: string | null;
+
+    phone?: string | null;
+    email?: string | null;
+    address?: string | null;
+
+    startDate?: string | null;
+    start_date?: string | null;
+
     quitDate?: string | null;
+    quit_date?: string | null;
+
+    roleId?: number | null;
+    role_id?: number | null;
+
+    departmentId?: number | null;
+    department_id?: number | null;
+    departmentName?: string | null;
+    department_name?: string | null;
+
+    gradeId?: number | null;
+    grade_id?: number | null;
+    gradeName?: string | null;
+    grade_name?: string | null;
+
+    birth?: string | null;
+    performance?: string | null;
+    bank?: string | null;
+
+    accountNum?: string | null;
+    account_num?: string | null;
+
+    accountOwner?: string | null;
+    account_owner?: string | null;
+};
+
+export type HrCardMutationPayload = {
+    userName?: string | null;
+    employeeId?: string | null;
+    password?: string | null;
+
+    phone?: string | null;
+    email?: string | null;
+    address?: string | null;
+
+    startDate?: string | null;
+    quitDate?: string | null;
+
     roleId?: number;
     departmentId?: number;
-    departmentName?: string;
+    departmentName?: string | null;
+
     gradeId?: number;
-    gradeName?: string;
-    birth?: string;
-    performance?: string;
-    bank?: string;
-    accountNum?: string;
-    accountOwner?: string;
+    gradeName?: string | null;
+
+    birth?: string | null;
+    performance?: string | null;
+    bank?: string | null;
+    accountNum?: string | null;
+    accountOwner?: string | null;
 };
 
 const toUserEntityPayload = (payload: HrCardMutationPayload) => {
-    const {
-        departmentName,
-        gradeName,
-        accountOwner,
-        ...userEntityPayload
-    } = payload;
+    const userEntityPayload: Record<string, unknown> = { ...payload };
+
+    delete userEntityPayload.departmentName;
+    delete userEntityPayload.gradeName;
+    delete userEntityPayload.accountOwner;
 
     return userEntityPayload;
 };
 
 // 인사카드 목록 조회
 export function useGetHrCardList(search?: string, page?: number, size?: number) {
-    return useQuery({
+    return useQuery<HrCardRecord[]>({
         queryKey: ["hrCardList", search || "", page, size],
         queryFn: async () => {
-            const { data } = await axios.get(`${Api_BASE}`, {
+            const { data } = await axios.get<HrCardRecord[]>(API_BASE, {
                 params: {
-                    page: page,
-                    size: size,
+                    page,
+                    size,
                     search: search || "",
                 },
                 withCredentials: true,
@@ -58,9 +108,12 @@ export function useGetHrCardList(search?: string, page?: number, size?: number) 
 export function useGetHrCardInfo() {
     return useMutation({
         mutationFn: async (userId: number) => {
-            const { data } = await axios.get(`${Api_BASE}/${userId}`, {
-                withCredentials: true,
-            });
+            const { data } = await axios.get<HrCardRecord>(
+                `${API_BASE}/${userId}`,
+                {
+                    withCredentials: true,
+                }
+            );
 
             return data;
         },
@@ -72,10 +125,10 @@ export function usePostHrCard() {
     return useMutation({
         mutationFn: async (payload: HrCardMutationPayload) => {
             const { data } = await axios.post(
-                `${Api_BASE}/add`,
+                `${API_BASE}/add`,
                 toUserEntityPayload(payload),
                 {
-                withCredentials: true,
+                    withCredentials: true,
                 }
             );
 
@@ -94,9 +147,13 @@ export function usePutHrCard() {
             userId: number;
             payload: HrCardMutationPayload;
         }) => {
-            const { data } = await axios.put(`${Api_BASE}/${userId}`, toUserEntityPayload(payload), {
-                withCredentials: true,
-            });
+            const { data } = await axios.put(
+                `${API_BASE}/${userId}`,
+                toUserEntityPayload(payload),
+                {
+                    withCredentials: true,
+                }
+            );
 
             return data;
         },
@@ -107,7 +164,7 @@ export function usePutHrCard() {
 export function useDeleteHrCard() {
     return useMutation({
         mutationFn: async (userId: number) => {
-            const { data } = await axios.delete(`${Api_BASE}/${userId}`, {
+            const { data } = await axios.delete(`${API_BASE}/${userId}`, {
                 withCredentials: true,
             });
 

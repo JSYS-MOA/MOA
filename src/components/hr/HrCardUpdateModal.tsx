@@ -5,6 +5,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import {
     useGetHrCardInfo,
     usePutHrCard as usePutHrCardHook,
+    type HrCardMutationPayload,
 } from "../../apis/hr/HrCardService";
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
@@ -12,6 +13,7 @@ import { useAuthStore } from "../../stores/useAuthStore";
 import "../../assets/styles/hr/hrCardUpdate.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
+import type { HrCard } from "../../types/HrCard";
 
 type Props = {
     isOpen: boolean;
@@ -21,10 +23,6 @@ type Props = {
 };
 
 type HrCardWithAccountOwner = HrCard & {
-    accountOwner?: string | null;
-};
-
-type HrCardUpdateRequest = Partial<HrCard> & {
     accountOwner?: string | null;
 };
 
@@ -94,6 +92,18 @@ type AddressSearchResult = {
     bname: string;
     buildingName: string;
 };
+
+declare global {
+    interface Window {
+        daum?: {
+            Postcode: new (options: {
+                oncomplete: (data: AddressSearchResult) => void;
+            }) => {
+                open: () => void;
+            };
+        };
+    }
+}
 
 type DateInputWithPickerProps = {
     value: string;
@@ -425,7 +435,7 @@ const mapCardToForm = (card: HrCardWithAccountOwner): HrCardFormState => {
     const resolvedGradeId = resolveHrGradeId(card.gradeId);
 
     return ({
-    employeeId: card.employeeId ?? "",
+    employeeId: String(card.employeeId ?? card.employee_id ?? ""),
     userName: card.userName ?? "",
     password: "",
     birth: card.birth ?? "",
@@ -656,6 +666,7 @@ const HrCardUpdateModal = ({
 
     useEffect(() => {
         if (!isOpen || !userId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             resetHrCardInfo();
             return;
         }
@@ -664,17 +675,10 @@ const HrCardUpdateModal = ({
     }, [isOpen, userId, loadHrCardInfo, resetHrCardInfo]);
 
     useEffect(() => {
-        if (!isOpen) {
-            setIsExitConfirmOpen(false);
-            setForm(initialForm);
-        }
-    }, [isOpen]);
-
-    useEffect(() => {
         if (!isOpen || !cardData) {
             return;
         }
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm(mapCardToForm(cardData as HrCardWithAccountOwner));
     }, [cardData, isOpen]);
 
@@ -685,7 +689,7 @@ const HrCardUpdateModal = ({
 
         const nextDepartmentName = selectedDepartment.departmentName;
         const nextDepartmentCord = getDepartmentCord(selectedDepartment);
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (
                 prev.departmentName === nextDepartmentName &&
@@ -705,6 +709,7 @@ const HrCardUpdateModal = ({
     useEffect(() => {
         const nextRoleId = calculatedRole ? String(calculatedRole.roleId) : "";
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (prev.roleId === nextRoleId) {
                 return prev;
@@ -721,7 +726,7 @@ const HrCardUpdateModal = ({
         if (!isOpen) {
             return;
         }
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             let nextForm = prev;
             let changed = false;
@@ -901,7 +906,7 @@ const HrCardUpdateModal = ({
                 quitDate: form.quitDate.trim(),
             });
 
-            const request: HrCardUpdateRequest = {
+            const request: HrCardMutationPayload  = {
                 employeeId: form.employeeId.trim(),
                 userName: form.userName.trim(),
                 password: form.password.trim() || undefined,

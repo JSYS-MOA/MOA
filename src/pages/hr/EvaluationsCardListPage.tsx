@@ -17,7 +17,7 @@ import { FaStar } from "react-icons/fa";
 const ITEMS_PER_PAGE = 10;
 const MANAGER_GRADE_ID = 4;
 
-type EvaluationsModalTarget = number;
+type EvaluationsModalTarget = number | "create";
 
 type FilterChipInputProps = {
     label: string;
@@ -103,7 +103,6 @@ const mapCardToRow = (card: EvaluationsCardRecord): EvaluationsTableProps | null
     const departmentId = getNumberValue(record, "departmentId", "department_id") ?? 0;
     const rawGradeId = getNumberValue(record, "gradeId", "grade_id") ?? 0;
     const gradeId = resolveEvaluationsGradeId(rawGradeId) ?? rawGradeId;
-
     const departmentName =
         getStringValue(record, "departmentName", "department_name") ||
         (departmentId > 0 ? `부서 ${departmentId}` : "");
@@ -136,14 +135,14 @@ const isVisibleEvaluationsRow = (item: EvaluationsTableProps) => {
 };
 
 const FilterChipInput = ({
-                             label,
-                             placeholder,
-                             draftValue,
-                             appliedValue,
-                             onDraftChange,
-                             onClear,
-                             onSubmit,
-                         }: FilterChipInputProps) => {
+    label,
+    placeholder,
+    draftValue,
+    appliedValue,
+    onDraftChange,
+    onClear,
+    onSubmit,
+}: FilterChipInputProps) => {
     const hasAppliedValue = appliedValue.trim() !== "";
     const hasAnyValue = hasAppliedValue || draftValue.trim() !== "";
 
@@ -165,7 +164,6 @@ const FilterChipInput = ({
     return (
         <div className="evaluationsCardListPage-filter-group">
             <label>{label}</label>
-
             <div className={`evaluationsCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
                 <span className="evaluationsCardListPage-chip-input-icon" aria-hidden="true" />
 
@@ -413,7 +411,7 @@ const EvaluationsCardListPage = () => {
 
             <EvaluationsCardUpdateModal
                 isOpen={modalTarget !== null}
-                userId={modalTarget}
+                userId={typeof modalTarget === "number" ? modalTarget : null}
                 onClose={handleCloseUpdateModal}
             />
         </div>

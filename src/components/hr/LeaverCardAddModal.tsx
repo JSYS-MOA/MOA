@@ -2,10 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import type { ChangeEvent, FormEvent } from "react";
+import type { HrCard } from "../../types/HrCard";
 import { useGetHrCardList } from "../../apis/hr/HrCardService";
 import { usePostLeaverCard } from "../../apis/hr/LeaverCardService";
 import Modal from "../Modal";
-import "../../assets/styles/hr/leaverAddCardModal.css";
+import "../../assets/styles/hr/LeaverAddCardModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById } from "../../constants/hrGradeOptions";
 
@@ -178,6 +179,7 @@ const DateSelectInput = ({
     const dateInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setParts(getDateParts(value));
     }, [value]);
 
@@ -367,7 +369,9 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
         queryFn: async () => buildGradeOptions(),
     });
 
-    const { data: hrCardOptions = [] } = useGetHrCardList();
+    const { data: hrCardOptions = [] } = useGetHrCardList() as {
+        data?: HrCard[];
+    };
 
     const searchableDepartments = useMemo(() => {
         return departmentOptions
@@ -391,7 +395,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     }, [gradeOptions]);
 
     const activeEmployees = useMemo(() => {
-        return hrCardOptions.filter((employee) => !employee.quitDate?.trim());
+        return hrCardOptions.filter((employee: HrCard) => !employee.quitDate?.trim());
     }, [hrCardOptions]);
 
     const selectedDepartment = useMemo(
@@ -407,6 +411,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     const resolvedDepartmentCord = selectedDepartment
         ? getDepartmentCord(selectedDepartment)
         : "";
+
     const gradeIdValue = selectedGrade ? String(selectedGrade.gradeId) : "";
 
     const matchingEmployees = useMemo(() => {
@@ -416,12 +421,14 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
 
         return activeEmployees
             .filter(
-                (employee) =>
+                (employee: HrCard) =>
                     String(employee.departmentId) === form.departmentId &&
                     normalizeGradeText(getResolvedGradeName(employee.gradeName, employee.gradeId)) ===
                     normalizeGradeText(form.gradeName)
             )
-            .sort((left, right) => left.userName.localeCompare(right.userName, "ko"));
+            .sort((left: HrCard, right: HrCard) =>
+                String(left.userName ?? "").localeCompare(String(right.userName ?? ""), "ko")
+            );
     }, [activeEmployees, form.departmentId, form.gradeName]);
 
     const selectedEmployee = useMemo(() => {
@@ -430,8 +437,9 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
         }
 
         return (
-            matchingEmployees.find((employee) => employee.userId === selectedEmployeeUserId) ??
-            null
+            matchingEmployees.find(
+                (employee: HrCard) => employee.userId === selectedEmployeeUserId
+            ) ?? null
         );
     }, [matchingEmployees, selectedEmployeeUserId]);
 
@@ -450,12 +458,16 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     useEffect(() => {
         if (
             selectedEmployeeUserId === null ||
-            matchingEmployees.some((employee) => employee.userId === selectedEmployeeUserId)
+            matchingEmployees.some(
+                (employee: HrCard) => employee.userId === selectedEmployeeUserId
+            )
         ) {
             return;
         }
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedEmployeeUserId(null);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => ({
             ...prev,
             employeeId: "",
@@ -513,10 +525,14 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     };
 
     const handleSelectEmployee = (employee: HrCard) => {
+        if (employee.userId === undefined) {
+            return;
+        }
+
         setSelectedEmployeeUserId(employee.userId);
         setForm((prev) => ({
             ...prev,
-            employeeId: employee.employeeId ?? "",
+            employeeId: String(employee.employeeId ?? ""),
             userName: employee.userName ?? "",
             startDate: employee.startDate ?? "",
             quitDate: "",
@@ -532,6 +548,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
             if (selectedEmployeeUserId === null) {
                 throw new Error("퇴사 처리할 직원을 선택해 주세요.");
             }
+
             if (!form.quitDate.trim()) {
                 throw new Error("퇴사일을 입력해 주세요.");
             }
@@ -577,12 +594,12 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     return (
         <div className="leaverCardModalScope">
             <Modal
-            title="퇴사자 카드 등록"
-            isOpen={isOpen}
-            onClose={handleClose}
-            footer={footer}
-        >
-            <form id={formId} className="leaverCardAddModal-form" onSubmit={handleSubmit}>
+                title="퇴사자 카드 등록"
+                isOpen={isOpen}
+                onClose={handleClose}
+                footer={footer}
+            >
+                <form id={formId} className="leaverCardAddModal-form" onSubmit={handleSubmit}>
                     <div className="leaverCardAddModal-section">
                         <div className="leaverCardAddModal-row leaverCardAddModal-row--optionFields">
                             <div className="leaverCardAddModal-field">
@@ -670,7 +687,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
 
                             {matchingEmployees.length > 0 ? (
                                 <div className="leaverCardAddModal-employeeList">
-                                    {matchingEmployees.map((employee) => {
+                                    {matchingEmployees.map((employee: HrCard) => {
                                         const isSelected =
                                             employee.userId === selectedEmployeeUserId;
 
@@ -739,7 +756,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                             </div>
                         </div>
                     </div>
-            </form>
+                </form>
             </Modal>
         </div>
     );

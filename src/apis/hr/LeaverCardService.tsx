@@ -4,7 +4,7 @@ import axios from "axios";
 const LEAVER_API_BASE = "http://localhost/api/hr/leavers";
 const HR_CARD_API_BASE = "http://localhost/api/hr/cards";
 
-type LeaverCardRecord = {
+export type LeaverCardRecord = {
     userId: number;
     userName?: string | null;
     employeeId?: string | null;
@@ -29,7 +29,7 @@ type LeaverCardRecord = {
     updatedAt?: string | null;
 };
 
-type LeaverCardUpdateRequest = Partial<LeaverCardRecord> & {
+export type LeaverCardUpdateRequest = Partial<LeaverCardRecord> & {
     accountOwner?: string | null;
 };
 
@@ -51,15 +51,14 @@ const normalizeCardList = (data: unknown) => {
 };
 
 const toUserEntityPayload = (payload: LeaverCardUpdateRequest) => {
-    const {
-        userId,
-        departmentName,
-        gradeName,
-        accountOwner,
-        createdAt,
-        updatedAt,
-        ...userEntityPayload
-    } = payload;
+    const userEntityPayload = { ...payload };
+
+    delete userEntityPayload.userId;
+    delete userEntityPayload.departmentName;
+    delete userEntityPayload.gradeName;
+    delete userEntityPayload.accountOwner;
+    delete userEntityPayload.createdAt;
+    delete userEntityPayload.updatedAt;
 
     return userEntityPayload;
 };
@@ -183,9 +182,9 @@ export function usePutLeaverCard() {
 
     return useMutation({
         mutationFn: async ({
-            userId,
-            payload,
-        }: {
+                               userId,
+                               payload,
+                           }: {
             userId: number;
             payload: LeaverCardUpdateRequest;
         }) => {
@@ -247,9 +246,19 @@ export function useLeaverCardUpdate() {
         mutate: (
             variables: { userId: number; request: LeaverCardUpdateRequest },
             options?: Parameters<typeof mutation.mutate>[1]
-        ) => mutation.mutate({ userId: variables.userId, payload: variables.request }, options),
-        mutateAsync: (variables: { userId: number; request: LeaverCardUpdateRequest }) =>
-            mutation.mutateAsync({ userId: variables.userId, payload: variables.request }),
+        ) =>
+            mutation.mutate(
+                { userId: variables.userId, payload: variables.request },
+                options
+            ),
+        mutateAsync: (variables: {
+            userId: number;
+            request: LeaverCardUpdateRequest;
+        }) =>
+            mutation.mutateAsync({
+                userId: variables.userId,
+                payload: variables.request,
+            }),
     };
 }
 

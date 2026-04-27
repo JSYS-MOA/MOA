@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { ChangeEvent, FormEvent } from "react";
-import {usePostHrCard} from "../../apis/hr/HrCardService";
+import {
+    usePostHrCard,
+    type HrCardMutationPayload,
+} from "../../apis/hr/HrCardService";
 import Modal from "../Modal";
 import "../../assets/styles/hr/hrCardUpdate.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
@@ -325,16 +328,6 @@ const getDepartmentCord = (department?: Department) => {
     return DEPARTMENT_CODE_BY_ID[department.departmentId] ?? "";
 };
 
-const findGradeByName = (grades: Grade[], value: string) => {
-    const normalizedValue = normalizeGradeText(value);
-
-    if (!normalizedValue) {
-        return undefined;
-    }
-
-    return grades.find((grade) => normalizeGradeText(grade.gradeName) === normalizedValue);
-};
-
 const findGradeById = (grades: Grade[], value: string) => {
     const normalizedValue = value.trim();
 
@@ -456,6 +449,7 @@ const DateSelectInput = ({
     const dateInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setParts(parsedValue);
     }, [parsedValue]);
 
@@ -613,6 +607,7 @@ const DateSelectInput = ({
 const HrCardAddModal = ({ isOpen, onClose }: Props) => {
     const [form, setForm] = useState<HrCardFormState>(initialForm);
     const addHrCard = usePostHrCard();
+    const queryClient = useQueryClient();
     const formId = "hr-card-add-form";
 
     const { data: departmentOptions = [] } = useQuery<Department[]>({
@@ -671,11 +666,6 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
         return getRoleOption(form.departmentId, resolvedDepartmentName, form.gradeName);
     }, [form.departmentId, resolvedDepartmentName, form.gradeName]);
 
-    useEffect(() => {
-        if (!isOpen) {
-            setForm(initialForm);
-        }
-    }, [isOpen]);
 
 
 
@@ -732,7 +722,7 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                 startDate: form.startDate.trim(),
             });
 
-            const payload: Partial<HrCard> = {
+            const payload: HrCardMutationPayload = {
                 employeeId: form.employeeId.trim(),
                 userName: form.userName.trim(),
                 password: form.password.trim(),
@@ -755,6 +745,12 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
             console.log("등록 payload:", payload);
 
             await addHrCard.mutateAsync(payload);
+
+            await queryClient.invalidateQueries({
+                queryKey: ["hrCardList"],
+            });
+
+            setForm(initialForm);
             onClose();
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -826,7 +822,10 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
             <button
                 type="button"
                 className="hrCardAddModal-button hrCardAddModal-button--secondary"
-                onClick={onClose}
+                onClick={() => {
+                    setForm(initialForm);
+                    onClose();
+                }}
             >
                 취소
             </button>

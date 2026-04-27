@@ -5,13 +5,16 @@ import type { ChangeEvent, FormEvent } from "react";
 import {
     useLeaverCardInfo,
     useLeaverCardUpdate,
+    type LeaverCardUpdateRequest,
 } from "../../apis/hr/LeaverCardService";
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
 import { useAuthStore } from "../../stores/useAuthStore";
-import "../../assets/styles/hr/leaverAddCardModal.css";
+import "../../assets/styles/hr/LeaverAddCardModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
+import type {HrCard} from "../../types/HrCard.ts";
+
 
 type Props = {
     isOpen: boolean;
@@ -20,11 +23,7 @@ type Props = {
     restrictEditToLeaverLead?: boolean;
 };
 
-type LeaverCardWithAccountOwner = LeaverCard & {
-    accountOwner?: string | null;
-};
-
-type LeaverCardUpdateRequest = Partial<LeaverCard> & {
+type LeaverCardWithAccountOwner = HrCard & {
     accountOwner?: string | null;
 };
 
@@ -425,7 +424,7 @@ const mapCardToForm = (card: LeaverCardWithAccountOwner): LeaverCardFormState =>
     const resolvedGradeId = resolveHrGradeId(card.gradeId);
 
     return ({
-    employeeId: card.employeeId ?? "",
+    employeeId: String(card.employeeId ?? ""),
     userName: card.userName ?? "",
     password: "",
     birth: card.birth ?? "",
@@ -649,7 +648,9 @@ const LeaverCardUpdateModal = ({
 
     useEffect(() => {
         if (!isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsExitConfirmOpen(false);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
         }
     }, [isOpen]);
@@ -658,7 +659,7 @@ const LeaverCardUpdateModal = ({
         if (!isOpen || !cardData) {
             return;
         }
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm(mapCardToForm(cardData as LeaverCardWithAccountOwner));
     }, [cardData, isOpen]);
 
@@ -670,6 +671,7 @@ const LeaverCardUpdateModal = ({
         const nextDepartmentName = selectedDepartment.departmentName;
         const nextDepartmentCord = getDepartmentCord(selectedDepartment);
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (
                 prev.departmentName === nextDepartmentName &&
@@ -689,6 +691,7 @@ const LeaverCardUpdateModal = ({
     useEffect(() => {
         const nextRoleId = calculatedRole ? String(calculatedRole.roleId) : "";
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             if (prev.roleId === nextRoleId) {
                 return prev;
@@ -706,6 +709,7 @@ const LeaverCardUpdateModal = ({
             return;
         }
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => {
             let nextForm = prev;
             let changed = false;

@@ -1,7 +1,10 @@
 import "../../assets/styles/hr/evaluationsCardList.css";
+import type {HrTableProps} from "../../types/HrTableProps.ts";
+
+type EvaluationsTableProps = HrTableProps;
 
 type EvaluationsTableViewProps = {
-    items: EvaluationsTableProps[];
+    items: HrTableProps[];
     onSelectItem: (userId: number) => void;
 };
 

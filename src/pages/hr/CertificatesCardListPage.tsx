@@ -17,7 +17,7 @@ import { FaStar } from "react-icons/fa";
 const ITEMS_PER_PAGE = 10;
 const MANAGER_GRADE_ID = 4;
 
-type CertificatesModalTarget = number | "create";
+type CertificatesModalTarget = number;
 
 type FilterChipInputProps = {
     label: string;

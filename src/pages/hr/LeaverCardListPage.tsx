@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { FaStar } from "react-icons/fa";
-import { useGetHrCardList } from "../../apis/hr/HrCardService";
 import {
     useDeleteLeaverCard,
     useGetLeaverCardList,
+    type LeaverCardRecord,
 } from "../../apis/hr/LeaverCardService";
 import "../../assets/styles/hr/leaverCardList.css";
 import LeaverCardAddModal from "../../components/hr/LeaverCardAddModal";
@@ -12,7 +12,7 @@ import LeaverCardUpdateModal from "../../components/hr/LeaverCardUpdateModal";
 import LeaverTable from "../../components/hr/LeaverTable";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
 import { useAuthStore } from "../../stores/useAuthStore";
-import type { LeaverTableProps } from "../../types/LeaverTableProps";
+import type { HrTableProps } from "../../types/HrTableProps";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -60,20 +60,20 @@ const getDepartmentName = (departmentName?: string | null, departmentId?: number
     return departmentId ? `부서 ${departmentId}` : "";
 };
 
-const mapCardToRow = (card: LeaverCard): LeaverTableProps => {
-    const gradeId = resolveHrGradeId(card.gradeId) ?? card.gradeId;
+const mapCardToRow = (card: LeaverCardRecord): HrTableProps => {
+    const gradeId = resolveHrGradeId(card.gradeId ?? undefined) ?? card.gradeId ?? 0;
 
     return {
         userId: card.userId,
-        userName: card.userName,
-        employeeId: card.employeeId,
+        userName: card.userName ?? "",
+        employeeId: String(card.employeeId ?? ""),
         phone: card.phone ?? "",
         email: card.email ?? "",
         address: card.address ?? "",
         startDate: parseDate(card.startDate) ?? new Date(0),
         quitDate: parseDate(card.quitDate),
-        departmentId: card.departmentId,
-        departmentName: getDepartmentName(card.departmentName, card.departmentId),
+        departmentId: card.departmentId ?? 0,
+        departmentName: getDepartmentName(card.departmentName, card.departmentId ?? undefined),
         gradeId,
         gradeName: getGradeName(card.gradeName, gradeId),
         birth: parseDate(card.birth),
