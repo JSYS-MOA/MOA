@@ -39,18 +39,18 @@ export async function getMembersApi() {
 }
 
 //캘린더 등록
-export async function saveCalendarApi(request: object) {
+export async function saveCalendarApi(formData: FormData) {
     const {data} = await axios.post(
-        `${API}/my/calendars`, request,
+        `${API}/my/calendars`, formData,
         {withCredentials: true}
     );
     return data;
 }
 
 // 캘린더 수정
-export async function updateCalendarApi(calendarId: number, request: object) {
+export async function updateCalendarApi(calendarId: number, formData: FormData) {
     const {data} = await axios.put(
-        `${API}/my/calendars/${calendarId}`, request,
+        `${API}/my/calendars/${calendarId}`, formData,
         {withCredentials: true}
     );
     return data;

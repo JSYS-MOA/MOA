@@ -13,6 +13,8 @@ export interface CalendarEvent {
     color?: string;
     dotColor?: string;
     writerName: string | null;
+    sharedUserIds: number[];
+    departmentName: string;
 }
 
 export interface CalendarCategory {
@@ -23,4 +25,5 @@ export interface CalendarCategory {
 export interface CalendarMember {
     userId: number;
     userName: string;
+    departmentName: string
 }

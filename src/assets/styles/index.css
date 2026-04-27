@@ -95,7 +95,6 @@
   font-size: 16px;
 }
 
-
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -157,6 +156,9 @@ input{
   margin: 0; padding: 0;
   color: var(--text-secondary);
   font-weight: 300 !important;
+}
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
 }
 input::placeholder{color: var(--text-secondary-30)}
 input:focus,select:focus {outline: 1px solid rgba(94,92,119,0.3);}
@@ -253,7 +255,7 @@ button {
   height: auto;
   min-height: 40px;
   font-size: var(--font-xs);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   align-items: center;
 }
 .modal-Row-Group{
@@ -318,7 +320,7 @@ button {
   width: 100%;
   cursor: pointer;
   background: var(--bg-file-input);
-  height: 24px;
+  height: 26px;
 }
 .file-Input-wrapper span{ font-size: 18px; color: var(--text-secondary-30)}
 .file-Input-wrapper input{ display: none;}
@@ -357,4 +359,30 @@ button {
   font-size: 17px;
   color: var(--text-accent);
   font-weight: 700;
+}
+
+
+/* 모달 표 */
+.base-Table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-xs);
+}
+
+.base-Table thead tr {
+  background: var(--color-gray-50);
+}
+
+.base-Table th {
+  padding: 8px 12px;
+  color: var(--color-primary);
+  font-weight: 500;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.base-Table td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
 }

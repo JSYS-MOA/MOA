@@ -1,13 +1,21 @@
 import Modal from "../../components/Modal.tsx";
 import {Editor} from "@toast-ui/react-editor";
 import ConfirmModal from "../../components/ConfirmModal.tsx";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import DatePicker from "react-datepicker";
 import {ko} from "date-fns/locale";
 import {MdCalendarMonth} from "react-icons/md";
-import {getCategoriesApi, saveCalendarApi} from "../../apis/CalendarService.tsx";
+import {
+    getCalendarApi,
+    getCategoriesApi,
+    getMembersApi,
+    saveCalendarApi,
+    updateCalendarApi,
+} from "../../apis/CalendarService.tsx";
 import {useQuery} from "@tanstack/react-query";
-import type {CalendarCategory} from "../../types/calendar.ts";
+import type {CalendarCategory, CalendarEvent, CalendarMember} from "../../types/calendar.ts";
+import TagInput from "../../components/input/TagInput.tsx";
+import CalendarMemberModal from "./CalendarMemberModal.tsx";
 
 interface CalendarWriteModalProps {
     isOpen: boolean;
@@ -53,6 +61,7 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
         sharedUserIds: [],
         content: "",
     });
+    const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([new Date(), new Date()]);
     const [startDate, endDate] = dateRange;
@@ -67,6 +76,64 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
         queryKey: ["calendarCategories"],
         queryFn: getCategoriesApi
     });
+
+    const { data: calendar, refetch } = useQuery<CalendarEvent>({
+        queryKey: ["calendar", calendarId],
+        queryFn: () => getCalendarApi(calendarId!),
+        enabled: false,
+    });
+
+    const {data: members = []} = useQuery<CalendarMember[]>({
+        queryKey: ["calendarMembers"],
+        queryFn: getMembersApi,
+    });
+    useEffect(() => {
+        if (!isOpen) return;
+
+        if (calendarId == null) {
+            isDirtyRef.current = false;
+            isInitializing.current = false;
+            return;
+        }
+        void refetch();
+    }, [isOpen, calendarId, refetch]);
+
+    useEffect(() => {
+        if (! calendar || !isOpen) return;
+
+        const load = async () => {
+            isInitializing.current = true;
+
+            setForm({
+                title: calendar.eventTitle,
+                content: calendar.eventContent ?? "",
+
+                calendarCategoryId: calendar.calendarCategoryId ?? null,
+                type: calendar.type ?? "",
+
+                alarm: !!calendar.alarm,
+                sharedUserIds: calendar.sharedUserIds ?? [],
+
+                existingFile: calendar.file ?? null,
+                file: null,
+
+                eventStartDate: calendar.eventStartDate.slice(0, 10),
+                eventEndDate: calendar.eventEndDate.slice(0, 10),
+
+                eventStartHour: calendar.eventStartDate.slice(11, 13),
+                eventStartMin: calendar.eventStartDate.slice(14, 16),
+
+                eventEndHour: calendar.eventEndDate.slice(11, 13),
+                eventEndMin: calendar.eventEndDate.slice(14, 16),
+            });
+
+            requestAnimationFrame(() => {
+                editorRef.current?.getInstance().setMarkdown( calendar.eventContent ?? "");
+                isInitializing.current = false;
+            });
+        };
+        void load();
+    }, [ calendar, isOpen]);
 
     const formatDate = (date: Date) => {
         const y = date.getFullYear();
@@ -92,6 +159,9 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
             alert("날짜를 선택해주세요.");
             return;
         }
+        if (!form.type) { alert("캘린더를 선택해주세요."); return; }
+        if (!form.calendarCategoryId) { alert("일정구분을 선택해주세요."); return; }
+        if (form.type === "공유" && form.sharedUserIds.length === 0) { alert("공유자를 선택해주세요."); return; }
 
         try {
             const request = {
@@ -105,7 +175,19 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
                 sharedUserIds: form.sharedUserIds
             };
 
-            await saveCalendarApi(request);
+            const formData = new FormData();
+            //@RequestPart 사용할 때
+            formData.append("request", new Blob([JSON.stringify(request)], { type: "application/json" }));
+            if (form.file) {
+                formData.append("file", form.file);
+            }
+
+            if (isEditMode) {
+                await updateCalendarApi(calendarId!, formData);
+            } else {
+                await saveCalendarApi(formData);
+            }
+
             onSuccess?.();
             handleClose();
         } catch {
@@ -161,7 +243,7 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
                 <div className="Write-Wrapper">
                     <div className="modal-Row">
                         <label>날짜 / 시간</label>
-                        <div style={{display: "flex", alignItems: "center", gap: "8px",width:"70%"}}>
+                        <div style={{display: "flex", alignItems: "center", gap: "8px",width:"100%"}}>
                             <DatePicker
                                 selectsRange={true}
                                 startDate={startDate}
@@ -240,10 +322,17 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
                     </div>
                     <div className="modal-Row">
                         <label>공유자</label>
-                        <input
-                            type="text"
-                            placeholder="공유자"
-                            disabled={form.type ==="개인"}
+                        <TagInput
+                            selectedIds={form.sharedUserIds}
+                            members={members}
+                            onRemove={(id) => handleChange("sharedUserIds", form.sharedUserIds.filter(v => v !== id))}
+                            onClear={() => {
+                                handleChange("sharedUserIds", []);
+                                setIsMemberModalOpen(false);
+                            }}
+                            onClick={() => setIsMemberModalOpen(true)}
+                            disabled={form.type === "개인"}
+                            placeholder="성명"
                         />
                     </div>
                     <div className="modal-Row">
@@ -304,6 +393,13 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
                     </div>
                 </div>
             </Modal>
+            <CalendarMemberModal
+                key={JSON.stringify(form.sharedUserIds)}
+                isOpen={isMemberModalOpen}
+                onClose={() => setIsMemberModalOpen(false)}
+                selectedIds={form.sharedUserIds}
+                onApply={(ids) => handleChange("sharedUserIds", ids)}
+            />
             <ConfirmModal
                 isOpen={isExitConfirmOpen}
                 message="작성 중인 내용이 있습니다. 나가시겠습니까?"

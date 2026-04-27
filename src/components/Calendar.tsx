@@ -1,28 +1,32 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo } from "react";
+import type { ReactNode } from "react";
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 import "../assets/styles/component/calendar.css";
-import type { CalendarEvent } from "../types/calendar.ts";
+import type { CalendarEvent } from "../types/calendar";
 
 interface CalendarProps {
-    showHeader?: boolean;
     viewDate?: Date;
+    onViewDateChange?: (date: Date) => void;
     events?: CalendarEvent[];
+    renderEvent?: (event: CalendarEvent & { isStart: boolean; isEnd: boolean }) => ReactNode;
+    renderDateCell?: (date: Date, isToday: boolean) => ReactNode;
     onEventClick?: (calendarId: number) => void;
+    showHeader?: boolean;
 }
 
-const toDayNumber = (date: Date | string) => {
+//서버에서 오는 날짜가 시간 포함이라 시간을 제거하고 숫자로 변환해서 eventMap의 key로 사용
+const normalizeDate = (date: Date | string) => {
     const d = new Date(date);
-
-    return Math.floor(
-        (d.getTime() - d.getTimezoneOffset() * 60000) / 86400000
-    );
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
 };
 
 const Calendar = ({
-                      showHeader = true,
                       viewDate: externalViewDate,
+                      onViewDateChange,
                       events = [],
-                      onEventClick
+                      onEventClick,
+                      showHeader = true,
                   }: CalendarProps) => {
 
     const [internalViewDate, setInternalViewDate] = useState(new Date());
@@ -31,27 +35,31 @@ const Calendar = ({
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
 
-    const firstDayOfMonth = new Date(year, month, 1).getDay();
-    const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
-    const lastDayOfMonth = new Date(year, month, lastDateOfMonth).getDay();
-
-    const days = Array.from({ length: lastDateOfMonth }, (_, i) => i + 1);
-    const emptySlots = Array.from({ length: firstDayOfMonth }, (_, i) => i);
-    const remainingSlots = lastDayOfMonth < 6 ? 6 - lastDayOfMonth : 0;
-    const nextMonthDays = Array.from({ length: remainingSlots }, (_, i) => i + 1);
-
     const changeMonth = (offset: number) => {
-        setInternalViewDate(new Date(year, month + offset, 1));
+        const newDate = new Date(year, month + offset, 1);
+        if (onViewDateChange) {
+            onViewDateChange(newDate);
+        } else {
+            setInternalViewDate(newDate);
+        }
     };
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+    const lastDay = new Date(year, month, lastDate).getDay();
+
+    const emptySlots = Array.from({ length: firstDay });
+    const days = Array.from({ length: lastDate }, (_, i) => i + 1);
+    const nextSlots = lastDay < 6 ? Array.from({ length: 6 - lastDay }) : [];
 
     const eventMap = useMemo(() => {
         const map = new Map<number, (CalendarEvent & { isStart: boolean; isEnd: boolean })[]>();
 
         events.forEach(e => {
-            const start = toDayNumber(e.eventStartDate);
-            const end = toDayNumber(e.eventEndDate);
+            const start = normalizeDate(e.eventStartDate);
+            const end = normalizeDate(e.eventEndDate);
 
-            for (let d = start; d <= end; d++) {
+            for (let d = start; d <= end; d += 86400000) {
                 if (!map.has(d)) map.set(d, []);
                 map.get(d)!.push({
                     ...e,
@@ -61,95 +69,86 @@ const Calendar = ({
             }
         });
 
+        // 모든 날짜 다 채운 후 한 번만 정렬 (긴 일정이 위로)
+        map.forEach(dayEvents => {
+            dayEvents.sort((a, b) => {
+                const aDuration = normalizeDate(a.eventEndDate) - normalizeDate(a.eventStartDate);
+                const bDuration = normalizeDate(b.eventEndDate) - normalizeDate(b.eventStartDate);
+                return bDuration - aDuration;
+            });
+        });
+
         return map;
     }, [events]);
 
     return (
-        <div>
+        <div className="calendar">
+
             {showHeader && (
                 <div className="calendar-Header">
                     <button onClick={() => changeMonth(-1)}><SlArrowLeft /></button>
-                    {year}년 {month + 1}월
+                    <span>{year}년 {month + 1}월</span>
                     <button onClick={() => changeMonth(1)}><SlArrowRight /></button>
                 </div>
             )}
 
             <div className="calendar-DayCon">
-                {['일', '월', '화', '수', '목', '금', '토'].map(d => (
-                    <div className="day-Header" key={d}>{d}</div>
+                {["일","월","화","수","목","금","토"].map(d => (
+                    <div key={d} className="day-Header">{d}</div>
                 ))}
             </div>
 
             <div className="calendar-DateCon">
 
-                {emptySlots.map(i => (
-                    <div className="calendar-EmptyDate" key={`empty-${i}`} />
+                {emptySlots.map((_, i) => (
+                    <div key={`empty-${i}`} className="calendar-EmptyDate" />
                 ))}
 
                 {days.map(day => {
-                    const today = new Date();
 
+                    const current = new Date(year, month, day);
+                    const currentKey = normalizeDate(current);
+
+
+                    //오늘 날짜에 도트 표시하기위함
+                    const today = new Date();
                     const isToday =
                         day === today.getDate() &&
                         month === today.getMonth() &&
                         year === today.getFullYear();
 
-                    const current = new Date(year, month, day);
-                    const currentDay = toDayNumber(current);
-
-                    const dayEvents = eventMap.get(currentDay) ?? [];
+                    const dayEvents = eventMap.get(currentKey) ?? [];
 
                     return (
-                        <div className="calendar-Date" key={day}>
-                            <span style={{
-                                display: "inline-block",
-                                width: "20px",
-                                height: "20px",
-                                lineHeight: "20px",
-                                textAlign: "center",
-                                borderRadius: "50%",
-                                background: isToday ? "#DA5C57" : "transparent",
-                                color: isToday ? "white" : ""
-                            }}>
+                        <div key={day} className="calendar-Date">
+                            <span className={`calendar-Date-number ${isToday ? "today" : ""}`}>
                                 {day}
                             </span>
-
                             {dayEvents.map(e => (
                                 <div
-                                    key={e.calendarId}
+                                    key={`${e.calendarId}-${currentKey}`}
                                     onClick={() => onEventClick?.(e.calendarId)}
-                                    style={{
-                                        fontSize: "12px",
-                                        background: e.isStart ? (e.color ?? "transparent") : "transparent",
-                                        color: "#091B72",
-                                        padding: "4px 4px",
-                                        marginTop: "4px",
-                                        overflow: "hidden",
-                                        whiteSpace: "nowrap",
-                                        textOverflow: "ellipsis",
-                                        fontWeight: "500",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "5px",
-                                        cursor: "pointer"
-                                    }}
+                                    className={`calendar-event ${e.isStart ? "start" : ""}`}
+                                    style={{ background: e.isStart ? (e.color ?? "transparent") : "transparent" }}
                                 >
-                                    <span style={{
-                                        width: "6px",
-                                        height: "6px",
-                                        borderRadius: "50%",
-                                        background: e.dotColor ?? "#aaa",
-                                        flexShrink: 0
-                                    }} />
-                                    {e.calendarCategoryName}
+                                    <>
+                                        <span
+                                            className="calendar-event-dot"
+                                            style={{ background: e.dotColor ?? "#aaa" }}
+                                        />
+                                        <span className="calendar-event-name">
+                                            {e.calendarCategoryName}
+                                        </span>
+                                    </>
                                 </div>
                             ))}
+
                         </div>
                     );
                 })}
 
-                {nextMonthDays.map((_, i) => (
-                    <div className="calendar-EmptyDate" key={`next-${i}`} />
+                {nextSlots.map((_, i) => (
+                    <div key={`next-${i}`} className="calendar-EmptyDate" />
                 ))}
 
             </div>
