@@ -5,7 +5,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useGetHrCardList } from "../../apis/hr/HrCardService";
 import { usePostLeaverCard } from "../../apis/hr/LeaverCardService";
 import Modal from "../Modal";
-import "../../assets/styles/hr/LeaverAddCardModal.css";
+import "../../assets/styles/hr/leaverAddCardModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById } from "../../constants/hrGradeOptions";
 

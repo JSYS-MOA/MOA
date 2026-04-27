@@ -286,10 +286,6 @@ const CertificatesCardListPage = () => {
         setModalTarget(userId);
     };
 
-    const handleOpenCreateModal = () => {
-        setModalTarget("create");
-    };
-
     const handleCloseUpdateModal = () => {
         setModalTarget(null);
     };

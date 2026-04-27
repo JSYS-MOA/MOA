@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { useDeleteHrCard, useGetHrCardList } from "../../apis/hr/HrCardService";
 import "../../assets/styles/hr/hrCardList.css";
+import {hrCard}
 import HrCardAddModal from "../../components/hr/HrCardAddModal";
 import HrCardUpdateModal from "../../components/hr/HrCardUpdateModal";
 import HrTable from "../../components/hr/HrTable.tsx";
