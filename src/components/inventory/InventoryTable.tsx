@@ -2,10 +2,13 @@ import type React from "react";
 import  { type TableProps , type Column} from "../../types/TableProps"
 
 
+
+
 const InventoryTable = (
-    { items , columns , onItemClick , onItemChange , handleInbound}: {
+    { items , columns , onItemClick , onItemChange , handleInbound , select}: {
   items: TableProps[],
   columns: Column[],
+  select? : any [] ,
   handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: (e : React.ChangeEvent) => void 
@@ -52,13 +55,9 @@ const InventoryTable = (
               {'roleId' in  item ?
               <td>
                 <select onChange={(e)=>{onItemChange?.(e)}} name="roleId" id={item.userId} defaultValue={item.roleId} >
-                  <option value={1} >관리자</option>
-                  <option value={2} >모든인사</option>
-                  <option value={3} >모든물류</option>
-                  <option value={4} >모든영업</option>
-                  <option value={5} >일부인사</option>
-                  <option value={6} >일부물류</option>
-                  <option value={7} >일부영업</option>
+                  {select.map((option) =>(
+                    <option value={option.id} > {option.name}</option>
+                  ))}
                 </select>
               </td>
               : null }

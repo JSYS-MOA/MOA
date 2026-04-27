@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {FaStar} from "react-icons/fa";
 import Table from "../../components/inventory/InventoryTable";
 import { useGetOrder , useGetOrderInfo } from "../../apis/InventoryService";
 import ListModal from "../../components/inventory/InventoryListModalForm";
@@ -116,6 +117,11 @@ const InventoryOrder = () => {
 
   return (
     <div>
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>부서별 권한승인</span>
+      </div>
+      
       {data != null ?<>
         <Table
           items={data.content}

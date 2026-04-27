@@ -1,7 +1,7 @@
 import React from 'react'
 import  { type TableProps , type Column} from "../../types/TableProps"
 
-const ApprovalsTable = (
+const TeamMemberTable = (
     { items , columns , onItemClick , onItemChange , handleitems}: {
   items: TableProps[],
   columns: Column[],
@@ -9,7 +9,7 @@ const ApprovalsTable = (
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: (e : React.ChangeEvent) => void 
   }) => {
-      
+  
   return (
     <table>
     
@@ -22,27 +22,15 @@ const ApprovalsTable = (
 
       <tbody>
         {items.map((item, idx) => (
-        <tr key={idx} >
+        <tr key={idx} onClick={(e)=>onItemClick?.(item , e)}>
           <td>{idx + 1}</td>
 
           {columns.map(col => (
+            
             <td key={col.key}>
-
-               {col.key === 'approvaInfo' && (
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onItemClick?.(item , e);
-                    }}
-                    style={{ marginLeft: '8px' }}
-                  >
-                    보기
-                  </button>
-                )}
-
               
-              {item[col.key as keyof TableProps]|| ""}  
-
+              {item[col.key as keyof TableProps]|| ""}
+  
             </td>
           ))}    
 
@@ -54,4 +42,4 @@ const ApprovalsTable = (
   )
 }
 
-export default ApprovalsTable
+export default TeamMemberTable

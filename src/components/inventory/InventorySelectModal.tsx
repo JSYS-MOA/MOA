@@ -27,7 +27,7 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h3>상품 선택</h3>
+        <h3>항목 선택</h3>
         <table>
           <tbody>
             {title === 'PRODUCT' ? (
@@ -69,10 +69,30 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
               ))
             ) : null }
 
+            {title === 'LINE' ? (
+              items.map((line: any) => (
+                <tr key={line.inventoryId} onClick={() => onSelect(line)} >
+                  <td>{line.approvalLineCord}</td>
+                  <td>{line.approvalLineUser}</td>
+                  <td>{line.approvalLineName}</td>
+                </tr>
+              ))
+            ) : null }
+
+            {title === 'DOCUMENT' ? (
+              items.map((document: any) => (
+                <tr key={document.documentId} onClick={() => onSelect(document)} >
+                  <td>{document.documentCord}</td>
+                  <td>{document.documentName}</td>
+                </tr>
+              ))
+            ) : null }
+
+
           </tbody>
         </table>
         <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
+        <button onClick={()=>{changePage(1)}}>aa</button>
         <button onClick={onClose}>닫기</button>
       </div>
     </div>

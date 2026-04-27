@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {FaStar} from "react-icons/fa";
 import Table from "../../components/inventory/InventoryTable";
 import { useGetOutbounds , useGetOutboundsInfo } from "../../apis/InventoryService";
 import Modal from "../../components/inventory/InventoryModal";
@@ -80,6 +81,11 @@ const InventoryOutbound = () => {
 
   return (
     <div>
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>부서별 권한승인</span>
+      </div>
+      
       {data != null ?<>
       <Table
         items={data.content}

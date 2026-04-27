@@ -100,9 +100,59 @@ export interface ModalProps {
   defectStatus : string;
   defectMemo : string;
   logisticsId : number;
+
+  //결재 관련
+  approvaId : number;
+  approvaDate : string;
+  approvaKind : number;
+  approvaTitle : string;
+  approver : number;
+  approvaStatus : string;
+  approvaMemu : string;
+  userInfo : userInfo;
+  approvaInfo : approverInfo;
+  approvaContent : string ;
+}
+
+export interface approverInfo {
+  userId: number;
+  userName: string;
+  employeeId: string;
+  departmentName?: string;
+  gradeName?: string;
+
+  approvalLineId : number;
+  approvalLineUser : number;
+  approvalLineName : string ;
+  phone?  : string ;
+  email?  : string ;
+  roleName?  : string ;
+  roleCode?  : string ;
+  gradeCord?  : string ;
+  departmentCord?  : string ;
+}
+
+export interface userInfo {
+  userId: number;
+  userName: string;
+  employeeId: string;
+  departmentName?: string;
+  gradeName?: string;
+
+  phone?  : string ;
+  email?  : string ;
+
+  roleName?  : string ;
+  roleCode?  : string ;
+
+  gradeCord?: string;
+
+
+   departmentCord?  : string ;
+
 }
 
 export interface MColumn {
-  key: keyof ModalProps;
+  key: keyof ModalProps | string ;
   label: string;
 }

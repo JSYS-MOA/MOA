@@ -1,9 +1,10 @@
 import { useState } from "react";
-import Table from "../../components/inventory/InventoryTable";
+import {FaStar} from "react-icons/fa";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
-import Modal from "../../components/inventory/InventoryModal";
 import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Table from "../../components/inventory/InventoryTable";
+import Modal from "../../components/inventory/InventoryModal";
 import Alert from "../../components/inventory/Alert";
 
 
@@ -67,6 +68,11 @@ const Inventory = () => {
 
   return (
     <div>
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>부서별 권한승인</span>
+      </div>
+
       {data != null ?<>
       <Table
         items={data.content}
