@@ -5,7 +5,7 @@
     width: 100%;
     padding: 10px 16px;
     box-sizing: border-box;
-    height: 280px;
+    height: 100%;
 }
 .notice-Header{
     display: flex;

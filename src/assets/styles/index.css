@@ -250,12 +250,13 @@ button {
 /* 등록 인풋 클래스*/
 .modal-Row{
   display: flex;
-  height: 40px;
+  height: auto;
+  min-height: 40px;
   font-size: var(--font-xs);
   color: var(--text-secondary);
   align-items: center;
 }
-.madal-Row-Group{
+.modal-Row-Group{
   display: flex;
   gap: 16px;
   width: 100%;
@@ -335,6 +336,16 @@ button {
   align-items: center !important;
 }
 
+.Write-Wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.Write-Editor {
+  flex: 1;
+  min-height: 0;
+}
+
 /* main-Title */
 .favorite-Header{
   display: flex;
@@ -347,4 +358,3 @@ button {
   color: var(--text-accent);
   font-weight: 700;
 }
-

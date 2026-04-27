@@ -7,13 +7,17 @@ import CalendarWriteModal from "./CalendarWriteModal.tsx";
 import {useQuery} from "@tanstack/react-query";
 import type {CalendarEvent} from "../../types/calendar.ts";
 import {getCalendarsApi} from "../../apis/CalendarService.tsx";
+import CalendarDetailModal from "./CalendarDetailModal.tsx";
 
 const MyCalendar = () => {
 
     const [viewDate, setViewDate] = useState(new Date());
     const [showShared, setShowShared] = useState(true);
     const [showPersonal, setShowPersonal] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isWriteOpen, setIsWriteOpen] = useState(false);
+    const [editId, setEditId] = useState<number | null>(null);
+    const [selectedCalendarId, setSelectedCalendarId] = useState<number | null>(null);
 
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
@@ -40,8 +44,7 @@ const MyCalendar = () => {
     const filteredEvents = events
         .filter(e => {
             if (e.type === "개인") return showPersonal;
-            if (e.type === "팀") return showShared;
-            if (e.type === "전체") return showShared;
+            if (e.type === "공유") return showShared;
             return false;
         })
         .map(e => ({
@@ -103,18 +106,34 @@ const MyCalendar = () => {
                         showHeader={false}
                         viewDate={viewDate}
                         events ={filteredEvents}
+                        onEventClick={(id) => {
+                            setSelectedCalendarId(id);
+                            setIsDetailOpen(true);
+                        }}
                     />
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => setIsWriteOpen(true)}
                         className="myCalendar-addBtn btn-Primary"
                     >
                         신규
                     </button>
                 </div>
             </div>
+            <CalendarDetailModal
+                calendarId={selectedCalendarId}
+                isOpen={isDetailOpen}
+                onClose={() => setIsDetailOpen(false)}
+                onSuccess={() => refetch()}
+                onEdit={(id) => {
+                    setIsDetailOpen(false);
+                    setEditId(id);
+                    setIsWriteOpen(true);
+                }}
+            />
             <CalendarWriteModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                isOpen={isWriteOpen}
+                calendarId={editId}
+                onClose={() => setIsWriteOpen(false)}
                 onSuccess={() => refetch()}
             />
         </>

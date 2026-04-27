@@ -39,7 +39,7 @@
     border-right: 1px solid var(--border);
 }
 .calendar-Date{
-    padding: 6px 4px;
+    padding: 6px 0;
     border-left: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     font-size: var(--font-xs);

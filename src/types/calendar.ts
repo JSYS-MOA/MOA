@@ -12,6 +12,7 @@ export interface CalendarEvent {
     alarm: number | null;
     color?: string;
     dotColor?: string;
+    writerName: string | null;
 }
 
 export interface CalendarCategory {
