@@ -1,0 +1,27 @@
+.inventory-table {
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.inventory-table td , .inventory-table th {
+    border: 1px solid #A9A9A9;
+}
+
+.inventory-table-header {
+  height: 34px;
+  width: 198.63px;
+  background-color: var(--color-gray-100);
+  color: #091B72;
+  font-weight: normal;
+}
+
+.inventory-table-body td {
+  height: 42px;
+  width: 198.63px;
+  background-color: #fff;
+  color: #151515;
+
+}
+
+
+

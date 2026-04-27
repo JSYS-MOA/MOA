@@ -35,24 +35,21 @@ const TeamMembers = () => {
   };
   
   const onTeamMemberClick = ( item : any , e : React.MouseEvent) => {
-    console.log(item)
-
-        if('userId' in item) {
-          mutate (item.userId, {
-          onSuccess: (data) => {
-            setInfo({
-              content: [data],
-              totalPages: 1
-            });
-            setModalMode('LIST')
-            console.log("TeamMember 성공 데이터:", data);
-          },onError: (error: any) => {
-            setOnAlert("정보를 가져오는데 실패했습니다.");
-          }
-        })
-         
-        }
-        
+    if('userId' in item) {
+      mutate (item.userId, {
+      onSuccess: (data) => {
+        setInfo({
+          content: [data],
+          totalPages: 1
+        });
+        setModalMode('LIST')
+        console.log("TeamMember 성공 데이터:", data);
+      },onError: (error: any) => {
+        setOnAlert("정보를 가져오는데 실패했습니다.");
+      }
+    })
+      
+    }
   }
   
   const columns : Column[] = [

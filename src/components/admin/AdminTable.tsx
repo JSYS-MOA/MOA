@@ -4,10 +4,11 @@ import  { type TableProps , type Column} from "../../types/TableProps"
 
 
 
-const InventoryTable = (
-    { items , columns , onItemClick , onItemChange , handleInbound }: {
+const AdminTable = (
+    { items , columns , onItemClick , onItemChange , handleInbound , select}: {
   items: TableProps[],
   columns: Column[],
+  select? : any [] ,
   handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: (e : React.ChangeEvent) => void 
@@ -17,16 +18,17 @@ const InventoryTable = (
 
 
   return (
-    <table className="inventory-table">
+    <table>
 
-        <thead className="inventory-table-header">
+        <thead>
           <tr>
             { items ? <th>순번</th> : null}
             {columns.map(col => <th key={col.key}>{col.label}</th>)}
+            { 'roleId' in  items ? <th>권한승인</th> : null}
           </tr>
         </thead>
 
-        <tbody className="inventory-table-body">
+        <tbody>
           {items.map((item, idx) => (
           <tr key={idx} onClick={(e) => { onItemClick?.(item , e)}}>
             <td>{idx + 1}</td>
@@ -49,7 +51,19 @@ const InventoryTable = (
 
               </td>
             ))}
-            
+
+              {'roleId' in  item ?
+              <td>
+                <select onChange={(e)=>{onItemChange?.(e)}} name="roleId" id={item.userId} defaultValue={item.roleId} >
+                  {select.map((option) =>(
+                    <option value={option.id} > {option.name}</option>
+                  ))}
+                </select>
+              </td>
+              : null }
+
+  
+
           </tr>
         ))}
         </tbody>
@@ -58,7 +72,7 @@ const InventoryTable = (
   )
 }
 
-export default InventoryTable;
+export default AdminTable;
 
 
  

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {FaStar} from "react-icons/fa";
 import { useGetRole , usePatchRole , useGetRoleSelect } from '../../apis/AdminService'
-import Table from '../../components/inventory/InventoryTable'
+import Table from '../../components/admin/AdminTable'
 import { type Column } from '../../types/TableProps'
 import Button from '../../components/Button';
 

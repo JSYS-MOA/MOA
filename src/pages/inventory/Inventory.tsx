@@ -6,6 +6,8 @@ import { type Column } from "../../types/TableProps";
 import Table from "../../components/inventory/InventoryTable";
 import Modal from "../../components/inventory/InventoryModal";
 import Alert from "../../components/inventory/Alert";
+import "../../assets/styles/inventory/inventoryTable.css"
+import Button from "../../components/Button";
 
 
 const Inventory = () => {
@@ -73,6 +75,7 @@ const Inventory = () => {
           <span>부서별 권한승인</span>
       </div>
 
+      <div className="inventory-table-box">
       {data != null ?<>
       <Table
         items={data.content}
@@ -80,13 +83,16 @@ const Inventory = () => {
         onItemClick={onInventoryClick}
        />
 
+       <div>
+          <Button label='이전' onClick={()=>{changePage(-1)}} />
+          <Button label='다음' onClick={()=>{changePage(1)}} />
+        </div>
+       </>: "로딩중입니다." }
+      </div>
+
       {modal && info != null ?
         <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
-
-      <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
-       </> : "로딩중입니다." }
-        
+      
       { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
 
     </div>
