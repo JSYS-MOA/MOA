@@ -104,7 +104,6 @@ const TagInput = ({selectedIds, members, onRemove, onClear, onClick, disabled = 
                     </span>
                 )}
             </div>
-            {selectedIds.length > 0 && (
                 <div
                     onClick={(e) => {
                         e.stopPropagation();
@@ -120,10 +119,10 @@ const TagInput = ({selectedIds, members, onRemove, onClear, onClick, disabled = 
                         flexShrink: 0,
                         cursor: "pointer",
                         color: "#cdcdcd",
-                        fontSize: "16px",
+                        fontSize: "20px",
+                        lineHeight:"27px",
                     }}
                 >×</div>
-            )}
         </div>
     );
 };

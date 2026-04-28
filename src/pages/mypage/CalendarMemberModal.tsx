@@ -24,9 +24,10 @@ const CalendarMemberModal = ({isOpen, onClose, selectedIds, onApply}: CalendarMe
     if (!isOpen) return null;
 
     // 부서별 그룹
+    //배열.reduce((누적값, 현재값) => { return 누적값;}, 초기값);
     const grouped = members.reduce<Record<string, CalendarMember[]>>((acc, m) => {
         const dept = m.departmentName ?? "기타";
-        if (!acc[dept]) acc[dept] = [];
+        if (!acc[dept]) acc[dept] = []; //acc에 해당 부서키가 없으면 빈 배열로 초기화
         acc[dept].push(m);
         return acc;
     }, {});
@@ -38,6 +39,7 @@ const CalendarMemberModal = ({isOpen, onClose, selectedIds, onApply}: CalendarMe
     const toggleOne = (userId: number) => {
         setChecked(prev =>
             prev.includes(userId) ? prev.filter(id => id !== userId) : [...prev, userId]
+            //checked배열에 클릭한 userId가 있는지 확인하고 있으면 제거, 없으면 추가
         );
     };
 
@@ -95,6 +97,7 @@ const CalendarMemberModal = ({isOpen, onClose, selectedIds, onApply}: CalendarMe
                         </tr>
                         </thead>
                         <tbody>
+                        {/* Object.entries(grouped) -> 객체를 [key, value ]로 변환*/}
                         {Object.entries(grouped).map(([dept, deptMembers]) =>
                             deptMembers.map((m, idx) => (
                                 <tr key={m.userId}>
