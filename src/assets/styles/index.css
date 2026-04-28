@@ -362,7 +362,7 @@ button {
 }
 
 
-/* 모달 표 */
+/* 작은 모달 표 */
 .base-Table {
   width: 100%;
   border-collapse: collapse;
@@ -385,4 +385,45 @@ button {
   padding: 8px 12px;
   border: 1px solid var(--border);
   color: var(--text-secondary);
+}
+
+/* 큰 모달 표 */
+.table-Content {
+  padding: 17px 0 5px;
+  overflow-x: auto;
+}
+
+.modal-Table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: var(--font-xs);
+}
+
+.modal-Table thead tr {
+  background: var(--color-gray-100);
+}
+
+.modal-Table th {
+  padding: 8px 15px;
+  color: var(--color-primary);
+  font-weight: 500;
+  border: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.modal-Table td {
+  padding: 6px 30px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  background: var(--color-inverse);
+}
+.modal-Table td:has(input) {
+  padding: 0;
+}
+.modal-Table td input {
+ margin: 2px;
+  padding: 2px 8px;
 }

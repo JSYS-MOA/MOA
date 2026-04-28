@@ -11,3 +11,12 @@ export interface Transaction{
     transactionMemo: string | null;
     createdAt: string;
 }
+
+export interface TransactionForm {
+    transactionNum: number;
+    transactionType: string;
+    vendorCode: string;
+    vendorName: string;
+    transactionPrice: number;
+    transactionMemo: string;
+}

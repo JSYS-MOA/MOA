@@ -4,6 +4,7 @@ import {useState} from "react";
 import Table, {type TableColumn} from "../../components/Table.tsx";
 import {FaStar} from "react-icons/fa";
 import {getTransactionsApi} from "../../apis/SalesService.tsx";
+import TransactionModal from "./TransactionModal.tsx";
 
 const SalesJournals = () => {
 
@@ -53,7 +54,7 @@ const SalesJournals = () => {
                 />
              </div>
             {isDetailOpen && selectedId && (
-                <SalesDetailModal
+                <TransactionModal
                     isOpen={isDetailOpen}
                     onClose={() => setIsDetailOpen(false)}
                     transactionId={selectedId}

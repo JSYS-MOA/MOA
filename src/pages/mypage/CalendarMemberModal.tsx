@@ -78,7 +78,7 @@ const CalendarMemberModal = ({isOpen, onClose, selectedIds, onApply}: CalendarMe
                     <p>공유자</p>
                 </div>
 
-                <div className="modal-Body">
+                <div className="modal-Body" >
                     <table className="base-Table">
                         <thead>
                         <tr>
