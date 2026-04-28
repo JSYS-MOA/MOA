@@ -73,22 +73,29 @@ const TeamMembers = () => {
     <div>
       <div className="favorite-Header">
             <FaStar size={18} color="#C4C4C4"/>
-            <span>부서별 권한승인</span>
+            <span>소속팀원관리</span>
       </div>
 
       {data != null ?<>
         <Table
           items={data.content}
           columns={columns}
+          page={page}
           onItemClick={onTeamMemberClick}
           />
 
-        {modalMode === 'LIST' && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} 
-                onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
-
-        <button onClick={()=>{changePage(-1)}}>aa</button>
-        <button onClick={()=>{changePage(1)}}>aa</button>
+        {modalMode !== ''  ? <div className='modal-Overlay'>
+          {modalMode === 'LIST' && info != null ?
+          <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} 
+                  onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
+          
+          {maxPage > 1 ?
+          <div className='Page-Btn-container'>
+            <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+            <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
+          </div> : null }
+        </div> : null }
+        
         </> : "로딩중입니다." }
     
       { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }

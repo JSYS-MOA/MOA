@@ -2,6 +2,7 @@
   text-align: center;
   border-collapse: collapse;
   font-weight: 300;
+  width: 100%;
 }
 .inventory-table th {
   font-size: 0.8rem;
@@ -31,8 +32,11 @@
 
 }
 
+/* 드롭다운용 */
+
 .dropdown-right-List{
     position: absolute;
+    z-index: 10;
     background: var(--color-inverse);
     border: 1px solid var(--border);
     width: 100%;
@@ -45,6 +49,7 @@
 
 }
 .dropdown-right-List .dropdown-Item {
+    background: #fff;
     border-bottom: 1px solid #e6e6e6;
     display: flex;
     align-items: center;
@@ -58,4 +63,159 @@
     background: var(--color-primary);
     color: var(--text-inverse);
     font-weight: 200;
+}
+
+/* 공용 */
+.Page-Btn-container{
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.Btn-container{
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.modal-Row-Item-title{
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.modal-Row-Item-Group-Input {
+  width: 80px;
+  margin-right: 5px;
+}
+
+.modal-Row-Item-title-box {
+  display: flex;
+  gap: 5px;
+  text-align: center;
+  flex: 1 ;
+}
+
+.modal-Row-Item-title-Body {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-Row-Item-title-Body input{
+  width: 100%;
+}
+
+.viewer-wrapper {
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.viewer-wrapper p {
+  padding: 10px;
+  width: 100%;
+}
+
+/* 물폼선택 모달 테이블 */
+
+.modal-Table {
+  margin: 17px 15px 0;
+  padding: 20px;
+  background: var(--color-inverse);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;text-align: center;
+  border-collapse: collapse;
+  font-weight: 300;
+  max-width: 620px;
+}
+
+.modal-Select-Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.modal-Select-Container {
+    width: 650px;
+    background: var(--color-modal);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-Table-Form {
+  margin: 17px 15px 0;
+  padding: 20px;
+  background: var(--color-inverse);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;text-align: center;
+  border-collapse: collapse;
+  font-weight: 300;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.modal-Table-Form  th {
+  font-size: 0.8rem;
+}
+
+
+.modal-Table-Form  td {
+  font-size: 0.9rem;
+}
+
+.modal-Table-Form  th {
+  border: 1px solid #A9A9A9;
+}
+
+.modal-Table-Form td {
+
+}
+
+.modal-Table-Form input {
+  width: 100% !important;
+}
+
+.modal-Table-Form-header {
+  height: 34px;
+  background-color: var(--color-gray-100);
+  color: #091B72;
+}
+
+.modal-Table-Form-body td {
+  height: 42px;
+  background-color: #fff;
+  color: #151515;
+
+}
+
+.modal-Container-TableFrom {
+    width: 1000px;
+    background: var(--color-modal);
+    height: 800px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+
+}
+
+.Del-button{
+  color: red;
+  border: 1px solid red;
+  background: none;
+  cursor: pointer;
+
 }

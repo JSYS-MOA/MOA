@@ -1,5 +1,7 @@
 import React, { useEffect, useState  } from 'react'
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
+import {IoCloseOutline} from "react-icons/io5";
+import { Viewer } from '@toast-ui/react-editor';
 import { patchApprovalAct } from '../../apis/ApprovalsService'
 import ConfirmModal from './ApprovalsConfirmModal'
 
@@ -56,7 +58,7 @@ const ApprovalsWaitModal = (  { items , maxPage , columns, keySno , keyPrice , k
   'approverInfo.approvalLineName': rawMaster.approverInfo?.approvalLineName,
   };
 
-  const isCompleted = masterInfo.approvaStatus === '대기중';
+  const isCompleted = masterInfo.approvaStatus === '대기';
 
   const onConfirm = (e : React.SubmitEvent) =>{
      e.preventDefault();
@@ -90,21 +92,38 @@ const ApprovalsWaitModal = (  { items , maxPage , columns, keySno , keyPrice , k
   }
 
   return (
-    <form onSubmit={(e)=> { onConfirm(e)}}>
+    <form className='modal-Container' onSubmit={(e)=> { onConfirm(e)}}>
+      
+      <div className="modal-Header">
+                <p>결재문서</p>
+                <button onClick={onClose}>
+                    <IoCloseOutline color="#fff" size={18}/>
+                </button>
+      </div>
 
+      <div className="modal-Title">
+        <p>결재문서</p>
+      </div>
+
+      <div  className='modal-Body'>
        {columns.map((col) => {
           if (col.key === 'writerInfo.userName') {
             return (
-              <div key="row-writer-approver" style={{ display: 'flex', gap: '20px', marginBottom: '8px' }}>
-                <div style={{ display: 'flex', flex: 1 }}>
-                  <div style={{ width: '100px' }}><strong>기안자</strong></div>
-                  <input value={masterInfo['writerInfo.userName'] || ''} readOnly style={{ width: '80px' }} />
-                  <input value={masterInfo['writerInfo.employeeId'] || ''} readOnly style={{ width: '50px', marginLeft: '4px' }} />
-                </div>
-                <div style={{ display: 'flex', flex: 1 }}>
-                  <div style={{ width: '100px' }}><strong>결재자</strong></div>
-                  <input value={masterInfo['approverInfo.userName'] || ''} readOnly style={{ width: '80px' }} />
-                  <input value={masterInfo['approverInfo.employeeId'] || ''} readOnly style={{ width: '50px', marginLeft: '4px' }} />
+              <div className='modal-Row' key="row-writer-approver">
+                <div className='modal-Row-Group'>
+
+                  <div className='modal-Row-Item'>
+                    <div className='modal-Row-Item-title'><strong>기안자</strong></div>
+                    <input className="modal-Row-Item-Group-Input" value={masterInfo['writerInfo.userName'] || ''} readOnly />
+                    <input className="modal-Row-Item-Group-Input" value={masterInfo['writerInfo.employeeId'] || ''} readOnly />
+                  </div>
+                  
+                  <div className='modal-Row-Item'>
+                    <div className='modal-Row-Item-title'><strong>결재자</strong></div>
+                    <input className="modal-Row-Item-Group-Input" value={masterInfo['approverInfo.userName'] || ''} readOnly  />
+                    <input className="modal-Row-Item-Group-Input" value={masterInfo['approverInfo.employeeId'] || ''} readOnly  />
+                  </div>
+
                 </div>
               </div>
             );
@@ -112,19 +131,66 @@ const ApprovalsWaitModal = (  { items , maxPage , columns, keySno , keyPrice , k
 
           if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
             return null;
+          } 
+
+          if (col.key === 'approvaDate') {
+            const fullDate = masterInfo[col.key] || ""; // 예: "2026-04-28T09:30:00"
+            
+            // T를 기준으로 날짜와 시간을 나눔
+            const [datePart, timePart] = fullDate.split('T'); 
+            // 시(HH)와 분(mm) 추출
+            const hh = timePart?.slice(0, 2) || "00";
+            const mm = timePart?.slice(3, 5) || "00";
+
+            return (
+              <div className='modal-Row' key={col.key}>
+                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                <div className='modal-Row-Item-title-box' style={{ display: 'flex', gap: '5px', alignItems: 'center', flex: 1 }}>
+                  {/* 날짜 영역 (2026-04-28) */}
+                  <input 
+                    value={datePart || ''} 
+                    readOnly 
+                    style={{ width: '140px', textAlign: 'center' }} 
+                  />
+                  
+                  {/* 시간:분 영역 */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                    <input value={hh} readOnly style={{ width: '40px', textAlign: 'center' }} />
+                    <span>:</span>
+                    <input value={mm} readOnly style={{ width: '40px', textAlign: 'center' }} />
+                  </div>
+                </div>
+              </div>
+            );
           }
 
+          if (col.key === 'approvaContent') {
+              return (
+              <div className='modal-Row' key={col.key}>
+                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                <div className="viewer-wrapper">
+                  <Viewer initialValue={masterInfo[col.key] || "내용이 없습니다."} />
+                </div>
+              </div>
+          )}
+
           return (
-            <div key={col.key} style={{ display: 'flex', marginBottom: '8px' }}>
-              <div style={{ width: '100px' }}><strong>{col.label}</strong></div>
-              <div style={{ flex: 1 }}>
+            <div className='modal-Row' key={col.key} >
+              <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+              <div className='modal-Row-Item-title-Body'>
                 <input value={masterInfo[col.key] || ''} readOnly style={{ width: '100%' }} />
               </div>
             </div>
           );
         })}
+      </div>
 
-      {isCompleted && <button type='submit'> 결재처리하기 </button>} 
+      <div className="modal-Footer">
+        <div className="btn-Wrap">
+            {isCompleted &&  <button className="btn-Primary" type='submit'> 결재</button> } 
+            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+        </div>
+      </div>
 
       {confirm !== '' && <ConfirmModal isOpen={confirm !== '' } message={confirm} onConfirm={(e : any )=>{onSubmitPatch(e)}}  onClose={()=>{setConfirm('')}}/> } 
   

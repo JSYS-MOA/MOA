@@ -2,6 +2,7 @@ import React, { useMemo, useState  } from 'react'
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { postOutbounds , useGetInventorySelect} from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
+import {IoCloseOutline} from "react-icons/io5";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 const InventoryOutboundModalForm = (  {  columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose }: {
@@ -229,83 +230,103 @@ console.log(finalPayload);
   };
 
   return (
-    <form onSubmit={(e)=>{onSubmitPost(e)}}>
+    <form className='modal-Container-TableFrom' onSubmit={(e)=>{onSubmitPost(e)}}>
+
+        <div className="modal-Header">
+            <p>출고/폐기등록</p>
+            <button onClick={onClose}>
+                <IoCloseOutline color="#fff" size={18}/>
+            </button>
+          </div>
+  
+          <div className="modal-Title">
+            <p>출고/폐기등록</p>
+        </div>
+
+      <div className='modal-Body' >
         <div>
           <div >
             <label>출고요청일자</label>
             <input type="date" value={orderformDate} readOnly />
           </div>
-
         </div>
 
-      <button onClick={(e) => handleAddList(e)}>품목 추가</button>
-      <table>
 
-        <thead>
-            <tr>
-              { itemList ? <th>순번</th> : null}
-              {columns.map(col => <th key={col.key}>{col.label}</th>)}
-            </tr>
-          </thead>
+        <table className='modal-Table-Form'>
 
-        <tbody>
-        {itemList.map((item, idx) => (
-        <tr key={idx} onClick={()=>{onselectInventory(idx , item)}}>
-          <td >{idx + 1}</td>
-          {columns.map(col => (
-            <td key={col.key}
-               >
+          <thead className="modal-Table-Form-header">
+              <tr>
+                { itemList ? <th>순번</th> : null}
+                {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              </tr>
+            </thead>
 
-            {(() => {
-              const fieldKey = col.key as keyof ModalProps;
-                    
-                     if(col.key === 'defectStatus') {
-                      return <input
-                        type='checkbox'
-                        name={col.key}       
-                        onChange={(e) => {e.stopPropagation(); handleInputChange(idx, col.key, e.target.checked ? '불량' : '정상');}}
-                      />
+          <tbody className="modal-Table-Form-body">
+          {itemList.map((item, idx) => (
+          <tr key={idx} onClick={()=>{onselectInventory(idx , item)}}>
+            <td >{idx + 1}</td>
+            {columns.map(col => (
+              <td key={col.key}>
+
+              {(() => {
+                const fieldKey = col.key as keyof ModalProps;
                       
-                     } else if(col.key === 'defectMemo') {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? ''}          
-                        onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
-                      />
-                      
-                     } else if( col.key === keySno ) {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? 0 }          
-                        onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
-                      />
-                     }
-                     else {
+                      if(col.key === 'defectStatus') {
                         return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? ''}
-                        readOnly          
-                      />
-                     }
+                          type='checkbox'
+                          name={col.key}       
+                          onChange={(e) => {e.stopPropagation(); handleInputChange(idx, col.key, e.target.checked ? '불량' : '정상');}}
+                        />
+                        
+                      } else if(col.key === 'defectMemo') {
+                        return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? ''}          
+                          onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
+                        />
+                        
+                      } else if( col.key === keySno ) {
+                        return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? 0 }          
+                          onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
+                        />
+                      } else {
+                          return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? ''}
+                          readOnly          
+                        />
+                      }
 
-                  })()}
-              </td>
-            ))}
-            
-              <td>              
-                  <button 
-                    onClick={(e) => handleRemoveRow(idx, e)}
-                    style={{ color: 'red', border: '1px solid red', background: 'none', cursor: 'pointer' }}
-                  >
-                    삭제
-                  </button>
-              </td>
-        </tr>
-      ))}
-      </tbody>
-    
-      </table>
-      <button type='submit'>등록</button>
+                    })()}
+                </td>
+              ))}
+              
+                <td>              
+                    <button
+                      className='Del-button' 
+                      onClick={(e) => handleRemoveRow(idx, e)}
+                    >
+                      삭제
+                    </button>
+                </td>
+          </tr>
+        ))}
+        </tbody>
+      
+        </table>
+        
+        <button className="btn-Primary" type='submit' onClick={(e) => handleAddList(e)}> 품목추가</button>
+
+      </div>
+
+      <div className="modal-Footer">
+        <div className="btn-Wrap">
+            <button className="btn-Primary" type='submit'> 등록</button>
+            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+        </div>
+      </div>
           
           {selectMode === 'INVENTORY' ?
             <InventorySelectModal

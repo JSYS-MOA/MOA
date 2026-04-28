@@ -3,7 +3,6 @@ import {FaStar} from "react-icons/fa";
 import { useGetRole , usePatchRole , useGetRoleSelect } from '../../apis/AdminService'
 import Table from '../../components/admin/AdminTable'
 import { type Column } from '../../types/TableProps'
-import Button from '../../components/Button';
 
 const Admin = () => {
   const [page, setPage] = useState(0);
@@ -50,10 +49,6 @@ const Admin = () => {
     { key: 'phone', label: '연락처' },
     { key: 'email', label: 'Email' },]
   
-  console.log(maxPage)
-  console.log(data)
-
-
   return (
     <div>
       <div className="favorite-Header">
@@ -68,9 +63,9 @@ const Admin = () => {
           onItemChange={onRoleChange} columns={columns} select={role.content}/>
         : "로딩중입니다." }
         
-        <div>
-          <Button label='이전' onClick={()=>{changePage(-1)}} />
-          <Button label='다음' onClick={()=>{changePage(1)}} />
+        <div className='Page-Btn-container'>
+          <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+          <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
         </div>
 
       </div>

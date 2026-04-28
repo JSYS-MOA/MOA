@@ -25,7 +25,7 @@ const ConfirmModal = ({isOpen, message, onConfirm, onClose}: ConfirmModalProps) 
                 </div>
                 <div className="confirm-Footer btn-Wrap">
 
-                    { message === '결재처리하시겠습니까?'  ? 
+                    { message === '결재처리하시겠습니까'  ? 
                     <>
                         <button className="btn-Primary" onClick={(e)=>{onConfirm(e); onClose();}} value='결재'>결재</button>
                         <button className="btn-Primary" onClick={(e)=>{onConfirm(e); onClose();}} value='반려'>반려</button>

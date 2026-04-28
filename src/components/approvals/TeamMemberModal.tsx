@@ -1,4 +1,7 @@
-import React, { useEffect, useState  } from 'react'
+import React, { useEffect, useState , useRef  } from 'react'
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { patchTeamMembers } from '../../apis/ApprovalsService'
 import ConfirmModal from './ApprovalsConfirmModal'
@@ -19,6 +22,15 @@ const TeamMemberModal = (  { items , maxPage , columns, keySno , keyPrice , keyt
   const [confirm , setConfirm] = useState('');
 
   const { mutate : PatchTeamMember } = patchTeamMembers();
+
+   const editorRef = useRef<any>(null);
+
+   const handleEditorChange = () => {
+    if (editorRef.current) {
+      const content = editorRef.current.getInstance().getMarkdown(); // 마크다운 형식으로 추출
+      handleInputChange('performance', content);
+    }
+  };
 
   useEffect(() => {
     setItemList(items);
@@ -97,51 +109,60 @@ const TeamMemberModal = (  { items , maxPage , columns, keySno , keyPrice , keyt
   };  
 
   return (
-    <form onSubmit={(e)=> { onConfirm(e)}}>
+    <form className='modal-Container' onSubmit={(e)=> { onConfirm(e)}}>
+      <div className="modal-Header">
+          <p>팀원정보</p>
+          <button onClick={onClose}>
+              <IoCloseOutline color="#fff" size={18}/>
+          </button>
+        </div>
 
-       {columns.map((col) => {
-          if (col.key === 'writerInfo.userName') {
-            return (
-              <div key="row-writer-approver" style={{ display: 'flex', gap: '20px', marginBottom: '8px' }}>
-                <div style={{ display: 'flex', flex: 1 }}>
-                  <div style={{ width: '100px' }}><strong>기안자</strong></div>
-                  <input value={masterInfo['writerInfo.userName'] || ''} readOnly style={{ width: '80px' }} />
-                  <input value={masterInfo['writerInfo.employeeId'] || ''} readOnly style={{ width: '50px', marginLeft: '4px' }} />
-                </div>
-                <div style={{ display: 'flex', flex: 1 }}>
-                  <div style={{ width: '100px' }}><strong>결재자</strong></div>
-                  <input value={masterInfo['approverInfo.userName'] || ''} readOnly style={{ width: '80px' }} />
-                  <input value={masterInfo['approverInfo.employeeId'] || ''} readOnly style={{ width: '50px', marginLeft: '4px' }} />
-                </div>
-              </div>
-            );
-          }
+        <div className="modal-Title">
+          <p>팀원정보</p>
+      </div>
 
-          if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
-            return null;
-          }
+      <div className='modal-Body' >
+        {columns.map((col) => {
 
           if(col.key === 'performance' ) {
             return (
-            <div key={col.key} style={{ display: 'flex', marginBottom: '8px' }}>
-              <div style={{ width: '100px' }}><strong>{col.label}</strong></div>
-              <div style={{ flex: 1 }}>
-                <input value={masterInfo.performance ||  ''} style={{ width: '100%' }}  onChange={(e)=>{handleInputChange(col.key, e.target.value)}}/>
+              <div className='modal-Row' key={col.key} style={{ display: 'block' }}>
+                <div className='modal-Row-Item-title' style={{ marginBottom: '10px' }}>
+                  <strong>{col.label}</strong>
+                </div>
+                <div className="editor-container">
+                  <Editor
+                    ref={editorRef}
+                    initialValue={masterInfo.performance || " "}
+                    previewStyle="vertical"
+                    height="350px"
+                    initialEditType="wysiwyg"
+                    useCommandShortcut={true}
+                    language="ko-KR"
+                    onChange={handleEditorChange} // 내용 변경 시마다 상태 업데이트
+                  />
+                </div>
               </div>
-            </div>
+
           )}
 
           return (
-            <div key={col.key} style={{ display: 'flex', marginBottom: '8px' }}>
-              <div style={{ width: '100px' }}><strong>{col.label}</strong></div>
-              <div style={{ flex: 1 }}>
+            <div className='modal-Row' key={col.key} >
+              <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+              <div className='modal-Row-Item-title-Body'>
                 <input value={masterInfo[col.key] || ''} readOnly style={{ width: '100%' }} />
               </div>
             </div>
           );
         })}
+      </div>
 
-      <button type='submit'> 등록 </button>
+      <div className="modal-Footer">
+        <div className="btn-Wrap">
+            <button className="btn-Primary" type='submit'> 등록</button>
+            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+        </div>
+      </div>
 
       {confirm !== '' && <ConfirmModal isOpen={confirm !== '' } message={confirm} onConfirm={(e : any )=>{onSubmitPatch(e)}}  onClose={()=>{setConfirm('')}}/> } 
   

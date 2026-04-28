@@ -5,9 +5,10 @@ import  { type TableProps , type Column} from "../../types/TableProps"
 
 
 const InventoryTable = (
-    { items , columns , onItemClick , onItemChange , handleInbound }: {
+    { items , columns , page , onItemClick , onItemChange , handleInbound }: {
   items: TableProps[],
   columns: Column[],
+  page : number
   handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: (e : React.ChangeEvent) => void 
@@ -29,7 +30,7 @@ const InventoryTable = (
         <tbody className="inventory-table-body">
           {items.map((item, idx) => (
           <tr key={idx} onClick={(e) => { onItemClick?.(item , e)}}>
-            <td>{idx + 1}</td>
+            <td>{ 10 * page + idx + 1}</td>
             {columns.map(col => (
               <td key={col.key}>
                 

@@ -1,5 +1,5 @@
 import {SlArrowDown} from "react-icons/sl";
-import {useState} from "react";
+import {useState, useRef, useEffect } from "react";
 import "../../assets/styles/component/dropdownSelect.css";
 
 interface MapDropdownSelectProps {
@@ -11,11 +11,29 @@ interface MapDropdownSelectProps {
 }
 const MapDropdownSelect = ({id , value, options, onChange,allowInput = false}:MapDropdownSelectProps ) => {
 
-     const selectedOption = options.find(opt => opt.id === value);
+    
     const [isOpen, setIsOpen] = useState(false);
+    const selectedOption = options.find(opt => opt.id === value);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    
+   useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
 
     return(
-        <div className="dropdown-Wrapper">
+        <div className="dropdown-Wrapper" ref={dropdownRef}>
             <div className="dropdown-Value">
                 <button onClick={() => setIsOpen(!isOpen)}>
                     <span>{selectedOption ? selectedOption.name : value}</span>

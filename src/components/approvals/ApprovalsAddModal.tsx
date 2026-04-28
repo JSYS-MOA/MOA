@@ -1,4 +1,7 @@
-import React, { useEffect, useState  } from 'react'
+import React, { useState , useRef  } from 'react'
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import {IoCloseOutline} from "react-icons/io5";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { usePostApprovals , useGetApprovaLineSelect  , useGetDocumentSelect } from '../../apis/ApprovalsService'
@@ -14,8 +17,8 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
   
   const [approvalsDate, setApprovalsDate] = useState(new Date().toISOString().split('T')[0]); 
   const [selectMode, setSelectMode] = useState<'LINE'| 'DOCUMENT' | null>(null);
-  
-  const [targetIdx, setTargetIdx] = useState<number | null>(null);
+
+  const editorRef = useRef<any>(null);
   const { data : ApprovaLine  } = useGetApprovaLineSelect();
   const { data : Document  } = useGetDocumentSelect();
 
@@ -31,6 +34,13 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
 
     return [{ ...initialItem, approvaStatus: '대기' }];
   });
+
+   const handleEditorChange = () => {
+    if (editorRef.current) {
+      const content = editorRef.current.getInstance().getMarkdown(); // 마크다운 형식으로 추출
+      handleInputChange('approvaContent', content);
+    }
+  };
 
   const handleInputChange = (key: string, value: string | number) => {
     const nextList = [...itemList];
@@ -114,7 +124,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
     }
 
     if (itemList[0].approvaContent === null || itemList[0].approvaTitle === null  || itemList[0].documentId === null ) {
-      setOnAlert("결재 제목과 내용을 작성해주세요");
+      setOnAlert("결재 정보를 모두 입력해주세요.");
       return;
     }
 
@@ -146,43 +156,93 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
 
 
   return (
-    <form onSubmit={(e)=>{onSubmitPost(e)}}>
-       {columns.map((col) => {
-           if (col.key === 'approvaDate') {
+    <form className='modal-Container' onSubmit={(e)=>{onSubmitPost(e)}}>
+       
+       <div className="modal-Header">
+          <p>결재문서</p>
+          <button onClick={onClose}>
+              <IoCloseOutline color="#fff" size={18}/>
+          </button>
+        </div>
+
+        <div className="modal-Title">
+          <p>결재문서</p>
+      </div>
+       
+       <div className='modal-Body' >
+        {columns.map((col) => {
+
+          if (col.key === 'approvaDate') {
+           
+            // T를 기준으로 날짜와 시간을 나눔
+            const [datePart, timePart] = approvalsDate.split('T'); 
+
             return (
-            <div key={col.key} style={{ display: 'flex', marginBottom: '8px' }}>
-                <div style={{ width: '100px' }}><strong>{col.label}</strong></div>
-                <div style={{ flex: 1 }}>
-                  <input readOnly type='date' value={approvalsDate} style={{ width: '100%' }} />
+              <div className='modal-Row' key={col.key}>
+                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                <div className='modal-Row-Item-title-box' style={{ display: 'flex', gap: '5px', alignItems: 'center', flex: 1 }}>
+                  {/* 날짜 영역 (2026-04-28) */}
+                  <input 
+                    value={datePart || ''} 
+                    readOnly 
+                    style={{ width: '140px', textAlign: 'center' }} 
+                  />
+
                 </div>
-            </div>
+              </div>
             );
           }
 
-           if (col.key === 'documentName') {
+          if (col.key === 'documentName') {
             return (
-            <div key={col.key} style={{ display: 'flex', marginBottom: '8px' }} onClick={()=>{onselectDocument()}}>
-                <div style={{ width: '100px' }}><strong>{col.label}</strong></div>
-                <div style={{ flex: 1 }}>
+            <div key={col.key} className='modal-Row' onClick={()=>{onselectDocument()}}>
+                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                <div className='modal-Row-Item-title-Body'>
                   <input readOnly value={itemList[0].documentName} style={{ width: '100%' }} />
                 </div>
             </div>
             );
           }
 
-
           if (col.key === 'writerInfo.userName') {
             return (
-              <div key="row-writer-approver" style={{ display: 'flex', gap: '20px', marginBottom: '8px' }}>
-                <div style={{ display: 'flex', flex: 1 }}>
-                  <div style={{ width: '100px' }}><strong>기안자</strong></div>
-                  <input readOnly value={user?.userId} style={{ width: '80px' }} />
-                  <input readOnly value={user?.employeeId} style={{ width: '50px', marginLeft: '4px' }} />
+              <div className='modal-Row' key="row-writer-approver">
+                <div className='modal-Row-Group' >
+                 
+                  <div className='modal-Row-Item'>
+                    <div className='modal-Row-Item-title'><strong>기안자</strong></div>
+                      <input className="modal-Row-Item-Group-Input" readOnly value={user?.userName} />
+                      <input className="modal-Row-Item-Group-Input" readOnly value={user?.employeeId}/>
+                  </div>
+                    
+                  <div className='modal-Row-Item' onClick={()=>{onselectApprovaLine()}}>
+                    <div className='modal-Row-Item-title'><strong>결재자</strong></div>
+                      <input className="modal-Row-Item-Group-Input" readOnly value={(itemList[0] as any)['approverInfo.userName'] || ''} />
+                      <input className="modal-Row-Item-Group-Input" readOnly value={(itemList[0] as any)['approverInfo.employeeId'] || ''} />
+                    </div>
+                  </div>
+
                 </div>
-                <div style={{ display: 'flex', flex: 1 }} onClick={()=>{onselectApprovaLine()}}>
-                  <div style={{ width: '100px' }}><strong>결재자</strong></div>
-                  <input  readOnly value={(itemList[0] as any)['approverInfo.userName'] || ''} style={{ width: '80px' }} />
-                  <input  readOnly value={(itemList[0] as any)['approverInfo.employeeId'] || ''}  style={{ width: '50px', marginLeft: '4px' }} />
+            );
+          }
+
+          if (col.key === 'approvaContent') {
+            return (
+              <div className='modal-Row' key={col.key} style={{ display: 'block' }}>
+                <div className='modal-Row-Item-title' style={{ marginBottom: '10px' }}>
+                  <strong>{col.label}</strong>
+                </div>
+                <div className="editor-container">
+                  <Editor
+                    ref={editorRef}
+                    initialValue={itemList[0].approvaContent || " "}
+                    previewStyle="vertical"
+                    height="350px"
+                    initialEditType="wysiwyg"
+                    useCommandShortcut={true}
+                    language="ko-KR"
+                    onChange={handleEditorChange} // 내용 변경 시마다 상태 업데이트
+                  />
                 </div>
               </div>
             );
@@ -193,17 +253,23 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
           }
 
           return (
-            <div key={col.key} style={{ display: 'flex', marginBottom: '8px' }}>
-              <div style={{ width: '100px' }}><strong>{col.label}</strong></div>
-              <div style={{ flex: 1 }}>
-                <input style={{ width: '100%' }} onChange={(e)=>{handleInputChange(col.key , e.target.value)}} />
+            <div className='modal-Row' key={col.key}>
+              <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+              <div className='modal-Row-Item-title-Body'>
+                <input onChange={(e)=>{handleInputChange(col.key , e.target.value)}} />
               </div>
             </div>
           );
         })}
+      </div>
 
-      <button type='submit'> 등록</button>
-
+      <div className="modal-Footer">
+        <div className="btn-Wrap">
+            <button className="btn-Primary" type='submit'> 등록</button>
+            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+        </div>
+      </div>
+      
       {selectMode === 'LINE' ?
             <InventorySelectModal
               title='LINE'
@@ -219,7 +285,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
               onSelect={handleDocumentSelect}
               onClose={() => setSelectMode(null)}
               /> : null}        
-      
+
     </form>
   )
 }

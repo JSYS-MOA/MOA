@@ -55,7 +55,7 @@ const Approvals = () => {
       { key: 'approvaDate', label: '일자' },
       { key: 'approvaKind', label: '문서번호'  },
       { key: 'approvaTitle', label: '결재명' },
-      { key: 'approver', label: '결재자' },
+      { key: 'approverInfo.userName', label: '결재자' },
       { key: 'approvaStatus', label: '결제상태' },
       { key: 'approvaMemu', label: '비고' },
       { key: 'approvaInfo', label: '결재' }
@@ -87,28 +87,39 @@ const Approvals = () => {
       {data != null ?<>
         <div className="favorite-Header">
             <FaStar size={18} color="#C4C4C4"/>
-            <span>부서별 권한승인</span>
+            <span>결재신청</span>
         </div>
 
         <Table
           items={data.content}
           columns={columns}
+          page={page}
           onItemClick={onApprovaUserClick}
           />
+        {modalMode !== ''  ? <div className='modal-Overlay'>
 
-        {modalMode === 'LIST' && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keytype='approvaStatus'
-                onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
+          {modalMode === 'LIST' && info != null ?
+          <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keytype='approvaStatus'
+                  onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
 
-         {modalMode === 'ADD'?
-        <AddModal  columns={AddModalColumns}
-                onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
+          {modalMode === 'ADD'?
+          <AddModal  columns={AddModalColumns}
+                  onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
 
-        <button onClick={()=>{changePage(-1)}}>aa</button>
-        <button onClick={()=>{changePage(1)}}>aa</button>
+        </div> : null}
+
+      <div className='Btn-container'>
+        <button onClick={(e) => {setModalMode('ADD')}} className='btn-Primary' > 신규 </button>
+      </div>   
+       
+        {maxPage > 1 ?
+        <div className='Page-Btn-container'>
+          <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+          <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
+        </div> : null }
+
         </> : "로딩중입니다." }
-          
-     <button onClick={(e) => {setModalMode('ADD')}}> 결재 올리기</button>
+
 
       { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>
