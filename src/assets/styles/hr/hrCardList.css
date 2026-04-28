@@ -321,15 +321,15 @@
 
 /* ====================== 테이블 ====================== */
 
-.hrTable {
+.hrCardTable {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid var(--border);
     table-layout: fixed;
 }
 
-.hrTable-th,
-.hrTable-td {
+.hrCardTable-th,
+.hrCardTable-td {
     height: 20px;
     padding: 6px var(--spacing-xs);
     border: 1px solid var(--border);
@@ -340,16 +340,16 @@
     white-space: nowrap;
 }
 
-.hrTable-th {
+.hrCardTable-th {
     background-color: var(--color-gray-100);
     color: var(--text-accent);
 }
 
-.hrTable-td {
+.hrCardTable-td {
     background: var(--color-inverse);
 }
 
-.hrTable-nameButton {
+.hrCardTable-nameButton {
     width: 100%;
     padding: 0;
     border: 0;
@@ -360,21 +360,21 @@
     cursor: pointer;
 }
 
-.hrTable-nameButton:hover,
-.hrTable-nameButton:focus-visible {
+.hrCardTable-nameButton:hover,
+.hrCardTable-nameButton:focus-visible {
     text-decoration: underline;
 }
 
-.hrTable tbody tr:hover {
+.hrCardTable tbody tr:hover {
     background-color: var(--color-gray-100);
 }
 
 /* 체크박스 열 */
-.hrTable-checkbox-cell {
+.hrCardTable-checkbox-cell {
     text-align: center;
 }
 
-.hrTable-checkbox {
+.hrCardTable-checkbox {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -382,11 +382,11 @@
     cursor: pointer;
 }
 
-.hrTable-checkbox input {
+.hrCardTable-checkbox input {
     display: none;
 }
 
-.hrTable-checkbox .checkmark {
+.hrCardTable-checkbox .checkmark {
     width: 16px;
     height: 16px;
     display: inline-block;
@@ -397,59 +397,74 @@
     cursor: pointer;
 }
 
-.hrTable-checkbox input:checked + .checkmark {
+.hrCardTable-checkbox input:checked + .checkmark {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
-.hrTable-empty {
+.hrCardTable-empty {
     padding: var(--spacing-sm);
     border: 1px solid var(--border);
     text-align: center;
 }
 
 /* 열 너비 */
-.hrTable th:nth-child(1),
-.hrTable td:nth-child(1) {
-    width: 36px;
+/* 1. 체크박스 */
+.hrCardTable th:nth-child(1),
+.hrCardTable td:nth-child(1) {
+    width: 4%;
 }
 
-.hrTable th:nth-child(2),
-.hrTable td:nth-child(2) {
-    width: 70px;
+/* 2. 입사일 */
+.hrCardTable th:nth-child(2),
+.hrCardTable td:nth-child(2) {
+    width: 13%;
 }
 
-.hrTable th:nth-child(3),
-.hrTable td:nth-child(3) {
-    width: 70px;
+/* 3. 퇴사일 */
+.hrCardTable th:nth-child(3),
+.hrCardTable td:nth-child(3) {
+    width: 10%;
 }
 
-.hrTable th:nth-child(4),
-.hrTable td:nth-child(4) {
-    width: 80px;
+/* 4. 사원번호 */
+.hrCardTable th:nth-child(4),
+.hrCardTable td:nth-child(4) {
+    width: 11%;
 }
 
-.hrTable th:nth-child(5),
-.hrTable td:nth-child(5) {
-    width: 80px;
+/* 5. 이름 */
+.hrCardTable th:nth-child(5),
+.hrCardTable td:nth-child(5) {
+    width: 8%;
 }
 
-.hrTable th:nth-child(6),
-.hrTable td:nth-child(6) {
-    width: 70px;
+/* 6. 부서 */
+.hrCardTable th:nth-child(6),
+.hrCardTable td:nth-child(6) {
+    width: 10%;
 }
 
-.hrTable th:nth-child(7),
-.hrTable td:nth-child(7) {
-    width: 100px;
+/* 7. 직급 */
+.hrCardTable th:nth-child(7),
+.hrCardTable td:nth-child(7) {
+    width: 5%;
 }
 
-.hrTable th:nth-child(8),
-.hrTable td:nth-child(8) {
-    width: 200px;
+/* 8. 연락처 */
+.hrCardTable th:nth-child(8),
+.hrCardTable td:nth-child(8) {
+    width: 17%;
 }
 
-.hrTable th:nth-child(9),
-.hrTable td:nth-child(9) {
-    width: 200px;
+/* 9. 이메일 */
+.hrCardTable th:nth-child(9),
+.hrCardTable td:nth-child(9) {
+    width: 11%;
+}
+
+/* 10. 주소 */
+.hrCardTable th:nth-child(10),
+.hrCardTable td:nth-child(10) {
+    width: 11%;
 }

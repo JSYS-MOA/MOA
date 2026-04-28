@@ -73,16 +73,16 @@
 }
 
 /* ====================== Form Layout ====================== */
-.leaverCardAddModal-form {
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardAddModal-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     margin: 0 var(--spacing-sm);
     border-radius: var(--radius-lg);
-    background: var(--bg);
+    background: transparent;
 }
 
-.leaverCardAddModal-section {
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardAddModal-section {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
@@ -92,7 +92,7 @@
     background: var(--color-inverse);
 }
 
-.leaverCardAddModal-section > .leaverCardAddModal-row {
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardAddModal-section > .leaverCardAddModal-row {
     padding: 0;
 }
 
@@ -502,16 +502,16 @@
     }
 }
 
-.leaverCardModalScope .modal-Overlay {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Overlay {
     z-index: 999;
     padding: var(--spacing-md);
     box-sizing: border-box;
 }
 
-.leaverCardModalScope .modal-Container {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Container {
     width: min(800px, 100%);
-    max-height: min(900px, calc(100vh - (var(--spacing-md) * 2)));
-    height: 800px;
+    max-height: min(980px, calc(100vh - (var(--spacing-md) * 2)));
+    height: 900px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -520,25 +520,25 @@
     overflow: hidden;
 }
 
-.leaverCardModalScope .modal-Header p,
-.leaverCardModalScope .modal-Title p {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Header p,
+.leaverCardModalScope.leaverCardAddModalScope .modal-Title p {
     margin: 0;
 }
 
-.leaverCardModalScope .modal-Header button {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Header button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
-.leaverCardModalScope .modal-Title {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Title {
     margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
     color: var(--text-accent);
     font-size: var(--font-xl);
     font-weight: 700;
 }
 
-.leaverCardModalScope .modal-Body {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Body {
     flex: 1 1 auto;
     min-height: 0;
     margin: 0;
@@ -547,7 +547,19 @@
     overflow-y: auto;
 }
 
-.leaverCardModalScope .modal-Footer {
+.leaverCardModalScope.leaverCardAddModalScope .modal-Footer {
     padding: 0 var(--spacing-sm) var(--spacing-sm);
     background: transparent;
+}
+
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardAddModal-field,
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardAddModal-column,
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardUpdateModal-field--top {
+    grid-template-columns: 72px minmax(0, 1fr);
+    column-gap: 8px;
+}
+
+.leaverCardModalScope.leaverCardAddModalScope .leaverCardAddModal-employeeSelector {
+    grid-template-columns: 72px minmax(0, 1fr);
+    column-gap: 8px;
 }

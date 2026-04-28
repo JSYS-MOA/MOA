@@ -7,13 +7,15 @@ import {
     useLeaverCardUpdate,
     type LeaverCardUpdateRequest,
 } from "../../apis/hr/LeaverCardService";
+import LeaverCertificateModal from "./CertificateDocumentModal.tsx";
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
 import { useAuthStore } from "../../stores/useAuthStore";
-import "../../assets/styles/hr/LeaverUpdateCardModal.css";
+import "../../assets/styles/hr/leaverCardUpdateModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
 import type {HrCard} from "../../types/HrCard.ts";
+import { openDaumPostcode } from "../../utils/daumPostcode";
 
 
 type Props = {
@@ -86,13 +88,6 @@ type DepartmentResponse = Department[] | { content?: Department[]; value?: Depar
 type DepartmentKey = "HR" | "WML" | "ACLE";
 type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
 type RoleOption = { roleId: number; code: string; label: string };
-
-type AddressSearchResult = {
-    address: string;
-    addressType: string;
-    bname: string;
-    buildingName: string;
-};
 
 type DateInputWithPickerProps = {
     value: string;
@@ -550,10 +545,11 @@ const LeaverCardUpdateModal = ({
                                    userId = null,
                                    onClose,
                                    restrictEditToLeaverLead = false,
-                               }: Props) => {
+}: Props) => {
     const { user } = useAuthStore();
     const [form, setForm] = useState<LeaverCardFormState>(initialForm);
     const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+    const [isEmploymentCertificateOpen, setIsEmploymentCertificateOpen] = useState(false);
 
     const updateLeaverCard = useLeaverCardUpdate();
     const { data: cardData, isLoading, isError } = useLeaverCardInfo(isOpen && userId ? userId : 0);
@@ -645,11 +641,35 @@ const LeaverCardUpdateModal = ({
         currentComparableForm,
         initialComparableForm
     );
+    const employmentCertificateData = useMemo(() => {
+        if (!userId || !cardData) {
+            return null;
+        }
+
+        return {
+            userName: form.userName.trim(),
+            employeeId: form.employeeId.trim(),
+            departmentName: form.departmentName.trim(),
+            departmentCord: form.departmentCord.trim(),
+            gradeName: form.gradeName.trim(),
+            phone: form.phone.trim(),
+            email: form.email.trim(),
+            address: form.address.trim(),
+            birth: form.birth.trim(),
+            startDate: form.startDate.trim(),
+            quitDate: form.quitDate.trim(),
+        };
+    }, [cardData, form, userId]);
+    const isActiveEmployment = form.quitDate.trim() === "";
+    const canPrintEmploymentCertificate =
+        !isLoading && !isError && !updateLeaverCard.isPending && employmentCertificateData !== null;
 
     useEffect(() => {
         if (!isOpen) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsExitConfirmOpen(false);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setIsEmploymentCertificateOpen(false);
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
         }
@@ -800,47 +820,31 @@ const LeaverCardUpdateModal = ({
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSearchAddress = () => {
+    const handleSearchAddress = async () => {
         if (isReadOnly) {
             return;
         }
 
-        if (!window.daum?.Postcode) {
+        try {
+            const selectedAddress = await openDaumPostcode();
+
+            if (!selectedAddress) {
+                return;
+            }
+
+            setForm((prev) => ({
+                ...prev,
+                address: selectedAddress,
+            }));
+        } catch (error) {
+            console.error(error);
             alert("주소 검색 서비스를 불러오지 못했습니다.");
-            return;
         }
-
-        new window.daum.Postcode({
-            oncomplete: (data: AddressSearchResult) => {
-                let fullAddress = data.address;
-                let extraAddress = "";
-
-                if (data.addressType === "R") {
-                    if (data.bname) {
-                        extraAddress += data.bname;
-                    }
-
-                    if (data.buildingName) {
-                        extraAddress += extraAddress
-                            ? `, ${data.buildingName}`
-                            : data.buildingName;
-                    }
-
-                    if (extraAddress) {
-                        fullAddress += ` (${extraAddress})`;
-                    }
-                }
-
-                setForm((prev) => ({
-                    ...prev,
-                    address: fullAddress,
-                }));
-            },
-        }).open();
     };
 
     const handleCancelEdit = () => {
         setIsExitConfirmOpen(false);
+        setIsEmploymentCertificateOpen(false);
         setForm(cardData ? mapCardToForm(cardData as LeaverCardWithAccountOwner) : initialForm);
 
         onClose();
@@ -864,6 +868,14 @@ const LeaverCardUpdateModal = ({
             ...prev,
             email: formatEmailValue(nextLocal, nextDomain),
         }));
+    };
+
+    const handleOpenEmploymentCertificate = () => {
+        if (!canPrintEmploymentCertificate) {
+            return;
+        }
+
+        setIsEmploymentCertificateOpen(true);
     };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -936,6 +948,14 @@ const LeaverCardUpdateModal = ({
                     disabled={updateLeaverCard.isPending || !canEditCard}
                 >
                     {updateLeaverCard.isPending ? "저장 중..." : "저장"}
+                </button>
+                <button
+                    type="button"
+                    className="leaverCardAddModal-button leaverCardAddModal-button--secondary"
+                    onClick={handleOpenEmploymentCertificate}
+                    disabled={!canPrintEmploymentCertificate}
+                >
+                    인쇄
                 </button>
                 <button
                     type="button"
@@ -1231,6 +1251,14 @@ const LeaverCardUpdateModal = ({
                 message="수정 중인 내용이 있습니다. 나가시겠습니까?"
                 onConfirm={handleCancelEdit}
                 onClose={() => setIsExitConfirmOpen(false)}
+            />
+            <LeaverCertificateModal
+                isOpen={isEmploymentCertificateOpen}
+                onClose={() => setIsEmploymentCertificateOpen(false)}
+                data={employmentCertificateData}
+                certificateTitle={isActiveEmployment ? "재직증명서" : "경력증명서"}
+                useLabel={isActiveEmployment ? "재직 확인용" : "경력 확인용"}
+                forceCurrentEmployment={isActiveEmployment}
             />
         </div>
     );

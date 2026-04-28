@@ -14,6 +14,7 @@ import "../../assets/styles/hr/hrCardUpdateModal.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
 import type { HrCard } from "../../types/HrCard";
+import { openDaumPostcode } from "../../utils/daumPostcode";
 
 type Props = {
     isOpen: boolean;
@@ -85,25 +86,6 @@ type DepartmentResponse = Department[] | { content?: Department[]; value?: Depar
 type DepartmentKey = "HR" | "WML" | "ACLE";
 type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
 type RoleOption = { roleId: number; code: string; label: string };
-
-type AddressSearchResult = {
-    address: string;
-    addressType: string;
-    bname: string;
-    buildingName: string;
-};
-
-declare global {
-    interface Window {
-        daum?: {
-            Postcode: new (options: {
-                oncomplete: (data: AddressSearchResult) => void;
-            }) => {
-                open: () => void;
-            };
-        };
-    }
-}
 
 type DateInputWithPickerProps = {
     value: string;
@@ -817,43 +799,26 @@ const HrCardUpdateModal = ({
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSearchAddress = () => {
+    const handleSearchAddress = async () => {
         if (isReadOnly) {
             return;
         }
 
-        if (!window.daum?.Postcode) {
+        try {
+            const selectedAddress = await openDaumPostcode();
+
+            if (!selectedAddress) {
+                return;
+            }
+
+            setForm((prev) => ({
+                ...prev,
+                address: selectedAddress,
+            }));
+        } catch (error) {
+            console.error(error);
             alert("주소 검색 서비스를 불러오지 못했습니다.");
-            return;
         }
-
-        new window.daum.Postcode({
-            oncomplete: (data: AddressSearchResult) => {
-                let fullAddress = data.address;
-                let extraAddress = "";
-
-                if (data.addressType === "R") {
-                    if (data.bname) {
-                        extraAddress += data.bname;
-                    }
-
-                    if (data.buildingName) {
-                        extraAddress += extraAddress
-                            ? `, ${data.buildingName}`
-                            : data.buildingName;
-                    }
-
-                    if (extraAddress) {
-                        fullAddress += ` (${extraAddress})`;
-                    }
-                }
-
-                setForm((prev) => ({
-                    ...prev,
-                    address: fullAddress,
-                }));
-            },
-        }).open();
     };
 
     const handleCancelEdit = () => {

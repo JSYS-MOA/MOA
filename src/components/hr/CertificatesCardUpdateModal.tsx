@@ -8,6 +8,7 @@ import {
     usePostCertificatesCard as usePostCertificatesCardHook,
     usePutCertificatesCard as usePutCertificatesCardHook,
 } from "../../apis/hr/CertificatesCardService";
+import LeaverCertificateModal from "./CertificateDocumentModal.tsx";
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
 import "../../assets/styles/hr/certificatesUpdateCardModal.css";
@@ -370,6 +371,32 @@ const formatGradeDisplay = (gradeName: string, gradeId: string) => {
     return `${gradeName} (${gradeId})`;
 };
 
+const getCertificatePreviewData = (
+    cardDetail: CardDetail | null,
+    form: FormState,
+    departmentName: string,
+    departmentCord: string,
+    gradeName: string
+) => {
+    if (!cardDetail || !form.employeeId.trim() || !form.userName.trim()) {
+        return null;
+    }
+
+    return {
+        userName: form.userName.trim(),
+        employeeId: form.employeeId.trim(),
+        departmentName: departmentName.trim(),
+        departmentCord: departmentCord.trim(),
+        gradeName: gradeName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        address: form.address.trim(),
+        birth: getStringField(cardDetail, "birth"),
+        startDate: getStringField(cardDetail, "startDate", "start_date"),
+        quitDate: getStringField(cardDetail, "quitDate", "quit_date"),
+    };
+};
+
 const buildPayload = (form: FormState) => ({
     employeeId: form.employeeId.trim(),
     userName: form.userName.trim(),
@@ -398,12 +425,14 @@ const CertificatesCardUpdateModal = ({
     const [departments, setDepartments] = useState<Department[]>([]);
     const [form, setForm] = useState<FormState>(initialForm);
     const [initialSnapshot, setInitialSnapshot] = useState<FormState>(initialForm);
+    const [cardDetail, setCardDetail] = useState<CardDetail | null>(null);
     const [isLoadingDepartments, setIsLoadingDepartments] = useState(false);
     const [isLoadingDetail, setIsLoadingDetail] = useState(false);
     const [departmentError, setDepartmentError] = useState("");
     const [loadError, setLoadError] = useState("");
     const [saveError, setSaveError] = useState("");
     const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+    const [isCareerCertificateOpen, setIsCareerCertificateOpen] = useState(false);
 
     const { mutateAsync: fetchCertificatesCardInfo } = useGetCertificatesCardInfo();
     const postCertificatesCard = usePostCertificatesCardHook();
@@ -507,6 +536,18 @@ const CertificatesCardUpdateModal = ({
 
     const hasReferenceInfo = Boolean(form.email || form.phone || form.address);
 
+    const careerCertificateData = useMemo(
+        () =>
+            getCertificatePreviewData(
+                cardDetail,
+                form,
+                resolvedDepartmentName,
+                resolvedDepartmentCord,
+                resolvedGradeName
+            ),
+        [cardDetail, form, resolvedDepartmentCord, resolvedDepartmentName, resolvedGradeName]
+    );
+
     const hasUnsavedChanges = useMemo(
         () => !areSameForm(form, initialSnapshot),
         [form, initialSnapshot]
@@ -546,12 +587,14 @@ const CertificatesCardUpdateModal = ({
         setDepartments([]);
         setForm(initialForm);
         setInitialSnapshot(initialForm);
+        setCardDetail(null);
         setIsLoadingDepartments(false);
         setIsLoadingDetail(false);
         setDepartmentError("");
         setLoadError("");
         setSaveError("");
         setIsExitConfirmOpen(false);
+        setIsCareerCertificateOpen(false);
     };
 
     useEffect(() => {
@@ -609,6 +652,7 @@ const CertificatesCardUpdateModal = ({
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(initialForm);
             setInitialSnapshot(initialForm);
+            setCardDetail(null);
             setLoadError("");
             return;
         }
@@ -627,6 +671,7 @@ const CertificatesCardUpdateModal = ({
                 }
 
                 const nextForm = mapCardToForm(card as CardDetail);
+                setCardDetail(card as CardDetail);
                 setForm(nextForm);
                 setInitialSnapshot(nextForm);
             })
@@ -637,6 +682,7 @@ const CertificatesCardUpdateModal = ({
 
                 setForm(initialForm);
                 setInitialSnapshot(initialForm);
+                setCardDetail(null);
                 setLoadError("인사 발령 정보를 불러오지 못했습니다.");
             })
             .finally(() => {
@@ -877,7 +923,6 @@ const CertificatesCardUpdateModal = ({
                             >
                                 {submitLabel}
                             </button>
-
                             <button
                                 type="button"
                                 className="certificatesCardAddModal-button certificatesCardAddModal-button--secondary"
@@ -1122,6 +1167,12 @@ const CertificatesCardUpdateModal = ({
                     onClose();
                 }}
                 onClose={() => setIsExitConfirmOpen(false)}
+            />
+
+            <LeaverCertificateModal
+                isOpen={isCareerCertificateOpen}
+                onClose={() => setIsCareerCertificateOpen(false)}
+                data={careerCertificateData}
             />
         </>
     );

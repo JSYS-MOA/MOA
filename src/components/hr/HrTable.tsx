@@ -49,11 +49,11 @@ const HrTable = ({
         items.length > 0 && items.every((item) => selectedUserIds.includes(item.userId));
 
     return (
-        <table className="hrTable">
+        <table className="hrCardTable">
             <thead>
             <tr>
-                <th className="hrTable-th hrTable-checkbox-cell">
-                    <label className="hrTable-checkbox">
+                <th className="hrCardTable-th hrCardTable-checkbox-cell">
+                    <label className="hrCardTable-checkbox">
                         <input
                             type="checkbox"
                             checked={allSelected}
@@ -65,7 +65,7 @@ const HrTable = ({
                 </th>
 
                 {columns.map((column) => (
-                    <th key={column.key} className="hrTable-th">
+                    <th key={column.key} className="hrCardTable-th">
                         {column.label}
                     </th>
                 ))}
@@ -75,15 +75,15 @@ const HrTable = ({
             <tbody>
             {items.length === 0 ? (
                 <tr>
-                    <td colSpan={columns.length + 1} className="hrTable-empty">
+                    <td colSpan={columns.length + 1} className="hrCardTable-empty">
                         조회된 인사카드가 없습니다.
                     </td>
                 </tr>
             ) : (
                 items.map((item) => (
                     <tr key={item.userId}>
-                        <td className="hrTable-th hrTable-checkbox-cell">
-                            <label className="hrTable-checkbox">
+                        <td className="hrCardTable-th hrCardTable-checkbox-cell">
+                            <label className="hrCardTable-checkbox">
                                 <input
                                     type="checkbox"
                                     checked={selectedUserIds.includes(item.userId)}
@@ -97,12 +97,12 @@ const HrTable = ({
                         {columns.map((column) => (
                             <td
                                 key={`${item.userId}-${column.key}`}
-                                className="hrTable-td"
+                                className="hrCardTable-td"
                             >
                                 {column.key === "userName" ? (
                                     <button
                                         type="button"
-                                        className="hrTable-nameButton"
+                                        className="hrCardTable-nameButton"
                                         onClick={() => onSelectItem(item.userId)}
                                     >
                                         {formatCellValue(item[column.key])}
