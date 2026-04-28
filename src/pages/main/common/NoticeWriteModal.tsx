@@ -226,8 +226,8 @@ const NoticeWriteModal = ({isOpen, onClose, noticeId, onSuccess}: NoticeWriteMod
                         ref={editorRef}
                         initialValue=" "
                         previewStyle="vertical"
-                        height="369px"
                         initialEditType="wysiwyg"
+                        height="100%"
                         onChange={() => {
                             if (isInitializing.current) return;
 

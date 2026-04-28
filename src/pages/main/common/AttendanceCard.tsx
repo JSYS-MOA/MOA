@@ -4,7 +4,7 @@ import { MdRefresh } from "react-icons/md";
 
 const AttendanceCard = () => {
 
-    const [currentTime, setCurrentTime] = useState("");
+    const [currentTime, setCurrentTime] = useState("00:00:00");
     const [startTime, setStartTime] = useState("00:00:00");
     const [endTime, setEndTime] = useState("00:00:00");
 

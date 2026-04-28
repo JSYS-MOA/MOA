@@ -27,11 +27,11 @@ const HRList = ({ apiType }: Hr2Props) => {
     const [selectedItem, setSelectedItem] = useState<any>(null);
 
     // 데이터 조회
-    const {fetchData, items, loading, setLoading, selectedIds, setSelectedIds,} = useHR2Data(apiType);
+    const {fetchData, items, loading, setLoading, selectedIds, setSelectedIds, page, setPage, totalPages} = useHR2Data(apiType);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData, apiType]);
 
 
 // 체크박스 핸들러
@@ -112,6 +112,32 @@ const HRList = ({ apiType }: Hr2Props) => {
         <div>
             <button onClick={handleInsert} disabled={loading}>신규</button>
             <button onClick={handleDelete} disabled={loading}>삭제</button>
+        </div>
+
+        <div className="pagination" style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
+            <button
+                disabled={page === 0}
+                onClick={() => setPage(prev => prev - 1)}
+            >
+                이전
+            </button>
+
+            {[...Array(totalPages)].map((_, i) => (
+                <button
+                    key={i}
+                    onClick={() => setPage(i)}
+                    style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'blue' : 'black' }}
+                >
+                    {i + 1}
+                </button>
+            ))}
+
+            <button
+                disabled={page >= totalPages - 1}
+                onClick={() => setPage(prev => prev + 1)}
+            >
+                다음
+            </button>
         </div>
 
 

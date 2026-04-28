@@ -4,6 +4,11 @@ export const hr2Configs = {
         title: "근무기록",
         apiUrl: "/api/hr/attendances",
         idKey: "workId",
+        // 필터 조건 필드
+        filterFields: [
+            { id: "keyword", label: "성명", type: "text", placeholder: "성명 입력" },
+            { id: "category", label: "수당항목", type: "select", options: ["야간수당", "휴일수당", "연장수당"] }
+        ],
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "workDate", label: "근무일자" },

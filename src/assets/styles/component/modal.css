@@ -16,6 +16,8 @@
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
 }
 .modal-Header{
     padding: 5px 11px;
@@ -41,9 +43,10 @@
     padding: 20px;
     background: var(--color-inverse);
     border-radius: var(--radius-lg);
-    min-height: 622px;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
 }
 .modal-Footer{
     padding: 13px 15px;

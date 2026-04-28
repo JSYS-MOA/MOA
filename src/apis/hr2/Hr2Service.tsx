@@ -6,10 +6,15 @@ const api = axios.create({
     withCredentials: true,
 });
 
-export const getHr2Data = async (path: keyof typeof hr2Configs) => {
+export const getHr2Data = async (path: keyof typeof hr2Configs, page = 0, size = 15, filterDTO: any) => {
     const realUrl = hr2Configs[path].apiUrl;
 
-    const { data } = await api.get(realUrl);
+    const { data } = await api.get(`${realUrl}`,{
+        params: {
+            page,
+            size,
+            ...filterDTO
+    }});
     return data;
 };
 //
