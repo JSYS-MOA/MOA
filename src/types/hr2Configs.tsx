@@ -1,13 +1,13 @@
 
 export const hr2Configs = {
-    work: {
+    attendances: {
         title: "근무기록",
         apiUrl: "/api/hr/attendances",
         idKey: "workId",
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호" },
+            { key: "employeeId", label: "사원번호", clickable: true },
             { key: "userName", label: "성명" },
             { key: "allowanceName", label: "수당항목" },
             { key: "workMemo", label: "비고" }
@@ -16,12 +16,30 @@ export const hr2Configs = {
         fields: [
             { key: "workDate", label: "근무일자" },
             { key: "employeeId", label: "사원번호", type:"text" },
-            { key: "userName", label: "성명", type:"text" },
-            { key: "allowanceName", label: "수당항목", type:"text" },
+            { key: "userName", label: "성명", type:"text",
+                //검색모달용
+                hasSearch: true,
+                searchType: "user",
+                mapTo: { userName: "userName", employeeId: "employeeId" },
+                readOnly: true
+            },
+            {
+                key: "allowanceCode",
+                label: "수당코드",
+                type: "text",
+                readOnly: true
+            },
+            { key: "allowanceName", label: "수당항목", type:"text",
+                //검색모달용
+                hasSearch: true,
+                searchType: "allowance",
+                mapTo: { allowanceName:"allowanceName", allowanceCode:"allowanceCode" },
+                readOnly: true
+            },
             { key: "workMemo", label: "비고", type:"text" }
         ]
-    },
-    vacation: {
+    }
+   /*vacation: {
         title: "출력물",
         apiUrl: "/api/hr/leavesBalance",
         idKey: "workId",
@@ -83,5 +101,5 @@ export const hr2Configs = {
             { key: "allowanceName", label: "수당항목", type:"text" },
             { key: "workMemo", label: "비고", type:"text" }
         ]
-    }
+    }*/
 }

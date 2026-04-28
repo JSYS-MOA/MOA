@@ -17,6 +17,7 @@ import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
 import Approvals from './pages/approvals/Approvals.tsx';
+import HRLists from "./pages/hr2/HRLists.tsx";
 
 
 
@@ -57,6 +58,7 @@ const App = () => {
                         <Route path="/my/calendars" element={<MyCalendar />} />
                         <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                         <Route path="/admin/levels" element={<Admin />} />
+                        <Route path="/hr/:type" element={<HRLists />} />
                     </Route>
                 </Route>
 

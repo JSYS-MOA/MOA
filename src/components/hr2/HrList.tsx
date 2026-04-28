@@ -1,0 +1,134 @@
+import {useEffect, useState} from "react";
+
+import {hr2Configs} from "../../types/hr2Configs.tsx";
+
+import Table from "../Table.tsx";
+
+import HRModal from "./HRModal.tsx";
+
+import {deleteHr2Data} from "../../apis/hr2/Hr2Service.tsx";
+import useHR2Data from "./useHR2Data.tsx";
+
+
+
+interface Hr2Props {
+
+    apiType: keyof typeof hr2Configs;
+
+}
+
+
+
+const HRList = ({ apiType }: Hr2Props) => {
+
+    const config = hr2Configs[apiType];
+
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<any>(null);
+
+    // 데이터 조회
+    const {fetchData, items, loading, setLoading, selectedIds, setSelectedIds,} = useHR2Data(apiType);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+
+// 체크박스 핸들러
+
+    const handleCheck = (idOrIds: any, checked: boolean, isAll?: boolean) => {
+
+        if (isAll) {
+
+            setSelectedIds(checked ? idOrIds : []);
+
+        } else {
+
+            setSelectedIds(prev =>
+
+                checked ? [...prev, idOrIds] : prev.filter(id => id !== idOrIds)
+
+            );
+
+        }
+
+    };
+
+
+
+    const handleEditOpen = (item: any) => {
+        setSelectedItem(item);
+        setModalOpen(true);
+    };
+
+
+    const handleInsert = () => {
+        setSelectedItem(null); // 수정이 아니므로 기존 데이터를 비움
+        setModalOpen(true);    // 모달 오픈
+    };
+
+    const handleDelete = async () => {
+        if (selectedIds.length === 0) return;
+        if (!window.confirm("삭제하시겠습니까?")) return;
+
+        setLoading(true);
+        try {
+            for (const id of selectedIds) {
+                await deleteHr2Data(apiType, id);
+            }
+
+            setSelectedIds([]);
+            await fetchData(); // 재조회
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
+    if (!config) return <div>페이지 정보를 찾을 수 없습니다.</div>;
+
+    return (
+    <div>
+
+        <h2>{config.title}리스트</h2>
+        <Table
+            idKey={config.idKey}
+            items={items}
+            columns={config.columns.map(col => ({
+                ...col,
+                render: (val: any, item: any) =>
+                    (col as { clickable?: boolean }).clickable ? (
+                        <span onClick={() => handleEditOpen(item)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                                {val}
+                            </span>
+                    ) : val
+            }))}
+            showCheckbox={true}
+            selectedIds={selectedIds}
+            onCheck={handleCheck}
+        />
+        <div>
+            <button onClick={handleInsert} disabled={loading}>신규</button>
+            <button onClick={handleDelete} disabled={loading}>삭제</button>
+        </div>
+
+
+        {isModalOpen && (
+            <HRModal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setModalOpen(false);
+                    setSelectedItem(null); // 닫을 때 선택 아이템 초기화
+                }}
+                apiType={apiType}
+                baseData={selectedItem}
+                fetchData={fetchData}    // 새로고침 함수 전달
+            />
+        )}
+    </div>
+);
+}
+
+export default HRList;
