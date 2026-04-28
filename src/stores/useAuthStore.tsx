@@ -3,7 +3,7 @@ import "../types/auth.ts";
 import type {User} from "../types/auth.ts";
 
 // zustand 스토어 안에 뭐가 들어있는지 미리 정의해두는 것
-interface AuthState {
+export interface AuthState {
     user: User | null;
     login: (userData: User) => void;
     logout: () => void;
