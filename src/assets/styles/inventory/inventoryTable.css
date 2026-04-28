@@ -1,18 +1,26 @@
 .inventory-table {
   text-align: center;
   border-collapse: collapse;
+  font-weight: 300;
+}
+.inventory-table th {
+  font-size: 0.8rem;
+}
+
+.inventory-table td {
+  font-size: 0.9rem;
 }
 
 .inventory-table td , .inventory-table th {
-    border: 1px solid #A9A9A9;
+  border: 1px solid #A9A9A9;
 }
 
 .inventory-table-header {
   height: 34px;
+  min-width: 198.63px;
   width: 198.63px;
   background-color: var(--color-gray-100);
   color: #091B72;
-  font-weight: normal;
 }
 
 .inventory-table-body td {
@@ -23,5 +31,31 @@
 
 }
 
+.dropdown-right-List{
+    position: absolute;
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    width: 100%;
+    border-radius: var(--radius-lg);
+    top: 31px;
+    left: 0;
+    box-sizing: border-box;
+}
+.dropdown-right-List span{
 
-
+}
+.dropdown-right-List .dropdown-Item {
+    border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: none;
+}
+.dropdown-right-List .dropdown-Item:hover{
+    background: var(--color-primary-light);
+}
+.dropdown-right-List .dropdown-Item.active{
+    background: var(--color-primary);
+    color: var(--text-inverse);
+    font-weight: 200;
+}

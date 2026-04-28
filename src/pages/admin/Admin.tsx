@@ -9,8 +9,8 @@ const Admin = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
 
-  const { data } =  useGetRole( search, page, 10);
-  const { data : role } =  useGetRoleSelect();
+  const { data , refetch } =  useGetRole( search, page, 10);
+  const { data : role   } =  useGetRoleSelect();
   const {  mutate, isPending } = usePatchRole()
   const maxPage = data ? data.totalPages  : 0; 
 
@@ -25,13 +25,15 @@ const Admin = () => {
     }
   };
 
-  const onRoleChange = (e : React.ChangeEvent) => {
-    const { id , value } = e.target as HTMLSelectElement;
+  const onRoleChange = (id: number, value: number) => {
+    console.log(id, value)
+
     const roleId : number = Number(value);
     const userId : number = Number(id);
 
      mutate({ userId , roleId }, {
         onSuccess: (data) => {
+          refetch()
           console.log("성공 데이터:", data);
         },
         onError: (error: any) => {
@@ -62,7 +64,7 @@ const Admin = () => {
       <div className='myInfo-Section'>
         {data != null && role != null ?
         <Table
-          items={data.content}
+          items={data.content} page={page}
           onItemChange={onRoleChange} columns={columns} select={role.content}/>
         : "로딩중입니다." }
         
