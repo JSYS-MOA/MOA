@@ -26,16 +26,12 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
         queryFn: () => getNoticeInfoApi(noticeId!),
         enabled: noticeId != null && isOpen
     })
-    const handleClose = () => {
-        onClose();
-    }
-
     const handleDelete = async ()=>{
         try {
             await deleteNoticeApi(selectedNotice!.noticeId);
             onSuccess?.();
             setIsDeleteOpen(false);
-            handleClose();
+            onClose()
         }catch{
             console.error("삭제실패")
         }
@@ -46,7 +42,7 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
             <Modal
                 title="공지사항"
                 isOpen={isOpen}
-                onClose={handleClose}
+                onClose={onClose}
                 footer={
                     <div className="btn-Wrap">
                         {selectedNotice?.writerId === user?.userId && (
@@ -59,7 +55,7 @@ const NoticeDetailModal = ({noticeId, isOpen, onClose, onEdit, onSuccess }:Notic
                                 </button>
                             </>
                         )}
-                        <button className="btn-Secondary" onClick={handleClose}>
+                        <button className="btn-Secondary" onClick={onClose}>
                             취소
                         </button>
                     </div>

@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import React from 'react';
 import './assets/styles/index.css'
+import "react-datepicker/dist/react-datepicker.css"; 
+import "./assets/styles/component/datepicker.css";
 import App from './App.tsx'
 
 // 캐시 저장소
