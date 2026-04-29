@@ -38,7 +38,7 @@ const InventoryTable = (
                 return (
                   <td key={col.key}>
                     {(() => {
-                      if (typeof rawValue === 'string' && rawValue.includes('T')) {
+                      if (typeof rawValue === 'string' && rawValue.includes('T') && col.key === 'reqDate') {
                         return rawValue.split('T')[0];
                       }
 

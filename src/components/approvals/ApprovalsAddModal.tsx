@@ -137,7 +137,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
         approvaMemu : item.approvaMemu,
         file : null ,
         approvaDate : new Date().toISOString(),
-        approver : item.approver
+        approver : item.approvaInfo.approvalLineId
       
     };
 

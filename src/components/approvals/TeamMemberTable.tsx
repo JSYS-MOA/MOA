@@ -23,7 +23,7 @@ const TeamMemberTable = (
 
       <tbody className="inventory-table-body">
         {items.map((item, idx) => (
-        <tr key={idx} onClick={(e)=>onItemClick?.(item , e)}>
+        <tr className='Select-Pointer' key={idx} onClick={(e)=>onItemClick?.(item , e)}>
           <td>{ 10 * page + idx + 1}</td>
 
           {columns.map(col => (

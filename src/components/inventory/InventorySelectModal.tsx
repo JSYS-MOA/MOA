@@ -69,7 +69,7 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
           </thead>
           
           
-          <tbody className="inventory-table-body">
+          <tbody className="Select-Pointer inventory-table-body">
             {title === 'PRODUCT' ? (
               items.map((product: any) => (
                 <tr key={product.productId} onClick={() => onSelect(product)}>

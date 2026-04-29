@@ -219,7 +219,8 @@
 
 .Del-button{
   padding: 4px 14px;
-  background: #5E5C77;
+  background-color: #DA5C57;
+  /* background: #5E5C77; */
   color: #fff;
   border-radius: 7px;
   font-weight: 100;
@@ -247,6 +248,12 @@
 
 .modal-Table-Form input[type='checkbox']:focus,
 .modal-Table-Form input[type='checkbox']:active {
+  cursor: pointer;
   outline: none;
   box-shadow: none;
+}
+
+
+.Select-Pointer {
+  cursor: pointer;
 }
