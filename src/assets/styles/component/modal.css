@@ -39,7 +39,7 @@
     font-weight: 500;
 }
 .modal-Body{
-    padding: 20px;
+    padding: 20px 15px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -47,7 +47,7 @@
 }
 .modal-Children{
     background: var(--color-inverse);
-    padding: 10px 15px;
+    padding: 15px 20px 20px;
     border-radius: var(--radius-lg);
     flex: 1;
 }

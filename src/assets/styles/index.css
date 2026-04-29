@@ -206,23 +206,25 @@ button {
 
 /* 버튼 */
 .btn-Primary{
-  padding: 4px 14px;
+  padding: 3px 12px;
   background: var(--color-primary);
   color: var(--text-inverse);
   border-radius: var(--radius-md);
   font-weight: 100;
+  font-size: 12px;
 }
 .btn-Primary:hover{
   background: #575568;
 }
 
 .btn-Secondary{
-  padding: 4px 14px;
+  padding: 3px 12px;
   background: var(--color-inverse);
   color: var(--text-primary);
   border-radius: var(--radius-md);
   font-weight: 100;
   border: 1px solid var(--text-secondary-30);
+  font-size: 12px;
 }
 .btn-Secondary:hover{
   background: #F9F9F9;
@@ -230,6 +232,26 @@ button {
 .btn-Wrap{
   display: flex;
   gap: 6px;
+}
+.toggle-Btn-Ab{
+  position: absolute;
+  bottom: 27px;
+  left: 0;
+  background: var(--color-inverse);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-dark);
+  z-index: 10;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 200;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.toggle-Btn-Ab:hover {
+  background: var(--color-gray-50);
 }
 /* margin-top */
 .addBtn{margin-top: 12px;}
@@ -323,6 +345,7 @@ button {
   cursor: pointer;
   background: var(--bg-file-input);
   height: 26px;
+  line-height: 26px;
 }
 .file-Input-wrapper span{ font-size: 18px; color: var(--text-secondary-30)}
 .file-Input-wrapper input{ display: none;}

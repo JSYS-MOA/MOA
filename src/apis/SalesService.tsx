@@ -1,4 +1,5 @@
 import axios from "axios";
+import type {Transaction} from "../types/transaction.ts";
 
 const API = "http://localhost/api";
 
@@ -47,6 +48,15 @@ export const deleteTransactionApi = async (transactionId: number) => {
 //전자세금계산서
 export const getTaxInvoiceApi = async (transactionId: number) => {
     const {data} = await axios.get(`${API}/sales/journals/${transactionId}/tax-invoice`,
+        {
+        withCredentials: true,
+    });
+    return data;
+};
+
+//전자세금계산서 조회
+export const getTaxInvoiceListApi = async (): Promise<Transaction[]> => {
+    const {data} = await axios.get(`${API}/sales/taxInv`,
         {
         withCredentials: true,
     });

@@ -18,6 +18,7 @@ import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
 import Approvals from './pages/approvals/Approvals.tsx';
 import SalesJournals from "./pages/sales/SalesJournals.tsx";
+import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
 
 
 
@@ -80,6 +81,7 @@ const App = () => {
                         </Route>
                         <Route path="/sales">
                             <Route path="journals" element={<SalesJournals/>} />
+                            <Route path="taxInv" element={<TaxInvoicePage/>} />
                         </Route>
 
 

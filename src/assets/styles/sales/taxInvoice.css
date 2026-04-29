@@ -54,13 +54,29 @@
     padding-right: 6px !important;
 }
 
+
+.tax-PrintDate {
+    font-size: 11px;
+    display: none;
+}
 @media print {
-    .modal-Overlay {
-        position: static;
-        background: none;
+    @page {
+        margin: 0;
+        padding: 30px;
     }
-    .modal-Header button,
-    .modal-Footer {
-        display: none;
+    .tax-PrintDate {
+        display: block;
+    }
+    body * {
+        visibility: hidden;
+    }
+    .tax-Print, .tax-Print * {
+        visibility: visible;
+    }
+    .tax-Print {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
     }
 }

@@ -6,6 +6,7 @@ import Modal from "../../components/Modal.tsx";
 import ConfirmModal from "../../components/ConfirmModal.tsx";
 import TaxInvoiceModal from "./TaxInvoiceModal.tsx";
 import "../../assets/styles/sales/taxInvoice.css";
+import {IoMdArrowDropdown, IoMdArrowDropup} from "react-icons/io";
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -29,6 +30,7 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
     const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
     const isDirtyRef = useRef(false);
     const [isTaxOpen, setIsTaxOpen] = useState(false);
+    const [showTaxBtn, setShowTaxBtn] = useState(false);
 
     const {data: transaction} = useQuery<Transaction>({
         queryKey: ["transaction", transactionId],
@@ -163,13 +165,23 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                 footer={
                     <div>
                         <div className="btn-Wrap">
-                            <button className="btn-Secondary" onClick={() => setIsTaxOpen(true)}>
-                                전자세금계산서
-                            </button>
                             <button className="btn-Primary" onClick={handleUpdate}>저장</button>
-                            {isEditMode && transaction?.transactionType !== "일반전표(급여)" && (
-                                <button className="btn-Secondary" onClick={() => window.print()}>인쇄</button>
-                            )}
+                            <div style={{position: "relative"}}>
+                                <button
+                                    className="btn-Secondary"
+                                    onClick={() => setShowTaxBtn(prev => !prev)}
+                                    style={{display:"flex",alignItems:"center", gap:"25px"}}
+                                >
+                                    인쇄 {showTaxBtn ?  <IoMdArrowDropdown size={17} /> : <IoMdArrowDropup size={17}/> }
+                                </button>
+                                {showTaxBtn && (
+                                    <div className="toggle-Btn-Ab">
+                                        <div onClick={() => { setIsTaxOpen(true); setShowTaxBtn(false); }}>
+                                            전자세금계산서
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <button className="btn-Secondary" onClick={handleCloseAttempt}>취소</button>
                         </div>
                     </div>
