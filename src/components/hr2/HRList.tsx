@@ -14,12 +14,12 @@ import useHR2Data from "./useHR2Data.tsx";
 interface Hr2Props {
 
     apiType: keyof typeof hr2Configs;
-
+    filterParams: any; // 부모로부터 전달받는 검색 조건
 }
 
 
 
-const HRList = ({ apiType }: Hr2Props) => {
+const HRList = ({ apiType,filterParams }: Hr2Props) => {
 
     const config = hr2Configs[apiType];
 
@@ -27,11 +27,11 @@ const HRList = ({ apiType }: Hr2Props) => {
     const [selectedItem, setSelectedItem] = useState<any>(null);
 
     // 데이터 조회
-    const {fetchData, items, loading, setLoading, selectedIds, setSelectedIds, page, setPage, totalPages} = useHR2Data(apiType);
+    const {fetchData, items, loading, setLoading, selectedIds, setSelectedIds, page, setPage, totalPages} = useHR2Data(apiType, filterParams);
 
     useEffect(() => {
         fetchData();
-    }, [fetchData, apiType]);
+    }, [fetchData, apiType, filterParams]);
 
 
 // 체크박스 핸들러

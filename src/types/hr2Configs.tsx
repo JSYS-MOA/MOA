@@ -6,8 +6,8 @@ export const hr2Configs = {
         idKey: "workId",
         // 필터 조건 필드
         filterFields: [
-            { id: "keyword", label: "성명", type: "text", placeholder: "성명 입력" },
-            { id: "category", label: "수당항목", type: "select", options: ["야간수당", "휴일수당", "연장수당"] }
+            { id: "keyword", label: "성명", type: "text", placeholder: "성명" },
+            { id: "category", label: "수당항목", type: "select", placeholder: "수당항목"}
         ],
         // 표(Table)에 보여줄 컬럼들
         columns: [
@@ -25,7 +25,7 @@ export const hr2Configs = {
                 //검색모달용
                 hasSearch: true,
                 searchType: "user",
-                mapTo: { userName: "userName", employeeId: "employeeId" },
+                mapTo: { name: "userName", id: "employeeId" },
                 readOnly: true
             },
             {
@@ -38,7 +38,7 @@ export const hr2Configs = {
                 //검색모달용
                 hasSearch: true,
                 searchType: "allowance",
-                mapTo: { allowanceName:"allowanceName", allowanceCode:"allowanceCode" },
+                mapTo: { name:"allowanceName", id:"allowanceId" },
                 readOnly: true
             },
             { key: "workMemo", label: "비고", type:"text" }

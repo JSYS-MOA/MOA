@@ -1,8 +1,9 @@
 import {hr2Configs} from "../../types/hr2Configs.tsx";
 import {useState} from "react";
 import FilterDate from "./FilterDate.tsx";
-import FilterSearch from "./FilterSearch.tsx";
 import Modal from "../Modal.tsx";
+import TestTagInput from "../input/TestTagInput.tsx";
+import {getFilterSearch} from "../../apis/hr2/FilterService.tsx";
 
 
 interface FilterProps {
@@ -27,14 +28,9 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
 
         try {
             // 1. configs에서 설정한 url 가져오기 (없으면 기본값)
-            const baseUrl = activeField.fetchUrl || "/api/hr2/getFilterList";
-
-            // 2. 템플릿 리터럴 `${}` 사용해서 쿼리 스트링 조립
-            // 예: /api/hr2/getFilterList?fieldId=user&keyword=김철수
-            const response = await fetch(`${baseUrl}?fieldId=${activeField.id}&keyword=${keyword}`);
-            const data = await response.json();
-
+            const data = await getFilterSearch(activeField.id, keyword);
             setResults(data);
+
         } catch (e) {
             console.error("검색 실패:", e);
             setResults([]);
@@ -42,44 +38,82 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
     };
 
     const handleSelectItem = (item: any) => {
-        setSearchValues({
-            ...searchValues,
-            [activeField.id]: item.name // 화면엔 이름을 보여줌
-            // 만약 ID나 사번을 따로 서버에 보내야 한다면 추가 상태를 만드세요
+
+        const detail = config.fields.find((f: any) => f.searchType === activeField.id || f.key === activeField.id);
+
+        const mapping = detail?.mapTo || { id: 'id', name: 'name' };
+
+        const newItem = {
+            id: item[mapping.id],
+            name: item[mapping.name]
+        };
+
+        setSearchValues((prev: any) => {
+            const currentList = prev[activeField.id] || [];
+            // 중복 선택 방지
+            if (currentList.find((i: any) => i.id === newItem.id)) return prev;
+            return {
+                ...prev,
+                [activeField.id]: [...currentList, newItem] // 무조건 배열로 관리!
+            };
         });
         setIsModalOpen(false);
         setResults([]); // 초기화
         setKeyword(""); // 초기화
     };
 
+    const handleSearchClick = () => {
+        // 1. searchValues에서 ID만 추출해서 백엔드용 포맷으로 변환
+        const formattedFilters = Object.keys(searchValues).reduce((acc: any, key) => {
+            acc[key] = searchValues[key].map((item: any) => item.id);
+            return acc;
+        }, {});
+
+        // 2. 날짜와 합쳐서 부모에게 전달
+        onFilter({
+            ...formattedFilters,
+            startDate: `${dates.start.y}-${dates.start.m}-${dates.start.d}`,
+            endDate: `${dates.end.y}-${dates.end.m}-${dates.end.d}`
+        });
+    };
+
+
     return (
         <div className="filter-container">
             {/* 1. 무조건 있는 날짜 컴포넌트 */}
-            <FilterDate
-                label="일자"
-                value={dates.start}
-                onChange={(val: any) => setDates({...dates, start: val})}
-            />
-            ~
-            <FilterDate
-                value={dates.end}
-                onChange={(val: any) => setDates({...dates, end: val})}
-            />
-
-            {/* 2. Config에 따라 동적으로 생성되는 검색 컴포넌트 */}
-            {config.filterFields?.map(field => (
-                <FilterSearch
-                    key={field.id}
-                    label={field.label}
-                    value={searchValues[field.id]}
-                    onOpenModal={() => {
-                        setActiveField(field);
-                        setIsModalOpen(true);
-                    }}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <FilterDate
+                    label="일자"
+                    value={dates.start}
+                    onChange={(val: any) => setDates({...dates, start: val})}
                 />
+                <span style={{ alignSelf: 'center', padding: '10px auto' }}>~</span>
+                <FilterDate
+                    value={dates.end}
+                    onChange={(val: any) => setDates({...dates, end: val})}
+                />
+            </div>
+            {config.filterFields.map((field) => (
+                <div key={field.id} style={{ width: "200px" }}>
+                    <TestTagInput
+                        placeholder={field.label}
+                        selectedItems={searchValues[field.id] || []}
+                        onClick={() =>{
+                            setActiveField(field);
+                            setIsModalOpen(true);
+                        }} // 해당 필드의 모달 오픈
+                        onRemove={(itemId) => {
+                            setSearchValues((prev:any) => ({
+                                ...prev,
+                                [field.id]: prev[field.id].filter((item:any) => item.id !== itemId)
+                            }));
+                        }}
+                        onClear={() => setSearchValues((prev:any) => ({ ...prev, [field.id]: [] }))}
+                    />
+                </div>
             ))}
 
-            <button onClick={() => onFilter({dates, searchValues})}>검색</button>
+            <button onClick={handleSearchClick}>검색</button>
 
             {/* 3. 공용 모달 연결 */}
             <Modal
@@ -108,7 +142,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                         <thead>
                         <tr>
                             {/* configs에 정의된 컬럼들만 자동으로 출력 */}
-                            {activeField?.columns?.map((col: any) => (
+                            {(activeField?.columns || config.columns.slice(1, 3)).map((col: any) => (
                                 <th key={col.key}>{col.label}</th>
                             ))}
                         </tr>

@@ -2,7 +2,7 @@ import {useCallback, useState} from "react";
 import {getHr2Data} from "../../apis/hr2/Hr2Service.tsx";
 import {hr2Configs} from "../../types/hr2Configs.tsx";
 
-const useHR2Data = (apiType: keyof typeof hr2Configs) => {
+const useHR2Data = (apiType: keyof typeof hr2Configs,filterParams: any) => {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<any[]>([]);
@@ -14,7 +14,7 @@ const useHR2Data = (apiType: keyof typeof hr2Configs) => {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const datas = await getHr2Data(apiType, page);
+            const datas = await getHr2Data(apiType, page, 15, filterParams);
 
             console.log("서버 응답 확인:", datas);
 
