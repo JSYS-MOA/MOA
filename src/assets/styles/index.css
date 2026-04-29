@@ -46,7 +46,7 @@
   --color-inverse: #ffffff;
 
   /* 강조컬러 */
-  --color-danger: #DA5C57;
+  --color-danger: #da5c57;
   --color-danger-hover: #d06864;
 
   /*서브 컬러*/
@@ -231,6 +231,8 @@ button {
   display: flex;
   gap: 6px;
 }
+/* margin-top */
+.addBtn{margin-top: 12px;}
 
 /* 공지사항 헤더 아이콘 */
 .Header-Icon{

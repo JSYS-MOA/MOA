@@ -3,14 +3,16 @@ import type {Transaction} from "../../types/transaction.ts";
 import {useState} from "react";
 import Table, {type TableColumn} from "../../components/Table.tsx";
 import {FaStar} from "react-icons/fa";
-import {getTransactionsApi} from "../../apis/SalesService.tsx";
+import {deleteTransactionApi, getTransactionsApi} from "../../apis/SalesService.tsx";
 import TransactionModal from "./TransactionModal.tsx";
+import ConfirmModal from "../../components/ConfirmModal.tsx";
 
 const SalesJournals = () => {
 
     const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
-
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const {data: transactions =[], refetch} = useQuery<Transaction[], Error, Transaction[]>({
         queryKey:["transactions"],
         queryFn:getTransactionsApi,
@@ -40,6 +42,26 @@ const SalesJournals = () => {
         {key: "transactionMemo", label: "적요"},
     ];
 
+    const handleCheck = (idOrIds: any, checked: boolean, isAll?: boolean) => {
+        if (isAll) {
+            setSelectedIds(checked ? idOrIds : []);
+        } else {
+            setSelectedIds(prev =>
+                checked ? [...prev, idOrIds] : prev.filter(id => id !== idOrIds)
+            );
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            await Promise.all(selectedIds.map(id => deleteTransactionApi(id)))
+            setSelectedIds([]);
+            setIsDeleteOpen(false);
+            await refetch();
+        }catch {
+            console.error("삭제실패")
+        }
+    };
     return(
         <>
             <div className="favorite-Header">
@@ -51,6 +73,9 @@ const SalesJournals = () => {
                     items={transactions}
                     idKey="transactionId"
                     columns={columns}
+                    showCheckbox={true}
+                    selectedIds={selectedIds}
+                    onCheck={handleCheck}
                 />
              </div>
             {isDetailOpen && selectedId && (
@@ -61,6 +86,19 @@ const SalesJournals = () => {
                     onSuccess={() => refetch()}
                 />
             )}
+                <button
+                    className="btn-Primary addBtn"
+                    onClick={() => setIsDeleteOpen(true)}
+                    disabled={selectedIds.length === 0}
+                >
+                    삭제
+                </button>
+            <ConfirmModal
+                isOpen={isDeleteOpen}
+                message="삭제하시겠습니까?"
+                onConfirm={handleDelete}
+                onClose={() => setIsDeleteOpen(false)}
+            />
         </>
     )
 }

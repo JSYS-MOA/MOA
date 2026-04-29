@@ -47,7 +47,7 @@
 }
 .modal-Children{
     background: var(--color-inverse);
-    padding: 20px;
+    padding: 10px 15px;
     border-radius: var(--radius-lg);
     flex: 1;
 }

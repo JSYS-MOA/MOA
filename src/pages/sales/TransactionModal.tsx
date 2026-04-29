@@ -1,9 +1,11 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import type {Transaction} from "../../types/transaction.ts";
-import {deleteTransactionApi, getTransactionApi, updateTransactionApi} from "../../apis/SalesService.tsx";
+import {getTransactionApi, updateTransactionApi} from "../../apis/SalesService.tsx";
 import Modal from "../../components/Modal.tsx";
 import ConfirmModal from "../../components/ConfirmModal.tsx";
+import TaxInvoiceModal from "./TaxInvoiceModal.tsx";
+import "../../assets/styles/sales/taxInvoice.css";
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -24,7 +26,9 @@ interface TransactionForm {
 const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: TransactionModalProps) => {
 
     const isEditMode = transactionId != null;
-    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
+    const isDirtyRef = useRef(false);
+    const [isTaxOpen, setIsTaxOpen] = useState(false);
 
     const {data: transaction} = useQuery<Transaction>({
         queryKey: ["transaction", transactionId],
@@ -33,15 +37,31 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
     });
 
     const [form, setForm] = useState<TransactionForm>({
-        transactionNum: transaction?.transactionNum ?? 0,
-        transactionType: transaction?.transactionType ?? "",
-        vendorCode: transaction?.vendorCode ?? "",
-        vendorName: transaction?.vendorName ?? "",
-        transactionPrice: transaction?.transactionPrice ?? 0,
-        transactionMemo: transaction?.transactionMemo ?? "",
+        transactionNum: 0,
+        transactionType: "",
+        vendorCode: "",
+        vendorName: "",
+        transactionPrice: 0,
+        transactionMemo: "",
     });
 
+    useEffect(() => {
+        if (!transaction || !isOpen) return;
+        const timer = setTimeout(() => {
+            setForm({
+                transactionNum: transaction.transactionNum ?? 0,
+                transactionType: transaction.transactionType ?? "",
+                vendorCode: transaction.vendorCode ?? "",
+                vendorName: transaction.vendorName ?? "",
+                transactionPrice: transaction.transactionPrice ?? 0,
+                transactionMemo: transaction.transactionMemo ?? "",
+            });
+        }, 0);
+        return () => clearTimeout(timer);
+    }, [transaction, isOpen]);
+
     const handleChange = <K extends keyof TransactionForm>(key: K, value: TransactionForm[K]) => {
+        isDirtyRef.current = true;
         setForm(prev => ({...prev, [key]: value}));
     };
 
@@ -58,24 +78,25 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
         }
     };
 
-    const handleDelete = async () => {
-        try {
-            await deleteTransactionApi(transactionId!);
-            onSuccess?.();
-            setIsDeleteOpen(false);
-            onClose();
-        } catch {
-            console.error("삭제 실패");
-        }
+    const handleClose = () => {
+        isDirtyRef.current = false;
+        onClose();
     };
 
+    const handleCloseAttempt = () => {
+        if (isDirtyRef.current) {
+            setIsExitConfirmOpen(true);
+        } else {
+            handleClose();
+        }
+    };
     return (
         <>
             <Modal
                 title="일반전표"
                 isOpen={isOpen}
-                onClose={onClose}
-                bodyStyle={{flex: "none", padding:"10px 15px"}}
+                onClose={handleCloseAttempt}
+                bodyStyle={{flex: "none"}}
                 tableContent={
                     <table className="modal-Table">
                         <thead>
@@ -123,7 +144,7 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                             <td>
                                 <input
                                     type="number"
-                                    value={isEditMode ? (transaction?.transactionPrice ?? 0) : form.transactionPrice}
+                                    value={form.transactionPrice}
                                     onChange={(e) => handleChange("transactionPrice", Number(e.target.value))}
                                     style={{width: "100px"}}
                                 />
@@ -131,7 +152,7 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                             <td>
                                 <input
                                     type="text"
-                                    value={isEditMode ? (transaction?.transactionMemo ?? "") : form.transactionMemo}
+                                    value={form.transactionMemo}
                                     onChange={(e) => handleChange("transactionMemo", e.target.value)}
                                 />
                             </td>
@@ -142,11 +163,14 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                 footer={
                     <div>
                         <div className="btn-Wrap">
+                            <button className="btn-Secondary" onClick={() => setIsTaxOpen(true)}>
+                                전자세금계산서
+                            </button>
                             <button className="btn-Primary" onClick={handleUpdate}>저장</button>
                             {isEditMode && transaction?.transactionType !== "일반전표(급여)" && (
                                 <button className="btn-Secondary" onClick={() => window.print()}>인쇄</button>
                             )}
-                            <button className="btn-Secondary" onClick={onClose}>취소</button>
+                            <button className="btn-Secondary" onClick={handleCloseAttempt}>취소</button>
                         </div>
                     </div>
                 }
@@ -157,10 +181,18 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                 </div>
             </Modal>
             <ConfirmModal
-                isOpen={isDeleteOpen}
-                message="삭제하시겠습니까?"
-                onConfirm={handleDelete}
-                onClose={() => setIsDeleteOpen(false)}
+                isOpen={isExitConfirmOpen}
+                message="작성 중인 내용이 있습니다. 나가시겠습니까?"
+                onConfirm={() => {
+                    setIsExitConfirmOpen(false);
+                    handleClose();
+                }}
+                onClose={() => setIsExitConfirmOpen(false)}
+            />
+            <TaxInvoiceModal
+                isOpen={isTaxOpen}
+                onClose={() => setIsTaxOpen(false)}
+                transactionId={transactionId!}
             />
         </>
     );
