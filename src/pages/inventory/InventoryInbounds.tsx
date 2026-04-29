@@ -81,7 +81,7 @@ const InventoryInbounds = () => {
       
       {modalMode !== ''  ? <div className='modal-Overlay'>
       {modalMode === 'INFO' && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
+        <Modal items={info.content} onClose={()=>{setModalMode('')}} title="입고현황" maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
       
       </div> : null}
       

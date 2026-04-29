@@ -155,11 +155,10 @@
 }
 
 .modal-Table-Form {
-  margin: 17px 15px 0;
-  padding: 20px;
   background: var(--color-inverse);
   border-radius: var(--radius-lg);
-  box-sizing: border-box;text-align: center;
+  box-sizing: border-box;
+  text-align: center;
   border-collapse: collapse;
   font-weight: 300;
   width: 100%;
@@ -170,8 +169,7 @@
   font-size: 0.8rem;
 }
 
-
-.modal-Table-Form  td {
+.modal-Table-Form td {
   font-size: 0.9rem;
 }
 
@@ -180,7 +178,14 @@
 }
 
 .modal-Table-Form td {
+   border: 1px solid #A9A9A9;
+}
 
+.modal-Table-Form td input{
+   height: 100%;
+   font-size: 0.8rem;
+   border: 0px;
+   text-overflow: ellipsis;
 }
 
 .modal-Table-Form input {
@@ -213,9 +218,35 @@
 }
 
 .Del-button{
-  color: red;
-  border: 1px solid red;
-  background: none;
+  padding: 4px 14px;
+  background: #5E5C77;
+  color: #fff;
+  border-radius: 7px;
+  font-weight: 100;
   cursor: pointer;
 
+}
+
+.Date-Header-Input {
+  width: 140px !important;
+}
+
+.Time-Header-Input {
+  width: 40px !important;
+}
+
+.Time-Header-Box {
+ display: flex;
+ gap: 3px;
+}
+
+.modal-Table-Form-body input[type='checkbox'] {
+  height: 24px;
+  width: 24px;
+}
+
+.modal-Table-Form input[type='checkbox']:focus,
+.modal-Table-Form input[type='checkbox']:active {
+  outline: none;
+  box-shadow: none;
 }

@@ -174,18 +174,17 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
 
           if (col.key === 'approvaDate') {
            
-            // T를 기준으로 날짜와 시간을 나눔
             const [datePart, timePart] = approvalsDate.split('T'); 
 
             return (
               <div className='modal-Row' key={col.key}>
                 <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
-                <div className='modal-Row-Item-title-box' style={{ display: 'flex', gap: '5px', alignItems: 'center', flex: 1 }}>
-                  {/* 날짜 영역 (2026-04-28) */}
+                <div className='modal-Row-Item-title-box'>
+
                   <input 
+                    className='Date-Header-Input' 
                     value={datePart || ''} 
                     readOnly 
-                    style={{ width: '140px', textAlign: 'center' }} 
                   />
 
                 </div>

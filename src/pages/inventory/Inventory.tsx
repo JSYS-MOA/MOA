@@ -88,7 +88,7 @@ const Inventory = () => {
 
       
       {modalMode === 'INFO' && info != null ?
-        <Modal items={info.content} onClose={()=>{setModalMode('')}} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
+        <Modal items={info.content} onClose={()=>{setModalMode('')}} maxPage={info.totalPages} title={'재고현황'} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
 
       </div> : null }
 

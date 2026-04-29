@@ -49,7 +49,11 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
                 <th>코드</th>
                 <th>이름</th>
                 </> : null }
-                {title === 'PRODUCT' ? <th>금액</th> :  null }
+                {title === 'PRODUCT' ? (<>
+                <th>코드</th>
+                <th>이름</th>
+                <th>금액</th>
+                </>):  null }
                 {title === 'INVENTORY' ? (<>
                   <th>상품명</th>
                   <th>상품코드</th>

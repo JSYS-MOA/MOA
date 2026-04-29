@@ -2,11 +2,12 @@ import React from 'react'
 import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 
-const InventoryModal = (  { items , maxPage , columns ,onClose, keySno , keyPrice , keytype }: {
+const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , keyPrice , keytype }: {
   items: ModalProps[] ,
   columns : MColumn[] ,
   onClose: () => void 
   maxPage : number ,
+  title? : string ,
   keySno : string ,
   keyPrice : string ,
   keytype : string
@@ -30,14 +31,19 @@ const InventoryModal = (  { items , maxPage , columns ,onClose, keySno , keyPric
     <div className='modal-Container'>
 
       <div className="modal-Header">
-          <p>결재문서</p>
+          <p>
+            {title}
+          </p>
           <button onClick={onClose}>
               <IoCloseOutline color="#fff" size={18}/>
           </button>
         </div>
 
         <div className="modal-Title">
-          <p>결재문서</p>
+          { title === '재고현황' ?  <p>재고수불부</p>: null }
+          { title === '불량/페기현황' ?  <p>불량/페기현황상세</p>: null }
+          { title === '입고현황' ?  <p>발주상세</p>: null }
+          { title === '출고현황' ?  <p>출고상세</p>: null }
       </div>
 
       <div className='modal-Body'>

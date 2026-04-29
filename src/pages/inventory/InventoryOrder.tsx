@@ -88,7 +88,7 @@ const InventoryOrder = () => {
       { key: 'productName', label: '품목명'  },
       { key: 'orderSno', label: '수량' },
       { key: 'unitPrice', label: '단가' },
-      { key: 'totalPrice', label: '총금액' }
+      { key: 'totalPrice', label: '총금액' },
   ]
 
   const inboundModalColumns : MColumn[] = [
@@ -158,9 +158,11 @@ const InventoryOrder = () => {
 
        </> : "로딩중입니다." }
 
-       
+       <div className='Btn-container'>
+          <button onClick={()=>{setModalMode('ADD')}} className='btn-Primary'>발주하기</button> 
+        </div>
 
-       <button onClick={()=>{setModalMode('ADD')}}>발주하기</button> 
+       
 
       {onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>

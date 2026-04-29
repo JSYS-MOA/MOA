@@ -102,6 +102,7 @@ const InventoryDisposals = () => {
         <Modal
           items={info.content}
           maxPage={info.totalPages}
+          title={'불량/페기현황'}
           columns={ModalColumns}
           onClose={() => setModalMode('')}
           keySno='defectSno'

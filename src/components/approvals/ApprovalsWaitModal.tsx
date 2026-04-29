@@ -134,30 +134,26 @@ const ApprovalsWaitModal = (  { items , maxPage , columns, keySno , keyPrice , k
           } 
 
           if (col.key === 'approvaDate') {
-            const fullDate = masterInfo[col.key] || ""; // 예: "2026-04-28T09:30:00"
-            
-            // T를 기준으로 날짜와 시간을 나눔
+            const fullDate = masterInfo[col.key] || ""; 
             const [datePart, timePart] = fullDate.split('T'); 
-            // 시(HH)와 분(mm) 추출
             const hh = timePart?.slice(0, 2) || "00";
             const mm = timePart?.slice(3, 5) || "00";
 
             return (
               <div className='modal-Row' key={col.key}>
                 <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
-                <div className='modal-Row-Item-title-box' style={{ display: 'flex', gap: '5px', alignItems: 'center', flex: 1 }}>
-                  {/* 날짜 영역 (2026-04-28) */}
+                <div className='modal-Row-Item-title-box' >
+
                   <input 
+                    className='Date-Header-Input'
                     value={datePart || ''} 
                     readOnly 
-                    style={{ width: '140px', textAlign: 'center' }} 
                   />
                   
-                  {/* 시간:분 영역 */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                    <input value={hh} readOnly style={{ width: '40px', textAlign: 'center' }} />
+                  <div className='Time-Header-Box'>
+                    <input className='Time-Header-Input' value={hh} readOnly />
                     <span>:</span>
-                    <input value={mm} readOnly style={{ width: '40px', textAlign: 'center' }} />
+                    <input className='Time-Header-Input' value={mm} readOnly />
                   </div>
                 </div>
               </div>

@@ -95,7 +95,7 @@ const InventoryOutbound = () => {
        />
       {modalMode !== ''  ? <div className='modal-Overlay'>
         {modalMode === 'LIST' && info != null ?
-          <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
+          <Modal items={info.content} title="출고현황" onClose={()=>{setModalMode('')}} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
 
         {modalMode === 'OUTBOUND' ?
         <OutboundModal
@@ -103,14 +103,15 @@ const InventoryOutbound = () => {
         onClose={() => setModalMode('')} onRefresh={refetch} setOnAlert={setOnAlert} />: null}
       </div> : null }
 
-
+        <div className='Btn-container'>
+          <button onClick={()=>{setModalMode('OUTBOUND')}} className='btn-Primary'>신규</button>  
+        </div>
+      
       {maxPage > 1 ?
         <div className='Page-Btn-container'>
           <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
           <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
         </div> : null }
-
-      <button onClick={()=>{setModalMode('OUTBOUND')}} className='btn-Primary'>신규</button> 
 
        </> : "로딩중입니다." }
         

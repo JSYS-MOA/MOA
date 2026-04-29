@@ -134,19 +134,17 @@ const ApprovalsModal = (  { items , maxPage , columns, keySno , keyPrice , keyty
             return (
               <div className='modal-Row' key={col.key}>
                 <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
-                <div className='modal-Row-Item-title-box' style={{ display: 'flex', gap: '5px', alignItems: 'center', flex: 1 }}>
-                  {/* 날짜 영역 (2026-04-28) */}
-                  <input 
+                <div className='modal-Row-Item-title-box'>
+                  <input
+                    className='Date-Header-Input' 
                     value={datePart || ''} 
-                    readOnly 
-                    style={{ width: '140px', textAlign: 'center' }} 
+                    readOnly     
                   />
                   
-                  {/* 시간:분 영역 */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                    <input value={hh} readOnly style={{ width: '40px', textAlign: 'center' }} />
+                  <div className='Time-Header-Box'>
+                    <input className='Time-Header-Input' value={hh} readOnly />
                     <span>:</span>
-                    <input value={mm} readOnly style={{ width: '40px', textAlign: 'center' }} />
+                    <input className='Time-Header-Input' value={mm} readOnly  />
                   </div>
                 </div>
               </div>

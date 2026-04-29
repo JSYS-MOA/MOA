@@ -29,30 +29,38 @@ const InventoryTable = (
 
         <tbody className="inventory-table-body">
           {items.map((item, idx) => (
-          <tr key={idx} onClick={(e) => { onItemClick?.(item , e)}}>
-            <td>{ 10 * page + idx + 1}</td>
-            {columns.map(col => (
-              <td key={col.key}>
-                
-                {item[col.key as keyof TableProps]|| "-"}
+            <tr key={idx} onClick={(e) => { onItemClick?.(item, e) }}>
+              <td>{10 * page + idx + 1}</td>
 
-                 {col.key === 'orderStatus' && item[col.key] === '대기' && (
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleInbound?.(item , e);
-                    }}
-                    style={{ marginLeft: '8px' }}
-                  >
-                    입고처리
-                  </button>
-                )}
+              {columns.map(col => {
+                const rawValue = item[col.key as keyof TableProps];
 
-              </td>
-            ))}
-            
-          </tr>
-        ))}
+                return (
+                  <td key={col.key}>
+                    {(() => {
+                      if (typeof rawValue === 'string' && rawValue.includes('T')) {
+                        return rawValue.split('T')[0];
+                      }
+
+                      return rawValue || "-";
+                    })()}
+
+                    {col.key === 'orderStatus' && item[col.key] === '대기' && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleInbound?.(item, e);
+                        }}
+                      >
+                        입고처리
+                      </button>
+                    )}
+
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
 
     </table>
