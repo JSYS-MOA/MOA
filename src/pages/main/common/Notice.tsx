@@ -16,7 +16,7 @@ const Notice = () => {
     const [isWriteOpen, setIsWriteOpen] = useState(false);
     const [editId, setEditId] = useState<number | null>(null);
 
-   const { data:notices =[], refetch } = useQuery({
+   const { data:notices =[], refetch,isLoading } = useQuery({
        queryKey:["notices"],
        queryFn: getNoticesApi
    })
@@ -59,40 +59,45 @@ const Notice = () => {
                     />
                 </div>
             </div>
-            <table className="notice-Table">
-                <thead>
-                <tr>
-                    <th>제목</th>
-                    <th>작성일</th>
-                    <th>작성자</th>
-                    <th>첨부</th>
-                </tr>
-                </thead>
-                <tbody>
-                {sortedNotices.map((notice:NoticeItem) => (
-                    <tr key={notice.noticeId} style={{backgroundColor: notice.isNotice ? "#FFF6F6" : "fff"}}>
-                        <td onClick={() => handleNoticeClick(notice.noticeId)} style={{cursor:"pointer", color:"#091B72"}}>
-                            {notice.isNotice && (
-                                <span style={{
-                                    color: "#fff",
-                                    backgroundColor: "#DA5C57",
-                                    fontSize: "11px",
-                                    padding: "3px 14px",
-                                    borderRadius: "15px",
-                                    marginRight: "6px"
-                                }}>
-                                    공지
-                                </span>
-                            )}
-                            {notice.noticeTitle}
-                        </td>
-                        <td>{notice.postDate}</td>
-                        <td>{notice.writerName}</td>
-                        <td>{notice.file ? "Y" : "N"}</td>
+            {isLoading ? (
+                <div className="notice-IsLoading">
+                    <div className="spinner-Wrap">
+                        <span className="spinner spinner-Dark"></span>
+                        로딩 중...
+                    </div>
+                </div>
+            ) : (
+                <table className="notice-Table">
+                    <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>작성일</th>
+                        <th>작성자</th>
+                        <th>첨부</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {sortedNotices.map((notice: NoticeItem) => (
+                        <tr key={notice.noticeId} className={notice.isNotice ? "notice-IsNotice-Row" : ""}>
+                            <td
+                                onClick={() => handleNoticeClick(notice.noticeId)}
+                                style={{cursor: "pointer", color: "#091B72"}}
+                            >
+                                {notice.isNotice && (
+                                    <span className="notice-IsNotice">
+                                        공지
+                                    </span>
+                                )}
+                                {notice.noticeTitle}
+                            </td>
+                            <td>{notice.postDate}</td>
+                            <td>{notice.writerName}</td>
+                            <td>{notice.file ? "Y" : "N"}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            )}
             <NoticeDetailModal
                 noticeId={selectedId}
                 isOpen={isDetailOpen}

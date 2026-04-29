@@ -5,6 +5,7 @@
 }
 .dropdown-Value{
     text-align: center;
+    font-weight: 300;
 }
 .dropdown-Wrapper button{
     display: flex;
@@ -35,9 +36,10 @@
     align-items: center;
     width: 100%;
     background: none;
+    font-weight: 300;
 }
 .dropdown-List .dropdown-Item:hover{
-    background: var(--color-primary-light);
+    background: var(--color-gray-100);
 }
 .dropdown-List .dropdown-Item.active{
     background: var(--color-primary);

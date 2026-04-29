@@ -6,7 +6,7 @@ export interface TableProps {
   gradeName? : string;
   phone? : string;
   email? : string;
-  roleId? : string;
+  roleId? : number;
   inventorySno: string;
 
   employeeId?: string;

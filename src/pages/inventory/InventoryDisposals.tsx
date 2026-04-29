@@ -1,10 +1,12 @@
 import { useState } from "react";
+import {FaStar} from "react-icons/fa";
 import Table from "../../components/inventory/InventoryTable";
 import { useGetDefect , useGetDefectInfo } from "../../apis/InventoryService";
 import Modal from "../../components/inventory/InventoryModal";
 import OutboundModal from "../../components/inventory/InventoryOutboundModalForm"
 import { type ModalProps , type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Alert from "../../components/inventory/Alert";
 
 
 const InventoryDisposals = () => {
@@ -40,7 +42,7 @@ const InventoryDisposals = () => {
           setModalMode('LIST')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("정보를 가져오는데 실패했습니다.");
+          setOnAlert("정보를 가져오는데 실패했습니다.");
         }
       })
        
@@ -81,38 +83,55 @@ const InventoryDisposals = () => {
 
   return (
     <div>
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>불량/페기 현황</span>
+      </div>
+      
       {data != null ?<>
       <Table
         items={data.content}
         columns={columns}
+        page={page}
         onItemClick={onInventoryClick}
        />
 
-      {modalMode == 'LIST' && info != null ?
+      {modalMode !== ''  ? <div className='modal-Overlay'>
+
+        {modalMode == 'LIST' && info != null ?
         <Modal
           items={info.content}
           maxPage={info.totalPages}
+          title={'불량/페기현황'}
           columns={ModalColumns}
+          onClose={() => setModalMode('')}
           keySno='defectSno'
           keyPrice='productPrice'
           keytype=''
           /> : null}
 
-      <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
+        {modalMode === 'OUTBOUND' ?
+        <OutboundModal
+        columns={outboundModalColumns} keySno='logisticSno' keyPrice='unitPrice' keytype='orderStatus'
+        onClose={() => setModalMode('')} onRefresh={refetch} setOnAlert={setOnAlert} />: null}
       
-      <button onClick={()=>{setModalMode('OUTBOUND')}}>출고/폐기 등록</button> 
-
-      {modalMode === 'OUTBOUND' ?
-      <OutboundModal
-      columns={outboundModalColumns} keySno='logisticSno' keyPrice='unitPrice' keytype='orderStatus'
-      onClose={() => setModalMode('')} onRefresh={refetch} setOnAlert={setOnAlert} />: null}
+      </div> : null }
    
+        <div className='Btn-container'>
+          <button onClick={()=>{setModalMode('OUTBOUND')}} className='btn-Primary' >출고/폐기 등록</button> 
+        </div>
       
+      {maxPage > 1 ?
+        <div className='Page-Btn-container'>
+          <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+          <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
+        </div> : null }
+        
+        
        </> : "로딩중입니다." }
         
       
-
+        { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
     </div>
   )
 }

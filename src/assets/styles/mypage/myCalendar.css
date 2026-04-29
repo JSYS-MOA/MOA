@@ -18,14 +18,15 @@
     width: 1170px;
 }
 .myCalendar-Year{
-    background: var(--color-gray-100);
+    background: var(--color-primary-light);
     border-radius: var(--radius-lg);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-gray-100);
 }
-
+.myCalendar-Year .dropdown-Value span{
+    color: var(--text-primary);
+}
 .myCalendar-Year button {
-    padding: 6px 12px;
+    padding: 6px 13px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -41,11 +42,11 @@
     padding: 6px 12px;
 }
 .myCalendar-Months{
-    margin-top: var(--spacing-md);
+    margin-top: 18px;
     padding-bottom: var(--spacing-md);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 7px;
+    gap: 8px;
     width: 100%;
     color: var(--text-secondary);
 }
@@ -55,9 +56,16 @@
     font-weight: 300;
 }
 .myCalendar-Months button:hover{
-    background: var(--color-danger);
-    color: var(--text-inverse);
+    background: #f1f1f1;
     font-weight: 200;
+}
+.month-Btn.active {
+    background: var(--color-danger);
+    color: #fff;
+    font-weight: 200;
+}
+.month-Btn.active:hover {
+    background: var(--color-danger);
 }
 .filter-Title{
     padding: 9px 0;
