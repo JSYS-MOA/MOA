@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {FaStar} from "react-icons/fa";
 import { useAuthStore } from "../../stores/useAuthStore.tsx";
 import Table from "../../components/approvals/TeamMemberTable.tsx"
@@ -12,7 +12,8 @@ const TeamMembers = () => {
 
   const { user } = useAuthStore();
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
+  const search  = '';
   const [onAlert, setOnAlert] = useState('');
   const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
@@ -34,7 +35,7 @@ const TeamMembers = () => {
         }
   };
   
-  const onTeamMemberClick = ( item : any , e : React.MouseEvent) => {
+  const onTeamMemberClick = ( item : any ) => {
     if('userId' in item) {
       mutate (item.userId, {
       onSuccess: (data) => {
@@ -45,7 +46,7 @@ const TeamMembers = () => {
         setModalMode('LIST')
         console.log("TeamMember 성공 데이터:", data);
       },onError: (error: any) => {
-        setOnAlert("정보를 가져오는데 실패했습니다.");
+        setOnAlert( error + "정보를 가져오는데 실패했습니다.");
       }
     })
       

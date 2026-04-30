@@ -24,7 +24,8 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
   const { mutate : DelOrderForm } = useDeleteOrderForm();
   const { data } = useGetProductSelect();
 
-  const [delOrder, setDelOrder] = useState(false);
+  // const [delOrder, setDelOrder] = useState(false);
+  console.log(maxPage)
 
   useEffect(() => {
     setItemList(items);
@@ -235,30 +236,31 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
       </div>
       
       <div className='modal-Body'>
-        <div className='modal-Row'>
-          <div className='modal-Row-Group'>
-            <div className='modal-Row-Item'>
-              <div className='modal-Row-Item-title'>
-                <label >발주요청일자</label>
+        <div className='modal-Children'>
+          <div className='modal-Row'>
+            <div className='modal-Row-Group'>
+              <div className='modal-Row-Item'>
+                <div className='modal-Row-Item-title'>
+                  <label >발주요청일자</label>
+                </div>
+                <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.orderformDate || ''} readOnly />  
               </div>
-              <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.orderformDate || ''} readOnly />  
+
+              <div className='modal-Row-Item'>
+                <div className='modal-Row-Item-title'>
+                  <label >납기일자</label>
+                </div>
+                  <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.stockInDate || ''} readOnly  />
+              </div>
             </div>
 
-            <div className='modal-Row-Item'>
-              <div className='modal-Row-Item-title'>
-                <label >납기일자</label>
-              </div>
-                <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.stockInDate || ''} readOnly  />
-            </div>
           </div>
-
-        </div>
 
           <div className='modal-Row'>
             <label >거래처</label>
             <input type="text" value={masterInfo.vendorName || ''} readOnly />
           </div>
-
+        </div>
         <table className='modal-Table-Form'>
 
           <thead className="modal-Table-Form-header">
@@ -275,7 +277,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
             <td >{idx + 1}</td>
             {columns.map(col => (
               <td key={col.key}
-                  onClick={(e) => {
+                  onClick={() => {
                       if (col.key !== keySno ) {
                         onselectProduct(idx , item);
                       }}}>

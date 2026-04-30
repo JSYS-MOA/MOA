@@ -5,13 +5,13 @@ import  { type TableProps , type Column} from "../../types/TableProps"
 
 
 const InventoryTable = (
-    { items , columns , page , onItemClick , onItemChange , handleInbound }: {
+    { items , columns , page , onItemClick  , handleInbound }: {
   items: TableProps[],
   columns: Column[],
   page : number
   handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
-  onItemChange?: (e : React.ChangeEvent) => void 
+
   }) => {
 
   console.log(items)
