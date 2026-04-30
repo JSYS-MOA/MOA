@@ -5,7 +5,7 @@ import { Viewer } from '@toast-ui/react-editor';
 import { patchApprovalAct } from '../../apis/ApprovalsService'
 import ConfirmModal from './ApprovalsConfirmModal'
 
-const ApprovalsWaitModal = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
+const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
   columns : MColumn[] ,
   maxPage : number ,

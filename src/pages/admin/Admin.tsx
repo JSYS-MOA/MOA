@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {FaStar} from "react-icons/fa";
 import { useGetRole , usePatchRole , useGetRoleSelect } from '../../apis/AdminService'
 import Table from '../../components/admin/AdminTable'
@@ -6,11 +6,12 @@ import { type Column } from '../../types/TableProps'
 
 const Admin = () => {
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
+  const search = '';
 
   const { data , refetch } =  useGetRole( search, page, 10);
   const { data : role   } =  useGetRoleSelect();
-  const {  mutate, isPending } = usePatchRole()
+  const {  mutate } = usePatchRole()
   const maxPage = data ? data.totalPages  : 0; 
 
   const changePage = (num: number) => {

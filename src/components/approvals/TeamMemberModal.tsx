@@ -6,7 +6,7 @@ import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { patchTeamMembers } from '../../apis/ApprovalsService'
 import ConfirmModal from './ApprovalsConfirmModal'
 
-const TeamMemberModal = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
+const TeamMemberModal = (  { items  , columns, onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
   columns : MColumn[] ,
   maxPage : number ,

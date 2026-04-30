@@ -2,7 +2,7 @@ import React from 'react'
 import  { type TableProps , type Column} from "../../types/TableProps"
 
 const TeamMemberTable = (
-    { items , columns , page , onItemClick , onItemChange , handleitems}: {
+    { items , columns , page , onItemClick }: {
   items: TableProps[],
   columns: Column[],
   page : number,

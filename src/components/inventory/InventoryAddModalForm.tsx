@@ -93,7 +93,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
   } ;
 
    // 물품 전달을 위한 조회
-  const onselectProduct = (idx: number , item : any) => {
+  const onselectProduct = (idx: number ) => {
       setSelectMode('PRODUCT');
       setTargetIdx(idx);
   }
@@ -236,7 +236,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
               <td key={col.key}
                   onClick={() => {
                       if (col.key !== keySno ) {
-                        onselectProduct(idx , item);
+                        onselectProduct(idx);
                     }}}>
 
               {(() => {

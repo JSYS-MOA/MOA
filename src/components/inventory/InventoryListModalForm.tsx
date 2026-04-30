@@ -24,7 +24,8 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
   const { mutate : DelOrderForm } = useDeleteOrderForm();
   const { data } = useGetProductSelect();
 
-  const [delOrder, setDelOrder] = useState(false);
+  // const [delOrder, setDelOrder] = useState(false);
+  console.log(maxPage)
 
   useEffect(() => {
     setItemList(items);
@@ -275,7 +276,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
             <td >{idx + 1}</td>
             {columns.map(col => (
               <td key={col.key}
-                  onClick={(e) => {
+                  onClick={() => {
                       if (col.key !== keySno ) {
                         onselectProduct(idx , item);
                       }}}>

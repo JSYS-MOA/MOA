@@ -11,7 +11,8 @@ import Alert from "../../components/inventory/Alert";
 
 const InventoryDisposals = () => {
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+    // const [search, setSearch] = useState('');
+  const search = '';
   const [onAlert, setOnAlert] = useState('');
   const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
@@ -32,7 +33,7 @@ const InventoryDisposals = () => {
     }
   };
 
-    const onInventoryClick = ( item : any , e : React.MouseEvent) => {
+    const onInventoryClick = ( item : any ) => {
 
       if('inventoryId' in item) {
         
@@ -42,7 +43,7 @@ const InventoryDisposals = () => {
           setModalMode('LIST')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          setOnAlert("정보를 가져오는데 실패했습니다.");
+          setOnAlert( error + "정보를 가져오는데 실패했습니다.");
         }
       })
        
@@ -112,7 +113,7 @@ const InventoryDisposals = () => {
 
         {modalMode === 'OUTBOUND' ?
         <OutboundModal
-        columns={outboundModalColumns} keySno='logisticSno' keyPrice='unitPrice' keytype='orderStatus'
+        columns={outboundModalColumns} keySno='logisticSno' keyPrice='unitPrice'
         onClose={() => setModalMode('')} onRefresh={refetch} setOnAlert={setOnAlert} />: null}
       
       </div> : null }

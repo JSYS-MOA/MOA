@@ -1,22 +1,21 @@
-import React, { useMemo, useState  } from 'react'
+import React, {  useState  } from 'react'
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { postOutbounds , useGetInventorySelect} from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
 import {IoCloseOutline} from "react-icons/io5";
 import { useAuthStore } from "../../stores/useAuthStore";
 
-const InventoryOutboundModalForm = (  {  columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose }: {
+const InventoryOutboundModalForm = (  {  columns, keySno , keyPrice  , onRefresh , setOnAlert , onClose }: {
   columns : MColumn[] ,
   keySno : string ,
   keyPrice : string ,
-  keytype : string ,
   onRefresh : any,
   onClose: () => void 
   setOnAlert: (msg: string) => void 
   })  => {
   
-  const [orderformDate, setOrderformDate] = useState(new Date().toISOString().split('T')[0]); 
-  const [vendor, setVendor] = useState({ vendorName: '', vendorId: '' , vendorCord: '' });  
+  // const [orderformDate, setOrderformDate] = useState(new Date().toISOString().split('T')[0]); 
+  const orderformDate = new Date().toISOString().split('T')[0];
 
   const [selectMode, setSelectMode] = useState<'INVENTORY' | null>(null);
 
@@ -24,6 +23,8 @@ const InventoryOutboundModalForm = (  {  columns, keySno , keyPrice , keytype , 
   const { data : InventoryData } = useGetInventorySelect(); 
   const { mutate } = postOutbounds();
   const { user } = useAuthStore();
+
+
 
   const [itemList, setItemList] = useState<ModalProps[]>(() => {
     // 초기값으로 빈 행 하나를 생성합니다.
@@ -105,7 +106,7 @@ const InventoryOutboundModalForm = (  {  columns, keySno , keyPrice , keytype , 
   } ;
 
    //  물품 인벤토리
-  const onselectInventory = (idx: number , item : any) => {
+  const onselectInventory = (idx: number ) => {
       setSelectMode('INVENTORY');
       setTargetIdx(idx);
   }
@@ -266,7 +267,7 @@ console.log(finalPayload);
 
           <tbody className="modal-Table-Form-body">
           {itemList.map((item, idx) => (
-          <tr key={idx} onClick={()=>{onselectInventory(idx , item)}}>
+          <tr key={idx} onClick={()=>{onselectInventory(idx)}}>
             <td >{idx + 1}</td>
             {columns.map(col => (
               <>

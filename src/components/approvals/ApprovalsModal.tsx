@@ -4,7 +4,7 @@ import { Viewer } from '@toast-ui/react-editor';
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { useDeleteApprovals } from '../../apis/ApprovalsService'
 
-const ApprovalsModal = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
+const ApprovalsModal = (  { items ,  columns,  onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
   columns : MColumn[] ,
   maxPage : number ,

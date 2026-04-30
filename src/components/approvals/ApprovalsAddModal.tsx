@@ -15,7 +15,8 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
   setOnAlert: (msg: string) => void 
   })  => {
   
-  const [approvalsDate, setApprovalsDate] = useState(new Date().toISOString().split('T')[0]); 
+  // const [approvalsDate, setApprovalsDate] = useState(new Date().toISOString().split('T')[0]); 
+  const approvalsDate = new Date().toISOString().split('T')[0];
   const [selectMode, setSelectMode] = useState<'LINE'| 'DOCUMENT' | null>(null);
 
   const editorRef = useRef<any>(null);
@@ -174,7 +175,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
 
           if (col.key === 'approvaDate') {
            
-            const [datePart, timePart] = approvalsDate.split('T'); 
+            const datePart = approvalsDate.split('T'); 
 
             return (
               <div className='modal-Row' key={col.key}>
