@@ -1,5 +1,5 @@
 import Modal from "../Modal";
-import "../../assets/styles/hr/CertificateDocumentModal.css";
+import "../../assets/styles/hr/certificateDocumentModal.css";
 
 export type CertificateData = {
     userName: string;

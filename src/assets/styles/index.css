@@ -46,21 +46,22 @@
   --color-inverse: #ffffff;
 
   /* 강조컬러 */
-  --color-danger: rgb(218 92 87);
+  --color-danger: #da5c57;
+  --color-danger-hover: #d06864;
 
   /*서브 컬러*/
   --color-gray-50: #FBFBFB;
   --color-gray-100: #F1F1F1;
 
   /*  hover 등등 */
-  --color-primary-light: #F6F5FF;
+  --color-primary-light: #F9F9FF;
   --color-modal:#F6F6F6;
-/*---------------------------------------------*/
+  /*---------------------------------------------*/
   /*배경색*/
   --bg: #f6f6f6;
   --bg-file-input: #F1F2F6;
 
-/*----------------------------------------------*/
+  /*----------------------------------------------*/
   /*선 색*/
   --border: #e6e6e6;
   --border-dark: rgba(169,169,169,0.5);
@@ -70,7 +71,7 @@
   --radius-md: 7px;
   --radius-lg: 15px;
 
-/*------------------------------------------------*/
+  /*------------------------------------------------*/
 
   /*폰트사이즈*/
   --font-xs: 0.75rem;   /* 12px */
@@ -89,11 +90,10 @@
 
   /*------------------------------------------------*/
 
-  }
+}
 @media (max-width: 1024px) {
   font-size: 16px;
 }
-
 
 #root {
   max-width: 100%;
@@ -108,6 +108,7 @@
   overflow-y: hidden;
   overflow-x: hidden;
   color: var(--text-primary);
+  font-weight: 300 !important;
 }
 
 .layout-wrapper {
@@ -136,7 +137,7 @@ h1 {
   @media (max-width: 1024px) {
     font-size: 36px;
   }
-  }
+}
 
 h2 {
   letter-spacing: -0.24px;
@@ -144,7 +145,7 @@ h2 {
   @media (max-width: 1024px) {
     font-size: 20px;
   }
-  }
+}
 
 p {
   margin: 0;
@@ -154,15 +155,20 @@ input{
   border: 1px solid var(--border);
   margin: 0; padding: 0;
   color: var(--text-secondary);
+  font-weight: 300 !important;
+}
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
 }
 input::placeholder{color: var(--text-secondary-30)}
-input:focus,select:focus {outline: none; border: 2px solid rgba(94,92,119,0.3) !important; }
+input:focus,select:focus {outline: 1px solid rgba(94,92,119,0.3);}
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 24 24'%3E%3Cpath fill='%23BFBEC9' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
   color: var(--text-secondary);
+  font-weight: 300 !important;
 }
 button {
   cursor: pointer;
@@ -190,29 +196,35 @@ button {
   animation: spin 0.8s linear infinite;
 }
 
+.spinner-Dark{
+  border: 2px solid var(--border);
+  border-top-color: black;
+}
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
 /* 버튼 */
 .btn-Primary{
-  padding: 4px 14px;
+  padding: 3px 12px;
   background: var(--color-primary);
   color: var(--text-inverse);
   border-radius: var(--radius-md);
   font-weight: 100;
+  font-size: 12px;
 }
 .btn-Primary:hover{
   background: #575568;
 }
 
 .btn-Secondary{
-  padding: 4px 14px;
+  padding: 3px 12px;
   background: var(--color-inverse);
   color: var(--text-primary);
   border-radius: var(--radius-md);
   font-weight: 100;
   border: 1px solid var(--text-secondary-30);
+  font-size: 12px;
 }
 .btn-Secondary:hover{
   background: #F9F9F9;
@@ -221,6 +233,28 @@ button {
   display: flex;
   gap: 6px;
 }
+.toggle-Btn-Ab{
+  position: absolute;
+  bottom: 27px;
+  left: 0;
+  background: var(--color-inverse);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-dark);
+  z-index: 10;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 200;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.toggle-Btn-Ab:hover {
+  background: var(--color-gray-50);
+}
+/* margin-top */
+.addBtn{margin-top: 12px;}
 
 /* 공지사항 헤더 아이콘 */
 .Header-Icon{
@@ -242,12 +276,17 @@ button {
 /* 등록 인풋 클래스*/
 .modal-Row{
   display: flex;
-  padding: 10px 0;
+  height: auto;
+  min-height: 40px;
   font-size: var(--font-xs);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   align-items: center;
 }
-.madal-Row-Group{display: flex; gap: 16px;}
+.modal-Row-Group{
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
 .modal-Row-Item{
   flex: 1;
   display: flex;
@@ -258,7 +297,7 @@ button {
   flex-shrink: 0;
 }
 .modal-Row input, .row-Span{
-  padding: 5px 8px;
+  padding: 6px 8px;
   width: 100%;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
@@ -271,7 +310,7 @@ button {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   font-size: var(--font-xs);
-  padding: 5px 8px;
+  padding: 6px 8px;
 }
 
 
@@ -305,7 +344,8 @@ button {
   width: 100%;
   cursor: pointer;
   background: var(--bg-file-input);
-  height: 24px;
+  height: 26px;
+  line-height: 26px;
 }
 .file-Input-wrapper span{ font-size: 18px; color: var(--text-secondary-30)}
 .file-Input-wrapper input{ display: none;}
@@ -323,6 +363,16 @@ button {
   align-items: center !important;
 }
 
+.Write-Wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.Write-Editor {
+  flex: 1;
+  min-height: 0;
+}
+
 /* main-Title */
 .favorite-Header{
   display: flex;
@@ -336,3 +386,69 @@ button {
   font-weight: 700;
 }
 
+
+/* 작은 모달 표 */
+.base-Table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-xs);
+}
+
+.base-Table thead tr {
+  background: var(--color-gray-50);
+}
+
+.base-Table th {
+  padding: 8px 12px;
+  color: var(--color-primary);
+  font-weight: 500;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.base-Table td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+/* 큰 모달 표 */
+.table-Content {
+  padding: 17px 0 5px;
+  overflow-x: auto;
+}
+
+.modal-Table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: var(--font-xs);
+}
+
+.modal-Table thead tr {
+  background: var(--color-gray-100);
+}
+
+.modal-Table th {
+  padding: 8px 15px;
+  color: var(--color-primary);
+  font-weight: 500;
+  border: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.modal-Table td {
+  padding: 6px 30px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  background: var(--color-inverse);
+}
+.modal-Table td:has(input) {
+  padding: 0;
+}
+.modal-Table td input {
+  margin: 2px;
+  padding: 2px 8px;
+}

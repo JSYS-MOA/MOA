@@ -22,6 +22,7 @@ import HrCardListPage from "./pages/hr/HrCardListPage.tsx";
 import LeaverCardListPage from "./pages/hr/LeaverCardListPage.tsx";
 import CertificatesCardListPage from "./pages/hr/CertificatesCardListPage.tsx";
 import EvaluationsCardListPage from "./pages/hr/EvaluationsCardListPage.tsx";
+import PayRollListPage from "./pages/hr/PayRollListPage.tsx";
 
 
 
@@ -72,6 +73,7 @@ const App = () => {
                             <Route path="leavers" element={<LeaverCardListPage />} />
                             <Route path="certificates" element={<CertificatesCardListPage />} />
                             <Route path="evaluations" element={<EvaluationsCardListPage />} />
+                            <Route path="payroll" element={<PayRollListPage />} />
                         </Route>
                     </Route>
                 </Route>

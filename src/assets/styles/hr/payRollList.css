@@ -1,45 +1,44 @@
 /* ====================== 인사카드 목록 상단 ====================== */
-.certificatesCardListPage-page {
+.payRollListPage-page {
     width: 100%;
 }
 
-.certificatesCardListPage-table-box {
+
+.payRollListPage-table-box {
     margin-top: var(--spacing-md);
 }
 
-.certificatesCardListPage-header {
+.payRollListPage-header {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
     margin-bottom: var(--spacing-xs);
 }
 
-.certificatesCardListPage-title {
+.payRollListPage-star {
+    gap: var(--spacing-xs);
+    cursor: pointer;
+    font-size: var(--font-xl);
+    margin-right: var(--spacing-xs);
+    font-weight: bolder;
+}
+
+
+.payRollListPage-title {
     margin: 0;
     font-size: var(--font-xl);
     color: var(--text-accent);
     font-weight: bolder;
 }
 
-.certificatesCardListPage-star {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-}
-
-.certificatesCardListPage-top-search-btn {
+.payRollListPage-top-search-btn {
     margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
+    display: flex;
+    justify-content: flex-end;
 }
 
 /* ====================== 검색 필터 ====================== */
 
-.certificatesCardListPage-filter-box {
+.payRollListPage-filter-box {
     overflow: hidden;
     max-height: 130px;
     max-width: 1589px;
@@ -56,7 +55,7 @@
             border-width 0.2s ease;
 }
 
-.certificatesCardListPage-filter-box.is-collapsed {
+.payRollListPage-filter-box.is-collapsed {
     max-height: 0;
     margin-bottom: 0;
     padding-top: 0;
@@ -65,7 +64,7 @@
     opacity: 0;
 }
 
-.certificatesCardListPage-filter-row {
+.payRollListPage-filter-row {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: center;
@@ -74,7 +73,7 @@
     text-align: left;
 }
 
-.certificatesCardListPage-filter-group {
+.payRollListPage-filter-group {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -82,13 +81,13 @@
     min-width: 0;
 }
 
-.certificatesCardListPage-filter-group label {
+.payRollListPage-filter-group label {
     flex: 0 0 40px;
     color: var(--text-primary);
 }
 
 /* 칩 입력창 */
-.certificatesCardListPage-chip-input {
+.payRollListPage-chip-input {
     display: flex;
     align-items: center;
     flex: 1;
@@ -102,16 +101,16 @@
     overflow: hidden;
 }
 
-.certificatesCardListPage-chip-input.has-chip {
+.payRollListPage-chip-input.has-chip {
     padding-block: var(--spacing-xs);
 }
 
-.certificatesCardListPage-chip-input:focus-within {
+.payRollListPage-chip-input:focus-within {
     border-color: var(--border);
     box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
 }
 
-.certificatesCardListPage-chip-input-icon {
+.payRollListPage-chip-input-icon {
     position: relative;
     width: 28px;
     height: 28px;
@@ -119,7 +118,7 @@
     border-right: 1px solid var(--border);
 }
 
-.certificatesCardListPage-chip-input-icon::before {
+.payRollListPage-chip-input-icon::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -132,7 +131,7 @@
     box-sizing: border-box;
 }
 
-.certificatesCardListPage-chip-input-icon::after {
+.payRollListPage-chip-input-icon::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -144,7 +143,7 @@
     transform: translateY(4px) rotate(45deg);
 }
 
-.certificatesCardListPage-chip-input input {
+.payRollListPage-chip-input input {
     flex: 1;
     width: 100%;
     min-width: 0;
@@ -155,11 +154,11 @@
     background: var(--color-inverse);
 }
 
-.certificatesCardListPage-chip-input input::placeholder {
+.payRollListPage-chip-input input::placeholder {
     color: var(--border-dark);
 }
 
-.certificatesCardListPage-chip {
+.payRollListPage-chip {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -172,21 +171,21 @@
     line-height: 1;
 }
 
-.certificatesCardListPage-chip span {
+.payRollListPage-chip span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.certificatesCardListPage-chip-input .certificatesCardListPage-chip {
+.payRollListPage-chip-input .payRollListPage-chip {
     margin-right: 4px;
 }
 
-.certificatesCardListPage-chip-input.has-chip input {
+.payRollListPage-chip-input.has-chip input {
     min-width: 48px;
 }
 
-.certificatesCardListPage-chip-x {
+.payRollListPage-chip-x {
     border: none;
     background: var(--text-accent);
     color: var(--color-inverse);
@@ -196,11 +195,11 @@
     line-height: 1;
 }
 
-.certificatesCardListPage-chip-x:hover {
+.payRollListPage-chip-x:hover {
     opacity: 0.7;
 }
 
-.certificatesCardListPage-chip-clear {
+.payRollListPage-chip-clear {
     align-self: stretch;
     text-align: center;
     width: 28px;
@@ -215,37 +214,34 @@
     cursor: pointer;
 }
 
-.certificatesCardListPage-chip-clear:disabled {
+.payRollListPage-chip-clear:disabled {
     cursor: default;
 }
 
-.certificatesCardListPage-chip-clear:not(:disabled):hover {
+.payRollListPage-chip-clear:not(:disabled):hover {
     color: var(--border-dark);
 }
 
-.certificatesCardListPage-filter-actions {
+.payRollListPage-filter-actions {
     display: flex;
     justify-content: flex-start;
     margin-top: var(--spacing-sm);
     border-top: 1px solid var(--border);
 }
 
-.certificatesCardListPage-search-btn {
+.payRollListPage-search-btn {
     margin: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
 }
 
 /* ====================== 목록 정보 / 하단 버튼 ====================== */
 
-.certificatesCardListPage-table-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.payRollListPage-table-info {
     width: 100%;
     margin-bottom: var(--spacing-sm);
     text-align: left;
 }
 
-.certificatesCardListPage-bottom-actions {
+.payRollListPage-bottom-actions {
     display: flex;
     justify-content: flex-start;
     gap: var(--spacing-xs);
@@ -253,11 +249,11 @@
 }
 
 /* 공통 버튼 */
-.certificatesCardListPage-top-search-btn,
-.certificatesCardListPage-search-btn,
-.certificatesCardListPage-add-btn,
-.certificatesCardListPage-paging-prev-btn,
-.certificatesCardListPage-paging-next-btn {
+.payRollListPage-top-search-btn,
+.payRollListPage-search-btn,
+.payRollListPage-add-btn,
+.payRollListPage-paging-prev-btn,
+.payRollListPage-paging-next-btn {
     border: 1px solid transparent;
     border-radius: var(--radius-md);
     background: var(--color-primary);
@@ -267,17 +263,17 @@
     height: var(--spacing-lg);
 }
 
-.certificatesCardListPage-top-search-btn:hover,
-.certificatesCardListPage-search-btn:hover,
-.certificatesCardListPage-add-btn:hover,
-.certificatesCardListPage-paging-prev-btn:hover,
-.certificatesCardListPage-paging-next-btn:hover {
+.payRollListPage-top-search-btn:hover,
+.payRollListPage-search-btn:hover,
+.payRollListPage-add-btn:hover,
+.payRollListPage-paging-prev-btn:hover,
+.payRollListPage-paging-next-btn:hover {
     background: var(--color-danger);
     color: var(--color-inverse);
 
 }
 
-.certificatesCardListPage-disabled-btn {
+.payRollListPage-disabled-btn {
     color: var(--color-primary);
     border: 2px solid var(--border);
     border-radius: var(--radius-md);
@@ -286,27 +282,27 @@
     height: var(--spacing-lg);
 }
 
-.certificatesCardListPage-disabled-btn:hover {
+.payRollListPage-disabled-btn:hover {
     color: var(--color-primary);
     background: var(--color-primary-light);
 }
 
 /* ====================== 페이징 ====================== */
 
-.certificatesCardListPage-paging-group {
+.payRollListPage-paging-group {
     display: flex;
     justify-content: center;
     width: 100%;
     margin-top: var(--spacing-sm);
 }
 
-.certificatesCardListPage-paging-group-min {
+.payRollListPage-paging-group-min {
     display: flex;
     align-items: center;
     gap:var(--spacing-xs);
 }
 
-.certificatesCardListPage-paging-num-btn {
+.payRollListPage-paging-num-btn {
     background: none;
     border: 0;
     color: var(--border-dark);
@@ -315,23 +311,27 @@
     cursor: pointer;
 }
 
-.certificatesCardListPage-paging-num-btn:disabled {
+.payRollListPage-paging-num-btn:disabled {
     color: var(--text-accent);
     border-radius: var(--radius-sm);
     cursor: default;
 }
 
-/* ====================== 테이블 ====================== */
 
-.certificatesTable {
+
+
+
+
+
+.payRollTable {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid var(--border);
     table-layout: fixed;
 }
 
-.certificatesTable-th,
-.certificatesTable-td {
+.payRollTable-th,
+.payRollTable-td {
     height: 20px;
     padding: 6px var(--spacing-xs);
     border: 1px solid var(--border);
@@ -342,16 +342,20 @@
     white-space: nowrap;
 }
 
-.certificatesTable-th {
+.payRollTable-th {
     background-color: var(--color-gray-100);
     color: var(--text-accent);
 }
 
-.certificatesTable-td {
+.payRollTable-td {
     background: var(--color-inverse);
 }
 
-.certificatesTable-nameButton {
+.payRollTable tbody tr:hover .payRollTable-td {
+    background: var(--color-gray-50);
+}
+
+.payRollTable-nameButton {
     width: 100%;
     padding: 0;
     border: 0;
@@ -362,55 +366,137 @@
     cursor: pointer;
 }
 
-.certificatesTable-nameButton:hover,
-.certificatesTable-nameButton:focus-visible {
+.payRollTable-nameButton:hover,
+.payRollTable-nameButton:focus-visible {
     text-decoration: underline;
 }
 
-.certificatesTable tbody tr:hover {
-    background-color: var(--color-gray-100);
+.payRollTable-checkbox-cell {
+    text-align: center;
 }
 
-/* 체크박스 열 */
-.certificatesTable-empty {
+.payRollTable-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.payRollTable-checkbox input {
+    display: none;
+}
+
+.payRollTable-checkbox .checkmark {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid var(--border-dark);
+    border-radius: 3px;
+    background: var(--bg);
+    cursor: pointer;
+}
+
+.payRollTable-checkbox input:checked + .checkmark {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.payRollTable-empty {
     padding: var(--spacing-sm);
     border: 1px solid var(--border);
     text-align: center;
 }
 
-/* 열 너비 */
-
-.leaverTable th:nth-child(1),
-.leaverTable td:nth-child(1) {
-    width: 20px;
+.payRollTable-statusValue {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: var(--font-sm);
+    line-height: 1;
 }
 
-.leaverTable th:nth-child(2),
-.leaverTable td:nth-child(2) {
-    width: 25px;
+.payRollTable-statusValue.is-complete {
+    background: #ebf5ef;
+    color: #24704b;
 }
 
-.leaverTable th:nth-child(3),
-.leaverTable td:nth-child(3) {
-    width: 25px;
+.payRollTable-statusValue.is-pending {
+    background: #fff4e3;
+    color: #8a5b10;
 }
 
-.leaverTable th:nth-child(4),
-.leaverTable td:nth-child(4) {
-    width: 25px;
+.payRollTable-statusValue.is-default {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
 }
 
-.leaverTable th:nth-child(5),
-.leaverTable td:nth-child(5) {
-    width: 15px;
+.payRollTable th:nth-child(1),
+.payRollTable td:nth-child(1) {
+    width: 4%;
 }
 
-.leaverTable th:nth-child(6),
-.leaverTable td:nth-child(6) {
-    width: 15px;
+.payRollTable th:nth-child(2),
+.payRollTable td:nth-child(2) {
+    width: 12%;
 }
 
-.leaverTable th:nth-child(7),
-.leaverTable td:nth-child(7) {
-    width: 15px;
+.payRollTable th:nth-child(3),
+.payRollTable td:nth-child(3) {
+    width: 28%;
+}
+
+.payRollTable th:nth-child(4),
+.payRollTable td:nth-child(4) {
+    width: 14%;
+}
+
+.payRollTable th:nth-child(5),
+.payRollTable td:nth-child(5) {
+    width: 10%;
+}
+
+.payRollTable th:nth-child(6),
+.payRollTable td:nth-child(6) {
+    width: 16%;
+}
+
+.payRollTable th:nth-child(7),
+.payRollTable td:nth-child(7) {
+    width: 16%;
+}
+
+.payRollListPage-filterRow {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+}
+
+.payRollListPage-dateRange {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex: 1;
+    min-width: 0;
+}
+
+.payRollListPage-dateRange input {
+    min-width: 0;
+    height: 30px;
+    padding: 0 var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    background: var(--color-inverse);
+}
+
+.payRollListPage-dateRange span {
+    color: var(--text-secondary);
+    flex: 0 0 auto;
+}
+
+.payRollListPage-selectionInfo {
+    margin-left: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
 }
