@@ -46,7 +46,7 @@
   --color-inverse: #ffffff;
 
   /* 강조컬러 */
-  --color-danger: #DA5C57;
+  --color-danger: #da5c57;
   --color-danger-hover: #d06864;
 
   /*서브 컬러*/
@@ -206,23 +206,25 @@ button {
 
 /* 버튼 */
 .btn-Primary{
-  padding: 4px 14px;
+  padding: 3px 12px;
   background: var(--color-primary);
   color: var(--text-inverse);
   border-radius: var(--radius-md);
   font-weight: 100;
+  font-size: 12px;
 }
 .btn-Primary:hover{
   background: #575568;
 }
 
 .btn-Secondary{
-  padding: 4px 14px;
+  padding: 3px 12px;
   background: var(--color-inverse);
   color: var(--text-primary);
   border-radius: var(--radius-md);
   font-weight: 100;
   border: 1px solid var(--text-secondary-30);
+  font-size: 12px;
 }
 .btn-Secondary:hover{
   background: #F9F9F9;
@@ -231,6 +233,28 @@ button {
   display: flex;
   gap: 6px;
 }
+.toggle-Btn-Ab{
+  position: absolute;
+  bottom: 27px;
+  left: 0;
+  background: var(--color-inverse);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-dark);
+  z-index: 10;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 200;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.toggle-Btn-Ab:hover {
+  background: var(--color-gray-50);
+}
+/* margin-top */
+.addBtn{margin-top: 12px;}
 
 /* 공지사항 헤더 아이콘 */
 .Header-Icon{
@@ -321,6 +345,7 @@ button {
   cursor: pointer;
   background: var(--bg-file-input);
   height: 26px;
+  line-height: 26px;
 }
 .file-Input-wrapper span{ font-size: 18px; color: var(--text-secondary-30)}
 .file-Input-wrapper input{ display: none;}
@@ -362,7 +387,7 @@ button {
 }
 
 
-/* 모달 표 */
+/* 작은 모달 표 */
 .base-Table {
   width: 100%;
   border-collapse: collapse;
@@ -385,4 +410,45 @@ button {
   padding: 8px 12px;
   border: 1px solid var(--border);
   color: var(--text-secondary);
+}
+
+/* 큰 모달 표 */
+.table-Content {
+  padding: 17px 0 5px;
+  overflow-x: auto;
+}
+
+.modal-Table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: var(--font-xs);
+}
+
+.modal-Table thead tr {
+  background: var(--color-gray-100);
+}
+
+.modal-Table th {
+  padding: 8px 15px;
+  color: var(--color-primary);
+  font-weight: 500;
+  border: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.modal-Table td {
+  padding: 6px 30px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  background: var(--color-inverse);
+}
+.modal-Table td:has(input) {
+  padding: 0;
+}
+.modal-Table td input {
+ margin: 2px;
+  padding: 2px 8px;
 }

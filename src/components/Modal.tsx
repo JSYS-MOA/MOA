@@ -7,9 +7,11 @@ interface ModalProps{
     onClose: () => void;
     children: React.ReactNode;
     footer?:React.ReactNode;
+    tableContent?: React.ReactNode;
+    bodyStyle?: React.CSSProperties;
 }
 
-const Modal = ({ title, isOpen, onClose, children, footer}:ModalProps) => {
+const Modal = ({ title, isOpen, onClose, children, footer, tableContent, bodyStyle}:ModalProps) => {
 
     if(!isOpen) return null;
 
@@ -26,7 +28,16 @@ const Modal = ({ title, isOpen, onClose, children, footer}:ModalProps) => {
                     <p>{title}</p>
                 </div>
                 <div className="modal-Body">
-                    {children}
+                    {children && (
+                        <div className="modal-Children" style={bodyStyle}>
+                            {children}
+                        </div>
+                    )}
+                    {tableContent && (
+                        <div className="table-Content">
+                            {tableContent}
+                        </div>
+                    )}
                 </div>
                 {footer && (
                     <div className="modal-Footer">
