@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState  } from 'react'
+import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { usePutOrderSno , useGetProductSelect , useDeleteOrderForm} from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
-import type { TableProps } from '../../types/TableProps';
 
 const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
@@ -221,123 +221,153 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
   const isCompleted = masterInfo.orderStatus === '완료';
 
   return (
-    <form onSubmit={(e)=>{onSubmitPut(e)}}>
-      <div>
-        <div>
-          <label >발주요청일자</label>
-          <input type="text" value={masterInfo.orderformDate || ''} readOnly />
-        </div>
-
-        <div>
-          <label >거래처</label>
-          <input type="text" value={masterInfo.vendorName || ''} readOnly />
-        </div>
-
-        <div>
-          <label >납기일자</label>
-          <input type="text" value={masterInfo.stockInDate || ''} readOnly  />
-        </div>
+    <form className='modal-Container-TableFrom' onSubmit={(e)=>{onSubmitPut(e)}}>
+      
+      <div className="modal-Header">
+          <p>발주상세</p>
+          <button onClick={onClose}>
+              <IoCloseOutline color="#fff" size={18}/>
+          </button>
       </div>
 
-        {!isCompleted && <button onClick={(e) => { handleAddList(e) }}>품목 추가</button>}
-      <table>
+      <div className="modal-Title">
+          <p>발주상세</p>
+      </div>
+      
+      <div className='modal-Body'>
+        <div className='modal-Row'>
+          <div className='modal-Row-Group'>
+            <div className='modal-Row-Item'>
+              <div className='modal-Row-Item-title'>
+                <label >발주요청일자</label>
+              </div>
+              <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.orderformDate || ''} readOnly />  
+            </div>
 
-        <thead>
+            <div className='modal-Row-Item'>
+              <div className='modal-Row-Item-title'>
+                <label >납기일자</label>
+              </div>
+                <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.stockInDate || ''} readOnly  />
+            </div>
+          </div>
+
+        </div>
+
+          <div className='modal-Row'>
+            <label >거래처</label>
+            <input type="text" value={masterInfo.vendorName || ''} readOnly />
+          </div>
+
+        <table className='modal-Table-Form'>
+
+          <thead className="modal-Table-Form-header">
             <tr>
               { itemList ? <th>순번</th> : null}
               {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              <th>비고</th>
             </tr>
           </thead>
 
-        <tbody>
-        {itemList.map((item, idx) => (
-        <tr key={idx} >
-          <td >{idx + 1}</td>
-          {columns.map(col => (
-            <td key={col.key}
-                onClick={(e) => {
-                     if (col.key !== keySno ) {
-                       onselectProduct(idx , item);
-                     }}}>
+          <tbody className="modal-Table-Form-body">
+          {itemList.map((item, idx) => (
+          <tr key={idx} >
+            <td >{idx + 1}</td>
+            {columns.map(col => (
+              <td key={col.key}
+                  onClick={(e) => {
+                      if (col.key !== keySno ) {
+                        onselectProduct(idx , item);
+                      }}}>
 
-            {(() => {
-              const fieldKey = col.key as keyof ModalProps;
-                    
-                    if (col.key === 'totalPrice') {
-                       const targetItem = item as any;
-                      return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
-                    }
-                     
-                    if(item.orderStatus !== '완료' ) {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? ''}          
-                        onChange={(e) => {
-                         if (col.key === keySno ) handleInputChange(idx, col.key, e.target.value);
-                        }}
+              {(() => {
+                const fieldKey = col.key as keyof ModalProps;
+                      
+                      if (col.key === 'totalPrice') {
+                        const targetItem = item as any;
+                        return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
+                      }
+                      
+                      if(item.orderStatus !== '완료' ) {
+                        return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? ''}          
+                          onChange={(e) => {
+                          if (col.key === keySno ) handleInputChange(idx, col.key, e.target.value);
+                          }}
+                          />
+
+                      } else {
+                        return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? ''} 
+                          readOnly                 
                         />
+                      } 
 
-                    } else {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? ''} 
-                        readOnly                 
-                      />
-                    } 
-
-                  })()}
-              </td>
-            ))}
-
-              <td>
-                {item.orderStatus === '대기' && (
-                  <>
-                    <button 
-                      onClick={(e) => handleRemoveRow(idx, e)}
-                      style={{ color: 'red', border: '1px solid red', background: 'none', cursor: 'pointer' }}
-                      >
-                      삭제
-                    </button>
-                  </>
-                )}
-              </td>
-        </tr>
-      ))}
-      </tbody>
-
-        <tfoot>
-        <tr>
-          {(() => {
-            const qtyIndex = columns.findIndex(col => col.key === keySno);
-            const firstDataColPos = qtyIndex !== -1 ? qtyIndex + 1 : 1;
-
-            return (
-              <>
-                <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                  합계
+                    })()}
                 </td>
+              ))}
 
-                {columns.slice(qtyIndex).map((col) => {
-                  if (col.key === keySno ) {
-                    return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
-                  }
-                  if (col.key === 'totalPrice') {
-                    return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
-                  }
+                <td>
+                  {item.orderStatus === '대기' && (
+                    <>
+                      <button 
+                        onClick={(e) => handleRemoveRow(idx, e)}
+                        className='Del-button' 
+                        >
+                        삭제
+                      </button>
+                    </>
+                  )}
+                </td>
+          </tr>
+        ))}
+          </tbody>
 
-                  return <td key={col.key}></td>;
-                })}
-              </>
-            );
-          })()}
-        </tr>
-      </tfoot>
+          <tfoot className="modal-Table-Form-header">
+            <tr>
+              {(() => {
+                const qtyIndex = columns.findIndex(col => col.key === keySno);
+                const firstDataColPos = qtyIndex !== -1 ? qtyIndex + 1 : 1;
+
+                return (
+                  <>
+                    <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                      합계
+                    </td>
+
+                    {columns.slice(qtyIndex).map((col) => {
+                      if (col.key === keySno ) {
+                        return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
+                      }
+                      if (col.key === 'totalPrice') {
+                        return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
+                      }
+
+                      return <td key={col.key}></td>;
+                    })}
+                  </>
+                );
+              })()}
+              <td></td>
+            </tr>
+        </tfoot>
+          
+        </table>
+
+          {!isCompleted && <button className="btn-Primary" onClick={(e) => { handleAddList(e) }}>품목 추가</button>}
         
-      </table>
+      </div>
 
-      {!isCompleted && <button type='submit'>등록</button>}
-      {!isCompleted && <button onClick={(e) => { onOderFormDel(e) }}> 발주삭제</button>}  
-      
+      <div className="modal-Footer">
+        <div className="btn-Wrap">
+            {!isCompleted && <button className="btn-Primary" type='submit'>등록</button>}
+                  {!isCompleted && <button className="btn-Primary" onClick={(e) => { onOderFormDel(e) }}> 발주삭제</button>} 
+            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+        </div>
+      </div>
+   
           {selectModal ?
             <InventorySelectModal
               title='PRODUCT'

@@ -2,49 +2,59 @@ import React from 'react'
 import  { type TableProps , type Column} from "../../types/TableProps"
 
 const ApprovalsTable = (
-    { items , columns , onItemClick , onItemChange , handleInbound}: {
+    { items , columns , page , onItemClick , onItemChange , handleitems}: {
   items: TableProps[],
   columns: Column[],
-  handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
+  page : number
+  handleitems? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: (e : React.ChangeEvent) => void 
   }) => {
-  
-  
-  
+      
   return (
-    <table>
+    <table className="inventory-table">
     
-      <thead>
+      <thead className="inventory-table-header">
         <tr>
           { items ? <th>순번</th> : null}
           {columns.map(col => <th key={col.key}>{col.label}</th>)}
         </tr>
       </thead>
 
-      <tbody>
+      <tbody className="inventory-table-body">
         {items.map((item, idx) => (
-        <tr key={idx} onClick={(e) => { onItemClick?.(item , e)}}>
-          <td>{idx + 1}</td>
+        <tr key={idx} >
+          <td>{ 10 * page + idx + 1}</td>
 
           {columns.map(col => (
             <td key={col.key}>
 
-               {col.key === 'approvaInfo' && (
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleInbound?.(item , e);
-                    }}
-                    style={{ marginLeft: '8px' }}
-                  >
-                    보기
-                  </button>
-                )}
+              {col.key === 'approvaInfo' && (
+                <button 
+                  className='btn-Secondary'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onItemClick?.(item , e);
+                  }}
+                >
+                  보기
+                </button>
+              )}
 
-              
-              {item[col.key as keyof TableProps]|| ""}  
+              {(() => {
+                    const columnKey = col.key as string;
+                    const value = columnKey.includes('.') 
+                      ? columnKey.split('.').reduce((obj: any, key) => obj?.[key], item)
+                      : (item as any)[col.key];
 
+                    if (col.key === 'approvaDate' && value) {
+                      return String(value).substring(0, 10).replace(/-/g, '-');
+                    }
+
+                    if (col.key === 'approvaInfo') return null;
+
+                    return value || "";
+                  })()}
             </td>
           ))}    
 

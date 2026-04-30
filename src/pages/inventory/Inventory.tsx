@@ -1,15 +1,20 @@
 import { useState } from "react";
-import Table from "../../components/inventory/InventoryTable";
+import {FaStar} from "react-icons/fa";
 import { useGetInventory , useGetInventoryInfo } from "../../apis/InventoryService";
-import Modal from "../../components/inventory/InventoryModal";
 import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Table from "../../components/inventory/InventoryTable";
+import Modal from "../../components/inventory/InventoryModal";
+import Alert from "../../components/inventory/Alert";
+import "../../assets/styles/inventory/inventoryTable.css"
+import Button from "../../components/Button";
 
 
 const Inventory = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
-  const [modal, setModal] = useState(false);
+  const [onAlert, setOnAlert] = useState('');
+  const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
   const { data } =  useGetInventory( search, page, 10);
@@ -17,7 +22,7 @@ const Inventory = () => {
 
   const maxPage = data ? data.totalPages  : 0; 
   
-    const changePage = (num: number) => {
+  const changePage = (num: number) => {
         const newPage : number = page + num
       if( newPage <= 0 ) {
         setPage(0);
@@ -26,27 +31,27 @@ const Inventory = () => {
       } else {
         setPage( page => page + num);
       }
-    };
+  };
 
-    const onInventoryClick = ( item : any , e : React.MouseEvent) => {
+  const onInventoryClick = ( item : any , e : React.MouseEvent) => {
 
       if('productId' in item) {
         
         mutate (item.productId, {
         onSuccess: (data) => {
           setInfo(data);
-          setModal(true)
+          setModalMode('INFO')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("정보를 가져오는데 실패했습니다.");
+          setOnAlert("정보를 가져오는데 실패했습니다.");
         }
       })
        
       }
       
-    }
+  }
 
-    const columns : Column[] = [
+  const columns : Column[] = [
     { key: 'productCord', label: '품목코드' },
     { key: 'productName', label: '품목명'  },
     { key: 'storageName', label: '창고명' },
@@ -65,21 +70,39 @@ const Inventory = () => {
 
   return (
     <div>
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>물류현황</span>
+      </div>
+
+      <div className="inventory-table-box">
       {data != null ?<>
       <Table
         items={data.content}
         columns={columns}
+        page={page}
         onItemClick={onInventoryClick}
        />
 
-      {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
+      {modalMode !== ''  ? <div className='modal-Overlay'>
 
-      <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
-       </> : "로딩중입니다." }
-        
       
+      {modalMode === 'INFO' && info != null ?
+        <Modal items={info.content} onClose={()=>{setModalMode('')}} maxPage={info.totalPages} title={'재고현황'} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
+
+      </div> : null }
+
+       {maxPage > 1 ?
+        <div className='Page-Btn-container'>
+          <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+          <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
+        </div> : null }
+
+       </>: "로딩중입니다." }
+      </div>
+      
+      { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
+
     </div>
   )
 }

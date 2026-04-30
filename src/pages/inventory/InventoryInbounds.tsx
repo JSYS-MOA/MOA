@@ -1,15 +1,18 @@
 import { useState } from "react";
+import {FaStar} from "react-icons/fa";
 import Table from "../../components/inventory/InventoryTable";
 import { useGetInbounds , useGetInboundsInfo } from "../../apis/InventoryService";
 import Modal from "../../components/inventory/InventoryModal";
 import { type ModalProps ,  type MColumn } from "../../types/ModalProps";
 import { type Column } from "../../types/TableProps";
+import Alert from "../../components/inventory/Alert";
 
 
 const InventoryInbounds = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
-  const [modal, setModal] = useState(false);
+  const [onAlert, setOnAlert] = useState('');
+  const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
 
   const { data } =  useGetInbounds( search, page, 10);
@@ -35,10 +38,10 @@ const InventoryInbounds = () => {
         mutate (item.logisticsOrderNum, {
         onSuccess: (data) => {
           setInfo(data);
-          setModal(true)
+          setModalMode('INFO')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          alert("정보를 가져오는데 실패했습니다.");
+          setOnAlert("정보를 가져오는데 실패했습니다.");
         }
       })
        
@@ -63,20 +66,34 @@ const InventoryInbounds = () => {
 
   return (
     <div>
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>입고현황</span>
+      </div>
+      
       {data != null ?<>
       <Table
         items={data.content}
         columns={columns}
+        page={page}
         onItemClick={onInventoryClick}
        />
-
-      {modal && info != null ?
-        <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
-
-      <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
+      
+      {modalMode !== ''  ? <div className='modal-Overlay'>
+      {modalMode === 'INFO' && info != null ?
+        <Modal items={info.content} onClose={()=>{setModalMode('')}} title="입고현황" maxPage={info.totalPages} columns={ModalColumns} keySno='logisticSno' keyPrice='productPrice' keytype='logisticsType' /> : null}
+      
+      </div> : null}
+      
+      {maxPage > 1 ?
+        <div className='Page-Btn-container'>
+          <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+          <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
+        </div> : null }
+        
        </> : "로딩중입니다." }
         
+        { onAlert !== '' ? <Alert onClose={() => setOnAlert('')} >{onAlert}</Alert> : null }
       
     </div>
   )

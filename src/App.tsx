@@ -17,6 +17,8 @@ import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
 import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
 import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
 import Approvals from './pages/approvals/Approvals.tsx';
+import ApprovalsWait from './pages/approvals/ApprovalsWait.tsx';
+import TeamMembers from './pages/approvals/TeamMembers.tsx';
 import SalesJournals from "./pages/sales/SalesJournals.tsx";
 import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
 import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
@@ -80,6 +82,8 @@ const App = () => {
                         <Route path="/gw">
                             <Route index element={<Approvals/>} />
                             <Route path="approvals" element={<Approvals/>} />
+                            <Route path='teamMembers' element={<TeamMembers/>} />
+                            <Route path='approvalWait' element={<ApprovalsWait/>}/>
                         </Route>
                         <Route path="/sales">
                             <Route path="journals" element={<SalesJournals/>} />
