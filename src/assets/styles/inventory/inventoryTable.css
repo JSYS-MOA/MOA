@@ -45,9 +45,9 @@
     left: 0;
     box-sizing: border-box;
 }
-.dropdown-right-List span{
+/* .dropdown-right-List span{
 
-}
+} */
 .dropdown-right-List .dropdown-Item {
     background: #fff;
     border-bottom: 1px solid var(--border);
