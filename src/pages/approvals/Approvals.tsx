@@ -100,11 +100,11 @@ const Approvals = () => {
 
           {modalMode === 'LIST' && info != null ?
           <Modal items={info.content} maxPage={info.totalPages} columns={ModalColumns} keytype='approvaStatus'
-                  onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
+                  onClose={() => setModalMode('')} onRefresh={refetchList} setOnAlert={setOnAlert} /> : null}
 
           {modalMode === 'ADD'?
           <AddModal  columns={AddModalColumns}
-                  onClose={() => setModalMode('')} onRefresh={refetchList}setOnAlert={setOnAlert} /> : null}
+                  onClose={() => setModalMode('')} onRefresh={refetchList} setOnAlert={setOnAlert} /> : null}
 
         </div> : null}
 
