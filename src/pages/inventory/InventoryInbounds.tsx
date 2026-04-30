@@ -10,7 +10,8 @@ import Alert from "../../components/inventory/Alert";
 
 const InventoryInbounds = () => {
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+    // const [search, setSearch] = useState('');
+  const search = '';
   const [onAlert, setOnAlert] = useState('');
   const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
@@ -31,7 +32,7 @@ const InventoryInbounds = () => {
       }
     };
 
-    const onInventoryClick = ( item : any , e : React.MouseEvent) => {
+    const onInventoryClick = ( item : any ) => {
 
       if('logisticsOrderNum' in item) {
         
@@ -41,7 +42,7 @@ const InventoryInbounds = () => {
           setModalMode('INFO')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          setOnAlert("정보를 가져오는데 실패했습니다.");
+          setOnAlert( error + "정보를 가져오는데 실패했습니다.");
         }
       })
        

@@ -9,7 +9,7 @@ interface MapDropdownSelectProps {
     onChange: (id: number, value: any) => void;
     allowInput?: boolean;     // 직접입력 허용 여부
 }
-const MapDropdownSelect = ({id , value, options, onChange,allowInput = false}:MapDropdownSelectProps ) => {
+const MapDropdownSelect = ({id , value, options, onChange }:MapDropdownSelectProps ) => {
 
     
     const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +48,7 @@ const MapDropdownSelect = ({id , value, options, onChange,allowInput = false}:Ma
                         <button
                             key={opt.id}
                             className={`dropdown-Item ${opt.id === value ? "active" : ""}`}
-                            onClick={(e) => {
+                            onClick={() => {
                                 onChange(id , opt.id);
                                 setIsOpen(false);
                             }}

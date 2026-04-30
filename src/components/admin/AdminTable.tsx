@@ -4,12 +4,11 @@ import MapDropdownSelect from "./MapDropdownSelect"
 
 
 const AdminTable = (
-    { items , columns, page , onItemClick , onItemChange , handleInbound , select}: {
+    { items , columns, page , onItemClick , onItemChange  , select}: {
   items: TableProps[],
   columns: Column[],
   page : number
   select? : any [] ,
-  handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
   onItemChange?: ( id: number, value : number) => void 
   }) => {

@@ -18,7 +18,8 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   })  => {
   
   const [itemList, setItemList] = useState<ModalProps[]>(items);
-  const [selectModal, setSelectModal] = useState(false);
+  // const [selectModal, setSelectModal] = useState(false);
+  console.log(maxPage)
 
 
   const [selectMode, setSelectMode] = useState<'STORAGE' | null>(null);
@@ -34,7 +35,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
 
 
   //  차고 전달을 위한 조회
-  const onselectStorage = (idx: number , item : any) => {
+  const onselectStorage = (idx: number ) => {
       setSelectMode('STORAGE');
       setTargetIdx(idx);
   }
@@ -204,7 +205,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
       </div>
       
       <div className='modal-Body'>
-        <div>
+        <div className='modal-Children'>
           <div className='modal-Row'>
             <div className='modal-Row-Item-title'>
               <label >발주요청일자</label>
@@ -226,7 +227,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
             </div>
           </div>
 
-          </div>
+        </div>
 
         <table className='modal-Table-Form'>
 
@@ -292,7 +293,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                       } else {
                         return <input onClick={() => {
                           if(col.key === 'storageName' ) {
-                          onselectStorage(idx , item); }}}
+                          onselectStorage(idx); }}}
                           name={col.key}
                           value={item[fieldKey] ?? ''}
                           readOnly />

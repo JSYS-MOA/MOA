@@ -12,7 +12,8 @@ import Alert from "../../components/inventory/Alert";
 
 const InventoryOrder = () => {
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+    // const [search, setSearch] = useState('');
+  const search = '';
   const [onAlert, setOnAlert] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);
   const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
@@ -36,7 +37,7 @@ const InventoryOrder = () => {
       }
   };
 
-  const onInventoryClick = ( item : any , e : React.MouseEvent) => {
+  const onInventoryClick = ( item : any ) => {
 
       if('orderformId' in item) {
          setCurrentOrderId(item.orderformId);
@@ -46,7 +47,7 @@ const InventoryOrder = () => {
           setModalMode('LIST')
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          setOnAlert("정보를 가져오는데 실패했습니다.");
+          setOnAlert(error + "정보를 가져오는데 실패했습니다.");
         }
       })
        
@@ -54,7 +55,7 @@ const InventoryOrder = () => {
       
   }
 
-  const handleInbound = ( item : any , e : React.MouseEvent) => {
+  const handleInbound = ( item : any ) => {
    
     if('orderformId' in item) {
          setCurrentOrderId(item.orderformId);
@@ -64,7 +65,7 @@ const InventoryOrder = () => {
           setModalMode('INBOUND');
           console.log("성공 데이터:", data.content);
         },onError: (error: any) => {
-          setOnAlert("정보를 가져오는데 실패했습니다.");
+          setOnAlert(error + "정보를 가져오는데 실패했습니다.");
         }
       })
        

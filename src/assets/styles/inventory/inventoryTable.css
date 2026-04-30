@@ -5,15 +5,15 @@
   width: 100%;
 }
 .inventory-table th {
-  font-size: 0.8rem;
+  font-size: 12px;
 }
 
 .inventory-table td {
-  font-size: 0.9rem;
+  font-size: 12px;
 }
 
 .inventory-table td , .inventory-table th {
-  border: 1px solid #A9A9A9;
+  border: 1px solid var(--border);
 }
 
 .inventory-table-header {
@@ -21,7 +21,7 @@
   min-width: 198.63px;
   width: 198.63px;
   background-color: var(--color-gray-100);
-  color: #091B72;
+  color: var(--color-primary);
 }
 
 .inventory-table-body td {
@@ -45,12 +45,12 @@
     left: 0;
     box-sizing: border-box;
 }
-.dropdown-right-List span{
+/* .dropdown-right-List span{
 
-}
+} */
 .dropdown-right-List .dropdown-Item {
     background: #fff;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     width: 100%;
@@ -107,7 +107,7 @@
 }
 
 .viewer-wrapper {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);;
   box-sizing: border-box;
   border-radius: 5px;
   width: 100%;
@@ -162,23 +162,24 @@
   border-collapse: collapse;
   font-weight: 300;
   width: 100%;
+  margin-top: 10px;
   table-layout: fixed;
 }
 
 .modal-Table-Form  th {
-  font-size: 0.8rem;
+  font-size: 12px;
 }
 
 .modal-Table-Form td {
-  font-size: 0.9rem;
+  font-size: 12px;
 }
 
 .modal-Table-Form  th {
-  border: 1px solid #A9A9A9;
+  border: 1px solid var(--border);
 }
 
 .modal-Table-Form td {
-   border: 1px solid #A9A9A9;
+   border: 1px solid var(--border);
 }
 
 .modal-Table-Form td input{

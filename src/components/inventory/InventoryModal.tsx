@@ -1,4 +1,3 @@
-import React from 'react'
 import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 
@@ -13,6 +12,7 @@ const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , 
   keytype : string
   })  => {
 
+  console.log(maxPage)
 
   const totalSno = items.reduce((acc, item) => {
     const targetItem = item as any; 

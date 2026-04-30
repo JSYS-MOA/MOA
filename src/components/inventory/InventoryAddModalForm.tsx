@@ -93,7 +93,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
   } ;
 
    // 물품 전달을 위한 조회
-  const onselectProduct = (idx: number , item : any) => {
+  const onselectProduct = (idx: number ) => {
       setSelectMode('PRODUCT');
       setTargetIdx(idx);
   }
@@ -200,7 +200,8 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
         </div>
         
       <div className='modal-Body'>
-          <div>
+          
+          <div className='modal-Children'>
             <div className='modal-Row'>
               <div className='modal-Row-Item-title'>
                 <label>발주요청일자</label>
@@ -236,7 +237,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
               <td key={col.key}
                   onClick={() => {
                       if (col.key !== keySno ) {
-                        onselectProduct(idx , item);
+                        onselectProduct(idx);
                     }}}>
 
               {(() => {
