@@ -205,7 +205,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
       </div>
       
       <div className='modal-Body'>
-        <div>
+        <div className='modal-Children'>
           <div className='modal-Row'>
             <div className='modal-Row-Item-title'>
               <label >발주요청일자</label>
@@ -227,7 +227,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
             </div>
           </div>
 
-          </div>
+        </div>
 
         <table className='modal-Table-Form'>
 

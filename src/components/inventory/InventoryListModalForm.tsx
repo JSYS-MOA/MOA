@@ -236,30 +236,31 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
       </div>
       
       <div className='modal-Body'>
-        <div className='modal-Row'>
-          <div className='modal-Row-Group'>
-            <div className='modal-Row-Item'>
-              <div className='modal-Row-Item-title'>
-                <label >발주요청일자</label>
+        <div className='modal-Children'>
+          <div className='modal-Row'>
+            <div className='modal-Row-Group'>
+              <div className='modal-Row-Item'>
+                <div className='modal-Row-Item-title'>
+                  <label >발주요청일자</label>
+                </div>
+                <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.orderformDate || ''} readOnly />  
               </div>
-              <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.orderformDate || ''} readOnly />  
+
+              <div className='modal-Row-Item'>
+                <div className='modal-Row-Item-title'>
+                  <label >납기일자</label>
+                </div>
+                  <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.stockInDate || ''} readOnly  />
+              </div>
             </div>
 
-            <div className='modal-Row-Item'>
-              <div className='modal-Row-Item-title'>
-                <label >납기일자</label>
-              </div>
-                <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.stockInDate || ''} readOnly  />
-            </div>
           </div>
-
-        </div>
 
           <div className='modal-Row'>
             <label >거래처</label>
             <input type="text" value={masterInfo.vendorName || ''} readOnly />
           </div>
-
+        </div>
         <table className='modal-Table-Form'>
 
           <thead className="modal-Table-Form-header">

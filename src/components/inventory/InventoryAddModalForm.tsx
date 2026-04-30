@@ -200,7 +200,8 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
         </div>
         
       <div className='modal-Body'>
-          <div>
+          
+          <div className='modal-Children'>
             <div className='modal-Row'>
               <div className='modal-Row-Item-title'>
                 <label>발주요청일자</label>

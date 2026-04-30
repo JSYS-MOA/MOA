@@ -171,55 +171,56 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
       </div>
        
        <div className='modal-Body' >
-        {columns.map((col) => {
+          <div className='modal-Children'>
+            {columns.map((col) => {
 
-          if (col.key === 'approvaDate') {
-           
-            const datePart = approvalsDate.split('T'); 
+              if (col.key === 'approvaDate') {
+              
+                const datePart = approvalsDate.split('T'); 
 
-            return (
-              <div className='modal-Row' key={col.key}>
-                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
-                <div className='modal-Row-Item-title-box'>
+                return (
+                  <div className='modal-Row' key={col.key}>
+                    <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                    <div className='modal-Row-Item-title-box'>
 
-                  <input 
-                    className='Date-Header-Input' 
-                    value={datePart || ''} 
-                    readOnly 
-                  />
+                      <input 
+                        className='Date-Header-Input' 
+                        value={datePart || ''} 
+                        readOnly 
+                      />
 
-                </div>
-              </div>
-            );
-          }
-
-          if (col.key === 'documentName') {
-            return (
-            <div key={col.key} className='modal-Row' onClick={()=>{onselectDocument()}}>
-                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
-                <div className='modal-Row-Item-title-Body'>
-                  <input readOnly value={itemList[0].documentName} style={{ width: '100%' }} />
-                </div>
-            </div>
-            );
-          }
-
-          if (col.key === 'writerInfo.userName') {
-            return (
-              <div className='modal-Row' key="row-writer-approver">
-                <div className='modal-Row-Group' >
-                 
-                  <div className='modal-Row-Item'>
-                    <div className='modal-Row-Item-title'><strong>기안자</strong></div>
-                      <input className="modal-Row-Item-Group-Input" readOnly value={user?.userName} />
-                      <input className="modal-Row-Item-Group-Input" readOnly value={user?.employeeId}/>
-                  </div>
-                    
-                  <div className='modal-Row-Item' onClick={()=>{onselectApprovaLine()}}>
-                    <div className='modal-Row-Item-title'><strong>결재자</strong></div>
-                      <input className="modal-Row-Item-Group-Input" readOnly value={(itemList[0] as any)['approverInfo.userName'] || ''} />
-                      <input className="modal-Row-Item-Group-Input" readOnly value={(itemList[0] as any)['approverInfo.employeeId'] || ''} />
                     </div>
+                  </div>
+                );
+              }
+
+              if (col.key === 'documentName') {
+                return (
+                <div key={col.key} className='modal-Row' onClick={()=>{onselectDocument()}}>
+                    <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                    <div className='modal-Row-Item-title-Body'>
+                      <input readOnly value={itemList[0].documentName} style={{ width: '100%' }} />
+                    </div>
+                </div>
+                );
+              }
+
+              if (col.key === 'writerInfo.userName') {
+                return (
+                  <div className='modal-Row' key="row-writer-approver">
+                    <div className='modal-Row-Group' >
+                    
+                      <div className='modal-Row-Item'>
+                        <div className='modal-Row-Item-title'><strong>기안자</strong></div>
+                          <input className="modal-Row-Item-Group-Input" readOnly value={user?.userName} />
+                          <input className="modal-Row-Item-Group-Input" readOnly value={user?.employeeId}/>
+                      </div>
+                        
+                      <div className='modal-Row-Item' onClick={()=>{onselectApprovaLine()}}>
+                        <div className='modal-Row-Item-title'><strong>결재자</strong></div>
+                          <input className="modal-Row-Item-Group-Input" readOnly value={(itemList[0] as any)['approverInfo.userName'] || ''} />
+                          <input className="modal-Row-Item-Group-Input" readOnly value={(itemList[0] as any)['approverInfo.employeeId'] || ''} />
+                        </div>
                   </div>
 
                 </div>
@@ -260,9 +261,10 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
               </div>
             </div>
           );
-        })}
+             })}
+          </div>
       </div>
-
+      
       <div className="modal-Footer">
         <div className="btn-Wrap">
             <button className="btn-Primary" type='submit'> 등록</button>
