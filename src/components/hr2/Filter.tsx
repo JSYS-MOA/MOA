@@ -14,6 +14,7 @@ interface FilterProps {
 
 const Filter = ({ apiType, onFilter }: FilterProps) => {
     const config = hr2Configs[apiType];
+
     const [dates, setDates] = useState({start: {y: '2025', m: '01', d: '01'}, end: {y: '2025', m: '01', d: '01'}});
     const [searchValues, setSearchValues] = useState<any>({});
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,28 +39,35 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
     };
 
     const handleSelectItem = (item: any) => {
+// 1. activeField.id와 매칭되는 설정을 filterFields에서 찾거나 fields에서 찾음
+        const fieldConfig = config.filterFields.find((f: any) => f.id === activeField.id);
 
-        const detail = config.fields.find((f: any) => f.searchType === activeField.id || f.key === activeField.id);
+        // 2. mapTo가 없으면 기본값(id, name) 사용, 백엔드 오타(cord) 대응 로직 추가
+        const mapping = (fieldConfig as any)?.mapTo || { id: 'id', name: 'name' };
 
-        const mapping = detail?.mapTo || { id: 'id', name: 'name' };
-
+        // 3. newItem 생성 시 DTO의 키값(mapping.id/name)을 사용하여 동적 추출
+        // 백엔드에서 오타난 필드명(allowanceCord 등)이 들어와도 안전하게 매핑되도록 fallback 추가
         const newItem = {
-            id: item[mapping.id],
-            name: item[mapping.name]
+            id: item[mapping.id] || item['employeeId'] || item['allowanceCode'] || item['allowanceCord'],
+            name: item[mapping.name] || item['userName'] || item['allowanceName']
         };
+
+        if (!newItem.id) {
+            console.error("ID 매핑 실패:", item);
+            return;
+        }
 
         setSearchValues((prev: any) => {
             const currentList = prev[activeField.id] || [];
-            // 중복 선택 방지
             if (currentList.find((i: any) => i.id === newItem.id)) return prev;
             return {
                 ...prev,
-                [activeField.id]: [...currentList, newItem] // 무조건 배열로 관리!
+                [activeField.id]: [...currentList, newItem]
             };
         });
         setIsModalOpen(false);
-        setResults([]); // 초기화
-        setKeyword(""); // 초기화
+        setResults([]);
+        setKeyword("");
     };
 
     const handleSearchClick = () => {
@@ -93,8 +101,32 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     onChange={(val: any) => setDates({...dates, end: val})}
                 />
             </div>
-            {config.filterFields.map((field) => (
-                <div key={field.id} style={{ width: "200px" }}>
+            {/* 필터 필드 루프 내에서 타입별 분기 처리 (그룹버튼 위치 수정) */}
+            {config.filterFields.map((field) => {
+                if (field.type === "groupButton") {
+                    return (
+                        <div key={field.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 'bold' }}>{field.label}:</span>
+                            <div className="btn-group">
+                                <button
+                                    className={!searchValues[field.id] ? "active" : ""}
+                                    onClick={() => setSearchValues({ ...searchValues, [field.id]: null })}
+                                >전체</button>
+                                {(field as any).option?.map((opt: any) => (
+                                    <button
+                                        key={opt.value}
+                                        className={searchValues[field.id] === opt.value ? "active" : ""}
+                                        onClick={() => setSearchValues({ ...searchValues, [field.id]: opt.value })}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                }
+                return (
+                    <div key={field.id} style={{ width: "200px" }}>
                     <TestTagInput
                         placeholder={field.label}
                         selectedItems={searchValues[field.id] || []}
@@ -111,7 +143,8 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                         onClear={() => setSearchValues((prev:any) => ({ ...prev, [field.id]: [] }))}
                     />
                 </div>
-            ))}
+                );
+            })}
 
             <button onClick={handleSearchClick}>검색</button>
 
@@ -167,8 +200,36 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     </table>
                 </div>
             </Modal>
+            // 여기에 그룹버튼
+            {config.filterFields.map((field) => {
+                // 1. 그룹 버튼 타입일 경우
+                if (field.type === "groupButton") {
+                    return (
+                        <div key={field.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 'bold', marginRight: '8px' }}>{field.label}:</span>
+                            <div className="btn-group" style={{ display: 'flex', gap: '2px' }}>
+                                <button
+                                    className={!searchValues[field.id] ? "active" : ""}
+                                    onClick={() => setSearchValues({ ...searchValues, [field.id]: null })}
+                                >전체</button>
+
+                                {/* API 등으로 받아온 옵션들 (지금은 임시 데이터나 config에서 가져옴) */}
+                                {(field as any).option?.map((opt: any) => (
+                                    <button
+                                        key={opt.value}
+                                        className={searchValues[field.id] === opt.value ? "active" : ""}
+                                        onClick={() => setSearchValues({ ...searchValues, [field.id]: opt.value })}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                )}
+                return null;
+            })}
         </div>
-    );
+    )
 }
 
 export default Filter;

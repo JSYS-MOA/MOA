@@ -1,4 +1,4 @@
-import { Outlet } from "react-router"
+import {Outlet, useNavigate} from "react-router"
 import {useState, useEffect} from "react";
 import Header from "./Header.tsx"
 import Sidebar from "./Sidebar.tsx";
@@ -19,7 +19,9 @@ interface LayoutData {
 
 const MainLayout = () => {
 
-    const [activeMenu, setActiveMenu] = useState<number | null>(null);
+    const navigate = useNavigate();
+
+    const [activeMenu, setActiveMenu] = useState<number>(1);
     const [layoutData, setLayoutData] = useState<LayoutData>();
 
 // [2] 백엔드 데이터 호출 (세션 방식)
@@ -36,17 +38,36 @@ const MainLayout = () => {
         init();
     }, []);
 
+    const handleMenuClick = (menuNum: number) => {
+        setActiveMenu(menuNum);
+
+        const paths: Record<number, string> = {
+            1: '/home',
+            2: '/my/profile',
+            3: '/gw/approvals',
+            4: '/admin/levels',
+            5: '/hr/cards',
+            6: '/inventory/status',
+            7: '/sales/journals',
+            8: '/base/form'
+
+        };
+
+        navigate(paths[menuNum] || '/home');
+    };
+
+
     return (
         <div className="layout-wrapper">
             <Header
                 userDept={layoutData?.departmentName || ""}
                 activeMenu={activeMenu || 0}
                 menuList={layoutData?.menuList || []}
-                onMenuClick={(id) => setActiveMenu(id)}
+                onMenuClick={handleMenuClick}
             />
 
             <div className="main-content-layout" style={{ display: 'flex', height:"100%" }}>
-                {activeMenu !== null && layoutData && (
+                {activeMenu !== null && activeMenu !== 1 && layoutData && (
                     <Sidebar
                         activeMenu={activeMenu}
                         layoutData={layoutData}

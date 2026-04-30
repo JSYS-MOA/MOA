@@ -148,7 +148,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                     <Table
                         idKey={config.idKey}
                         items={items}
-                        columns={config.columns.map(col => ({
+                        columns={config.columns.map((col:any) => ({
                             ...col,
                             render: (val: any, item: any) =>
                                 // 특정 컬럼 클릭 시 모달 열리게 렌더링 주입
@@ -157,10 +157,10 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                                         onClick={() => handleEditOpen(item)}
                                         style={{cursor:'pointer', textDecoration:'underline', color: 'blue'}}
                                     >
-                                        {val}
+                                        {col.render? col.render(val, item) : val}
                                     </span>
                                 ) : (
-                                    val
+                                    col.render? col.render(val, item) : val
                                 )
                         }))}
                         showCheckbox={true}

@@ -41,7 +41,7 @@ const Header = ({menuList, userDept, onMenuClick}:HeaderProps) => {
 
     return (
     <header className="header-container">
-        <div className="header-logo">MOA</div>
+        <div className="header-logo" onClick={()=>onMenuClick(1)}>MOA</div>
         <ul className="header-nav">
             {Array.isArray(uniqueMenuList) && uniqueMenuList.map((item) => {
                 const config = menuData[item.menuNum];

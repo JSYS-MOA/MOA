@@ -98,21 +98,37 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
             items={items}
             columns={config.columns.map(col => ({
                 ...col,
-                render: (val: any, item: any) =>
-                    (col as { clickable?: boolean }).clickable ? (
-                        <span onClick={() => handleEditOpen(item)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
-                                {val}
-                            </span>
-                    ) : val
+                render: (val: any, item: any) => {
+                    // 1. 기존 config에 설정된 render(예: renderVacationDays)가 있다면 먼저 실행
+                    const renderedValue = col.render ? (col.render as any)(val, item) : val;
+
+                    // 2. clickable 설정이 되어 있다면 span으로 감싸고, 아니면 그냥 값 반환
+                    if ((col as { clickable?: boolean }).clickable) {
+                        return (
+                            <span
+                                onClick={() => handleEditOpen(item)}
+                                style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                            >
+                        {renderedValue}
+                    </span>
+                        );
+                    }
+
+                    return renderedValue;
+                }
             }))}
             showCheckbox={true}
             selectedIds={selectedIds}
             onCheck={handleCheck}
         />
-        <div>
-            <button onClick={handleInsert} disabled={loading}>신규</button>
-            <button onClick={handleDelete} disabled={loading}>삭제</button>
-        </div>
+        {((config as any).fields?.length && (config as any).hasCrud) ?(
+            <div>
+                <button onClick={handleInsert} disabled={loading}>신규</button>
+                <button onClick={handleDelete} disabled={loading}>삭제</button>
+            </div>
+        ) : (
+            <></>
+        )}
 
         <div className="pagination" style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
             <button
@@ -124,7 +140,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
 
             {[...Array(totalPages)].map((_, i) => (
                 <button
-                    key={i}
+                    key={`${apiType}-${i}`}
                     onClick={() => setPage(i)}
                     style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'blue' : 'black' }}
                 >

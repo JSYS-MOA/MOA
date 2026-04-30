@@ -2,6 +2,7 @@ import {hr2Configs} from "../../types/hr2Configs.tsx";
 import {useState} from "react";
 import {saveHr2Data} from "../../apis/hr2/Hr2Service.tsx";
 import HRSearchModal from "./HRSearchModal.tsx";
+import FilterDate from "./FilterDate.tsx";
 
 
 interface HRModalProps {
@@ -31,6 +32,8 @@ interface HRFormData {
 const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps) => {
 
     const config = hr2Configs[apiType];
+    const fields = (config && "fields" in config) ? config.fields : [];
+
 
     const [formData, setFormData] = useState<HRFormData>((baseData as HRFormData) || ({} as HRFormData));
     const [currentField, setCurrentField] = useState<any>(null);
@@ -75,7 +78,7 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 // 3. 검색 결과 처리 핸들러 (수당코드 등 자동 채우기 핵심 로직)
     const handleSearchResult = (selectedData: any) => {
         if (!currentField || !currentField.mapTo) return;
-
+        console.log("원본 데이터 전체:", selectedData);
         const { mapTo } = currentField;
         const updates: any = {};
 
@@ -84,6 +87,8 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
             const dataKey = mapTo[formKey];
             updates[formKey] = selectedData[dataKey];
         });
+
+        console.log("🔥 업데이트될 데이터:", updates)
 
         setFormData((prev) => ({
             ...prev,
@@ -116,17 +121,29 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
                 {/* 본문 */}
 
                 <div>
-                    {config.fields.map((f) => {
+                    {fields.map((f:any) => {
                         return (
                             <div key={f.key}>
                                 <label>{f.label}</label>
                                 <div>
-                                    <input
-                                        type={f.type || "text"}
-                                        value={formData[f.key] || ""}
-                                        readOnly={f.readOnly}
-                                        onChange={(e) => handleChange(f.key, e.target.value)}
-                                    />
+                                    {f.isDate ? (
+                                        <FilterDate
+                                            value={formData[f.key] || ""}
+                                            onChange={(newDate:any) => handleChange(f.key, newDate)}
+                                        />
+                                    ) : (
+                                        // 2. 일반 타입인 경우 기존 input 사용
+                                        <input
+                                            type={f.type || "text"}
+                                            value={formData[f.key] || ""}
+                                            readOnly={f.readOnly}
+                                            onChange={(e) => handleChange(f.key, e.target.value)}
+                                            style={{
+                                                backgroundColor: f.readOnly ? '#f0f0f0' : 'white',
+                                                cursor: f.readOnly ? 'not-allowed' : 'text'
+                                            }}
+                                        />
+                                    )}
                                     {/* 돋보기 버튼 */}
                                     {f.hasSearch && (
                                         <button type="button" onClick={() => handleOpenSearch(f)}>

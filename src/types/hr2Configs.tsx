@@ -1,17 +1,41 @@
+// 휴가일수 렌더링
+const renderVacationDays = (val: any) => {
+    // null/undefined 0.00 반환
+    if (val === undefined || val === null || val === "") return "0.00";
+
+    // 숫자로 변환
+    const num = Number(val);
+
+    // 변환 결과가 숫자가 아니면 0.00, 맞으면 소수점 2자리 고정
+    return isNaN(num) ? "0.00" : num.toFixed(2);
+};
+// 날짜 렌더링
+const renderDate = (val: any) => {
+    if (!val) return "-";
+    // 10자리(yyyy-MM-dd)만 잘라서 출력
+    return val.substring(0, 10);
+};
+//시간 렌더링
+const renderTime = (val: any) => {
+    if (!val) return "-";
+    return val.substring(0, 5); // 앞에서 5글자만 잘라서 '16:50'
+};
+
 
 export const hr2Configs = {
     attendances: {
+        hasCrud: true,
         title: "근무기록",
         apiUrl: "/api/hr/attendances",
         idKey: "workId",
         // 필터 조건 필드
         filterFields: [
             { id: "keyword", label: "성명", type: "text", placeholder: "성명" },
-            { id: "category", label: "수당항목", type: "select", placeholder: "수당항목"}
+            { id: "category", label: "수당항목", type: "text", placeholder: "수당항목"}
         ],
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "workDate", label: "근무일자" },
+            { key: "workDate", label: "근무일자", render: renderDate, isDate: true },
             { key: "employeeId", label: "사원번호", clickable: true },
             { key: "userName", label: "성명" },
             { key: "allowanceName", label: "수당항목" },
@@ -19,13 +43,13 @@ export const hr2Configs = {
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호", type:"text" },
-            { key: "userName", label: "성명", type:"text",
+            { key: "workDate", label: "근무일자", render: renderDate, isDate: true  },
+            { key: "employeeId", label: "사원번호", readOnly: true },
+            { key: "userName", label: "성명", type:"search",
                 //검색모달용
                 hasSearch: true,
                 searchType: "user",
-                mapTo: { name: "userName", id: "employeeId" },
+                mapTo: { userName: "userName", employeeId: "employeeId" },
                 readOnly: true
             },
             {
@@ -34,77 +58,88 @@ export const hr2Configs = {
                 type: "text",
                 readOnly: true
             },
-            { key: "allowanceName", label: "수당항목", type:"text",
+            { key: "allowanceName", label: "수당항목", type:"search",
                 //검색모달용
                 hasSearch: true,
                 searchType: "allowance",
-                mapTo: { name:"allowanceName", id:"allowanceId" },
+                mapTo: { allowanceName:"allowanceName", allowanceCord:"allowanceCord" },
                 readOnly: true
             },
             { key: "workMemo", label: "비고", type:"text" }
         ]
-    }
-   /*vacation: {
+    },
+    Print: {
+        hasCrud: false,
         title: "출력물",
         apiUrl: "/api/hr/leavesBalance",
-        idKey: "workId",
+        idKey: "vacationId",
+        // 필터 조건 필드
+        filterFields: [
+            { id: "keyword", label: "부서", type: "text", placeholder: "부서" },
+            { id: "category", label: "성명", type: "text", placeholder: "성명" }
+        ],
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호" },
+            { key: "departmentName", label: "부서" },
+            { key: "employeeId", label: "사원번호", clickable: true },
             { key: "userName", label: "성명" },
-            { key: "allowanceName", label: "수당항목" },
-            { key: "workMemo", label: "비고" }
+            { key: "basicVacation", label: "휴가일수", render: renderVacationDays },
+            { key: "useVacation", label: "휴가사용일수", render: renderVacationDays },
+            { key: "remainingVacation", label: "휴가잔여일수", render: renderVacationDays }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
-            { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호", type:"text" },
-            { key: "userName", label: "성명", type:"text" },
-            { key: "allowanceName", label: "수당항목", type:"text" },
-            { key: "workMemo", label: "비고", type:"text" }
+            { key: "vacationId", label: "전표번호", type:"text", readOnly: true },
+            { key: "basicVacation", label: "휴가일수", type:"number", readOnly: true, render: renderVacationDays },
+            { key: "useVacation", label: "휴가사용일수", type:"number", readOnly: true, render: renderVacationDays },
+            { key: "remainingVacation", label: "휴가잔여일수", type: "number", readOnly: true, render: renderVacationDays },
         ]
     },
     lateness: {
+        hasCrud: false,
         title: "지각현황",
         apiUrl: "/api/hr/latenesses",
         idKey: "workId",
+        // 필터 조건 필드
+        filterFields: [
+            { id: "keyword", label: "부서", type: "text", placeholder: "부서" },
+            { id: "category", label: "성명", type: "text", placeholder: "성명" }
+        ],
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "workDate", label: "일자" },
-            { key: "employeeId", label: "사원번호" },
-            { key: "userName", label: "성명" },
-            { key: "allowanceName", label: "수당항목" },
-            { key: "workMemo", label: "비고" }
-        ],
-        // 등록/수정 모달(Modal)에 나타날 입력창들
-        fields: [
-            { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호", type:"text" },
-            { key: "userName", label: "성명", type:"text" },
-            { key: "allowanceName", label: "수당항목", type:"text" },
-            { key: "workMemo", label: "비고", type:"text" }
+            { key: "workDate", label: "일자", render: renderDate },
+            { key: "userName", label: "사원", clickable: true },
+            { key: "startTime", label: "출근시간", render: renderTime },
+            { key: "startWork", label: "출근입력시간", render: renderTime }
         ]
     },
-    approval: {
+    approvalWait: {
+        hasCrud: false,
         title: "근태관리",
         apiUrl: "/api/hr/approvalWait",
-        idKey: "workId",
+        idKey: "approvaId",
+        // 필터 조건 필드
+        filterFields: [
+            { id: "keyword", label: "구분", type: "text", placeholder: "전체" },
+            { id: "category", label: "성명", type: "text", placeholder: "성명" },
+            { id: "tap", label: "팀별", type: "groupButton", option:[]} // 옵션 초기값: 빈배열,
+                                                                       // 컴포넌트에서 api 호출 후 채워넣기
+        ],
         // 표(Table)에 보여줄 컬럼들
         columns: [
-            { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호" },
-            { key: "userName", label: "성명" },
-            { key: "allowanceName", label: "수당항목" },
-            { key: "workMemo", label: "비고" }
-        ],
-        // 등록/수정 모달(Modal)에 나타날 입력창들
-        fields: [
-            { key: "workDate", label: "근무일자" },
-            { key: "employeeId", label: "사원번호", type:"text" },
-            { key: "userName", label: "성명", type:"text" },
-            { key: "allowanceName", label: "수당항목", type:"text" },
-            { key: "workMemo", label: "비고", type:"text" }
+            { key: "approvaDate", label: "일자", render: renderDate },
+            { key: "approvaId", label: "문서번호", clickable: true },
+            { key: "approvaTitle", label: "제목" },
+            { key: "writer", label: "기안자" },
+            { key: "documentName", label: "구분" },
+            { key: "approvaState", label: "결재", type: "select",
+                options: [
+                    { label: "결재대기", value: "결재대기" },
+                    { label: "결재", value: "결재" },
+                    { label: "반려", value: "반려" }
+                ]
+            },
+            { key: "memo", label: "비고" }
         ]
-    }*/
+    }
 }
