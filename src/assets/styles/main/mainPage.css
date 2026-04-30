@@ -33,6 +33,7 @@
     overflow: hidden;
     height: 278px;
     width: 100%;
+    box-sizing: border-box;
 }
 .card-Header {
     background: var(--color-primary);
