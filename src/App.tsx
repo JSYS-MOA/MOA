@@ -17,7 +17,7 @@ import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
 import MonthlyRevenuePage from "./pages/sales/MonthlyRevenuePage.tsx";
 
 // 라우터 모움
-import InventoryRouter from "./routes/inventoryRoutes.tsx";
+import InventoryRouter from "./routes/InventoryRoutes.tsx";
 import GwRouter from './routes/GwRoutes.tsx';
 
 
