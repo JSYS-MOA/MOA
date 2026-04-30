@@ -28,15 +28,13 @@ const ApprovalsTable = (
 
           {columns.map(col => (
             <td key={col.key}>
-
-              {col.key === 'approvaInfo' && (
+               {col.key === 'approvaInfo' && (
                 <button 
                   className='btn-Secondary'
                   onClick={(e) => {
                     e.stopPropagation();
                     onItemClick?.(item , e);
-                  }}
-                >
+                  }}>
                   보기
                 </button>
               )}

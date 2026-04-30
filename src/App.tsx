@@ -11,18 +11,14 @@ import MyInfo from "./pages/mypage/MyInfo.tsx";
 import MyCalendar from "./pages/mypage/MyCalendar.tsx";
 import Base from "./pages/base/Base.tsx";
 import Admin from './pages/admin/Admin.tsx';
-import Inventory from './pages/inventory/Inventory.tsx';
-import InventoryDisposals from './pages/inventory/InventoryDisposals.tsx';
-import InventoryOrder from './pages/inventory/InventoryOrder.tsx';
-import InventoryInbounds from './pages/inventory/InventoryInbounds.tsx';
-import InventoryOutbound from './pages/inventory/InventoryOutbound.tsx';
-import Approvals from './pages/approvals/Approvals.tsx';
-import ApprovalsWait from './pages/approvals/ApprovalsWait.tsx';
-import TeamMembers from './pages/approvals/TeamMembers.tsx';
 import SalesJournals from "./pages/sales/SalesJournals.tsx";
 import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
 import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
 import MonthlyRevenuePage from "./pages/sales/MonthlyRevenuePage.tsx";
+
+// 라우터 모움
+import InventoryRouter from "./routes/inventoryRoutes.tsx";
+import GwRouter from './routes/GwRoutes.tsx';
 
 
 
@@ -50,12 +46,12 @@ const App = () => {
     if (isLoading) return null;
 
     return (
-        <>
-            <Routes>
+    <>
+        <Routes>
                 <Route path="/" element={<Login/>} />
 
                 <Route element={<PrivateRoute />}>
-                    {/* 메인페이지는 여기 있어야됨 -> 링크이동이 안 돼서 임시로 mainLayout안에 둠*/}
+                    
                     <Route element={<MainLayout />}>
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/base/:type" element={<Base />} />
@@ -70,21 +66,9 @@ const App = () => {
                     <Route element={<MainLayout />}>
                     <Route path="/home" element={<MainPage />} />
 
-                        <Route path="/inventory">
-                            <Route index element={<Inventory/>} />
-                            <Route path="status" element={<Inventory/>} />
-                            <Route path="disposals" element={<InventoryDisposals/>} />
-                            <Route path="orders" element={<InventoryOrder/>} />
-                            <Route path="inbounds" element={<InventoryInbounds/>} />
-                            <Route path="outbounds" element={<InventoryOutbound/>} />
-                        </Route>
+                        <Route path="/inventory/*" element={<InventoryRouter />} />
+                        <Route path="/gw/*" element={<GwRouter />} />
                         
-                        <Route path="/gw">
-                            <Route index element={<Approvals/>} />
-                            <Route path="approvals" element={<Approvals/>} />
-                            <Route path='teamMembers' element={<TeamMembers/>} />
-                            <Route path='approvalWait' element={<ApprovalsWait/>}/>
-                        </Route>
                         <Route path="/sales">
                             <Route path="journals" element={<SalesJournals/>} />
                             <Route path="taxInv" element={<TaxInvoicePage/>} />
@@ -99,9 +83,7 @@ const App = () => {
 
                 
 
-      </Routes>
-
-    
+        </Routes>    
     </>
   )
 }

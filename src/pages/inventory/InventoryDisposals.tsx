@@ -86,7 +86,7 @@ const InventoryDisposals = () => {
     <div>
       <div className="favorite-Header">
           <FaStar size={18} color="#C4C4C4"/>
-          <span>불량/페기 현황</span>
+          <span>불량/폐기 현황</span>
       </div>
       
       {data != null ?<>
@@ -103,7 +103,7 @@ const InventoryDisposals = () => {
         <Modal
           items={info.content}
           maxPage={info.totalPages}
-          title={'불량/페기현황'}
+          title={'불량/폐기현황'}
           columns={ModalColumns}
           onClose={() => setModalMode('')}
           keySno='defectSno'
