@@ -20,3 +20,10 @@ export interface TransactionForm {
     transactionPrice: number;
     transactionMemo: string;
 }
+
+export interface VendorMonthly {
+    vendorCode: string;
+    vendorName: string;
+    monthly: number[];
+    total: number;
+}

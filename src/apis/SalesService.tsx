@@ -1,5 +1,5 @@
 import axios from "axios";
-import type {Transaction} from "../types/transaction.ts";
+import type {Transaction, VendorMonthly} from "../types/transaction.ts";
 
 const API = "http://localhost/api";
 
@@ -38,7 +38,8 @@ export const updateTransactionApi = async (transactionId: number, request: {
 
 // 삭제
 export const deleteTransactionApi = async (transactionId: number) => {
-    const {data} = await axios.delete(`${API}/sales/journals/${transactionId}`,
+    const {data} = await axios.delete(
+        `${API}/sales/journals/${transactionId}`,
         {
         withCredentials: true,
     });
@@ -47,7 +48,8 @@ export const deleteTransactionApi = async (transactionId: number) => {
 
 //전자세금계산서
 export const getTaxInvoiceApi = async (transactionId: number) => {
-    const {data} = await axios.get(`${API}/sales/journals/${transactionId}/tax-invoice`,
+    const {data} = await axios.get(
+        `${API}/sales/journals/${transactionId}/tax-invoice`,
         {
         withCredentials: true,
     });
@@ -56,8 +58,27 @@ export const getTaxInvoiceApi = async (transactionId: number) => {
 
 //전자세금계산서 조회
 export const getTaxInvoiceListApi = async (): Promise<Transaction[]> => {
-    const {data} = await axios.get(`${API}/sales/taxInv`,
+    const {data} = await axios.get(
+        `${API}/sales/taxInv`,
         {
+        withCredentials: true,
+    });
+    return data;
+};
+
+//월별매입집계
+export const getMonthlyExpenseApi = async (): Promise<VendorMonthly[]> => {
+    const {data} = await axios.get(
+        `${API}/sales/expense`, {
+        withCredentials: true,
+    });
+    return data;
+};
+
+//월별매출집계
+export const getMonthlyRevenueApi = async (): Promise<VendorMonthly[]> => {
+    const {data} = await axios.get(
+        `${API}/sales/revenue`, {
         withCredentials: true,
     });
     return data;
