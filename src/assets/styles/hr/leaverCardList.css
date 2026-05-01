@@ -407,31 +407,31 @@
 /* 2. 입사일 */
 .leaverTable th:nth-child(2),
 .leaverTable td:nth-child(2) {
-    width: 13%;
+    width: 8%;
 }
 
 /* 3. 퇴사일 */
 .leaverTable th:nth-child(3),
 .leaverTable td:nth-child(3) {
-    width: 13%;
+    width: 8%;
 }
 
 /* 4. 사원번호 */
 .leaverTable th:nth-child(4),
 .leaverTable td:nth-child(4) {
-    width: 11%;
+    width: 8%;
 }
 
 /* 5. 이름 */
 .leaverTable th:nth-child(5),
 .leaverTable td:nth-child(5) {
-    width: 8%;
+    width: 7%;
 }
 
 /* 6. 부서 */
 .leaverTable th:nth-child(6),
 .leaverTable td:nth-child(6) {
-    width: 10%;
+    width: 7%;
 }
 
 /* 7. 직급 */
@@ -443,17 +443,17 @@
 /* 8. 연락처 */
 .leaverTable th:nth-child(8),
 .leaverTable td:nth-child(8) {
-    width: 11%;
+    width: 8%;
 }
 
 /* 9. 이메일 */
 .leaverTable th:nth-child(9),
 .leaverTable td:nth-child(9) {
-    width: 14%;
+    width: 12%;
 }
 
 /* 10. 주소 */
 .leaverTable th:nth-child(10),
 .leaverTable td:nth-child(10) {
-    width: 11%;
+    width: 20%;
 }

@@ -204,6 +204,7 @@ const HrCardListPage = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isStarred, setIsStarred] = useState(false);
 
     const [keywordDraft, setKeywordDraft] = useState("");
     const [departmentDraft, setDepartmentDraft] = useState("");
@@ -364,7 +365,14 @@ const HrCardListPage = () => {
     return (
         <div className="hrCardListPage-page">
             <div className="favorite-Header">
-                <FaStar size={18} color="#C4C4C4"/>
+                <button
+                    type="button"
+                    className="hrCardListPage-star"
+                    aria-pressed={isStarred}
+                    onClick={() => setIsStarred((prev) => !prev)}
+                >
+                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                </button>
                 <span>인사카드 목록</span>
 
                 <button

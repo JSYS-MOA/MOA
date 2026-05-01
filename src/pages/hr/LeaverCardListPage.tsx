@@ -4,6 +4,7 @@ import { FaStar } from "react-icons/fa";
 import {
     useDeleteLeaverCard,
     useGetLeaverCardList,
+    useRestoreLeaverCard,
     type LeaverCardRecord,
 } from "../../apis/hr/LeaverCardService";
 import "../../assets/styles/hr/leaverCardList.css";
@@ -155,11 +156,13 @@ const LeaverCardListPage = () => {
     const { user } = useAuthStore();
     const { data: cards = [], isLoading, isError } = useGetLeaverCardList();
     const deleteLeaverCard = useDeleteLeaverCard();
+    const restoreLeaverCard = useRestoreLeaverCard();
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedDetailUserId, setSelectedDetailUserId] = useState<number | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isRestoring, setIsRestoring] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [checkedUserIds, setCheckedUserIds] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -184,7 +187,7 @@ const LeaverCardListPage = () => {
         () => checkedUserIds.filter((userId) => validUserIdSet.has(userId)),
         [checkedUserIds, validUserIdSet]
     );
-    const canDeleteLeaverCard = user?.roleId === 2;
+    const canManageLeaverCard = user?.roleId === 2;
 
     const filteredItems = useMemo(() => {
         return items.filter((item) => {
@@ -277,7 +280,7 @@ const LeaverCardListPage = () => {
             return;
         }
 
-        if (!canDeleteLeaverCard) {
+        if (!canManageLeaverCard) {
             alert("인사팀장만 퇴사자 카드를 삭제할 수 있습니다.");
             return;
         }
@@ -317,6 +320,56 @@ const LeaverCardListPage = () => {
             alert(message);
         } finally {
             setIsDeleting(false);
+        }
+    };
+
+    const handleRestoreSelected = async () => {
+        const targetUserIds = selectedUserIds;
+
+        if (targetUserIds.length === 0 || isRestoring) {
+            return;
+        }
+
+        if (!canManageLeaverCard) {
+            alert("인사팀만 퇴사자를 직원으로 복귀시킬 수 있습니다.");
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `선택한 퇴사자 ${targetUserIds.length}명을 직원으로 복귀시키겠습니까?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setIsRestoring(true);
+
+        try {
+            for (const userId of targetUserIds) {
+                await restoreLeaverCard.mutateAsync(userId);
+            }
+
+            setCheckedUserIds([]);
+
+            if (
+                selectedDetailUserId !== null &&
+                targetUserIds.includes(selectedDetailUserId)
+            ) {
+                setSelectedDetailUserId(null);
+            }
+
+            alert("선택한 퇴사자를 직원으로 복귀시켰습니다.");
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "퇴사자 복귀 처리 중 오류가 발생했습니다.";
+
+            console.error(error);
+            alert(message);
+        } finally {
+            setIsRestoring(false);
         }
     };
 
@@ -431,6 +484,15 @@ const LeaverCardListPage = () => {
                             추가
                         </button>
                     )}
+
+                    <button
+                        type="button"
+                        className="leaverCardListPage-add-btn"
+                        disabled={selectedUserIds.length === 0 || isRestoring}
+                        onClick={handleRestoreSelected}
+                    >
+                        {isRestoring ? "복귀 처리 중..." : "직원복귀"}
+                    </button>
 
                     <button
                         type="button"

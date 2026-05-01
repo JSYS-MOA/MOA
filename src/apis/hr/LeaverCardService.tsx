@@ -107,6 +107,18 @@ const updateLeaverCardApi = async (
     return ensureLeaverCard(updatedCard);
 };
 
+const restoreLeaverCardApi = async (userId: number) => {
+    const { data } = await axios.put(
+        `${LEAVER_API_BASE}/${userId}/restore`,
+        {},
+        {
+            withCredentials: true,
+        }
+    );
+
+    return data;
+};
+
 const deleteLeaverCardApi = async (userId: number) => {
     const { data } = await axios.delete(`${LEAVER_API_BASE}/${userId}`, {
         withCredentials: true,
@@ -219,6 +231,23 @@ export function useDeleteLeaverCard() {
     });
 }
 
+export function useRestoreLeaverCard() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (userId: number) => {
+            return restoreLeaverCardApi(userId);
+        },
+        onSuccess: async (_, userId) => {
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["hrCardList"] }),
+                queryClient.invalidateQueries({ queryKey: ["leaverCardList"] }),
+                queryClient.invalidateQueries({ queryKey: ["leaverCardInfo", userId] }),
+            ]);
+        },
+    });
+}
+
 export function useLeaverCardList(search?: string, page?: number, size?: number) {
     return useGetLeaverCardList(search, page, size);
 }
@@ -264,4 +293,8 @@ export function useLeaverCardUpdate() {
 
 export function useLeaverCardDelete() {
     return useDeleteLeaverCard();
+}
+
+export function useLeaverCardRestore() {
+    return useRestoreLeaverCard();
 }

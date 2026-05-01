@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const API_BASE = "http://localhost/api/payroll";
+const API_BASE = "/api/hr/payroll";
 
 export type PayRollRecord = {
 
@@ -67,6 +67,15 @@ export type PayRollRecord = {
     salary_amount:number | null;
     salaryAmount:number | null;
 
+    overtime_allowance?: number | null;
+    overtimeAllowance?: number | null;
+
+    weekend_allowance?: number | null;
+    weekendAllowance?: number | null;
+
+    annual_allowance?: number | null;
+    annualAllowance?: number | null;
+
     //사용자
     user_name:string | null;
     userName:string | null;
@@ -131,6 +140,14 @@ export type PayRollMutationPayload = {
     bank:string | null;
     account_num:string | null;
 
+    //급여 종류
+    allowanceId:number;
+
+    allowanceCord:string;
+
+    allowanceName:string;
+
+    
     //부서
     gradeName:string;
 
@@ -168,16 +185,33 @@ export function useGetPayRollList(search?: string, page?: number, size?: number)
     return useQuery<PayRollRecord[]>({
         queryKey: ["PayRollList", search || "", page, size],
         queryFn: async () => {
-            const { data } = await axios.get<PayRollRecord[]>(API_BASE, {
-                params: {
-                    page,
-                    size,
-                    search: search || "",
-                },
-                withCredentials: true,
-            });
+            if (page !== undefined || size !== undefined) {
+                const { data } = await axios.get<{ content?: PayRollRecord[] }>(
+                    `${API_BASE}/page`,
+                    {
+                        params: {
+                            ...(page !== undefined ? { page } : {}),
+                            ...(size !== undefined ? { size } : {}),
+                        },
+                        withCredentials: true,
+                    }
+                );
 
-            return data;
+                return Array.isArray(data?.content) ? data.content : [];
+            }
+
+            const { data } = await axios.get<PayRollRecord[] | { message?: string }>(
+                API_BASE,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (Array.isArray(data)) {
+                return data;
+            }
+
+            return [];
         },
     });
 }

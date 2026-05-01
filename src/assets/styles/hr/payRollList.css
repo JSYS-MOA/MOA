@@ -435,6 +435,44 @@
     color: var(--color-primary);
 }
 
+.payRollTable-linkCell {
+    white-space: normal;
+}
+
+.payRollTable-linkGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.payRollTable-linkPrimary,
+.payRollTable-linkAction {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-accent);
+    font: inherit;
+    cursor: pointer;
+}
+
+.payRollTable-linkPrimary {
+    font-weight: 600;
+}
+
+.payRollTable-linkPrimary:hover,
+.payRollTable-linkPrimary:focus-visible,
+.payRollTable-linkAction:hover,
+.payRollTable-linkAction:focus-visible {
+    text-decoration: underline;
+}
+
+.payRollTable-linkActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+}
+
 .payRollTable th:nth-child(1),
 .payRollTable td:nth-child(1) {
     width: 4%;
@@ -442,17 +480,17 @@
 
 .payRollTable th:nth-child(2),
 .payRollTable td:nth-child(2) {
-    width: 12%;
+    width: 10%;
 }
 
 .payRollTable th:nth-child(3),
 .payRollTable td:nth-child(3) {
-    width: 28%;
+    width: 22%;
 }
 
 .payRollTable th:nth-child(4),
 .payRollTable td:nth-child(4) {
-    width: 14%;
+    width: 12%;
 }
 
 .payRollTable th:nth-child(5),
@@ -462,12 +500,17 @@
 
 .payRollTable th:nth-child(6),
 .payRollTable td:nth-child(6) {
-    width: 16%;
+    width: 14%;
 }
 
 .payRollTable th:nth-child(7),
 .payRollTable td:nth-child(7) {
-    width: 16%;
+    width: 10%;
+}
+
+.payRollTable th:nth-child(8),
+.payRollTable td:nth-child(8) {
+    width: 18%;
 }
 
 .payRollListPage-filterRow {

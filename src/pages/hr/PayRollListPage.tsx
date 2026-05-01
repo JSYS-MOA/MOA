@@ -8,12 +8,15 @@ import {
     useGetPayRollList,
 } from "../../apis/hr/PayLollService.tsx";
 import "../../assets/styles/hr/payRollList.css";
+import PayRollUpdateModal from "../../components/hr/PayRollUpdateModal.tsx";
 import PayRollTable, {
+    type PayRollTableAction,
     type PayRollTableRow,
 } from "../../components/hr/PayRollTable.tsx";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 const ITEMS_PER_PAGE = 10;
+const PAYROLL_VENDOR_ID = 11;
 
 type FilterChipInputProps = {
     label: string;
@@ -28,8 +31,10 @@ type FilterChipInputProps = {
 type LoosePayRoll = PayRollRecord & Record<string, unknown>;
 
 type PayRollListRow = PayRollTableRow & {
+    createdDateValue: number | null;
     payDateValue: number | null;
     totalAmountValue: number;
+    transactionIds: number[];
     departmentText: string;
     searchText: string;
 };
@@ -75,37 +80,32 @@ const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
     return undefined;
 };
 
+const getTransactionId = (record: Record<string, unknown>) =>
+    getNumberValue(record, "transactionId", "transaction_id");
+
+const getVendorId = (record: Record<string, unknown>) =>
+    getNumberValue(record, "vendorId", "vendor_id");
+
+const getEmployeeKey = (record: Record<string, unknown>) => {
+    const employeeId = getStringValue(record, "employeeId", "employee_id");
+
+    if (employeeId !== "") {
+        return `employee:${employeeId}`;
+    }
+
+    const userId = getNumberValue(record, "userId", "user_id");
+
+    if (userId !== undefined) {
+        return `user:${userId}`;
+    }
+
+    return "";
+};
+
 const parseIsoDate = (value: string) => {
     const parsed = new Date(value);
 
     if (Number.isNaN(parsed.getTime())) {
-        return undefined;
-    }
-
-    return parsed;
-};
-
-const parseCompactDate = (value: number | string | null | undefined) => {
-    if (value === null || value === undefined) {
-        return undefined;
-    }
-
-    const digits = String(value).replace(/\D/g, "");
-
-    if (digits.length !== 8) {
-        return undefined;
-    }
-
-    const year = Number(digits.slice(0, 4));
-    const month = Number(digits.slice(4, 6));
-    const day = Number(digits.slice(6, 8));
-    const parsed = new Date(year, month - 1, day);
-
-    if (
-        parsed.getFullYear() !== year ||
-        parsed.getMonth() !== month - 1 ||
-        parsed.getDate() !== day
-    ) {
         return undefined;
     }
 
@@ -124,17 +124,6 @@ const formatDateValue = (date: Date | undefined) => {
     return `${year}/${month}/${day}`;
 };
 
-const formatYearMonth = (date: Date | undefined) => {
-    if (!date) {
-        return "-";
-    }
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-
-    return `${year}/${month}`;
-};
-
 const formatAmount = (amount: number) => amount.toLocaleString("ko-KR");
 
 const toDateValue = (value: string) => {
@@ -148,6 +137,43 @@ const toDateValue = (value: string) => {
     return Number.isFinite(parsed) ? parsed : null;
 };
 
+const toFormattedDateValue = (date: Date | undefined) => {
+    if (!date) {
+        return null;
+    }
+
+    return Number(formatDateValue(date).replaceAll("/", ""));
+};
+
+const getCreatedAtDate = (record: Record<string, unknown>) => {
+    const createdAtText = getStringValue(
+        record,
+        "createdAt",
+        "created_at",
+        "transaction_created_at",
+        "salary_ledger_created_at",
+        "salary_created_at"
+    );
+
+    return createdAtText ? parseIsoDate(createdAtText) : undefined;
+};
+
+const getUpdatedAtDate = (record: Record<string, unknown>) => {
+    const updatedAtText = getStringValue(
+        record,
+        "updatedAt",
+        "updated_at",
+        "transaction_updated_at",
+        "salary_ledger_updated_at",
+        "salary_updated_at"
+    );
+
+    return updatedAtText ? parseIsoDate(updatedAtText) : undefined;
+};
+
+const isSummaryMemoRecord = (record: Record<string, unknown>) =>
+    getStringValue(record, "transactionMemo", "transaction_memo").includes("총합");
+
 const buildRows = (cards: PayRollRecord[]) => {
     const groupedRows = new Map<
         number,
@@ -155,13 +181,12 @@ const buildRows = (cards: PayRollRecord[]) => {
             id: number;
             yearMonth: string;
             ledgerName: string;
+            createdDateValue: number | null;
             payDate: string;
             payDateValue: number | null;
-            employeeIds: Set<number>;
-            employeeNames: Set<string>;
-            employeeNumbers: Set<string>;
-            departmentNames: Set<string>;
-            fallbackCount: number;
+            employeeCount: number;
+            employeeKeys: Set<string>;
+            transactionIds: number[];
             totalAmountValue: number;
             status: string;
         }
@@ -169,139 +194,110 @@ const buildRows = (cards: PayRollRecord[]) => {
 
     for (const card of cards) {
         const record = card as LoosePayRoll;
-        const ledgerId = getNumberValue(
-            record,
-            "salaryLedgerId",
-            "salary_ledger_id",
-            "transactionId",
-            "transaction_id"
-        );
 
-        if (ledgerId === undefined) {
+        if (getVendorId(record) !== PAYROLL_VENDOR_ID) {
             continue;
         }
 
-        const salaryDateNumber = getNumberValue(record, "salaryDate", "salary_date");
-        const fallbackDateText = getStringValue(
-            record,
-            "salary_ledger_created_at",
-            "transaction_created_at",
-            "salary_created_at"
-        );
-        const payDate =
-            parseCompactDate(salaryDateNumber) ||
-            (fallbackDateText ? parseIsoDate(fallbackDateText) : undefined);
-        const payDateValue = payDate
-            ? Number(formatDateValue(payDate).replaceAll("/", ""))
-            : null;
-        const yearMonth = formatYearMonth(payDate);
+        if (isSummaryMemoRecord(record)) {
+            continue;
+        }
+
+        const employeeKey = getEmployeeKey(record);
+
+        if (employeeKey === "") {
+            continue;
+        }
+
+        const createdAt = getCreatedAtDate(record);
+        const updatedAt = getUpdatedAtDate(record);
+        const createdDateValue = toFormattedDateValue(createdAt);
+        const payDateValue = toFormattedDateValue(updatedAt);
+        const transactionId = getTransactionId(record);
+        const groupId = createdDateValue ?? transactionId;
+
+        if (groupId === undefined) {
+            continue;
+        }
+
+        const createdDateLabel = formatDateValue(createdAt);
         const ledgerName =
             getStringValue(record, "transactionMemo", "transaction_memo") ||
-            (yearMonth === "-" ? "Payroll Ledger" : `${yearMonth} Payroll`);
-        const status =
-            getStringValue(record, "salaryStatus", "salary_status") || "Pending";
+            (createdDateLabel === "-" ? "급여" : `${createdDateLabel} 급여`);
+        const payDate = formatDateValue(updatedAt);
         const amount =
             getNumberValue(record, "salaryAmount", "salary_amount") ??
             getNumberValue(record, "transactionPrice", "transaction_price") ??
             0;
-        const userId = getNumberValue(record, "userId", "user_id");
-        const userName = getStringValue(record, "userName", "user_name");
-        const employeeNumber = getStringValue(record, "employeeId", "employee_id");
-        const departmentName = getStringValue(record, "departmentName", "department_name");
+        const status =
+            getStringValue(
+                record,
+                "salaryStatus",
+                "salary_status",
+                "transactionType",
+                "transaction_type"
+            ) || "-";
 
-        const currentRow = groupedRows.get(ledgerId);
+        const currentRow = groupedRows.get(groupId);
 
         if (!currentRow) {
-            groupedRows.set(ledgerId, {
-                id: ledgerId,
-                yearMonth,
+            groupedRows.set(groupId, {
+                id: groupId,
+                yearMonth: createdDateLabel,
                 ledgerName,
-                payDate: formatDateValue(payDate),
+                createdDateValue,
+                payDate,
                 payDateValue,
-                employeeIds:
-                    userId === undefined
-                        ? new Set<number>()
-                        : new Set<number>([userId]),
-                employeeNames: userName ? new Set<string>([userName]) : new Set<string>(),
-                employeeNumbers: employeeNumber
-                    ? new Set<string>([employeeNumber])
-                    : new Set<string>(),
-                departmentNames: departmentName
-                    ? new Set<string>([departmentName])
-                    : new Set<string>(),
-                fallbackCount: 1,
+                employeeCount: 1,
+                employeeKeys: new Set([employeeKey]),
+                transactionIds: transactionId === undefined ? [] : [transactionId],
                 totalAmountValue: amount,
                 status,
             });
             continue;
         }
 
-        if (userId !== undefined) {
-            currentRow.employeeIds.add(userId);
-        } else {
-            currentRow.fallbackCount += 1;
-        }
-
-        if (userName) {
-            currentRow.employeeNames.add(userName);
-        }
-
-        if (employeeNumber) {
-            currentRow.employeeNumbers.add(employeeNumber);
-        }
-
-        if (departmentName) {
-            currentRow.departmentNames.add(departmentName);
+        if (!currentRow.employeeKeys.has(employeeKey)) {
+            currentRow.employeeKeys.add(employeeKey);
+            currentRow.employeeCount += 1;
         }
 
         currentRow.totalAmountValue += amount;
 
-        if (currentRow.payDateValue === null && payDateValue !== null) {
+        if (transactionId !== undefined) {
+            currentRow.transactionIds.push(transactionId);
+        }
+
+        if (currentRow.payDate === "-" && payDate !== "-") {
+            currentRow.payDate = payDate;
             currentRow.payDateValue = payDateValue;
-            currentRow.payDate = formatDateValue(payDate);
-            currentRow.yearMonth = yearMonth;
         }
 
-        if (currentRow.ledgerName === "Payroll Ledger" && ledgerName !== "Payroll Ledger") {
-            currentRow.ledgerName = ledgerName;
-        }
-
-        if (currentRow.status === "Pending" && status !== "Pending") {
+        if (currentRow.status === "-" && status !== "-") {
             currentRow.status = status;
         }
     }
 
     return [...groupedRows.values()]
-        .map<PayRollListRow>((row) => {
-            const departmentText = [...row.departmentNames].join(" ");
-            const searchText = [
-                row.ledgerName,
-                row.yearMonth,
-                row.status,
-                departmentText,
-                [...row.employeeNames].join(" "),
-                [...row.employeeNumbers].join(" "),
-            ]
+        .map<PayRollListRow>((row) => ({
+            id: row.id,
+            yearMonth: row.yearMonth,
+            ledgerName: row.ledgerName,
+            createdDateValue: row.createdDateValue,
+            payDate: row.payDate,
+            payDateValue: row.payDateValue,
+            employeeCount: row.employeeCount,
+            totalAmount: formatAmount(row.totalAmountValue),
+            totalAmountValue: row.totalAmountValue,
+            transactionIds: row.transactionIds,
+            status: row.status,
+            departmentText: "",
+            searchText: [row.yearMonth, row.ledgerName, row.payDate, row.status]
                 .filter(Boolean)
-                .join(" ");
-
-            return {
-                id: row.id,
-                yearMonth: row.yearMonth,
-                ledgerName: row.ledgerName,
-                payDate: row.payDate,
-                payDateValue: row.payDateValue,
-                employeeCount:
-                    row.employeeIds.size > 0 ? row.employeeIds.size : row.fallbackCount,
-                totalAmount: formatAmount(row.totalAmountValue),
-                totalAmountValue: row.totalAmountValue,
-                status: row.status,
-                departmentText,
-                searchText,
-            };
-        })
+                .join(" "),
+        }))
         .sort((left, right) => {
-            const dateDiff = (right.payDateValue ?? 0) - (left.payDateValue ?? 0);
+            const dateDiff = (right.createdDateValue ?? 0) - (left.createdDateValue ?? 0);
 
             if (dateDiff !== 0) {
                 return dateDiff;
@@ -382,6 +378,7 @@ const PayRollListPage = () => {
     const deletePayRoll = useDeletePayRoll();
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
+    const [isPayRollModalOpen, setIsPayRollModalOpen] = useState(false);
     const [selectedLedgerId, setSelectedLedgerId] = useState<number | null>(null);
     const [selectedLedgerIds, setSelectedLedgerIds] = useState<number[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -422,11 +419,11 @@ const PayRollListPage = () => {
 
             const matchesStartDate =
                 startDateValue === null ||
-                (item.payDateValue !== null && item.payDateValue >= startDateValue);
+                (item.createdDateValue !== null && item.createdDateValue >= startDateValue);
 
             const matchesEndDate =
                 endDateValue === null ||
-                (item.payDateValue !== null && item.payDateValue <= endDateValue);
+                (item.createdDateValue !== null && item.createdDateValue <= endDateValue);
 
             return (
                 matchesKeyword &&
@@ -454,6 +451,25 @@ const PayRollListPage = () => {
         () => items.find((item) => item.id === activeSelectedLedgerId) ?? null,
         [items, activeSelectedLedgerId]
     );
+
+    const selectedLedgerRecords = useMemo(() => {
+        if (activeSelectedLedgerId === null) {
+            return [];
+        }
+
+        return cards.filter((card) => {
+            const record = card as LoosePayRoll;
+
+            return (
+                getVendorId(record) === PAYROLL_VENDOR_ID &&
+                toFormattedDateValue(getCreatedAtDate(record)) === activeSelectedLedgerId
+            );
+        });
+    }, [cards, activeSelectedLedgerId]);
+
+    const selectedPayrollLabel = useMemo(() => {
+        return selectedLedger?.ledgerName ?? "급여";
+    }, [selectedLedger]);
 
     const applyFilters = () => {
         setKeywordFilter(keywordDraft.trim());
@@ -483,6 +499,32 @@ const PayRollListPage = () => {
         );
     };
 
+    const handleOpenPayRollModal = (ledgerId: number) => {
+        setSelectedLedgerId(ledgerId);
+        setIsPayRollModalOpen(true);
+    };
+
+    const actionMessages: Record<Exclude<PayRollTableAction, "view">, string> = {
+        edit: "수정 기능은 아직 연결되지 않았습니다.",
+        cancelConfirm: "확정취소 기능은 아직 연결되지 않았습니다.",
+        createVoucher: "전표생성 기능은 아직 연결되지 않았습니다.",
+    };
+
+    const handleTableAction = (action: PayRollTableAction, ledgerId: number) => {
+        setSelectedLedgerId(ledgerId);
+
+        if (action === "view") {
+            setIsPayRollModalOpen(true);
+            return;
+        }
+
+        window.alert(actionMessages[action]);
+    };
+
+    const handleClosePayRollModal = () => {
+        setIsPayRollModalOpen(false);
+    };
+
     const handleToggleAll = () => {
         const visibleLedgerIds = paginatedItems.map((item) => item.id);
         const isAllSelected =
@@ -499,9 +541,12 @@ const PayRollListPage = () => {
     };
 
     const handleDeleteSelected = async () => {
-        const targetLedgerIds = activeSelectedLedgerIds;
+        const targetTransactionIds = activeSelectedLedgerIds.flatMap((ledgerId) => {
+            const item = items.find((row) => row.id === ledgerId);
+            return item?.transactionIds ?? [];
+        });
 
-        if (targetLedgerIds.length === 0 || isDeleting) {
+        if (targetTransactionIds.length === 0 || isDeleting) {
             return;
         }
 
@@ -511,7 +556,7 @@ const PayRollListPage = () => {
         }
 
         const confirmed = window.confirm(
-            `선택한 급여 ${targetLedgerIds.length}건을 삭제하시겠습니까?`
+            `선택한 급여 ${targetTransactionIds.length}건을 삭제하시겠습니까?`
         );
 
         if (!confirmed) {
@@ -522,7 +567,9 @@ const PayRollListPage = () => {
 
         try {
             await Promise.all(
-                targetLedgerIds.map((ledgerId) => deletePayRoll.mutateAsync(ledgerId))
+                targetTransactionIds.map((transactionId) =>
+                    deletePayRoll.mutateAsync(transactionId)
+                )
             );
 
             await queryClient.invalidateQueries({
@@ -533,9 +580,10 @@ const PayRollListPage = () => {
 
             if (
                 activeSelectedLedgerId !== null &&
-                targetLedgerIds.includes(activeSelectedLedgerId)
+                activeSelectedLedgerIds.includes(activeSelectedLedgerId)
             ) {
                 setSelectedLedgerId(null);
+                setIsPayRollModalOpen(false);
             }
 
             window.alert("선택한 급여 대장을 삭제했습니다.");
@@ -612,7 +660,7 @@ const PayRollListPage = () => {
 
                     <FilterChipInput
                         label="검색어"
-                        placeholder="대장명, 이름, 사번"
+                        placeholder="대장명 입력"
                         draftValue={keywordDraft}
                         appliedValue={keywordFilter}
                         onDraftChange={setKeywordDraft}
@@ -637,7 +685,7 @@ const PayRollListPage = () => {
                     <span>전체 {filteredItems.length}건</span>
                     {selectedLedger && (
                         <span className="payRollListPage-selectionInfo">
-                            선택됨: {selectedLedger.ledgerName}
+                            선택됨 {selectedLedger.ledgerName}
                         </span>
                     )}
                 </div>
@@ -652,7 +700,8 @@ const PayRollListPage = () => {
                         selectedLedgerIds={activeSelectedLedgerIds}
                         onToggleItem={handleToggleItem}
                         onToggleAll={handleToggleAll}
-                        onSelectItem={setSelectedLedgerId}
+                        onSelectItem={handleOpenPayRollModal}
+                        onAction={handleTableAction}
                     />
                 )}
 
@@ -715,6 +764,13 @@ const PayRollListPage = () => {
                     </div>
                 </div>
             </div>
+
+            <PayRollUpdateModal
+                isOpen={isPayRollModalOpen && activeSelectedLedgerId !== null}
+                onClose={handleClosePayRollModal}
+                payrollLabel={selectedPayrollLabel}
+                records={selectedLedgerRecords}
+            />
         </div>
     );
 };

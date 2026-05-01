@@ -208,6 +208,7 @@ const EvaluationsCardListPage = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [modalTarget, setModalTarget] = useState<EvaluationsModalTarget | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isStarred, setIsStarred] = useState(false);
 
     const [keywordDraft, setKeywordDraft] = useState("");
     const [departmentDraft, setDepartmentDraft] = useState("");
@@ -293,7 +294,14 @@ const EvaluationsCardListPage = () => {
     return (
         <div className="evaluationsCardListPage-page">
             <div className="favorite-Header">
-                <FaStar size={18} color="#C4C4C4" />
+                <button
+                    type="button"
+                    className="evaluationsCardListPage-star"
+                    aria-pressed={isStarred}
+                    onClick={() => setIsStarred((prev) => !prev)}
+                >
+                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                </button>
                 <span>인사 평가</span>
 
                 <button

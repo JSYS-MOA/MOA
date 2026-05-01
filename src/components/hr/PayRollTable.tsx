@@ -10,12 +10,19 @@ export type PayRollTableRow = {
     status: string;
 };
 
+export type PayRollTableAction =
+    | "view"
+    | "edit"
+    | "cancelConfirm"
+    | "createVoucher";
+
 type PayRollTableProps = {
     items: PayRollTableRow[];
     selectedLedgerIds: number[];
     onToggleItem: (ledgerId: number) => void;
     onToggleAll: () => void;
     onSelectItem: (ledgerId: number) => void;
+    onAction?: (action: PayRollTableAction, ledgerId: number) => void;
 };
 
 type ColumnKey =
@@ -27,12 +34,12 @@ type ColumnKey =
     | "status";
 
 const columns: Array<{ key: ColumnKey; label: string }> = [
-    { key: "yearMonth", label: "Month" },
-    { key: "ledgerName", label: "Ledger" },
-    { key: "payDate", label: "Pay Date" },
-    { key: "employeeCount", label: "Employees" },
-    { key: "totalAmount", label: "Total Amount" },
-    { key: "status", label: "Status" },
+    { key: "yearMonth", label: "일자" },
+    { key: "ledgerName", label: "대장명" },
+    { key: "payDate", label: "지급일" },
+    { key: "employeeCount", label: "인원 수" },
+    { key: "totalAmount", label: "총 금액" },
+    { key: "status", label: "상태" },
 ];
 
 const getStatusToneClassName = (status: string) => {
@@ -40,14 +47,19 @@ const getStatusToneClassName = (status: string) => {
 
     if (
         normalizedStatus.includes("complete") ||
-        normalizedStatus.includes("approved")
+        normalizedStatus.includes("approved") ||
+        status.includes("완료") ||
+        status.includes("승인") ||
+        status.includes("확정")
     ) {
         return "payRollTable-statusValue is-complete";
     }
 
     if (
         normalizedStatus.includes("pending") ||
-        normalizedStatus.includes("progress")
+        normalizedStatus.includes("progress") ||
+        status.includes("대기") ||
+        status.includes("진행")
     ) {
         return "payRollTable-statusValue is-pending";
     }
@@ -61,9 +73,20 @@ const PayRollTable = ({
     onToggleItem,
     onToggleAll,
     onSelectItem,
+    onAction,
 }: PayRollTableProps) => {
     const allSelected =
         items.length > 0 && items.every((item) => selectedLedgerIds.includes(item.id));
+    const handleAction = (action: PayRollTableAction, ledgerId: number) => {
+        if (onAction) {
+            onAction(action, ledgerId);
+            return;
+        }
+
+        if (action === "view") {
+            onSelectItem(ledgerId);
+        }
+    };
 
     return (
         <table className="payRollTable">
@@ -86,14 +109,16 @@ const PayRollTable = ({
                             {column.label}
                         </th>
                     ))}
+
+                    <th className="payRollTable-th">링크</th>
                 </tr>
             </thead>
 
             <tbody>
                 {items.length === 0 ? (
                     <tr>
-                        <td colSpan={columns.length + 1} className="payRollTable-empty">
-                            No payroll ledgers found.
+                        <td colSpan={columns.length + 2} className="payRollTable-empty">
+                            급여 대장 내역이 없습니다.
                         </td>
                     </tr>
                 ) : (
@@ -133,6 +158,45 @@ const PayRollTable = ({
                                     )}
                                 </td>
                             ))}
+
+                            <td className="payRollTable-td payRollTable-linkCell">
+                                <div className="payRollTable-linkGroup">
+                                    <div className="payRollTable-linkActions">
+                                        <button
+                                            type="button"
+                                            className="payRollTable-linkAction"
+                                            onClick={() => handleAction("view", item.id)}
+                                        >
+                                            조회
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="payRollTable-linkAction"
+                                            onClick={() => handleAction("edit", item.id)}
+                                        >
+                                            수정
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="payRollTable-linkAction"
+                                            onClick={() =>
+                                                handleAction("cancelConfirm", item.id)
+                                            }
+                                        >
+                                            확정취소
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="payRollTable-linkAction"
+                                            onClick={() =>
+                                                handleAction("createVoucher", item.id)
+                                            }
+                                        >
+                                            전표생성
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     ))
                 )}

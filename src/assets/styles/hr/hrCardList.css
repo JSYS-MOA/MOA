@@ -417,53 +417,47 @@
 /* 2. 입사일 */
 .hrCardTable th:nth-child(2),
 .hrCardTable td:nth-child(2) {
-    width: 13%;
+    width: 7%;
 }
 
-/* 3. 퇴사일 */
+/* 3. 사원번호 */
 .hrCardTable th:nth-child(3),
 .hrCardTable td:nth-child(3) {
-    width: 10%;
+    width: 7%;
 }
 
-/* 4. 사원번호 */
+/* 4. 이름 */
 .hrCardTable th:nth-child(4),
 .hrCardTable td:nth-child(4) {
-    width: 11%;
-}
-
-/* 5. 이름 */
-.hrCardTable th:nth-child(5),
-.hrCardTable td:nth-child(5) {
-    width: 8%;
-}
-
-/* 6. 부서 */
-.hrCardTable th:nth-child(6),
-.hrCardTable td:nth-child(6) {
-    width: 10%;
-}
-
-/* 7. 직급 */
-.hrCardTable th:nth-child(7),
-.hrCardTable td:nth-child(7) {
     width: 5%;
 }
 
-/* 8. 연락처 */
+/* 5. 부서 */
+.hrCardTable th:nth-child(5),
+.hrCardTable td:nth-child(5) {
+    width: 5%;
+}
+
+/* 6. 직급 */
+.hrCardTable th:nth-child(6),
+.hrCardTable td:nth-child(6) {
+    width: 5%;
+}
+
+/* 7. 연락처 */
+.hrCardTable th:nth-child(7),
+.hrCardTable td:nth-child(7) {
+    width: 10%;
+}
+
+/* 8. 이메일 */
 .hrCardTable th:nth-child(8),
 .hrCardTable td:nth-child(8) {
-    width: 17%;
+    width: 15%;
 }
 
 /* 9. 이메일 */
 .hrCardTable th:nth-child(9),
 .hrCardTable td:nth-child(9) {
-    width: 11%;
-}
-
-/* 10. 주소 */
-.hrCardTable th:nth-child(10),
-.hrCardTable td:nth-child(10) {
-    width: 11%;
+    width: 20%;
 }
