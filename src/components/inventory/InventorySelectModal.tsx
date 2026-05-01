@@ -42,7 +42,7 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
             <p>항목 선택</p>
         </div>
 
-        <table className='modal-Table , inventory-table'>
+        <table className='inventory-modal-Table , inventory-table'>
 
           <thead className="inventory-table-header">
               <tr>

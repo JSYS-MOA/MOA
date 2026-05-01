@@ -11,7 +11,7 @@
     border-bottom: 1px solid var(--border);
 }
 .common-Table thead tr th{
-    padding: 8px 8px;
+    padding: 7px 8px;
     font-weight: 500;
     border-right: 1px solid var(--border);
     color: var(--text-accent);
@@ -22,17 +22,49 @@
 .common-Table tbody tr:hover{
     background: var(--color-primary-light);
 }
+.common-Table tbody {
+    background: var(--color-inverse);
+}
 .common-Table tbody tr td{
-    padding: 8px 8px;
+    padding: 7px 8px;
     font-size: var(--font-xs);
     font-weight: 300;
     color: var(--text-primary);
     border-right: 1px solid var(--border);
-    background: var(--color-inverse);
 }
 .common-Table tbody tr td:last-child{
     border-right: none;
 }
+.common-Table input[type='checkbox'] {
+    height: 12px;
+    width: 12px;vertical-align: middle;
+}
+/* 영업 */
+.common-Table.salesJournals tbody td:first-child{
+    text-align: center;
+}
+.common-Table.salesJournals tbody td:nth-child(6),.common-Table.salesJournals tbody td:nth-child(7){
+    text-align: right;
+}
 
+.common-Table.taxInvoice tbody td:nth-child(7){
+    text-align: center;
+}
+.common-Table.taxInvoice tbody td:nth-child(5){
+    text-align: right;
+}
 
+.common-Table.monthly tbody td{
+    text-align: right;
+}
+.common-Table.monthly tbody td:last-child{
+    text-align: center;
+}
 
+.common-Table.monthly tbody td:nth-child(1),
+.common-Table.monthly tbody td:nth-child(2){
+    text-align: left;
+}
+.common-Table.modal-Table.transaction tbody td:nth-child(6){
+    text-align: right;
+}

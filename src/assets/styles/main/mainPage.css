@@ -53,10 +53,6 @@
     flex-direction: column;
 }
 
-
-/* notice */
-
-
 /* approvalCard */
 .approvalCard-Inner{gap: 8px;}
 .approval-Item{
@@ -102,7 +98,16 @@
 .calendar-Body{
     margin-top: 30px;
 }
+.logisticsTeam-Wrapper{
 
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px 20px;
+    box-sizing: border-box;
+    height: auto;
+}
 
 /* notice */
 .notice-Wrapper{

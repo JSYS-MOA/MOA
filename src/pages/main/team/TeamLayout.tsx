@@ -13,7 +13,7 @@ const TeamLayout = ({children, title, linkTo, onRefresh}:TeamLayoutProps) => {
 
     const navigate = useNavigate();
     return(
-        <div className="team_Wrapper">
+        <>
             <div className="team-Header">
                 <p>{title}</p>
                 <div className="Header-Icon">
@@ -34,7 +34,7 @@ const TeamLayout = ({children, title, linkTo, onRefresh}:TeamLayoutProps) => {
                 </div>
             </div>
             {children}
-        </div>
+        </>
     )
 }
 export default TeamLayout;

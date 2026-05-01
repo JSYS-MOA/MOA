@@ -1,9 +1,10 @@
-
+import "../assets/styles/component/table.css";
 
 export interface TableColumn<T> {
     key: keyof T | string; // 데이터의 키값
     label: string;         // 헤더 이름
     render?: (val: any, item: T) => React.ReactNode;
+    align?: "left" | "center" | "right";
 }
 
 interface TableProps<T> {
@@ -17,6 +18,7 @@ interface TableProps<T> {
     className?: string;
     wrapperStyle?: React.CSSProperties;
     rowClassName?: (item: T) => string;
+    onRowClick?: (item: T) => void;
 }
 
 
@@ -27,7 +29,7 @@ const Table = <T,>({
                    idKey='id',
                    showCheckbox = false,
                    selectedIds = [],
-                   onCheck, className, wrapperStyle,rowClassName
+                   onCheck, className, wrapperStyle,rowClassName,onRowClick
 }: TableProps<T>) => {
 
     //전체 선택 핸들러
@@ -67,9 +69,14 @@ const Table = <T,>({
                 <tbody>
                 {items.length > 0 ? (
                     items.map((item: any, idx) => (
-                        <tr key={item[idKey] || idx}>
+                        <tr
+                            key={item[idKey] || idx}
+                            className={rowClassName?.(item) ?? ""}
+                            onClick={() => onRowClick?.(item)}
+                            style={{ cursor: onRowClick ? "pointer" : "default" }}
+                        >
                             {showCheckbox === true && (
-                                <td>
+                                <td style={{textAlign: "center"}}>
                                     <input
                                         type="checkbox"
                                         checked={selectedIds?.includes(item[idKey])}
@@ -81,7 +88,7 @@ const Table = <T,>({
                             {columns.map((col) => (
                                 <td
                                     key={String(col.key)}
-                                    className={rowClassName?.(item) ?? ""}
+                                    style={{textAlign: col.align ?? "left"}}
                                 >
                                     {/* render 함수 호출 시 item 객체 전체를 두 번째 인자로 전달 (유연성 확보) */}
                                     {col.render

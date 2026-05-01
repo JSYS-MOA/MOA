@@ -17,23 +17,19 @@
     font-size: var(--font-xs);
 }
 
-
-
 .inventory-table th {
-    padding: 6px 15px;
+    padding: 7px 8px;
     color: var(--text-accent);
     font-weight: 500;
     border: 1px solid var(--border);
     text-align: center;
     white-space: nowrap;
 }
-
 .inventory-table td {
-    padding: 6px 10px;
+    padding: 7px 8px;
     border: 1px solid var(--border);
     color: var(--text-secondary);
     white-space: nowrap;
-    background: var(--color-inverse);
 }
 
 .inventory-table-header {
@@ -41,13 +37,12 @@
   color: #091B72;
     font-weight: 400;
 }
-.inventory-table-header th{
-    padding: 6px 8px;
-}
 .inventory-table-body td {
-  background-color: #fff;
-  color: #151515;
+    color: #151515;
 
+}
+.inventory-table tbody tr:hover{
+    background: var(--color-primary-light) !important;
 }
 
 .inventory-table-body{
@@ -143,7 +138,7 @@
 
 /* 물폼선택 모달 테이블 */
 
-.modal-Table {
+.inventory-modal-Table{
   margin: 17px 15px 0;
   padding: 20px;
   background: var(--color-inverse);

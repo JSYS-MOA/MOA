@@ -7,6 +7,7 @@ import ConfirmModal from "../../components/ConfirmModal.tsx";
 import TaxInvoiceModal from "./TaxInvoiceModal.tsx";
 import "../../assets/styles/sales/taxInvoice.css";
 import {IoMdArrowDropdown, IoMdArrowDropup} from "react-icons/io";
+import Table, {type TableColumn} from "../../components/Table.tsx";
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -92,6 +93,56 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
             handleClose();
         }
     };
+
+    const columns: TableColumn<TransactionForm>[] = [
+        {
+            key: "transactionNum",
+            label: "거래코드",
+            render: () => isEditMode
+                ? transaction?.transactionNum
+                : <input type="number" value={form.transactionNum}
+                         onChange={(e) => handleChange("transactionNum", Number(e.target.value))}/>
+        },
+        {
+            key: "transactionType",
+            label: "거래코드명",
+            render: () => isEditMode
+                ? transaction?.transactionType
+                : <input type="text" value={form.transactionType}
+                         onChange={(e) => handleChange("transactionType", e.target.value)}/>
+        },
+        {
+            key: "vendorCode",
+            label: "거래처코드",
+            render: () => isEditMode
+                ? transaction?.vendorCode
+                : <input type="text" value={form.vendorCode}
+                         onChange={(e) => handleChange("vendorCode", e.target.value)}/>
+        },
+        {
+            key: "vendorName",
+            label: "거래처명",
+            render: () => isEditMode
+                ? transaction?.vendorName
+                : <input type="text" value={form.vendorName}
+                         onChange={(e) => handleChange("vendorName", e.target.value)}/>
+        },
+        {key: "transactionPrice", label: "차변", render: () => 0},
+        {
+            key: "transactionPrice",
+            label: "대변",
+            render: () => <input type="number" value={form.transactionPrice}
+                                 onChange={(e) => handleChange("transactionPrice", Number(e.target.value))}
+                                 style={{width: "100px"}}/>
+
+        },
+        {
+            key: "transactionMemo",
+            label: "적요",
+            render: () => <input type="text" value={form.transactionMemo}
+                                 onChange={(e) => handleChange("transactionMemo", e.target.value)}/>
+        },
+    ];
     return (
         <>
             <Modal
@@ -100,67 +151,12 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                 onClose={handleCloseAttempt}
                 bodyStyle={{flex: "none"}}
                 tableContent={
-                    <table className="modal-Table">
-                        <thead>
-                        <tr>
-                            <th>거래코드</th>
-                            <th>거래코드명</th>
-                            <th>거래처코드</th>
-                            <th>거래처명</th>
-                            <th>차변</th>
-                            <th>대변</th>
-                            <th>적요</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                {isEditMode
-                                    ? transaction?.transactionNum
-                                    : <input type="number" value={form.transactionNum}
-                                             onChange={(e) => handleChange("transactionNum", Number(e.target.value))}/>
-                                }
-                            </td>
-                            <td>
-                                {isEditMode
-                                    ? transaction?.transactionType
-                                    : <input type="text" value={form.transactionType}
-                                             onChange={(e) => handleChange("transactionType", e.target.value)}/>
-                                }
-                            </td>
-                            <td>
-                                {isEditMode
-                                    ? transaction?.vendorCode
-                                    : <input type="text" value={form.vendorCode}
-                                             onChange={(e) => handleChange("vendorCode", e.target.value)}/>
-                                }
-                            </td>
-                            <td>
-                                {isEditMode
-                                    ? transaction?.vendorName
-                                    : <input type="text" value={form.vendorName}
-                                             onChange={(e) => handleChange("vendorName", e.target.value)}/>
-                                }
-                            </td>
-                            <td>0</td>
-                            <td>
-                                <input
-                                    type="number"
-                                    value={form.transactionPrice}
-                                    onChange={(e) => handleChange("transactionPrice", Number(e.target.value))}
-                                    style={{width: "100px"}}
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    value={form.transactionMemo}
-                                    onChange={(e) => handleChange("transactionMemo", e.target.value)}
-                                />
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <Table
+                        items={[form]}
+                        idKey="transactionNum"
+                        columns={columns}
+                        className="modal-Table"
+                    />
                 }
                 footer={
                     <div>
