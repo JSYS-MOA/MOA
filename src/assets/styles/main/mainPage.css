@@ -52,3 +52,76 @@
     display: flex;
     flex-direction: column;
 }
+
+
+/* notice */
+
+
+/* approvalCard */
+.approvalCard-Inner{gap: 8px;}
+.approval-Item{
+    padding: 21px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--color-inverse);
+    font-size: var(--font-sm);
+    font-weight: 400;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+}
+.approval-Item span:nth-child(2){
+    color: var(--text-secondary-70);
+}
+.approval-Item:hover {
+    background: var(--color-primary-light);
+    border: 1px solid rgba(94,92,119,0.25);
+}
+
+/* calendar */
+.calendar-Wrapper{
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    height: 578px;
+}
+.mainCalendar-Header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.mainCalendar-Header p{
+    font-size: var(--font-sm);
+    font-weight: 400;
+    color: var(--text-primary);
+}
+.calendar-Body{
+    margin-top: 30px;
+}
+
+
+/* notice */
+.notice-Wrapper{
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    height: 278px;
+}
+.notice-Header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.notice-Header p{
+    font-size: var(--font-sm);
+    font-weight: 400;
+    color: var(--text-primary);
+}

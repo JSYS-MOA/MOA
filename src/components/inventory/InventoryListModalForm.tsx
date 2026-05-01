@@ -3,6 +3,7 @@ import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { usePutOrderSno , useGetProductSelect , useDeleteOrderForm} from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
@@ -261,7 +262,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
 
         <table className='modal-Table-Form'>
 
-          <thead className="modal-Table-Form-header">
+          <thead >
             <tr>
               { itemList ? <th>순번</th> : null}
               {columns.map(col => <th key={col.key}>{col.label}</th>)}
@@ -269,7 +270,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
             </tr>
           </thead>
 
-          <tbody className="modal-Table-Form-body">
+          <tbody>
           {itemList.map((item, idx) => (
           <tr key={idx} >
             <td >{idx + 1}</td>
@@ -325,7 +326,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
         ))}
           </tbody>
 
-          <tfoot className="modal-Table-Form-header">
+          <tfoot>
             <tr>
               {(() => {
                 const qtyIndex = columns.findIndex(col => col.key === keySno);
@@ -333,16 +334,16 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
 
                 return (
                   <>
-                    <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                    <td colSpan={firstDataColPos} style={{ textAlign: 'center'}}>
                       합계
                     </td>
 
                     {columns.slice(qtyIndex).map((col) => {
                       if (col.key === keySno ) {
-                        return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
+                        return <td key={col.key} >{totalSno}</td>;
                       }
                       if (col.key === 'totalPrice') {
-                        return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
+                        return <td key={col.key}>{totalAmount}</td>;
                       }
 
                       return <td key={col.key}></td>;
@@ -364,7 +365,7 @@ const InventoryListModalForm = (  { items , maxPage , columns, keySno , keyPrice
         <div className="btn-Wrap">
             {!isCompleted && <button className="btn-Primary" type='submit'>등록</button>}
                   {!isCompleted && <button className="btn-Primary" onClick={(e) => { onOderFormDel(e) }}> 발주삭제</button>} 
-            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+            <button className="btn-Primary" onClick={onClose}>닫기</button>
         </div>
       </div>
    

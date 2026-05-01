@@ -3,6 +3,7 @@ import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { usePostOrder , useGetProductSelect , useGetVendorSelect} from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose }: {
   columns : MColumn[] ,
@@ -200,25 +201,21 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
         </div>
         
       <div className='modal-Body'>
-          <div>
+          <div className="inventory-table-body">
             <div className='modal-Row'>
-              <div className='modal-Row-Item-title'>
                 <label>발주요청일자</label>
-              </div>
                 <input className='Date-Header-Input' type="date" value={orderformDate} onChange={(e) => setOrderformDate(e.target.value)} />
           </div>
             
             <div className='modal-Row' onClick={onSelectVendor}>
-              <div className='modal-Row-Item-title'>
                 <label>거래처</label>
-              </div>
-                <input className='Date-Header-Input' type="text" value={vendor.vendorName} placeholder="거래처 선택" readOnly />
+                <input type="text" value={vendor.vendorName} placeholder="거래처 선택" readOnly />
             </div>
 
           </div>
 
         
-        <table className='modal-Table-Form'>
+        <table className='modal-Table-Form' >
 
           <thead className="modal-Table-Form-header">
               <tr>
@@ -289,16 +286,16 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
 
               return (
                 <>
-                  <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                  <td colSpan={firstDataColPos} style={{ textAlign: 'center'}}>
                     합계
                   </td>
 
                   {columns.slice(qtyIndex).map((col) => {
                     if (col.key === keySno ) {
-                      return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
+                      return <td key={col.key} >{totalSno}</td>;
                     }
                     if (col.key === 'totalPrice') {
-                      return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
+                      return <td key={col.key} >{totalAmount}</td>;
                     }
 
                     return <td key={col.key}></td>;
@@ -312,13 +309,13 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
           
         </table>
 
-        <button className="btn-Primary" onClick={(e) => handleAddList(e)}>품목 추가</button>
+        <button className="btn-Primary" onClick={(e) => handleAddList(e)} style={{marginTop:"4px",padding:"6px"}}>품목 추가</button>
        </div>  
       
        <div className="modal-Footer">
         <div className="btn-Wrap">
             <button className="btn-Primary" type='submit'>발주</button>
-            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+            <button className="btn-Primary" onClick={onClose}>닫기</button>
         </div>
       </div>
     

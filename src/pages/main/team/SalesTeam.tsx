@@ -8,12 +8,12 @@ const SalesTeam = () => {
 
     const currentMonth = new Date().getMonth() +1;
 
-    const {data: revenue =[]} = useQuery<VendorMonthly[]>({
+    const {data: revenue =[], refetch: refetchRevenue} = useQuery<VendorMonthly[]>({
         queryKey:["monthlyRevenue"],
         queryFn: getMonthlyRevenueApi,
     })
 
-    const {data: expense =[]} = useQuery<VendorMonthly[]>({
+    const {data: expense =[], refetch: refetchExpense} = useQuery<VendorMonthly[]>({
         queryKey:["monthlyExpense"],
         queryFn: getMonthlyExpenseApi,
     })
@@ -24,14 +24,20 @@ const SalesTeam = () => {
         expense: expense.reduce((sum, v) => sum + (v.monthly[i] ?? 0),0),
     }));
 
+    const handleRefresh = () => {
+        void Promise.all([refetchRevenue(), refetchExpense()]);
+    };
+
     return(
         <TeamLayout
             title="월별 매출 실적"
+            linkTo="/sales/expense"
+            onRefresh={handleRefresh}
         >
             <ResponsiveContainer width="100%" height={406} style={{marginTop:"78px", paddingBottom:"46px"}}>
                 <BarChart
                     data={chartData}
-                    margin={{top: 5, right: 0, left: 0, bottom: 0}}
+                    margin={{top: 5, right: 40, left: 0, bottom: 0}}
                     barSize={34}
                 >
                     <XAxis

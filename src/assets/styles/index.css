@@ -430,8 +430,8 @@ button {
 }
 
 .modal-Table th {
-  padding: 8px 15px;
-  color: var(--color-primary);
+  padding: 6px 15px;
+  color: var(--text-accent);
   font-weight: 500;
   border: 1px solid var(--border);
   text-align: center;

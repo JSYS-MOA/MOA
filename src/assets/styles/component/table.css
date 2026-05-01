@@ -1,0 +1,38 @@
+.common-Table {
+    width: 100%;
+    border-collapse: collapse;
+    border:1px solid var(--border);
+    font-size: var(--font-xs);
+    position: relative;
+}
+.common-Table thead{
+    background: var(--color-gray-100);
+    border-top: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--border);
+}
+.common-Table thead tr th{
+    padding: 8px 8px;
+    font-weight: 500;
+    border-right: 1px solid var(--border);
+    color: var(--text-accent);
+}
+.common-Table tbody tr{
+    border-bottom: 1px solid var(--border);
+}
+.common-Table tbody tr:hover{
+    background: var(--color-primary-light);
+}
+.common-Table tbody tr td{
+    padding: 8px 8px;
+    font-size: var(--font-xs);
+    font-weight: 300;
+    color: var(--text-primary);
+    border-right: 1px solid var(--border);
+    background: var(--color-inverse);
+}
+.common-Table tbody tr td:last-child{
+    border-right: none;
+}
+
+
+
