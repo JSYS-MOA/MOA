@@ -49,7 +49,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
       ...nextList[0],
       [key]: value
     };
-    console.log(nextList)
+    // console.log(nextList)
     setItemList(nextList);
   };
 
@@ -60,7 +60,8 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
   //  물품 선택
   const handleApprovaLineSelect = (line: any) => {
 
-  console.log(line);
+  // console.log(line);
+
   const targetIdx = 0
   const nextList = [...itemList];
 
@@ -89,10 +90,12 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
   const onselectDocument = () => {
       setSelectMode('DOCUMENT');
   }
+
   //  물품 선택
   const handleDocumentSelect = (document: any) => {
 
-  console.log(document);
+  // console.log(document);
+
   const targetIdx = 0
   const nextList = [...itemList];
 
@@ -225,33 +228,33 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
 
                 </div>
             );
-          }
+              }
 
-          if (col.key === 'approvaContent') {
-            return (
-              <div className='modal-Row' key={col.key} style={{ display: 'block' }}>
-                <div className='modal-Row-Item-title' style={{ marginBottom: '10px' }}>
-                  <strong>{col.label}</strong>
-                </div>
-                <div className="editor-container">
-                  <Editor
-                    ref={editorRef}
-                    initialValue={itemList[0].approvaContent || " "}
-                    previewStyle="vertical"
-                    height="350px"
-                    initialEditType="wysiwyg"
-                    useCommandShortcut={true}
-                    language="ko-KR"
-                    onChange={handleEditorChange} // 내용 변경 시마다 상태 업데이트
-                  />
-                </div>
-              </div>
-            );
-          }
+              if (col.key === 'approvaContent') {
+                return (
+                  <div className='modal-Row' key={col.key} style={{ display: 'block' }}>
+                    <div className='modal-Row-Item-title' style={{ marginBottom: '10px' }}>
+                      <strong>{col.label}</strong>
+                    </div>
+                    <div className="editor-container">
+                      <Editor
+                        ref={editorRef}
+                        initialValue={itemList[0].approvaContent || " "}
+                        previewStyle="vertical"
+                        height="350px"
+                        initialEditType="wysiwyg"
+                        useCommandShortcut={true}
+                        language="ko-KR"
+                        onChange={handleEditorChange} // 내용 변경 시마다 상태 업데이트
+                      />
+                    </div>
+                  </div>
+                );
+              }
 
-          if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
-            return null;
-          }
+              if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
+                return null;
+              }
 
           return (
             <div className='modal-Row' key={col.key}>
@@ -274,7 +277,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
       
       {selectMode === 'LINE' ?
             <InventorySelectModal
-              title='LINE'
+              title={selectMode}
               items={ApprovaLine.content}
               onSelect={handleApprovaLineSelect}
               onClose={() => setSelectMode(null)}
@@ -282,7 +285,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
 
       {selectMode === 'DOCUMENT' ?
             <InventorySelectModal
-              title='DOCUMENT'
+              title={selectMode}
               items={Document.content}
               onSelect={handleDocumentSelect}
               onClose={() => setSelectMode(null)}
