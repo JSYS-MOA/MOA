@@ -16,7 +16,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
     const config = hr2Configs[apiType];
     const fields = (config && "fields" in config) ? config.fields : [];
 
-    const [dates, setDates] = useState({start: {y: '', m: '', d: ''}, end: {y: '', m: '', d: ''}});
+    const [dates, setDates] = useState({start: {y: null, m: null, d: null}, end: {y: null, m: null, d: null}});
     const [searchValues, setSearchValues] = useState<any>({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeField, setActiveField] = useState<any>(null);
