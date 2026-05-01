@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {FaStar} from "react-icons/fa";
 import { useAuthStore } from "../../stores/useAuthStore";
 import Table from "../../components/approvals/ApprovalsTable.tsx"
@@ -12,7 +12,8 @@ const ApprovalsWait = () => {
 
   const { user } = useAuthStore();
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
+  const search = '';
   const [onAlert, setOnAlert] = useState('');
   const [modalMode, setModalMode] = useState('');
   const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
@@ -33,7 +34,7 @@ const ApprovalsWait = () => {
         }
   };
   
-  const onApprovaUserClick = ( item : any , e : React.MouseEvent) => {
+  const onApprovaUserClick = ( item : any ) => {
 
         if('approvaId' in item) {          
           mutate (item.approvaId, {
@@ -42,7 +43,7 @@ const ApprovalsWait = () => {
             setModalMode('LIST')
             console.log("ApprovaUser 성공 데이터:", data.content);
           },onError: (error: any) => {
-            setOnAlert("정보를 가져오는데 실패했습니다.");
+            setOnAlert(error + "정보를 가져오는데 실패했습니다.");
           }
         })
          
