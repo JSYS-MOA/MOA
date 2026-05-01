@@ -88,7 +88,7 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
             updates[formKey] = selectedData[dataKey];
         });
 
-        console.log("🔥 업데이트될 데이터:", updates)
+        console.log("업데이트될 데이터:", updates)
 
         setFormData((prev) => ({
             ...prev,
@@ -110,7 +110,7 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
                 <div>
 
-                    <h2>{config.title} {baseData ? '수정' : '등록'}</h2>
+                    <h2>{(config as any).title} {baseData ? '수정' : '등록'}</h2>
 
                     <button onClick={onClose}>X</button>
 

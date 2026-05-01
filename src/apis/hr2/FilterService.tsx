@@ -10,5 +10,11 @@ export const getFilterSearch = async (type: string, keyword: string) => {
     const { data } = await api.get("/api/filter/search", {
         params: { type, keyword }
     });
-    return data; // FilterKeywordDTO 리스트
+    return data;
 };
+
+export const getTapSearch = async ()=>{
+
+    const { data } = await api.get("/api/filter/departments");
+    return data;
+}

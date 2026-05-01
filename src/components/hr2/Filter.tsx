@@ -1,9 +1,9 @@
 import {hr2Configs} from "../../types/hr2Configs.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FilterDate from "./FilterDate.tsx";
 import Modal from "../Modal.tsx";
 import TestTagInput from "../input/TestTagInput.tsx";
-import {getFilterSearch} from "../../apis/hr2/FilterService.tsx";
+import {getFilterSearch, getTapSearch} from "../../apis/hr2/FilterService.tsx";
 
 
 interface FilterProps {
@@ -14,18 +14,19 @@ interface FilterProps {
 
 const Filter = ({ apiType, onFilter }: FilterProps) => {
     const config = hr2Configs[apiType];
+    const fields = (config && "fields" in config) ? config.fields : [];
 
-    const [dates, setDates] = useState({start: {y: '2025', m: '01', d: '01'}, end: {y: '2025', m: '01', d: '01'}});
+    const [dates, setDates] = useState({start: {y: '', m: '', d: ''}, end: {y: '', m: '', d: ''}});
     const [searchValues, setSearchValues] = useState<any>({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeField, setActiveField] = useState<any>(null);
+    const [tapOptions, setTapOptions] = useState<any[]>([]);
 
     // 모달 내 검색 결과 및 입력어 상태
     const [keyword, setKeyword] = useState("");
     const [results, setResults] = useState<any[]>([]);
 
     const handleModalSearch = async () => {
-        if (!keyword.trim()) return alert("검색어를 입력하세요.");
 
         try {
             // 1. configs에서 설정한 url 가져오기 (없으면 기본값)
@@ -39,51 +40,83 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
     };
 
     const handleSelectItem = (item: any) => {
-// 1. activeField.id와 매칭되는 설정을 filterFields에서 찾거나 fields에서 찾음
-        const fieldConfig = config.filterFields.find((f: any) => f.id === activeField.id);
 
-        // 2. mapTo가 없으면 기본값(id, name) 사용, 백엔드 오타(cord) 대응 로직 추가
-        const mapping = (fieldConfig as any)?.mapTo || { id: 'id', name: 'name' };
+        const detail = fields.find((f: any) => f.searchType === activeField.id || f.key === activeField.id);
 
-        // 3. newItem 생성 시 DTO의 키값(mapping.id/name)을 사용하여 동적 추출
-        // 백엔드에서 오타난 필드명(allowanceCord 등)이 들어와도 안전하게 매핑되도록 fallback 추가
+        const mapping = (detail && "mapTo" in detail) ? detail.mapTo : { id: 'id', name: 'name' };
+
+        const idKey = mapping ? Object.values(mapping).find(key =>
+            key?.toLowerCase().includes("id") || key?.toLowerCase().includes("cord")
+        ) : undefined;
+        const nameKey = mapping ? Object.values(mapping).find(key =>
+            key?.toLowerCase().includes("name")
+        ) : undefined;
+
         const newItem = {
-            id: item[mapping.id] || item['employeeId'] || item['allowanceCode'] || item['allowanceCord'],
-            name: item[mapping.name] || item['userName'] || item['allowanceName']
+            id: (idKey && item[idKey]) ? item[idKey] : item[''],
+            name: (nameKey && item[nameKey]) ? item[nameKey] : item[''],
         };
-
-        if (!newItem.id) {
-            console.error("ID 매핑 실패:", item);
-            return;
-        }
 
         setSearchValues((prev: any) => {
             const currentList = prev[activeField.id] || [];
+            // 중복 선택 방지
             if (currentList.find((i: any) => i.id === newItem.id)) return prev;
             return {
                 ...prev,
-                [activeField.id]: [...currentList, newItem]
+                [activeField.id]: [...currentList, newItem] // 무조건 배열로 관리!
             };
         });
         setIsModalOpen(false);
-        setResults([]);
-        setKeyword("");
+        setResults([]); // 초기화
+        setKeyword(""); // 초기화
     };
 
-    const handleSearchClick = () => {
+    const handleSearchClick = (selectedDept?: string) => {
         // 1. searchValues에서 ID만 추출해서 백엔드용 포맷으로 변환
         const formattedFilters = Object.keys(searchValues).reduce((acc: any, key) => {
-            acc[key] = searchValues[key].map((item: any) => item.id);
+            const val = searchValues[key];
+            acc[key] = Array.isArray(val) ? val.map((item: any) => item.id) : val;
             return acc;
         }, {});
 
-        // 2. 날짜와 합쳐서 부모에게 전달
-        onFilter({
+        const formatPartDate = (dateObj: any) => {
+            // 연, 월, 일이 모두 있을 때만 문자열 생성
+            if (dateObj.y && dateObj.m && dateObj.d) {
+                return `${dateObj.y}-${dateObj.m}-${dateObj.d}`;
+            }
+            return "";
+        }
+
+        const params = {
             ...formattedFilters,
-            startDate: `${dates.start.y}-${dates.start.m}-${dates.start.d}`,
-            endDate: `${dates.end.y}-${dates.end.m}-${dates.end.d}`
-        });
+            // 버튼 클릭 시 들어온 selectedDept가 있으면 그걸 최우선으로 사용
+            departmentId: selectedDept !== undefined
+                ? (selectedDept === "" ? null : selectedDept)
+                : (searchValues.departmentId || ""),
+            startDate: formatPartDate(dates.start),
+            finishDate: formatPartDate(dates.end)
+        };
+        // 디버깅 확인용
+        console.log("백엔드로 보내는 최종 파라미터:", params);
+        onFilter(params);
     };
+
+    useEffect(() => {
+        const fetchDepts = async () => {
+            try {
+                // 전체 부서 목록을 가져오는 API 호출
+                const data = await getTapSearch();
+                const formatted = data.map((d: any) => ({
+                    value: d.departmentId,
+                    label: d.departmentName
+                }));
+                setTapOptions(formatted);
+            } catch (e) {
+                console.error("부서 목록 로드 실패", e);
+            }
+        };
+        fetchDepts();
+    }, []);
 
 
     return (
@@ -101,32 +134,8 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     onChange={(val: any) => setDates({...dates, end: val})}
                 />
             </div>
-            {/* 필터 필드 루프 내에서 타입별 분기 처리 (그룹버튼 위치 수정) */}
-            {config.filterFields.map((field) => {
-                if (field.type === "groupButton") {
-                    return (
-                        <div key={field.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 'bold' }}>{field.label}:</span>
-                            <div className="btn-group">
-                                <button
-                                    className={!searchValues[field.id] ? "active" : ""}
-                                    onClick={() => setSearchValues({ ...searchValues, [field.id]: null })}
-                                >전체</button>
-                                {(field as any).option?.map((opt: any) => (
-                                    <button
-                                        key={opt.value}
-                                        className={searchValues[field.id] === opt.value ? "active" : ""}
-                                        onClick={() => setSearchValues({ ...searchValues, [field.id]: opt.value })}
-                                    >
-                                        {opt.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    );
-                }
-                return (
-                    <div key={field.id} style={{ width: "200px" }}>
+            {!(config as any).modalOnly &&config.filterFields?.map((field:any) => (
+                <div key={field.id} style={{ width: "200px" }}>
                     <TestTagInput
                         placeholder={field.label}
                         selectedItems={searchValues[field.id] || []}
@@ -143,10 +152,9 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                         onClear={() => setSearchValues((prev:any) => ({ ...prev, [field.id]: [] }))}
                     />
                 </div>
-                );
-            })}
+                ))}
 
-            <button onClick={handleSearchClick}>검색</button>
+            <button onClick={() => handleSearchClick()}>검색</button>
 
             {/* 3. 공용 모달 연결 */}
             <Modal
@@ -200,32 +208,39 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     </table>
                 </div>
             </Modal>
-            // 여기에 그룹버튼
-            {config.filterFields.map((field) => {
+            {/*그룹버튼*/}
+            {(config as any).tap?.map((tap:any) => {
                 // 1. 그룹 버튼 타입일 경우
-                if (field.type === "groupButton") {
+                if (tap.type === "groupButton") {
                     return (
-                        <div key={field.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 'bold', marginRight: '8px' }}>{field.label}:</span>
+                        <div key={tap.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 'bold', marginRight: '8px' }}>{tap.label}:</span>
                             <div className="btn-group" style={{ display: 'flex', gap: '2px' }}>
                                 <button
-                                    className={!searchValues[field.id] ? "active" : ""}
-                                    onClick={() => setSearchValues({ ...searchValues, [field.id]: null })}
+                                    className={!searchValues[tap.id] ? "active" : ""}
+                                    onClick={() => {
+                                        setSearchValues({ ...searchValues, [tap.id]: "" });
+                                        handleSearchClick("");
+                                }}
                                 >전체</button>
 
-                                {/* API 등으로 받아온 옵션들 (지금은 임시 데이터나 config에서 가져옴) */}
-                                {(field as any).option?.map((opt: any) => (
+                                {/* 받아온 옵션들  */}
+                                {tapOptions.map((opt: any) => (
                                     <button
                                         key={opt.value}
-                                        className={searchValues[field.id] === opt.value ? "active" : ""}
-                                        onClick={() => setSearchValues({ ...searchValues, [field.id]: opt.value })}
+                                        className={String(searchValues[tap.id]) === String(opt.value) ? "active" : ""}
+                                        onClick={() => {
+                                            const val = String(opt.value);
+                                            setSearchValues({ ...searchValues, [tap.id]: val });
+                                            handleSearchClick(opt.value);
+                                        }}
                                     >
                                         {opt.label}
                                     </button>
                                 ))}
                             </div>
                         </div>
-                )}
+                    )}
                 return null;
             })}
         </div>

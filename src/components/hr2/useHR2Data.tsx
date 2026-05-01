@@ -14,7 +14,7 @@ const useHR2Data = (apiType: keyof typeof hr2Configs,filterParams: any) => {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const datas = await getHr2Data(apiType, page, 15, filterParams);
+            const datas = await getHr2Data(apiType, page, 15, filterParams|| {});
 
             console.log("서버 응답 확인:", datas);
 
@@ -31,7 +31,7 @@ const useHR2Data = (apiType: keyof typeof hr2Configs,filterParams: any) => {
         } finally {
             setLoading(false);
         }
-    }, [apiType, page]);
+    }, [apiType, page, filterParams]);
 
     return {
         items,

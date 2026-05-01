@@ -39,3 +39,29 @@ export const deleteHr2Data = async (path: keyof typeof hr2Configs, id: number | 
     const { data } = await api.delete(`${realUrl}/${id}`);
     return data;
 };
+
+export const getUserData = async (path: keyof typeof hr2Configs, keyword: string) =>{
+    const realUrl = hr2Configs[path].apiUrl;
+
+    try {
+        const {data} = await api.get(`${realUrl}`,{params: {keyword}});
+        console.log("realUrl: "+`${realUrl}`);
+        return data;
+    } catch (e) {
+        console.error(`${path} 데이터 조회 실패:`, e);
+        return [];
+    }
+}
+export const getAllowanceData = async (path: keyof typeof hr2Configs, keyword: string) =>{
+    const realUrl = hr2Configs[path].apiUrl;
+
+    try {
+
+        const {data} = await api.get(`${realUrl}`,{params: {keyword}});
+        console.log("realUrl: "+`${realUrl}`);
+        return data;
+    } catch (e) {
+        console.error(`${path} 데이터 조회 실패:`, e);
+        return [];
+    }
+}

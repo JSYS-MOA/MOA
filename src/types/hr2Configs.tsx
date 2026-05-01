@@ -121,10 +121,9 @@ export const hr2Configs = {
         // 필터 조건 필드
         filterFields: [
             { id: "keyword", label: "구분", type: "text", placeholder: "전체" },
-            { id: "category", label: "성명", type: "text", placeholder: "성명" },
-            { id: "tap", label: "팀별", type: "groupButton", option:[]} // 옵션 초기값: 빈배열,
-                                                                       // 컴포넌트에서 api 호출 후 채워넣기
+            { id: "category", label: "성명", type: "text", placeholder: "성명" }
         ],
+        tap: [{ id: "departmentId", label: "팀별", type: "groupButton", option:[]}],
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "approvaDate", label: "일자", render: renderDate },
@@ -141,5 +140,17 @@ export const hr2Configs = {
             },
             { key: "memo", label: "비고" }
         ]
+    },
+    user:{
+        apiUrl: "/api/hr/attendances/put/user",
+        filterFields: [],
+        columns: [],
+        modalOnly: true
+    },
+    allowance:{
+        apiUrl: "/api/hr/attendances/put/allowance",
+        filterFields: [],
+        columns: [],
+        modalOnly: true
     }
 }

@@ -31,7 +31,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData, apiType, filterParams]);
+    }, [fetchData]);
 
 
 // 체크박스 핸들러
@@ -92,9 +92,9 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
     return (
     <div>
 
-        <h2>{config.title}리스트</h2>
+        <h2>{(config as any).title}리스트</h2>
         <Table
-            idKey={config.idKey}
+            idKey={(config as any).idKey}
             items={items}
             columns={config.columns.map(col => ({
                 ...col,

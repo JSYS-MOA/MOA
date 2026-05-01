@@ -38,7 +38,6 @@ const FilterDate = ({ label, value, onChange }: any) => {
         const lastDay = getLastDay(safeValue.y, safeValue.m);
         const days = Array.from({ length: lastDay }, (_, i) => i + 1);
 
-        // [중요 수정] 값이 바뀔 때 부모의 원래 데이터 타입에 맞춰서 리턴 ✊😠
         const handleDateChange = (key: string, newVal: string) => {
             const nextValue = { ...safeValue, [key]: newVal };
 
@@ -60,8 +59,7 @@ const FilterDate = ({ label, value, onChange }: any) => {
                     });
                 }
             } else {
-                // 값이 다 안 채워졌을 때는 객체 형태로 전달하여 상태 유지
-                onChange(nextValue);
+                onChange(null);
             }
         };
     return (
@@ -89,7 +87,9 @@ const FilterDate = ({ label, value, onChange }: any) => {
             >
                 <option value="">월</option>
                 {months.map(m => (
-                    <option key={m} value={String(Number(safeValue.m))}>{m.toString().padStart(2, '0')}</option>
+                    <option key={m} value={String(m)}>
+                        {m.toString().padStart(2, '0')}
+                    </option>
                 ))}
             </select>
             <span>/</span>
@@ -103,7 +103,9 @@ const FilterDate = ({ label, value, onChange }: any) => {
             >
                 <option value="">일</option>
                 {days.map(d => (
-                    <option key={d} value={d}>{d.toString().padStart(2, '0')}</option>
+                    <option key={d} value={d}>
+                        {d.toString().padStart(2, '0')}
+                    </option>
                 ))}
             </select>
         </div>
