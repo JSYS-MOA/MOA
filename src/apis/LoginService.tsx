@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API = "http://localhost/api";
+// const API = "http://localhost/api";
+
+const API = "https://onrender.com";
 
 export async function loginApi(employeeId: string, password: string){
     const { data } = await axios.post(
