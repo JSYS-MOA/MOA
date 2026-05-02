@@ -180,7 +180,6 @@
   font-weight: 300;
   width: 100%;
     font-size: var(--font-xs);
-    margin-top: 18px;
 }
 .modal-Table-Form thead tr {
     background: var(--color-gray-100);
@@ -247,6 +246,7 @@
 .modal-Table-Form-body input[type='checkbox'] {
   height: 12px;
   width: 12px;
+    vertical-align: middle;
 }
 
 .modal-Table-Form input[type='checkbox']:focus,

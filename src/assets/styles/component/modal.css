@@ -50,7 +50,7 @@
     background: var(--color-inverse);
     padding: 15px 20px 20px;
     border-radius: var(--radius-lg);
-    flex: 0 ;    
+    flex: 1;
 }
 .modal-Footer{
     padding: 13px 15px;

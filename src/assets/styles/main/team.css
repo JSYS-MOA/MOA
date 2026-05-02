@@ -24,6 +24,9 @@
  .recharts-zIndex-layer_300:focus {
      outline: none;
  }
+.recharts-legend-wrapper{
+    bottom: -20px !important;
+}
 
 /* 테이블 */
 .logistics-team-wrapper .favorite-Header { display: none; }
@@ -61,4 +64,50 @@
 .logistics-team-wrapper thead tr th:nth-child(4),.logistics-team-wrapper tbody tr td:nth-child(4){
     width: 20%;
     text-align: center;
+}
+
+
+/* 물류 */
+.logisticsTeam-Wrapper{
+
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px 20px;
+    box-sizing: border-box;
+    height: auto;
+}
+
+/* 영업 */
+.sales-Wrapper{
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px 20px;
+    box-sizing: border-box;
+    height: 578px;
+}
+
+/* notice */
+.notice-Wrapper{
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    height: 278px;
+}
+.notice-Header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.notice-Header p{
+    font-size: var(--font-sm);
+    font-weight: 400;
+    color: var(--text-primary);
 }

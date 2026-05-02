@@ -201,7 +201,7 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
         </div>
         
       <div className='modal-Body'>
-          <div className="inventory-table-body">
+          <div className="modal-Children" style={{flex:"none"}}>
             <div className='modal-Row'>
                 <label>발주요청일자</label>
                 <input className='Date-Header-Input' type="date" value={orderformDate} onChange={(e) => setOrderformDate(e.target.value)} />
@@ -214,100 +214,101 @@ const InventoryAddModalForm = (  {  columns, keySno , keyPrice , keytype , onRef
 
           </div>
 
-        
-        <table className='modal-Table-Form' >
+        <div className="table-Content">
+          <table className='modal-Table-Form' >
 
-          <thead className="modal-Table-Form-header">
-              <tr>
-                { itemList ? <th>순번</th> : null}
-                {columns.map(col => <th key={col.key}>{col.label}</th>)}
-                <th>비고</th>
-              </tr>
+            <thead className="modal-Table-Form-header">
+            <tr>
+              { itemList ? <th>순번</th> : null}
+              {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              <th>비고</th>
+            </tr>
             </thead>
 
-          <tbody className="modal-Table-Form-body">
-          {itemList.map((item, idx) => (
-          <tr key={idx} >
-            <td >{idx + 1}</td>
-            {columns.map(col => (
-              <td key={col.key}
-                  onClick={() => {
-                      if (col.key !== keySno ) {
-                        onselectProduct(idx);
-                    }}}>
+            <tbody className="modal-Table-Form-body">
+            {itemList.map((item, idx) => (
+                <tr key={idx} >
+                  <td >{idx + 1}</td>
+                  {columns.map(col => (
+                      <td key={col.key}
+                          onClick={() => {
+                            if (col.key !== keySno ) {
+                              onselectProduct(idx);
+                            }}}>
 
-              {(() => {
-                const fieldKey = col.key as keyof ModalProps;
-                      
-                      if (col.key === 'totalPrice') {
-                        const targetItem = item as any;
-                        return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
-                      }
+                        {(() => {
+                          const fieldKey = col.key as keyof ModalProps;
 
-                      if( item.orderStatus !== '완료' ) {
-                        return <input
-                          name={col.key}
-                          value={item[fieldKey] ?? ''}          
-                          onChange={(e) => {
-                          if (col.key === keySno ) handleInputChange(idx, col.key, e.target.value);
-                          }}
-                        />
-                      } else {
-                        return <input
-                          name={col.key}
-                          value={item[fieldKey] ?? ''} 
-                          readOnly                 
-                        />
-                      }
+                          if (col.key === 'totalPrice') {
+                            const targetItem = item as any;
+                            return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
+                          }
 
-                    })()}
-                </td>
-              ))}
-              
-                <td>
-                  {item.orderStatus !== '완료' && (
-                    <button 
-                      onClick={(e) => handleRemoveRow(idx, e)}
-                      className='Del-button' 
-                    >
-                      삭제
-                    </button>
-                  )}
-                </td>
-          </tr>
-        ))}
-        </tbody>
+                          if( item.orderStatus !== '완료' ) {
+                            return <input
+                                name={col.key}
+                                value={item[fieldKey] ?? ''}
+                                onChange={(e) => {
+                                  if (col.key === keySno ) handleInputChange(idx, col.key, e.target.value);
+                                }}
+                            />
+                          } else {
+                            return <input
+                                name={col.key}
+                                value={item[fieldKey] ?? ''}
+                                readOnly
+                            />
+                          }
 
-          <tfoot className="modal-Table-Form-header">
-          <tr>
-            {(() => {
-              const qtyIndex = columns.findIndex(col => col.key === keySno);
-              const firstDataColPos = qtyIndex !== -1 ? qtyIndex + 1 : 1;
+                        })()}
+                      </td>
+                  ))}
 
-              return (
-                <>
-                  <td colSpan={firstDataColPos} style={{ textAlign: 'center'}}>
-                    합계
+                  <td>
+                    {item.orderStatus !== '완료' && (
+                        <button
+                            onClick={(e) => handleRemoveRow(idx, e)}
+                            className='Del-button'
+                        >
+                          삭제
+                        </button>
+                    )}
                   </td>
+                </tr>
+            ))}
+            </tbody>
 
-                  {columns.slice(qtyIndex).map((col) => {
-                    if (col.key === keySno ) {
-                      return <td key={col.key} >{totalSno}</td>;
-                    }
-                    if (col.key === 'totalPrice') {
-                      return <td key={col.key} >{totalAmount}</td>;
-                    }
+            <tfoot className="modal-Table-Form-header">
+            <tr>
+              {(() => {
+                const qtyIndex = columns.findIndex(col => col.key === keySno);
+                const firstDataColPos = qtyIndex !== -1 ? qtyIndex + 1 : 1;
 
-                    return <td key={col.key}></td>;
-                  })}
-                </>
-              );
-            })()}
+                return (
+                    <>
+                      <td colSpan={firstDataColPos} style={{ textAlign: 'center'}}>
+                        합계
+                      </td>
+
+                      {columns.slice(qtyIndex).map((col) => {
+                        if (col.key === keySno ) {
+                          return <td key={col.key} >{totalSno}</td>;
+                        }
+                        if (col.key === 'totalPrice') {
+                          return <td key={col.key} >{totalAmount}</td>;
+                        }
+
+                        return <td key={col.key}></td>;
+                      })}
+                    </>
+                );
+              })()}
               <td></td>
-          </tr>
-        </tfoot>
-          
-        </table>
+            </tr>
+            </tfoot>
+
+          </table>
+        </div>
 
         <button className="btn-Primary" onClick={(e) => handleAddList(e)} style={{marginTop:"4px",padding:"6px"}}>품목 추가</button>
        </div>  

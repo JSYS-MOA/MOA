@@ -98,35 +98,4 @@
 .calendar-Body{
     margin-top: 30px;
 }
-.logisticsTeam-Wrapper{
 
-    background: var(--color-inverse);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    width: 100%;
-    padding: 10px 16px 20px;
-    box-sizing: border-box;
-    height: auto;
-}
-
-/* notice */
-.notice-Wrapper{
-    background: var(--color-inverse);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    width: 100%;
-    padding: 10px 16px;
-    box-sizing: border-box;
-    height: 278px;
-}
-.notice-Header{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-}
-.notice-Header p{
-    font-size: var(--font-sm);
-    font-weight: 400;
-    color: var(--text-primary);
-}

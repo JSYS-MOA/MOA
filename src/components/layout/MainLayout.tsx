@@ -3,6 +3,7 @@ import {useState, useEffect} from "react";
 import Header from "./Header.tsx"
 import Sidebar from "./Sidebar.tsx";
 import {layoutApi} from "../../apis/LayoutService.tsx";
+import CalendarAlarm from "../../pages/mypage/CalendarAlarm.tsx";
 
 interface LayoutData {
     userName: string;
@@ -57,6 +58,7 @@ const MainLayout = () => {
                 </main>
                 
             </div>
+            <CalendarAlarm/>
         </div>
     )
 }
