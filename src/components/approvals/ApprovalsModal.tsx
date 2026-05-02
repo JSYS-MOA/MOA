@@ -97,10 +97,10 @@ const ApprovalsModal = (  { items ,  columns,  onRefresh , setOnAlert , onClose}
       </div>
 
       <div className='modal-Body'>
-        <div className='modal-Children'>
+        <div className="modal-Children">
           {columns.map((col) => {
-              if (col.key === 'writerInfo.userName') {
-                return (
+            if (col.key === 'writerInfo.userName') {
+              return (
                   <div className='modal-Row' key="row-writer-approver" >
                     <div className='modal-Row-Group'>
                       <div className='modal-Row-Item'>
@@ -116,32 +116,32 @@ const ApprovalsModal = (  { items ,  columns,  onRefresh , setOnAlert , onClose}
                       </div>
                     </div>
                   </div>
-                );
-              }
+              );
+            }
 
-              if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
-                return null;
-              }
-              
-              if (col.key === 'approvaDate') {
-                const fullDate = masterInfo[col.key] || ""; // 예: "2026-04-28T09:30:00"
-                
-                // T를 기준으로 날짜와 시간을 나눔
-                const [datePart, timePart] = fullDate.split('T'); 
-                // 시(HH)와 분(mm) 추출
-                const hh = timePart?.slice(0, 2) || "00";
-                const mm = timePart?.slice(3, 5) || "00";
+            if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
+              return null;
+            }
 
-                return (
+            if (col.key === 'approvaDate') {
+              const fullDate = masterInfo[col.key] || ""; // 예: "2026-04-28T09:30:00"
+
+              // T를 기준으로 날짜와 시간을 나눔
+              const [datePart, timePart] = fullDate.split('T');
+              // 시(HH)와 분(mm) 추출
+              const hh = timePart?.slice(0, 2) || "00";
+              const mm = timePart?.slice(3, 5) || "00";
+
+              return (
                   <div className='modal-Row' key={col.key}>
                     <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
                     <div className='modal-Row-Item-title-box'>
                       <input
-                        className='Date-Header-Input' 
-                        value={datePart || ''} 
-                        readOnly     
+                          className='Date-Header-Input'
+                          value={datePart || ''}
+                          readOnly
                       />
-                      
+
                       <div className='Time-Header-Box'>
                         <input className='Time-Header-Input' value={hh} readOnly />
                         <span>:</span>
@@ -149,11 +149,11 @@ const ApprovalsModal = (  { items ,  columns,  onRefresh , setOnAlert , onClose}
                       </div>
                     </div>
                   </div>
-                );
-              }
+              );
+            }
 
-              if (col.key === 'approvaContent') {
-                return (
+            if (col.key === 'approvaContent') {
+              return (
                   <div className='modal-Row' key={col.key}>
                     <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
                     <div className="viewer-wrapper">
@@ -162,21 +162,21 @@ const ApprovalsModal = (  { items ,  columns,  onRefresh , setOnAlert , onClose}
                   </div>
               )}
 
-              return (
+            return (
                 <div className='modal-Row' key={col.key} >
                   <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
                   <div className='modal-Row-Item-title-Body'>
                     <input
-                      value={
-                        col.key === 'approvaDate' && masterInfo[col.key]
-                        ? masterInfo[col.key].substring(0, 10).replace(/-/g, '-')
-                        : masterInfo[col.key] || ''
-                      }
-                      readOnly  />
+                        value={
+                          col.key === 'approvaDate' && masterInfo[col.key]
+                              ? masterInfo[col.key].substring(0, 10).replace(/-/g, '-')
+                              : masterInfo[col.key] || ''
+                        }
+                        readOnly  />
                   </div>
                 </div>
-              );
-            })}
+            );
+          })}
         </div>
       </div>
 

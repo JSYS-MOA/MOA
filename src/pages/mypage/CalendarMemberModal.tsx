@@ -96,7 +96,7 @@ const CalendarMemberModal = ({isOpen, onClose, selectedIds, onApply}: CalendarMe
                             </th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody style={{background:"#fff"}}>
                         {/* Object.entries(grouped) -> 객체를 [key, value ]로 변환*/}
                         {Object.entries(grouped).map(([dept, deptMembers]) =>
                             deptMembers.map((m, idx) => (

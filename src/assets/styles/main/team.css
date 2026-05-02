@@ -1,0 +1,64 @@
+/*  영업 */
+.team_Wrapper {
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    height: 578px;
+}
+.team-Header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.team-Header p{
+    font-size: var(--font-sm);
+    font-weight: 400;
+    color: var(--text-primary);
+}
+.recharts-wrapper:focus,
+ .recharts-surface:focus,
+ .recharts-zIndex-layer_300:focus {
+     outline: none;
+ }
+
+/* 테이블 */
+.logistics-team-wrapper .favorite-Header { display: none; }
+.logistics-team-wrapper .Page-Btn-container { display: none; }
+.logistics-team-wrapper .inventory-table{font-size: var(--font-xs);}
+.logistics-team-wrapper .inventory-table th{font-weight: 500}
+.logistics-team-wrapper thead{
+    background: var(--color-gray-100);
+    border-top: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--border);
+}
+.logistics-team-wrapper thead tr th{
+    padding: 6px 8px;
+    font-size: var(--font-xs);
+    font-weight: 500;
+    border-right: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+.logistics-team-wrapper thead, .logistics-team-wrapper tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.logistics-team-wrapper thead tr th:nth-child(1), .logistics-team-wrapper tbody tr td:nth-child(1){
+    width: 3%;
+}
+.logistics-team-wrapper thead tr th:nth-child(2),.logistics-team-wrapper tbody tr td:nth-child(2){
+    width: 10%;
+    text-align: center;
+}
+.logistics-team-wrapper thead tr th:nth-child(3),.logistics-team-wrapper tbody tr td:nth-child(3){
+    width: 50%;
+    text-align: center;
+}
+.logistics-team-wrapper thead tr th:nth-child(4),.logistics-team-wrapper tbody tr td:nth-child(4){
+    width: 20%;
+    text-align: center;
+}

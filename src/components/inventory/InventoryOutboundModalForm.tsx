@@ -4,6 +4,7 @@ import { postOutbounds , useGetInventorySelect} from '../../apis/InventoryServic
 import InventorySelectModal from './InventorySelectModal';
 import {IoCloseOutline} from "react-icons/io5";
 import { useAuthStore } from "../../stores/useAuthStore";
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventoryOutboundModalForm = (  {  columns, keySno , keyPrice  , onRefresh , setOnAlert , onClose }: {
   columns : MColumn[] ,
@@ -245,7 +246,7 @@ console.log(finalPayload);
         </div>
 
       <div className='modal-Body' >
-        <div className='modal-Children'>
+        <div className="inventory-table-body">
           <div className='modal-Row'>
             <div className='modal-Row-Item-title'>
              <label>출고요청일자</label>
@@ -326,14 +327,14 @@ console.log(finalPayload);
       
         </table>
         
-        <button className="btn-Primary" type='submit' onClick={(e) => handleAddList(e)}> 품목추가</button>
+        <button className="btn-Primary" style={{marginTop:"4px",padding:"6px"}} type='submit' onClick={(e) => handleAddList(e)}> 품목추가</button>
 
       </div>
 
       <div className="modal-Footer">
         <div className="btn-Wrap">
             <button className="btn-Primary" type='submit'> 등록</button>
-            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+            <button className="btn-Primary" onClick={onClose}>닫기</button>
         </div>
       </div>
           

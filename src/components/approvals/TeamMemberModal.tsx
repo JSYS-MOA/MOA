@@ -122,41 +122,41 @@ const TeamMemberModal = (  { items  , columns, onRefresh , setOnAlert , onClose}
       </div>
 
       <div className='modal-Body' >
-        <div className='modal-Children'>
-          {columns.map((col) => {
+          <div className="modal-Children">
+              {columns.map((col) => {
 
-            if(col.key === 'performance' ) {
-              return (
-                <div className='modal-Row' key={col.key} style={{ display: 'block' }}>
-                  <div className='modal-Row-Item-title' style={{ marginBottom: '10px' }}>
-                    <strong>{col.label}</strong>
-                  </div>
-                  <div className="editor-container">
-                    <Editor
-                      ref={editorRef}
-                      initialValue={masterInfo.performance || " "}
-                      previewStyle="vertical"
-                      height="350px"
-                      initialEditType="wysiwyg"
-                      useCommandShortcut={true}
-                      language="ko-KR"
-                      onChange={handleEditorChange} // 내용 변경 시마다 상태 업데이트
-                    />
-                  </div>
-                </div>
+                  if(col.key === 'performance' ) {
+                      return (
+                          <div className='modal-Row' key={col.key} style={{ display: 'block', marginTop:"14px"}}>
+                              <div className='modal-Row-Item-title' style={{ marginBottom: '12px' }}>
+                                  <strong>{col.label}</strong>
+                              </div>
+                              <div className="editor-container">
+                                  <Editor
+                                      ref={editorRef}
+                                      initialValue={masterInfo.performance || " "}
+                                      previewStyle="vertical"
+                                      height="350px"
+                                      initialEditType="wysiwyg"
+                                      useCommandShortcut={true}
+                                      language="ko-KR"
+                                      onChange={handleEditorChange} // 내용 변경 시마다 상태 업데이트
+                                  />
+                              </div>
+                          </div>
 
-            )}
+                      )}
 
-            return (
-              <div className='modal-Row' key={col.key} >
-                <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
-                <div className='modal-Row-Item-title-Body'>
-                  <input value={masterInfo[col.key] || ''} readOnly style={{ width: '100%' }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                  return (
+                      <div className='modal-Row' key={col.key} >
+                          <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
+                          <div className='modal-Row-Item-title-Body'>
+                              <input value={masterInfo[col.key] || ''} readOnly style={{ width: '100%' }} />
+                          </div>
+                      </div>
+                  );
+              })}
+          </div>
       </div>
 
       <div className="modal-Footer">

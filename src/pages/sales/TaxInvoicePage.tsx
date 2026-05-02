@@ -35,9 +35,10 @@ const TaxInvoicePage = () => {
         {key: "transactionType", label: "거래코드명"},
         {key: "vendorCode", label: "거래처코드"},
         {key: "vendorName", label: "거래처명"},
-        {key: "transactionPrice", label: "공급가액", render: (val) => val?.toLocaleString()},
+        {key: "transactionPrice", label: "공급가액", render: (val) => val?.toLocaleString(),align: "right"},
         {key: "transactionMemo", label: "적요"},
-        {key: "createdAt", label: "등록일", render: (val) => val?.slice(0, 10)},
+        {key: "createdAt", label: "등록일", render: (val) => val?.slice(0, 10),
+            align: "center",},
     ];
 
 

@@ -1,37 +1,55 @@
+.modal-Container-TableFrom {
+    width: 650px;
+    background: var(--color-modal);
+    height: 800px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+
+}
 .inventory-table {
-  text-align: center;
-  border-collapse: collapse;
-  font-weight: 300;
-  width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    font-weight: 300;
+    width: 100%;
+    font-size: var(--font-xs);
 }
+
 .inventory-table th {
-  font-size: 12px;
+    padding: 7px 8px;
+    color: var(--text-accent);
+    font-weight: 500;
+    border: 1px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
 }
-
 .inventory-table td {
-  font-size: 12px;
-}
-
-.inventory-table td , .inventory-table th {
-  border: 1px solid var(--border);
+    padding: 7px 8px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 .inventory-table-header {
-  height: 34px;
-  min-width: 198.63px;
-  width: 198.63px;
   background-color: var(--color-gray-100);
-  color: var(--color-primary);
+  color: #091B72;
+    font-weight: 400;
 }
-
 .inventory-table-body td {
-  height: 42px;
-  width: 198.63px;
-  background-color: #fff;
-  color: #151515;
+    color: #151515;
 
 }
+.inventory-table tbody tr:hover{
+    background: var(--color-primary-light) !important;
+}
 
+.inventory-table-body{
+    background: #ffffff;
+    padding: 10px 20px;
+    border-radius: var(--radius-lg);
+}
 /* 드롭다운용 */
 
 .dropdown-right-List{
@@ -70,7 +88,10 @@
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 12px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .Btn-container{
@@ -102,9 +123,6 @@
   box-sizing: border-box;
 }
 
-.modal-Row-Item-title-Body input{
-  width: 100%;
-}
 
 .viewer-wrapper {
   border: 1px solid var(--border);;
@@ -120,7 +138,7 @@
 
 /* 물폼선택 모달 테이블 */
 
-.modal-Table {
+.inventory-modal-Table{
   margin: 17px 15px 0;
   padding: 20px;
   background: var(--color-inverse);
@@ -156,81 +174,65 @@
 
 .modal-Table-Form {
   background: var(--color-inverse);
-  border-radius: var(--radius-lg);
   box-sizing: border-box;
   text-align: center;
   border-collapse: collapse;
   font-weight: 300;
   width: 100%;
-  margin-top: 10px;
-  table-layout: fixed;
+    font-size: var(--font-xs);
+    margin-top: 18px;
 }
-
-.modal-Table-Form  th {
-  font-size: 12px;
+.modal-Table-Form thead tr {
+    background: var(--color-gray-100);
+}
+.modal-Table-Form th {
+    padding: 6px 8px;
+    color: var(--text-accent);
+    font-weight: 500;
+    border: 1px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
 }
 
 .modal-Table-Form td {
-  font-size: 12px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    background: var(--color-inverse);
+    padding: 5px 8px;
 }
-
-.modal-Table-Form  th {
-  border: 1px solid var(--border);
+.modal-Table-Form  td:has(input) {
+    padding: 2px;
 }
-
-.modal-Table-Form td {
-   border: 1px solid var(--border);
+.modal-Table-Form td input {
+    margin: 0;
+    padding: 5px 8px;
+    font-size: var(--font-xs);
+    box-sizing: border-box;
 }
-
-.modal-Table-Form td input{
-   height: 100%;
-   font-size: 0.8rem;
-   border: 0px;
-   text-overflow: ellipsis;
-}
-
 .modal-Table-Form input {
   width: 100% !important;
 }
 
 .modal-Table-Form-header {
-  height: 34px;
   background-color: var(--color-gray-100);
   color: #091B72;
+    font-weight: 500;
+    height: 27px;
 }
-
-.modal-Table-Form-body td {
-  height: 42px;
-  background-color: #fff;
-  color: #151515;
-
-}
-
-.modal-Container-TableFrom {
-    width: 1000px;
-    background: var(--color-modal);
-    height: 800px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-
-}
-
 .Del-button{
-  padding: 4px 14px;
+  padding: 1px 10px;
   background-color: #DA5C57;
   /* background: #5E5C77; */
   color: #fff;
   border-radius: 7px;
   font-weight: 100;
   cursor: pointer;
-
+    font-size: 12px;
 }
 
 .Date-Header-Input {
-  width: 140px !important;
+  width: 160px !important;
 }
 
 .Time-Header-Input {
@@ -243,8 +245,8 @@
 }
 
 .modal-Table-Form-body input[type='checkbox'] {
-  height: 24px;
-  width: 24px;
+  height: 12px;
+  width: 12px;
 }
 
 .modal-Table-Form input[type='checkbox']:focus,

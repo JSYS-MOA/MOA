@@ -106,10 +106,10 @@ const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClos
       </div>
 
       <div  className='modal-Body'>
-        <div className='modal-Children'>
+        <div className="modal-Children">
           {columns.map((col) => {
-              if (col.key === 'writerInfo.userName') {
-                return (
+            if (col.key === 'writerInfo.userName') {
+              return (
                   <div className='modal-Row' key="row-writer-approver">
                     <div className='modal-Row-Group'>
 
@@ -118,7 +118,7 @@ const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClos
                         <input className="modal-Row-Item-Group-Input" value={masterInfo['writerInfo.userName'] || ''} readOnly />
                         <input className="modal-Row-Item-Group-Input" value={masterInfo['writerInfo.employeeId'] || ''} readOnly />
                       </div>
-                      
+
                       <div className='modal-Row-Item'>
                         <div className='modal-Row-Item-title'><strong>결재자</strong></div>
                         <input className="modal-Row-Item-Group-Input" value={masterInfo['approverInfo.userName'] || ''} readOnly  />
@@ -127,30 +127,30 @@ const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClos
 
                     </div>
                   </div>
-                );
-              }
+              );
+            }
 
-              if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
-                return null;
-              } 
+            if (['writerInfo.employeeId', 'approverInfo.userName', 'approverInfo.employeeId'].includes(col.key as string)) {
+              return null;
+            }
 
-              if (col.key === 'approvaDate') {
-                const fullDate = masterInfo[col.key] || ""; 
-                const [datePart, timePart] = fullDate.split('T'); 
-                const hh = timePart?.slice(0, 2) || "00";
-                const mm = timePart?.slice(3, 5) || "00";
+            if (col.key === 'approvaDate') {
+              const fullDate = masterInfo[col.key] || "";
+              const [datePart, timePart] = fullDate.split('T');
+              const hh = timePart?.slice(0, 2) || "00";
+              const mm = timePart?.slice(3, 5) || "00";
 
-                return (
+              return (
                   <div className='modal-Row' key={col.key}>
                     <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
                     <div className='modal-Row-Item-title-box' >
 
-                      <input 
-                        className='Date-Header-Input'
-                        value={datePart || ''} 
-                        readOnly 
+                      <input
+                          className='Date-Header-Input'
+                          value={datePart || ''}
+                          readOnly
                       />
-                      
+
                       <div className='Time-Header-Box'>
                         <input className='Time-Header-Input' value={hh} readOnly />
                         <span>:</span>
@@ -158,11 +158,11 @@ const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClos
                       </div>
                     </div>
                   </div>
-                );
-              }
+              );
+            }
 
-              if (col.key === 'approvaContent') {
-                  return (
+            if (col.key === 'approvaContent') {
+              return (
                   <div className='modal-Row' key={col.key}>
                     <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
                     <div className="viewer-wrapper">
@@ -171,14 +171,14 @@ const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClos
                   </div>
               )}
 
-              return (
+            return (
                 <div className='modal-Row' key={col.key} >
                   <div className='modal-Row-Item-title'><strong>{col.label}</strong></div>
                   <div className='modal-Row-Item-title-Body'>
                     <input value={masterInfo[col.key] || ''} readOnly style={{ width: '100%' }} />
                   </div>
                 </div>
-              );
+            );
           })}
         </div>
       </div>
