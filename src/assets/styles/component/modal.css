@@ -8,6 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 .modal-Container{
     width: 650px;
@@ -39,7 +40,7 @@
     font-weight: 500;
 }
 .modal-Body{
-    padding: 20px 15px;
+    padding: 10px 15px;
     display: flex;
     flex-direction: column;
     flex: 1;

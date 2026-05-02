@@ -1,25 +1,5 @@
-.notice-Wrapper{
-    background: var(--color-inverse);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    width: 100%;
-    padding: 10px 16px;
-    box-sizing: border-box;
-    height: 100%;
-}
-.notice-Header{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-}
-.notice-Header p{
-    font-size: var(--font-sm);
-    font-weight: 400;
-    color: var(--text-primary);
-}
 
-.notice-Table{
+.mainPage-Table{
     width: 100%;
     border-collapse: collapse;
     margin-top: 24px;
@@ -29,55 +9,56 @@
     display: block;
     overflow-x:hidden;
 }
-.notice-Table thead{
+
+.common-Table.mainPage-Table thead{
     background: var(--color-gray-100);
     border-top: 1px solid var(--border-dark);
     border-bottom: 1px solid var(--border);
 }
-.notice-Table thead tr th{
+.common-Table.mainPage-Table thead tr th{
     padding: 6px 8px;
     font-size: var(--font-xs);
     font-weight: 500;
     border-right: 1px solid var(--border);
     color: var(--text-secondary);
 }
-.notice-Table thead, .notice-Table tbody tr {
+.common-Table.mainPage-Table thead, .mainPage-Table tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
 }
-.notice-Table thead tr th:nth-child(1), .notice-Table tbody tr td:nth-child(1){
+.mainPage-Table thead tr th:nth-child(1), .mainPage-Table tbody tr td:nth-child(1){
     width: 50%;
 }
-.notice-Table thead tr th:nth-child(2),.notice-Table tbody tr td:nth-child(2){
+.mainPage-Table thead tr th:nth-child(2),.mainPage-Table tbody tr td:nth-child(2){
     width: 20%;
     text-align: center;
 }
-.notice-Table thead tr th:nth-child(3),.notice-Table tbody tr td:nth-child(3){
+.mainPage-Table thead tr th:nth-child(3),.mainPage-Table tbody tr td:nth-child(3){
     width: 20%;
     text-align: center;
 }
-.notice-Table thead tr th:nth-child(4),.notice-Table tbody tr td:nth-child(4){
+.mainPage-Table thead tr th:nth-child(4),.mainPage-Table tbody tr td:nth-child(4){
     width: 10%;
     text-align: center;
 }
-.notice-Table thead tr th:last-child{
+.mainPage-Table thead tr th:last-child{
     border-right: none;
 }
-.notice-Table tbody tr{
+.mainPage-Table tbody tr{
     border-bottom: 1px solid var(--border);
 }
-.notice-Table tbody tr:hover{
+.mainPage-Table tbody tr:hover{
     background: var(--color-primary-light);
 }
-.notice-Table tbody tr td{
+.common-Table.mainPage-Table tbody tr td{
     padding: 7px 8px;
     font-size: var(--font-xs);
     font-weight: 300;
     color: var(--text-primary);
     border-right: 1px solid var(--border);
 }
-.notice-Table tbody tr td:last-child{
+.mainPage-Table tbody tr td:last-child{
     border-right: none;
 }
 .notice-IsNotice{
@@ -95,9 +76,26 @@
     align-items: center;
 }
 .notice-IsNotice-Row {
-    background: #FFF6F6;
+    background: #FFF6F6 !important;
 }
 
-.notice-Table tbody tr.notice-IsNotice-Row:hover {
-    background: #FFF0F0;
+tbody tr.notice-IsNotice-Row:hover {
+    background: #FFF0F0 !important;
+}
+
+/* logistics */
+.logisticsTeam{
+    height: 290px;
+}
+.mainPage-Table.logisticsTeam thead tr th:nth-child(1),
+.mainPage-Table.logisticsTeam tbody tr td:nth-child(1) {
+    width: 20%;
+}
+.mainPage-Table.logisticsTeam thead tr th:nth-child(2),
+.mainPage-Table.logisticsTeam tbody tr td:nth-child(2) {
+    width: 50%;
+}
+
+.mainPage-Table.logisticsTeam tbody tr td:nth-child(2) {
+    text-align: left;
 }

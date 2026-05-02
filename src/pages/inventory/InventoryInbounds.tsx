@@ -14,10 +14,10 @@ const InventoryInbounds = () => {
   const search = '';
   const [onAlert, setOnAlert] = useState('');
   const [modalMode, setModalMode] = useState('');
-  const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);;
+  const [info, setInfo] = useState<{ content: ModalProps[] , totalPages : number } | null>(null);
 
   const { data } =  useGetInbounds( search, page, 10);
-  const {  mutate } = useGetInboundsInfo()
+  const { mutate } = useGetInboundsInfo()
 
   const maxPage = data ? data.totalPages  : 0; 
   

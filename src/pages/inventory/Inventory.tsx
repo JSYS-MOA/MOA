@@ -6,7 +6,9 @@ import { type Column } from "../../types/TableProps";
 import Table from "../../components/inventory/InventoryTable";
 import Modal from "../../components/inventory/InventoryModal";
 import Alert from "../../components/inventory/Alert";
-import "../../assets/styles/inventory/inventoryTable.css"
+import "../../assets/styles/component/table.css"
+import Button from "../../components/Button";
+
 
 const Inventory = () => {
   const [page, setPage] = useState(0);

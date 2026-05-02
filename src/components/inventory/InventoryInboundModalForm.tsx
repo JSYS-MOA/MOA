@@ -4,6 +4,7 @@ import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { insertbounds , useGetStorageSelect } from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
 import { useAuthStore } from "../../stores/useAuthStore";
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
@@ -191,7 +192,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   const isCompleted = masterInfo.orderStatus === '완료';
 
   return (
-    <form className='modal-Container-TableFrom' onSubmit={(e)=>{onSubmitPost(e)}}>
+    <form className='modal-Container' onSubmit={(e)=>{onSubmitPost(e)}}>
       
       <div className="modal-Header">
         <p>입고처리</p>
@@ -226,19 +227,18 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
               </div>
             </div>
           </div>
-
         </div>
 
-        <table className='modal-Table-Form'>
+        <table className='inventory-table'>
 
-          <thead className="modal-Table-Form-header">
+          <thead >
               <tr>
                 { itemList ? <th>순번</th> : null}
                 {columns.map(col => <th key={col.key}>{col.label}</th>)}
               </tr>
             </thead>
 
-          <tbody className="modal-Table-Form-body">
+          <tbody>
           {itemList.map((item, idx) => (
           <tr key={idx} >
             <td >{idx + 1}</td>
@@ -246,7 +246,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
               <td key={col.key}>
               {(() => {
                 const fieldKey = col.key as keyof ModalProps;
-                      
+
                       if (col.key === 'totalPrice') {
                         const targetItem = item as any;
                         return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
@@ -255,7 +255,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                       if (col.key === 'expirationDate') {
                         return <input
                           type="date"
-                          name={col.key}      
+                          name={col.key}
                           onChange={(e) => {
                           handleInputChange(idx, col.key, e.target.value);
                           }}
@@ -266,25 +266,25 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                         const targetItem = item as any;
                         return <input
                           name={col.key}
-                          value={ (Number(targetItem['orderSno'] || 0) - Number(targetItem[keySno] || 0)) }          
+                          value={ (Number(targetItem['orderSno'] || 0) - Number(targetItem[keySno] || 0)) }
                           readOnly
                           />
-                      } 
+                      }
 
                       if(col.key === 'defectStatus' || col.key === 'defectMemo' ) {
                         return <input
                           name={col.key}
-                          value={item[fieldKey] ?? ''}          
+                          value={item[fieldKey] ?? ''}
                           onChange={(e) => {
                           handleInputChange(idx, col.key, e.target.value);
                           }}
                           />
-                      } 
-                    
+                      }
+
                       if(col.key === keySno) {
                         return <input
                           name={col.key}
-                          value={item[fieldKey] ?? 0}          
+                          value={item[fieldKey] ?? 0}
                           onChange={(e) => {
                           handleInputChange(idx, col.key, e.target.value);
                           }}
@@ -297,7 +297,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
                           name={col.key}
                           value={item[fieldKey] ?? ''}
                           readOnly />
-                      } 
+                      }
 
                     })()}
               </td>
@@ -307,7 +307,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
         ))}
           </tbody>
 
-          <tfoot className="modal-Table-Form-header">
+          <tfoot>
           <tr>
             {(() => {
               const qtyIndex = columns.findIndex(col => col.key === keySno);
@@ -315,16 +315,16 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
 
               return (
                 <>
-                  <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                  <td colSpan={firstDataColPos} style={{ textAlign: 'center'}}>
                     합계
                   </td>
 
                   {columns.slice(qtyIndex).map((col) => {
                     if (col.key === keySno ) {
-                      return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
+                      return <td key={col.key}>{totalSno}</td>;
                     }
                     if (col.key === 'totalPrice') {
-                      return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
+                      return <td key={col.key} >{totalAmount}</td>;
                     }
 
 
@@ -335,14 +335,14 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
             })()}
           </tr>
         </tfoot>
-          
+
         </table>
       </div>
 
       <div className="modal-Footer">
         <div className="btn-Wrap">
             {!isCompleted && <button  className="btn-Primary"  type='submit'>입고</button>}
-            <button className="btn-Secondary" onClick={onClose}>닫기</button>
+            <button className="Primary" onClick={onClose}>닫기</button>
         </div>
       </div>
       

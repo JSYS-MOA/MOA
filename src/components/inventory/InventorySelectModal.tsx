@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {IoCloseOutline} from "react-icons/io5";
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }: {
   title: string;
@@ -41,7 +42,7 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
             <p>항목 선택</p>
         </div>
 
-        <table className='modal-Table , inventory-table'>
+        <table className='inventory-modal-Table , inventory-table'>
 
           <thead className="inventory-table-header">
               <tr>
@@ -139,7 +140,7 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
             <button onClick={(e)=>{changePage(e , 1)}} className='btn-Primary'>다음</button>
           </div>
           : null}
-          <button onClick={onClose} className='btn-Secondary'>닫기</button>
+          <button onClick={onClose} className='btn-Primary'>닫기</button>
         </div>
 
       </div>

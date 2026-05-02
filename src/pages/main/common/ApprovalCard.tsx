@@ -1,5 +1,5 @@
 import {MdRefresh} from "react-icons/md";
-import "../../../assets/styles/main/approvalCard.css";
+import "../../../assets/styles/main/mainPage.css"
 
 const ApprovalCard = () => {
 

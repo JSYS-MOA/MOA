@@ -1,5 +1,6 @@
 import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , keyPrice , keytype }: {
   items: ModalProps[] ,
@@ -12,7 +13,7 @@ const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , 
   keytype : string
   })  => {
 
-  console.log(maxPage)
+  // console.log(maxPage)
 
   const totalSno = items.reduce((acc, item) => {
     const targetItem = item as any; 
@@ -100,16 +101,16 @@ const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , 
 
                 return (
                   <>
-                    <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                    <td colSpan={firstDataColPos} style={{ textAlign: 'center' }}>
                       합계
                     </td>
 
                     {columns.slice(qtyIndex).map((col) => {
                       if (col.key === 'incoming' || col.key === keySno ) {
-                        return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
+                        return <td key={col.key} >{totalSno}</td>;
                       }
                       if (col.key === 'totallogisticsPrice') {
-                        return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
+                        return <td key={col.key} >{totalAmount}</td>;
                       }
 
                       return <td key={col.key}></td>;
@@ -125,7 +126,7 @@ const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , 
 
       <div className="modal-Footer">
           <div className="btn-Wrap">
-              <button className="btn-Secondary" onClick={onClose}>닫기</button>
+              <button className="btn-Primary" onClick={onClose}>닫기</button>
           </div>
       </div>
 
