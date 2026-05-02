@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState  } from 'react'
+import {IoCloseOutline} from "react-icons/io5";
 import { type  ModalProps , type MColumn } from '../../types/ModalProps';
 import { insertbounds , useGetStorageSelect } from '../../apis/InventoryService';
 import InventorySelectModal from './InventorySelectModal';
 import { useAuthStore } from "../../stores/useAuthStore";
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPrice , keytype , onRefresh , setOnAlert , onClose}: {
   items: ModalProps[] ,
@@ -17,7 +19,8 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   })  => {
   
   const [itemList, setItemList] = useState<ModalProps[]>(items);
-  const [selectModal, setSelectModal] = useState(false);
+  // const [selectModal, setSelectModal] = useState(false);
+  console.log(maxPage)
 
 
   const [selectMode, setSelectMode] = useState<'STORAGE' | null>(null);
@@ -33,7 +36,7 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
 
 
   //  차고 전달을 위한 조회
-  const onselectStorage = (idx: number , item : any) => {
+  const onselectStorage = (idx: number ) => {
       setSelectMode('STORAGE');
       setTargetIdx(idx);
   }
@@ -189,133 +192,160 @@ const InventoryInboundModalForm = (  { items , maxPage , columns, keySno , keyPr
   const isCompleted = masterInfo.orderStatus === '완료';
 
   return (
-    <form onSubmit={(e)=>{onSubmitPost(e)}}>
-      <div>
-        <div>
-          <label >발주요청일자</label>
-          <input type="text" value={masterInfo.orderformDate || ''} readOnly />
+    <form className='modal-Container' onSubmit={(e)=>{onSubmitPost(e)}}>
+      
+      <div className="modal-Header">
+        <p>입고처리</p>
+        <button onClick={onClose}>
+            <IoCloseOutline color="#fff" size={18}/>
+        </button>
+      </div>
+        
+      <div className="modal-Title">
+        <p>입고처리</p>
+      </div>
+      
+      <div className='modal-Body'>
+        <div className='modal-Children'>
+          <div className='modal-Row'>
+            <div className='modal-Row-Item-title'>
+              <label >발주요청일자</label>
+            </div>
+             <input className='Date-Header-Input' type="text" value={masterInfo.orderformDate || ''} readOnly />
+          </div>
+
+          <div className='modal-Row'>
+            <div className='modal-Row-Group'>
+              <div className='modal-Row-Item'>
+                <label className='modal-Row-Item-title' >거래처</label>
+                <input className='modal-Row-Item-Group-Input' type="text" value={masterInfo.vendorName || ''} readOnly />
+              </div>
+
+              <div className='modal-Row-Item'>
+                  <label className='modal-Row-Item-title'>납기일자</label>
+                  <input className='modal-Row-Item-Group-Input' type="date" value={inbundDate} onChange={(e) => setInbundDate(e.target.value)} />
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label >거래처</label>
-          <input type="text" value={masterInfo.vendorName || ''} readOnly />
-        </div>
+        <table className='inventory-table'>
 
-        <div >
-            <label>납기일자</label>
-            <input type="date" value={inbundDate} onChange={(e) => setInbundDate(e.target.value)} />
+          <thead >
+              <tr>
+                { itemList ? <th>순번</th> : null}
+                {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              </tr>
+            </thead>
+
+          <tbody>
+          {itemList.map((item, idx) => (
+          <tr key={idx} >
+            <td >{idx + 1}</td>
+            {columns.map(col => (
+              <td key={col.key}>
+              {(() => {
+                const fieldKey = col.key as keyof ModalProps;
+
+                      if (col.key === 'totalPrice') {
+                        const targetItem = item as any;
+                        return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
+                      }
+
+                      if (col.key === 'expirationDate') {
+                        return <input
+                          type="date"
+                          name={col.key}
+                          onChange={(e) => {
+                          handleInputChange(idx, col.key, e.target.value);
+                          }}
+                          />;
+                      }
+
+                      if(col.key === 'defectSno' ) {
+                        const targetItem = item as any;
+                        return <input
+                          name={col.key}
+                          value={ (Number(targetItem['orderSno'] || 0) - Number(targetItem[keySno] || 0)) }
+                          readOnly
+                          />
+                      }
+
+                      if(col.key === 'defectStatus' || col.key === 'defectMemo' ) {
+                        return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? ''}
+                          onChange={(e) => {
+                          handleInputChange(idx, col.key, e.target.value);
+                          }}
+                          />
+                      }
+
+                      if(col.key === keySno) {
+                        return <input
+                          name={col.key}
+                          value={item[fieldKey] ?? 0}
+                          onChange={(e) => {
+                          handleInputChange(idx, col.key, e.target.value);
+                          }}
+                          />
+
+                      } else {
+                        return <input onClick={() => {
+                          if(col.key === 'storageName' ) {
+                          onselectStorage(idx); }}}
+                          name={col.key}
+                          value={item[fieldKey] ?? ''}
+                          readOnly />
+                      }
+
+                    })()}
+              </td>
+            ))}
+
+          </tr>
+        ))}
+          </tbody>
+
+          <tfoot>
+          <tr>
+            {(() => {
+              const qtyIndex = columns.findIndex(col => col.key === keySno);
+              const firstDataColPos = qtyIndex !== -1 ? qtyIndex + 1 : 1;
+
+              return (
+                <>
+                  <td colSpan={firstDataColPos} style={{ textAlign: 'center'}}>
+                    합계
+                  </td>
+
+                  {columns.slice(qtyIndex).map((col) => {
+                    if (col.key === keySno ) {
+                      return <td key={col.key}>{totalSno}</td>;
+                    }
+                    if (col.key === 'totalPrice') {
+                      return <td key={col.key} >{totalAmount}</td>;
+                    }
+
+
+                    return <td key={col.key}></td>;
+                  })}
+                </>
+              );
+            })()}
+          </tr>
+        </tfoot>
+
+        </table>
+      </div>
+
+      <div className="modal-Footer">
+        <div className="btn-Wrap">
+            {!isCompleted && <button  className="btn-Primary"  type='submit'>입고</button>}
+            <button className="Primary" onClick={onClose}>닫기</button>
         </div>
       </div>
-      <table>
-
-        <thead>
-            <tr>
-              { itemList ? <th>순번</th> : null}
-              {columns.map(col => <th key={col.key}>{col.label}</th>)}
-            </tr>
-          </thead>
-
-        <tbody>
-        {itemList.map((item, idx) => (
-        <tr key={idx} >
-          <td >{idx + 1}</td>
-          {columns.map(col => (
-            <td key={col.key}>
-            {(() => {
-              const fieldKey = col.key as keyof ModalProps;
-                    
-                    if (col.key === 'totalPrice') {
-                       const targetItem = item as any;
-                      return <input value={(Number(targetItem[keyPrice]) || 0) * (Number(targetItem[keySno]) || 0)} readOnly />;
-                    }
-
-                    if (col.key === 'expirationDate') {
-                      return <input
-                        type="date"
-                        name={col.key}      
-                        onChange={(e) => {
-                         handleInputChange(idx, col.key, e.target.value);
-                        }}
-                        />;
-                    }
-
-                    if(col.key === 'defectSno' ) {
-                      const targetItem = item as any;
-                      return <input
-                        name={col.key}
-                        value={ (Number(targetItem['orderSno'] || 0) - Number(targetItem[keySno] || 0)) }          
-                        readOnly
-                        />
-                    } 
-
-                    if(col.key === 'defectStatus' || col.key === 'defectMemo' ) {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? ''}          
-                        onChange={(e) => {
-                         handleInputChange(idx, col.key, e.target.value);
-                        }}
-                        />
-                    } 
-                   
-                    if(col.key === keySno) {
-                      return <input
-                        name={col.key}
-                        value={item[fieldKey] ?? 0}          
-                        onChange={(e) => {
-                         handleInputChange(idx, col.key, e.target.value);
-                        }}
-                        />
-
-                    } else {
-                      return <input onClick={() => {
-                        if(col.key === 'storageName' ) {
-                        onselectStorage(idx , item); }}}
-                        name={col.key}
-                        value={item[fieldKey] ?? ''}
-                        readOnly />
-                    } 
-
-                  })()}
-            </td>
-          ))}
-
-        </tr>
-      ))}
-      </tbody>
-
-        <tfoot>
-        <tr>
-          {(() => {
-            const qtyIndex = columns.findIndex(col => col.key === keySno);
-            const firstDataColPos = qtyIndex !== -1 ? qtyIndex + 1 : 1;
-
-            return (
-              <>
-                <td colSpan={firstDataColPos} style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                  합계
-                </td>
-
-                {columns.slice(qtyIndex).map((col) => {
-                  if (col.key === keySno ) {
-                    return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalSno}</td>;
-                  }
-                  if (col.key === 'totalPrice') {
-                    return <td key={col.key} style={{ fontWeight: 'bold' }}>{totalAmount}</td>;
-                  }
-
-
-                  return <td key={col.key}></td>;
-                })}
-              </>
-            );
-          })()}
-        </tr>
-      </tfoot>
-        
-      </table>
-
-      {!isCompleted && <button type='submit'>입고</button>}
+      
       
       {selectMode === 'STORAGE' ?
             <InventorySelectModal

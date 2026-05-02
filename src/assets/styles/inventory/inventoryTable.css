@@ -1,0 +1,262 @@
+.modal-Container-TableFrom {
+    width: 650px;
+    background: var(--color-modal);
+    height: 800px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+
+}
+.inventory-table {
+    text-align: center;
+    border-collapse: collapse;
+    font-weight: 300;
+    width: 100%;
+    font-size: var(--font-xs);
+}
+
+.inventory-table th {
+    padding: 7px 8px;
+    color: var(--text-accent);
+    font-weight: 500;
+    border: 1px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
+}
+.inventory-table td {
+    padding: 7px 8px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.inventory-table-header {
+  background-color: var(--color-gray-100);
+  color: #091B72;
+    font-weight: 400;
+}
+.inventory-table-body td {
+    color: #151515;
+
+}
+.inventory-table tbody tr:hover{
+    background: var(--color-primary-light) !important;
+}
+
+.inventory-table-body{
+    background: #ffffff;
+    padding: 10px 20px;
+    border-radius: var(--radius-lg);
+}
+/* 드롭다운용 */
+
+.dropdown-right-List{
+    position: absolute;
+    z-index: 10;
+    background: var(--color-inverse);
+    border: 1px solid var(--border);
+    width: 100%;
+    border-radius: var(--radius-lg);
+    top: 31px;
+    left: 0;
+    box-sizing: border-box;
+}
+/* .dropdown-right-List span{
+
+} */
+.dropdown-right-List .dropdown-Item {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: none;
+}
+.dropdown-right-List .dropdown-Item:hover{
+    background: var(--color-primary-light);
+}
+.dropdown-right-List .dropdown-Item.active{
+    background: var(--color-primary);
+    color: var(--text-inverse);
+    font-weight: 200;
+}
+
+/* 공용 */
+.Page-Btn-container{
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+   position: absolute;
+  left: 50%;
+   top: 40%;
+   transform: translate(-50%, -50%);
+}
+
+.Btn-container{
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.modal-Row-Item-title{
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.modal-Row-Item-Group-Input {
+  width: 80px;
+  margin-right: 5px;
+}
+
+.modal-Row-Item-title-box {
+  display: flex;
+  gap: 5px;
+  text-align: center;
+  flex: 1 ;
+}
+
+.modal-Row-Item-title-Body {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.viewer-wrapper {
+  border: 1px solid var(--border);;
+  box-sizing: border-box;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.viewer-wrapper p {
+  padding: 10px;
+  width: 100%;
+}
+
+/* 물폼선택 모달 테이블 */
+
+.inventory-modal-Table{
+  margin: 17px 15px 0;
+  padding: 20px;
+  background: var(--color-inverse);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;text-align: center;
+  border-collapse: collapse;
+  font-weight: 300;
+  max-width: 620px;
+}
+
+.modal-Select-Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.modal-Select-Container {
+    width: 650px;
+    background: var(--color-modal);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-Table-Form {
+  background: var(--color-inverse);
+  box-sizing: border-box;
+  text-align: center;
+  border-collapse: collapse;
+  font-weight: 300;
+  width: 100%;
+    font-size: var(--font-xs);
+    margin-top: 18px;
+}
+.modal-Table-Form thead tr {
+    background: var(--color-gray-100);
+}
+.modal-Table-Form th {
+    padding: 6px 8px;
+    color: var(--text-accent);
+    font-weight: 500;
+    border: 1px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.modal-Table-Form td {
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    background: var(--color-inverse);
+    padding: 5px 8px;
+}
+.modal-Table-Form  td:has(input) {
+    padding: 2px;
+}
+.modal-Table-Form td input {
+    margin: 0;
+    padding: 5px 8px;
+    font-size: var(--font-xs);
+    box-sizing: border-box;
+}
+.modal-Table-Form input {
+  width: 100% !important;
+}
+
+.modal-Table-Form-header {
+  background-color: var(--color-gray-100);
+  color: #091B72;
+    font-weight: 500;
+    height: 27px;
+}
+.Del-button{
+  padding: 1px 10px;
+  background-color: #DA5C57;
+  /* background: #5E5C77; */
+  color: #fff;
+  border-radius: 7px;
+  font-weight: 100;
+  cursor: pointer;
+    font-size: 12px;
+}
+
+.Date-Header-Input {
+  width: 160px !important;
+}
+
+.Time-Header-Input {
+  width: 40px !important;
+}
+
+.Time-Header-Box {
+ display: flex;
+ gap: 3px;
+}
+
+.modal-Table-Form-body input[type='checkbox'] {
+  height: 12px;
+  width: 12px;
+}
+
+.modal-Table-Form input[type='checkbox']:focus,
+.modal-Table-Form input[type='checkbox']:active {
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+}
+
+
+.Select-Pointer {
+  cursor: pointer;
+}

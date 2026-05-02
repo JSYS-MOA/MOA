@@ -1,7 +1,7 @@
 import Calendar from "../../../components/Calendar.tsx";
 import {BiLinkExternal} from "react-icons/bi";
 import {MdRefresh} from "react-icons/md";
-import "../../../assets/styles/main/MainCalendar.css";
+import "../../../assets/styles/main/mainPage.css"
 
 const MainCalendar = () => {
 

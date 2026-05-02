@@ -1,0 +1,101 @@
+
+.mainPage-Table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    border:1px solid var(--border);
+    height: 202px;
+    overflow-y: auto;
+    display: block;
+    overflow-x:hidden;
+}
+
+.common-Table.mainPage-Table thead{
+    background: var(--color-gray-100);
+    border-top: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--border);
+}
+.common-Table.mainPage-Table thead tr th{
+    padding: 6px 8px;
+    font-size: var(--font-xs);
+    font-weight: 500;
+    border-right: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+.common-Table.mainPage-Table thead, .mainPage-Table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.mainPage-Table thead tr th:nth-child(1), .mainPage-Table tbody tr td:nth-child(1){
+    width: 50%;
+}
+.mainPage-Table thead tr th:nth-child(2),.mainPage-Table tbody tr td:nth-child(2){
+    width: 20%;
+    text-align: center;
+}
+.mainPage-Table thead tr th:nth-child(3),.mainPage-Table tbody tr td:nth-child(3){
+    width: 20%;
+    text-align: center;
+}
+.mainPage-Table thead tr th:nth-child(4),.mainPage-Table tbody tr td:nth-child(4){
+    width: 10%;
+    text-align: center;
+}
+.mainPage-Table thead tr th:last-child{
+    border-right: none;
+}
+.mainPage-Table tbody tr{
+    border-bottom: 1px solid var(--border);
+}
+.mainPage-Table tbody tr:hover{
+    background: var(--color-primary-light);
+}
+.common-Table.mainPage-Table tbody tr td{
+    padding: 7px 8px;
+    font-size: var(--font-xs);
+    font-weight: 300;
+    color: var(--text-primary);
+    border-right: 1px solid var(--border);
+}
+.mainPage-Table tbody tr td:last-child{
+    border-right: none;
+}
+.notice-IsNotice{
+    color: var(--color-inverse);
+    background: #DA5C57;
+    font-size: 11px;
+    padding: 3px 14px;
+    border-radius: 15px;
+    margin-right: 6px;
+}
+.notice-IsLoading{
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.notice-IsNotice-Row {
+    background: #FFF6F6 !important;
+}
+
+tbody tr.notice-IsNotice-Row:hover {
+    background: #FFF0F0 !important;
+}
+
+/* logistics */
+.logisticsTeam{
+    height: 290px;
+}
+.mainPage-Table.logisticsTeam thead tr th:nth-child(1),
+.mainPage-Table.logisticsTeam tbody tr td:nth-child(1) {
+    width: 20%;
+}
+.mainPage-Table.logisticsTeam thead tr th:nth-child(2),
+.mainPage-Table.logisticsTeam tbody tr td:nth-child(2) {
+    width: 50%;
+}
+
+.mainPage-Table.logisticsTeam tbody tr td:nth-child(2) {
+    text-align: left;
+}

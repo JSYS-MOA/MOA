@@ -1,5 +1,5 @@
 import {MdRefresh} from "react-icons/md";
-import "../../../assets/styles/main/notice.css";
+import "../../../assets/styles/main/mainPage-Table.css";
 import {FaRegPenToSquare} from "react-icons/fa6";
 import {useState} from "react";
 import { getNoticesApi} from "../../../apis/NoticeService.tsx";
@@ -7,6 +7,7 @@ import NoticeDetailModal from "./NoticeDetailModal.tsx";
 import NoticeWriteModal from "./NoticeWriteModal.tsx";
 import {useQuery} from "@tanstack/react-query";
 import type {NoticeItem} from "../../../types/notice.ts";
+import Table, {type TableColumn} from "../../../components/Table.tsx";
 
 
 const Notice = () => {
@@ -36,73 +37,75 @@ const Notice = () => {
         setSelectedId(noticeId);
         setIsDetailOpen(true);
     }
+    const columns: TableColumn<NoticeItem>[] = [
+        {
+            key: "noticeTitle",
+            label: "제목",
+            render: (val, item) => (
+                <span
+                    onClick={() => handleNoticeClick(item.noticeId)}
+                    style={{cursor: "pointer", color: "#091B72"}}
+                >
+                    {item.isNotice && (
+                        <span className="notice-IsNotice">공지</span>
+                    )}
+                    {val}
+                </span>
+            )
+        },
+        {key: "postDate",   label: "작성일"},
+        {key: "writerName", label: "작성자"},
+        {
+            key: "file",
+            label: "첨부",
+            render: (val) => val ? "Y" : "N"
+        },
+    ];
 
     return(
         <div className="notice-Wrapper">
-            <div className="notice-Header">
-                <p>전체공지</p>
-                <div className="Header-Icon">
-                    <FaRegPenToSquare
-                        size={15}
-                        color="#d0d0d0"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                            setEditId(null);
-                            setIsWriteOpen(true);
-                        }}
-                    />
-                    <MdRefresh
-                        size={19}
-                        color="#d0d0d0"
-                        style={{cursor:"pointer"}}
-                        onClick={() => refetch()}
-                    />
-                </div>
-            </div>
-            {isLoading ? (
-                <div className="notice-IsLoading">
-                    <div className="spinner-Wrap">
-                        <span className="spinner spinner-Dark"></span>
-                        로딩 중...
+               <div className="notice-Header">
+                   <p>전체공지</p>
+                    <div className="Header-Icon">
+                        <FaRegPenToSquare
+                            size={15}
+                            color="#d0d0d0"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                                setEditId(null);
+                                setIsWriteOpen(true);
+                            }}
+                        />
+                        <MdRefresh
+                            size={19}
+                            color="#d0d0d0"
+                            style={{cursor:"pointer"}}
+                            onClick={() => refetch()}
+                        />
                     </div>
                 </div>
-            ) : (
-                <table className="notice-Table">
-                    <thead>
-                    <tr>
-                        <th>제목</th>
-                        <th>작성일</th>
-                        <th>작성자</th>
-                        <th>첨부</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {sortedNotices.map((notice: NoticeItem) => (
-                        <tr key={notice.noticeId} className={notice.isNotice ? "notice-IsNotice-Row" : ""}>
-                            <td
-                                onClick={() => handleNoticeClick(notice.noticeId)}
-                                style={{cursor: "pointer", color: "#091B72"}}
-                            >
-                                {notice.isNotice && (
-                                    <span className="notice-IsNotice">
-                                        공지
-                                    </span>
-                                )}
-                                {notice.noticeTitle}
-                            </td>
-                            <td>{notice.postDate}</td>
-                            <td>{notice.writerName}</td>
-                            <td>{notice.file ? "Y" : "N"}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            )}
+                {isLoading ? (
+                    <div className="notice-IsLoading">
+                        <div className="spinner-Wrap">
+                            <span className="spinner spinner-Dark"></span>
+                            로딩 중...
+                        </div>
+                    </div>
+                ) : (
+        <Table
+            items={sortedNotices}
+            idKey="noticeId"
+            columns={columns}
+            className="mainPage-Table"
+            wrapperStyle={{ overflowX: "auto" }}
+            rowClassName={(item) => item.isNotice ? "notice-IsNotice-Row" : ""}
+        />
+                )}
             <NoticeDetailModal
                 noticeId={selectedId}
                 isOpen={isDetailOpen}
                 onClose={() => setIsDetailOpen(false)}
-                onSuccess={() => refetch()}
+                onSuccess={() => void refetch()}
                 onEdit={(id) => {
                     setIsDetailOpen(false);
                     setEditId(id);
@@ -112,11 +115,11 @@ const Notice = () => {
             <NoticeWriteModal
                 isOpen={isWriteOpen}
                 noticeId={editId}
-                onSuccess={() => refetch()}
+                onSuccess={() => void refetch()}
                 onClose={() => setIsWriteOpen(false)}
             />
-
         </div>
-    )
-}
+    );
+};
+
 export default Notice;

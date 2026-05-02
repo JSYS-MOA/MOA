@@ -8,6 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 .modal-Container{
     width: 650px;
@@ -39,14 +40,17 @@
     font-weight: 500;
 }
 .modal-Body{
-    margin: 17px 15px 0;
-    padding: 20px;
-    background: var(--color-inverse);
-    border-radius: var(--radius-lg);
+    padding: 10px 15px;
     display: flex;
     flex-direction: column;
     flex: 1;
     overflow-y: auto;
+}
+.modal-Children{
+    background: var(--color-inverse);
+    padding: 15px 20px 20px;
+    border-radius: var(--radius-lg);
+    flex: 0 ;    
 }
 .modal-Footer{
     padding: 13px 15px;

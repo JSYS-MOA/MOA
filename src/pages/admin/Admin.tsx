@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
-import { useGetRole , usePatchRole } from '../../apis/AdminService'
-import Table from '../../components/inventory/InventoryTable'
+import { useState } from 'react'
+import {FaStar} from "react-icons/fa";
+import { useGetRole , usePatchRole , useGetRoleSelect } from '../../apis/AdminService'
+import Table from '../../components/admin/AdminTable'
 import { type Column } from '../../types/TableProps'
 
 const Admin = () => {
   const [page, setPage] = useState(0);
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
+  const search = '';
 
-  const { data } =  useGetRole( search, page, 10);
-  const {  mutate, isPending } = usePatchRole()
+  const { data , refetch } =  useGetRole( search, page, 10);
+  const { data : role   } =  useGetRoleSelect();
+  const {  mutate } = usePatchRole()
   const maxPage = data ? data.totalPages  : 0; 
 
   const changePage = (num: number) => {
@@ -22,13 +25,15 @@ const Admin = () => {
     }
   };
 
-  const onRoleChange = (e : React.ChangeEvent) => {
-    const { id , value } = e.target as HTMLSelectElement;
+  const onRoleChange = (id: number, value: number) => {
+    console.log(id, value)
+
     const roleId : number = Number(value);
     const userId : number = Number(id);
 
      mutate({ userId , roleId }, {
         onSuccess: (data) => {
+          refetch()
           console.log("성공 데이터:", data);
         },
         onError: (error: any) => {
@@ -45,20 +50,27 @@ const Admin = () => {
     { key: 'phone', label: '연락처' },
     { key: 'email', label: 'Email' },]
   
-  console.log(maxPage)
-  console.log(data)
-
-
   return (
     <div>
-      {data != null ?
-      <Table
-        items={data.content}
-        onItemChange={onRoleChange} columns={columns}/>
-      : "로딩중입니다." }
+      <div className="favorite-Header">
+          <FaStar size={18} color="#C4C4C4"/>
+          <span>부서별 권한승인</span>
+      </div>
 
-      <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
+      <div className='myInfo-Section'>
+        {data != null && role != null ?
+        <Table
+          items={data.content} page={page}
+          onItemChange={onRoleChange} columns={columns} select={role.content}/>
+        : "로딩중입니다." }
+        
+        <div className='Page-Btn-container'>
+          <button onClick={()=>{changePage(-1)}} className='btn-Primary'>이전</button>
+          <button onClick={()=>{changePage(1)}} className='btn-Primary'>다음</button>
+        </div>
+
+      </div>
+
     </div>
   )
 }

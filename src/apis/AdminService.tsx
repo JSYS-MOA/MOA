@@ -42,3 +42,18 @@ const Api_BASE = "http://localhost/api/admin/levels";
     });
 
   }
+
+  // 문서종류 선택 
+  export function useGetRoleSelect( roleCord?: string ) {
+      return useQuery({
+        queryKey: ["roleCord", roleCord ], 
+        queryFn: async () => {
+          const { data } = await axios.get(`http://localhost/api/select/role`, {   
+            params: {
+              roleCord : roleCord 
+            }
+          });
+          return data;
+        },
+      });
+  }

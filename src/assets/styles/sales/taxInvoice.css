@@ -1,0 +1,82 @@
+.tax-Table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    border: 1px solid var(--color-danger);
+    table-layout: fixed;
+}
+.tax-Table td {
+    border: 1px solid var(--color-danger);
+    padding: 3px 4px;
+    color: #e32b24;
+}
+
+.tax-Title {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    padding: 8px !important;
+}
+
+.tax-Sub {
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.tax-Side {
+    background: #ffffff;
+    font-weight: 500;
+    text-align: center;
+    font-size: 11px;
+    padding: 6px 2px !important;
+}
+
+.tax-Label {
+    background:  #ffffff;
+    color: #e32b24;
+    font-weight: 500;
+    font-size: 10px;
+    text-align: center;
+    padding: 3px !important;
+}
+
+.tax-Value {
+    background: #fff;
+    padding-left: 6px !important;
+}
+
+.tax-Center {
+    text-align: center !important;
+}
+
+.tax-Right {
+    text-align: right !important;
+    padding-right: 6px !important;
+}
+
+
+.tax-PrintDate {
+    font-size: 11px;
+    display: none;
+}
+@media print {
+    @page {
+        margin: 0;
+        padding: 30px;
+    }
+    .tax-PrintDate {
+        display: block;
+    }
+    body * {
+        visibility: hidden;
+    }
+    .tax-Print, .tax-Print * {
+        visibility: visible;
+    }
+    .tax-Print {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+}

@@ -116,7 +116,7 @@ const MyCalendar = () => {
                             setEditId(null);
                             setIsWriteOpen(true);
                         }}
-                        className="myCalendar-addBtn btn-Primary"
+                        className="addBtn btn-Primary"
                     >
                         신규
                     </button>
