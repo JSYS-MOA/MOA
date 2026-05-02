@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import type { ModalProps } from '../../types/ModalProps'
+import {IoCloseOutline} from "react-icons/io5";
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }: {
   title: string;
@@ -10,9 +11,11 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
  
   })  => {
 
+    const maxPagevalue =  maxPage || 1
     const [page, setPage] = useState(0);
 
-    const changePage = (num: number) => {
+    const changePage = (e : React.MouseEvent ,num: number) => {
+      e.preventDefault();
       const totalPage = maxPage ?? 1; 
       const newPage : number = page + num
     if( newPage <= 0 ) {
@@ -25,11 +28,49 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h3>상품 선택</h3>
-        <table>
-          <tbody>
+    <div className="modal-Select-Overlay">
+      <div className='modal-Select-Container'>
+
+        <div className="modal-Header">
+            <p>항목 선택</p>
+            <button onClick={onClose}>
+                <IoCloseOutline color="#fff" size={18}/>
+            </button>
+          </div>
+  
+          <div className="modal-Title">
+            <p>항목 선택</p>
+        </div>
+
+        <table className='inventory-modal-Table , inventory-table'>
+
+          <thead className="inventory-table-header">
+              <tr>
+                {(title as string)  !== 'PRODUCT'  && (title as string)  !== 'INVENTORY'  && (title as string)  !== 'LINE' ? <>
+                <th>코드</th>
+                <th>이름</th>
+                </> : null }
+                {title === 'PRODUCT' ? (<>
+                <th>코드</th>
+                <th>이름</th>
+                <th>금액</th>
+                </>):  null }
+                {title === 'INVENTORY' ? (<>
+                  <th>상품명</th>
+                  <th>상품코드</th>
+                  <th>창고</th>
+                  <th>유통기한</th>
+                  </>) :  null }
+                {title === 'LINE' ? (<>
+                  <th>결재코드</th>
+                  <th>결재자코드</th>
+                  <th>결재자</th>
+                  </>) :  null }
+              </tr>
+          </thead>
+          
+          
+          <tbody className="Select-Pointer inventory-table-body">
             {title === 'PRODUCT' ? (
               items.map((product: any) => (
                 <tr key={product.productId} onClick={() => onSelect(product)}>
@@ -69,11 +110,39 @@ const InventorySelectModal = ( { title , items , maxPage , onSelect , onClose  }
               ))
             ) : null }
 
+            {title === 'LINE' ? (
+              items.map((line: any) => (
+                <tr key={line.inventoryId} onClick={() => onSelect(line)} >
+                  <td>{line.approvalLineCord}</td>
+                  <td>{line.approvalLineUser}</td>
+                  <td>{line.approvalLineName}</td>
+                </tr>
+              ))
+            ) : null }
+
+            {title === 'DOCUMENT' ? (
+              items.map((document: any) => (
+                <tr key={document.documentId} onClick={() => onSelect(document)} >
+                  <td>{document.documentCord}</td>
+                  <td>{document.documentName}</td>
+                </tr>
+              ))
+            ) : null }
+
+
           </tbody>
         </table>
-        <button onClick={()=>{changePage(-1)}}>aa</button>
-      <button onClick={()=>{changePage(1)}}>aa</button>
-        <button onClick={onClose}>닫기</button>
+
+        <div className="modal-Footer">
+          {maxPagevalue > 1 ?  
+          <div className='Page-Btn-container'>
+            <button onClick={(e)=>{changePage(e ,-1)}}  className='btn-Primary'>이전</button>
+            <button onClick={(e)=>{changePage(e , 1)}} className='btn-Primary'>다음</button>
+          </div>
+          : null}
+          <button onClick={onClose} className='btn-Primary'>닫기</button>
+        </div>
+
       </div>
     </div>
   )

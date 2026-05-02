@@ -44,6 +44,7 @@
     display: flex;
     justify-content: space-between;
     color: var(--text-secondary);
+    width: 100%;
 }
 .info-list div {
     display: flex;
@@ -61,6 +62,7 @@
 .info-list span:last-child {
     font-size: var(--font-sm);
     color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
 }
 .info-list span:first-child::before {
     content: "";

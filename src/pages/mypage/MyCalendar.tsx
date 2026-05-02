@@ -4,19 +4,55 @@ import {useState} from "react";
 import "../../assets/styles/mypage/myCalendar.css";
 import DropdownSelect from "../../components/DropdownSelect.tsx";
 import CalendarWriteModal from "./CalendarWriteModal.tsx";
+import {useQuery} from "@tanstack/react-query";
+import type {CalendarEvent} from "../../types/calendar.ts";
+import {getCalendarsApi} from "../../apis/CalendarService.tsx";
+import CalendarDetailModal from "./CalendarDetailModal.tsx";
 
 const MyCalendar = () => {
 
     const [viewDate, setViewDate] = useState(new Date());
     const [showShared, setShowShared] = useState(true);
     const [showPersonal, setShowPersonal] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isWriteOpen, setIsWriteOpen] = useState(false);
+    const [editId, setEditId] = useState<number | null>(null);
+    const [selectedCalendarId, setSelectedCalendarId] = useState<number | null>(null);
 
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
 
     const years = Array.from({length: 5}, (_, i) => new Date().getFullYear() + 1 - i);
     const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    const {data: events =[], refetch} = useQuery<CalendarEvent[]>({
+        queryKey: ["calendars"],
+        queryFn: () => getCalendarsApi()
+    })
+    console.log(events);
+
+    const categoryStyles: Record<string, {bg: string, dot: string}> = {
+
+        "행사":     { bg: "#fbe5e5", dot: "#d64b4b" },
+        "회의":     { bg: "#fdfbd2", dot: "#F9A825" },
+        "주말 근무": { bg: "#e0e2f3", dot: "#111DA3" },
+        "연차":     { bg: "#e9e4fa", dot: "#6d3ccd" },
+        "회식":     { bg: "#e3f4ff", dot: "#0a3368" },
+        "개인":     { bg: "#fde8d9", dot: "#ea591c" },
+    };
+
+    const filteredEvents = events
+        .filter(e => {
+            if (e.type === "개인") return showPersonal;
+            if (e.type === "공유") return showShared;
+            return false;
+        })
+        .map(e => ({
+            ...e,
+            color:    categoryStyles[e.calendarCategoryName ?? ""]?.bg  ?? "#f1f1f1",
+            dotColor: categoryStyles[e.calendarCategoryName ?? ""]?.dot ?? "#aaa"
+        }));
+
 
     return(
         <>
@@ -68,19 +104,40 @@ const MyCalendar = () => {
                 <div className="myCalendar-Main">
                     <Calendar
                         showHeader={false}
+                        viewDate={viewDate}
+                        events ={filteredEvents}
+                        onEventClick={(id) => {
+                            setSelectedCalendarId(id);
+                            setIsDetailOpen(true);
+                        }}
                     />
                     <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="myCalendar-addBtn btn-Primary"
+                        onClick={() => {
+                            setEditId(null);
+                            setIsWriteOpen(true);
+                        }}
+                        className="addBtn btn-Primary"
                     >
                         신규
                     </button>
                 </div>
             </div>
+            <CalendarDetailModal
+                calendarId={selectedCalendarId}
+                isOpen={isDetailOpen}
+                onClose={() => setIsDetailOpen(false)}
+                onSuccess={() => refetch()}
+                onEdit={(id) => {
+                    setIsDetailOpen(false);
+                    setEditId(id);
+                    setIsWriteOpen(true);
+                }}
+            />
             <CalendarWriteModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSuccess={() => {}}
+                isOpen={isWriteOpen}
+                calendarId={editId}
+                onClose={() => setIsWriteOpen(false)}
+                onSuccess={() => refetch()}
             />
         </>
     )

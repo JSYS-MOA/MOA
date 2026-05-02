@@ -90,10 +90,11 @@
 
   /*------------------------------------------------*/
 
-}
-@media (max-width: 1024px) {
+  }
+
+/* @media (max-width: 1024px) {
   font-size: 16px;
-}
+} */
 
 #root {
   max-width: 100%;
@@ -119,6 +120,7 @@
 
 main{
   flex: 1;
+  position: relative;
 }
 
 body {
@@ -228,6 +230,16 @@ button {
 }
 .btn-Secondary:hover{
   background: #F9F9F9;
+}
+/*표 안에 들어가는 버튼*/
+.btn-sc{
+  padding: 1px 12px;
+  background: var(--color-inverse);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  font-weight: 100;
+  border: 1px solid var(--text-secondary-30);
+  font-size: 12px;
 }
 .btn-Wrap{
   display: flex;
@@ -418,37 +430,36 @@ button {
   overflow-x: auto;
 }
 
-.modal-Table {
+.common-Table.modal-Table {
   width: 100%;
   min-width: 620px;
   border-collapse: collapse;
   font-size: var(--font-xs);
 }
 
-.modal-Table thead tr {
+.common-Table.modal-Table thead tr {
   background: var(--color-gray-100);
 }
 
-.modal-Table th {
-  padding: 8px 15px;
-  color: var(--color-primary);
+.common-Table.modal-Table th {
+  padding: 6px 15px;
+  color: var(--text-accent);
   font-weight: 500;
   border: 1px solid var(--border);
   text-align: center;
   white-space: nowrap;
 }
-
-.modal-Table td {
+.common-Table.modal-Table td {
   padding: 6px 30px;
   border: 1px solid var(--border);
   color: var(--text-secondary);
   white-space: nowrap;
   background: var(--color-inverse);
 }
-.modal-Table td:has(input) {
-  padding: 0;
+.common-Table.modal-Table td:has(input) {
+  padding: 2px;
 }
-.modal-Table td input {
-  margin: 2px;
+.common-Table.modal-Table td input {
   padding: 2px 8px;
+  margin: 0;
 }
