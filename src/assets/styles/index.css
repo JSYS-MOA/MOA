@@ -463,3 +463,21 @@ button {
   padding: 2px 8px;
   margin: 0;
 }
+
+
+/* 페이지네이션 */
+.Page-Btn-container{
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  transform: translateX(-50%);
+}
+
+.Btn-container{
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}

@@ -47,7 +47,7 @@ const MainCalendar = () => {
                     <BiLinkExternal
                         size={16}
                         color="#d0d0d0"
-                        onClick={() => navigate("/my/calendar")}
+                        onClick={() => navigate("/my/calendars")}
                     />
                     <MdRefresh
                         size={19}
@@ -59,6 +59,7 @@ const MainCalendar = () => {
             <div className="calendar-Body">
                 <Calendar
                     events={styledEvents}
+                    categoryStyles={categoryStyles}
                     onEventClick={(id) => {
                         setSelectedCalendarId(id);
                         setIsDetailOpen(true);

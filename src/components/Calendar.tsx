@@ -12,6 +12,7 @@ interface CalendarProps {
     renderDateCell?: (date: Date, isToday: boolean) => ReactNode;
     onEventClick?: (calendarId: number) => void;
     showHeader?: boolean;
+    categoryStyles?: Record<string, {dot: string}>;
 }
 
 //서버에서 오는 날짜가 시간 포함이라 시간을 제거하고 숫자로 변환해서 eventMap의 key로 사용
@@ -26,7 +27,7 @@ const Calendar = ({
                       onViewDateChange,
                       events = [],
                       onEventClick,
-                      showHeader = true,
+                      showHeader = true,categoryStyles
                   }: CalendarProps) => {
 
     const [internalViewDate, setInternalViewDate] = useState(new Date());
@@ -86,9 +87,28 @@ const Calendar = ({
 
             {showHeader && (
                 <div className="calendar-Header">
-                    <button onClick={() => changeMonth(-1)}><SlArrowLeft /></button>
-                    <span>{year}년 {month + 1}월</span>
-                    <button onClick={() => changeMonth(1)}><SlArrowRight /></button>
+                    <div />
+                    <div className="calendar-Month">
+                        <button onClick={() => changeMonth(-1)}><SlArrowLeft /></button>
+                        <span>{year}년 {month + 1}월</span>
+                        <button onClick={() => changeMonth(1)}><SlArrowRight /></button>
+                    </div>
+                    {categoryStyles && (
+                        <div className="calendar-Event">
+                            {Object.entries(categoryStyles).map(([name, style]) => (
+                                <div key={name} style={{display: "flex", alignItems: "center", gap: "4px"}}>
+                        <span style={{
+                            width: "8px",
+                            height: "8px",
+                            borderRadius: "50%",
+                            background: style.dot,
+                            display: "inline-block",
+                        }}/>
+                                    <span>{name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 

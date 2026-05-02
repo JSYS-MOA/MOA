@@ -83,6 +83,7 @@
     padding: 10px 16px;
     box-sizing: border-box;
     height: 578px;
+    overflow: hidden;
 }
 .mainCalendar-Header{
     display: flex;
@@ -97,5 +98,7 @@
 }
 .calendar-Body{
     margin-top: 30px;
+    overflow-y: auto;
+    height: 490px;
 }
 
