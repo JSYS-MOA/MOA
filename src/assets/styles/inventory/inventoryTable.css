@@ -244,3 +244,21 @@
 .Select-Pointer {
   cursor: pointer;
 }
+
+@media (max-width: 1024px) {
+    .common-Table-Wrapper {
+        overflow-x: auto;
+    }
+
+    .common-Table-Wrapper .common-Table {
+        min-width: 900px;
+    }
+
+    .inventory-Table-Wrapper {
+        overflow-x: auto;
+    }
+
+    .inventory-Table-Wrapper .inventory-table {
+        min-width: 900px;
+    }
+}

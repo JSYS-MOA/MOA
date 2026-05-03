@@ -52,9 +52,7 @@ const MyInfo = () => {
                     </tr>
                     </tbody>
                 </table>
-            </div>
-            <div className="myInfo-Section">
-                <div className="myInfo-Section-Header">
+                <div className="myInfo-Section-Header" style={{marginTop:"21px"}}>
                     <p>계좌정보</p>
                 </div>
                 <table className="myInfo-Table">

@@ -1,5 +1,6 @@
 import React from 'react'
 import  { type TableProps , type Column} from "../../types/TableProps"
+import "../../assets/styles/inventory/inventoryTable.css";
 
 const ApprovalsTable = (
     { items , columns , page , onItemClick }: {
@@ -12,55 +13,58 @@ const ApprovalsTable = (
   }) => {
       
   return (
-    <table className="inventory-table">
-    
-      <thead className="inventory-table-header">
-        <tr>
-          { items ? <th>순번</th> : null}
-          {columns.map(col => <th key={col.key}>{col.label}</th>)}
-        </tr>
-      </thead>
+      <div className="inventory-Table-Wrapper">
+          <table className="inventory-table">
 
-      <tbody className="inventory-table-body">
-        {items.map((item, idx) => (
-        <tr key={idx} >
-          <td>{ 10 * page + idx + 1}</td>
+              <thead className="inventory-table-header">
+              <tr>
+                  { items ? <th>순번</th> : null}
+                  {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              </tr>
+              </thead>
 
-          {columns.map(col => (
-            <td key={col.key}>
-               {col.key === 'approvaInfo' && (
-                <button 
-                  className='btn-Secondary'
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onItemClick?.(item , e);
-                  }}>
-                  보기
-                </button>
-              )}
+              <tbody className="inventory-table-body">
+              {items.map((item, idx) => (
+                  <tr key={idx} >
+                      <td>{ 10 * page + idx + 1}</td>
 
-              {(() => {
-                    const columnKey = col.key as string;
-                    const value = columnKey.includes('.') 
-                      ? columnKey.split('.').reduce((obj: any, key) => obj?.[key], item)
-                      : (item as any)[col.key];
+                      {columns.map(col => (
+                          <td key={col.key}>
+                              {col.key === 'approvaInfo' && (
+                                  <button
+                                      className='btn-Secondary'
+                                      onClick={(e) => {
+                                          e.stopPropagation();
+                                          onItemClick?.(item , e);
+                                      }}>
+                                      보기
+                                  </button>
+                              )}
 
-                    if (col.key === 'approvaDate' && value) {
-                      return String(value).substring(0, 10).replace(/-/g, '-');
-                    }
+                              {(() => {
+                                  const columnKey = col.key as string;
+                                  const value = columnKey.includes('.')
+                                      ? columnKey.split('.').reduce((obj: any, key) => obj?.[key], item)
+                                      : (item as any)[col.key];
 
-                    if (col.key === 'approvaInfo') return null;
+                                  if (col.key === 'approvaDate' && value) {
+                                      return String(value).substring(0, 10).replace(/-/g, '-');
+                                  }
 
-                    return value || "";
-                  })()}
-            </td>
-          ))}    
+                                  if (col.key === 'approvaInfo') return null;
 
-        </tr>
-      ))}
-      </tbody>
+                                  return value || "";
+                              })()}
+                          </td>
+                      ))}
 
-    </table>
+                  </tr>
+              ))}
+              </tbody>
+
+          </table>
+      </div>
+
   )
 }
 

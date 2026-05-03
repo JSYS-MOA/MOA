@@ -26,7 +26,6 @@ const MyApproval = () => {
                 onSuccess: (data) => {
                     setInfo(data);
                     setModalMode('LIST');
-                    console.log("ApprovaUser 성공 데이터:", data.content);
                 },
                 onError: (error: any) => {
                     setOnAlert(error + "정보를 가져오는데 실패했습니다.");

@@ -3,7 +3,7 @@
 
 import {useState} from "react";
 import {useAuthStore} from "../stores/useAuthStore.tsx";
-import {Link, useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import {loginApi} from "../apis/LoginService.tsx";
 import { FiAlertCircle } from "react-icons/fi";
 import "../assets/styles/login.css";
@@ -18,6 +18,7 @@ const Login = () =>{
   const [employeeIdError, setEmployeeIdError] = useState("")
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [showTestAccount, setShowTestAccount] = useState(false);
   const {login} = useAuthStore();
   const navigate = useNavigate();
 
@@ -58,56 +59,72 @@ const Login = () =>{
     }
   }
   return(
-    <div className="login-Wrapper">
-      <div className="logo">
-        <h1>MOA</h1>
-        <p>All-in-One 비즈니스 솔루션</p>
+      <div style={{display:"flex", alignItems:"center",justifyContent:"center", height:"100%"}}>
+        <div className="login-Wrapper">
+          <div className="logo">
+            <h1>MOA</h1>
+            <p>All-in-One 비즈니스 솔루션</p>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="login-Id">
+              <p className="title">사원코드</p>
+              <input
+                  value={employeeId}
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                  placeholder="사원코드 입력"
+              />
+            </div>
+            <p className={`error-Icon ${employeeIdError ? "show" : ""}`}>
+              <span><FiAlertCircle /></span>
+              {employeeIdError}
+            </p>
+            <div className="login-Password">
+              <p className="title">비밀번호</p>
+              <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="비밀번호 입력"
+              />
+            </div>
+            <p className={`error-Icon ${passwordError ? "show" : ""}`}>
+              <span><FiAlertCircle /></span>
+              {passwordError}
+            </p>
+            <div className={`login-Error ${loginError ? "show" : ""}`}>
+              <span><FiAlertCircle /></span>
+              {loginError}
+            </div>
+            <button type="submit" className="submit-Btn" disabled={isLoading}>
+              {isLoading ? (
+                  <div className="spinner-Wrap">
+                    <span className="spinner"></span>
+                    로그인 중...
+                  </div>
+              ) : ("LOGIN")}
+            </button>
+            <p className="privacy-Agree">
+              처음 방문하셨나요?{" "}
+                <span
+                    onClick={() => setShowTestAccount(prev => !prev)}
+                >
+                   테스트 계정
+                </span>
+                으로 먼저 둘러보세요
+            </p>
+
+            {showTestAccount && (
+                <div className="test-Account-Box">
+                  인사팀 팀장 - 20200001 /
+                  인사팀 - 20200002<br />
+                  물류팀 - 20210002 /
+                  영업팀 - 20210003
+                </div>
+            )}
+          </form>
+        </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="login-Id">
-          <p className="title">사원코드</p>
-          <input
-              value={employeeId}
-              onChange={(e) => setEmployeeId(e.target.value)}
-              placeholder="사원코드 입력"
-          />
-        </div>
-        <p className={`error-Icon ${employeeIdError ? "show" : ""}`}>
-          <span><FiAlertCircle /></span>
-          {employeeIdError}
-        </p>
-        <div className="login-Password">
-          <p className="title">비밀번호</p>
-          <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호 입력"
-          />
-        </div>
-        <p className={`error-Icon ${passwordError ? "show" : ""}`}>
-          <span><FiAlertCircle /></span>
-          {passwordError}
-        </p>
-        <div className={`login-Error ${loginError ? "show" : ""}`}>
-          <span><FiAlertCircle /></span>
-          {loginError}
-        </div>
-        <button type="submit" className="submit-Btn" disabled={isLoading}>
-          {isLoading ? (
-              <div className="spinner-Wrap">
-                <span className="spinner"></span>
-                로그인 중...
-              </div>
-          ) : ("LOGIN")}
-        </button>
-        <p className="privacy-Agree">
-          서비스 이용 시 <span>이용약관</span>과
-          <span> 개인정보처리방침</span>에 동의한 것으로 간주합니다
-        </p>
-        <Link to="/find-password" className="login-FindPassword">비밀번호찾기</Link>
-      </form>
-    </div>
+
   )
 };
 export default Login;

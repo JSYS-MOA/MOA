@@ -48,14 +48,11 @@ const TaxInvoicePage = () => {
                 <FaStar size={18} color="#C4C4C4"/>
                 <span>전자세금계산서</span>
             </div>
-
-            <div className="sales-Wrapper">
                 <Table
                     items={transactions}
                     idKey="transactionId"
                     columns={columns}
                 />
-            </div>
             {isModalOpen && selectedId && (
                 <TaxInvoiceModal
                     isOpen={isModalOpen}

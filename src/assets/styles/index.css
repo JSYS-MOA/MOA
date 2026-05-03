@@ -92,9 +92,6 @@
 
   }
 
-/* @media (max-width: 1024px) {
-  font-size: 16px;
-} */
 
 #root {
   max-width: 100%;
@@ -106,8 +103,7 @@
   box-sizing: border-box;
   --font-primary: 'Pretendard', sans-serif;
   background: var(--bg);
-  overflow-y: hidden;
-  overflow-x: hidden;
+  overflow: hidden;
   color: var(--text-primary);
   font-weight: 300 !important;
 }
@@ -118,13 +114,11 @@
   height: 100%;
 }
 
-main{
-  flex: 1;
-  position: relative;
-}
+
 
 body {
   margin: 0;
+  height: 100%;
 }
 h1,
 h2 {
@@ -162,6 +156,7 @@ input{
 input[type="checkbox"] {
   accent-color: var(--color-primary);
 }
+
 input::placeholder{color: var(--text-secondary-30)}
 input:focus,select:focus {outline: 1px solid rgba(94,92,119,0.3);}
 select {
@@ -481,3 +476,26 @@ button {
   gap: 6px;
   margin-top: 12px;
 }
+
+
+/*  반응형 */
+
+@media (max-width: 1024px) {
+.main{
+  overflow-x: auto;
+}
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+@media (max-width: 767px) {
+  body {
+    overflow: hidden;
+  }
+}
+

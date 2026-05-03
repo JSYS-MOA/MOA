@@ -1,6 +1,7 @@
 .myInfo-Section{
     display: flex;
     flex-direction: column;
+    overflow-x: auto;
 }
 .myInfo-Section:last-child{
     margin-top: 21px;
@@ -32,4 +33,20 @@
 }
 .myInfo-Table tbody tr td{
     background: var(--color-inverse);
+}
+@media (max-width: 1400px) {
+    .myInfo-Table{
+    }
+    .myInfo-Table tbody tr th {
+        width: 80px;
+    }
+}
+@media (max-width: 1024px) {
+    .myInfo-Section-Header{
+        border-bottom: none;
+    }
+    .myInfo-Table {
+        table-layout: auto !important;
+        min-width: 900px !important;
+    }
 }
