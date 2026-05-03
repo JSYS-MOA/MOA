@@ -1,12 +1,20 @@
 import {useEffect, useState} from "react";
 import "../../../assets/styles/main/attendanceCard.css";
 import { MdRefresh } from "react-icons/md";
+import {useQuery} from "@tanstack/react-query";
+import {checkInApi, checkOutApi, getTodayWorkApi} from "../../../apis/hr2/Hr2Service.tsx";
 
 const AttendanceCard = () => {
 
     const [currentTime, setCurrentTime] = useState("00:00:00");
-    const [startTime, setStartTime] = useState("00:00:00");
-    const [endTime, setEndTime] = useState("00:00:00");
+
+    const {data: todayWork, refetch} = useQuery({
+        queryKey: ["todayWork"],
+        queryFn: getTodayWorkApi,
+    });
+
+    const startTime = todayWork?.startWork?.slice(11, 19) ?? "00:00:00";
+    const endTime = todayWork?.finishWork?.slice(11, 19) ?? "00:00:00";
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -33,16 +41,26 @@ const AttendanceCard = () => {
         return `${h}:${m}:${s}`;
     }
 
-    const handleCheckin = () => {
-        if(startTime !== "00:00:00") return;
-        setStartTime(getTimeStr());
-    }
+    const handleCheckin = async () => {
+        if (startTime !== "00:00:00") return;
+        try {
+            await checkInApi();
+            await refetch();
+        } catch {
+            console.error("출근 처리 실패");
+        }
+    };
 
-    const handleCheckout = () => {
-        if(startTime === "00:00:00") return;
-        if(endTime !== "00:00:00") return;
-        setEndTime(getTimeStr());
-    }
+    const handleCheckout = async () => {
+        if (startTime === "00:00:00") return;
+        if (endTime !== "00:00:00") return;
+        try {
+            await checkOutApi();
+            await refetch();
+        } catch {
+            console.error("퇴근 처리 실패");
+        }
+    };
 
     const calcWorkTime = (start:string, end:string) => {
         if(start === "00:00:00") return "00:00:00";
@@ -63,7 +81,11 @@ const AttendanceCard = () => {
         <div className="main-Card">
             <div className="card-Header">
                 <p>출근 / 퇴근카드</p>
-                <MdRefresh size={19} color="lightgray"/>
+                <MdRefresh
+                    size={19}
+                    color="lightgray"
+                    onClick={() => void refetch()}
+                />
             </div>
             <div className="card-Inner">
                 <p className="date">{dateStr}</p>
