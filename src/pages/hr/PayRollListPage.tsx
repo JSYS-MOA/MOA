@@ -3,17 +3,19 @@ import type { KeyboardEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaStar } from "react-icons/fa";
 import {
+    type PayRollDateMutationPayload,
     type PayRollRecord,
-    useDeletePayRoll,
+    useCancelPayRollConfirm,
+    useConfirmPayRollCreatedAt,
     useGetPayRollList,
 } from "../../apis/hr/PayLollService.tsx";
 import "../../assets/styles/hr/payRollList.css";
+import PayRollInfoModal from "../../components/hr/PayRollInfoModal.tsx";
 import PayRollUpdateModal from "../../components/hr/PayRollUpdateModal.tsx";
 import PayRollTable, {
     type PayRollTableAction,
     type PayRollTableRow,
 } from "../../components/hr/PayRollTable.tsx";
-import { useAuthStore } from "../../stores/useAuthStore";
 
 const ITEMS_PER_PAGE = 10;
 const PAYROLL_VENDOR_ID = 11;
@@ -83,6 +85,9 @@ const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
 const getTransactionId = (record: Record<string, unknown>) =>
     getNumberValue(record, "transactionId", "transaction_id");
 
+const getSalaryLedgerId = (record: Record<string, unknown>) =>
+    getNumberValue(record, "salaryLedgerId", "salary_ledger_id");
+
 const getVendorId = (record: Record<string, unknown>) =>
     getNumberValue(record, "vendorId", "vendor_id");
 
@@ -125,6 +130,17 @@ const formatDateValue = (date: Date | undefined) => {
 };
 
 const formatAmount = (amount: number) => amount.toLocaleString("ko-KR");
+
+const formatLocalDateTime = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+};
 
 const toDateValue = (value: string) => {
     if (value.trim() === "") {
@@ -173,6 +189,29 @@ const getUpdatedAtDate = (record: Record<string, unknown>) => {
 
 const isSummaryMemoRecord = (record: Record<string, unknown>) =>
     getStringValue(record, "transactionMemo", "transaction_memo").includes("총합");
+
+const buildDateMutationPayload = (
+    record: Record<string, unknown>,
+    updatedAt: string | null
+): PayRollDateMutationPayload => ({
+    transactionId: getNumberValue(record, "transactionId", "transaction_id"),
+    vendorId: getNumberValue(record, "vendorId", "vendor_id"),
+    salaryLedgerId: getNumberValue(record, "salaryLedgerId", "salary_ledger_id") ?? null,
+    transactionNum: getNumberValue(record, "transactionNum", "transaction_num"),
+    transactionType: getStringValue(record, "transactionType", "transaction_type"),
+    transactionPrice: getNumberValue(record, "transactionPrice", "transaction_price"),
+    transactionMemo: getStringValue(record, "transactionMemo", "transaction_memo"),
+    createdAt:
+        getStringValue(
+            record,
+            "createdAt",
+            "created_at",
+            "transaction_created_at",
+            "salary_ledger_created_at",
+            "salary_created_at"
+        ) || null,
+    updatedAt,
+});
 
 const buildRows = (cards: PayRollRecord[]) => {
     const groupedRows = new Map<
@@ -372,16 +411,17 @@ const FilterChipInput = ({
 };
 
 const PayRollListPage = () => {
-    const { user } = useAuthStore();
     const queryClient = useQueryClient();
-    const { data: cards = [], isLoading, isError } = useGetPayRollList();
-    const deletePayRoll = useDeletePayRoll();
+    const { data: cards = [], isLoading, isError, refetch: refetchPayRollList } = useGetPayRollList();
+    const cancelPayRollConfirm = useCancelPayRollConfirm();
+    const confirmPayRollCreatedAt = useConfirmPayRollCreatedAt();
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
-    const [isPayRollModalOpen, setIsPayRollModalOpen] = useState(false);
+    const [activePayRollModal, setActivePayRollModal] = useState<"view" | "edit" | null>(null);
     const [selectedLedgerId, setSelectedLedgerId] = useState<number | null>(null);
     const [selectedLedgerIds, setSelectedLedgerIds] = useState<number[]>([]);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [isCancelingConfirm, setIsCancelingConfirm] = useState(false);
+    const [isConfirmingPayRoll, setIsConfirmingPayRoll] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [isStarred, setIsStarred] = useState(false);
     const [keywordDraft, setKeywordDraft] = useState("");
@@ -394,7 +434,6 @@ const PayRollListPage = () => {
     const [endDateFilter, setEndDateFilter] = useState("");
 
     const items = useMemo(() => buildRows(cards), [cards]);
-    const canDeletePayRoll = user?.roleId === 2;
     const validLedgerIds = useMemo(() => new Set(items.map((item) => item.id)), [items]);
     const activeSelectedLedgerId =
         selectedLedgerId !== null && validLedgerIds.has(selectedLedgerId)
@@ -501,20 +540,118 @@ const PayRollListPage = () => {
 
     const handleOpenPayRollModal = (ledgerId: number) => {
         setSelectedLedgerId(ledgerId);
-        setIsPayRollModalOpen(true);
+        setActivePayRollModal("view");
     };
 
-    const actionMessages: Record<Exclude<PayRollTableAction, "view">, string> = {
-        edit: "수정 기능은 아직 연결되지 않았습니다.",
+    const actionMessages: Record<Exclude<PayRollTableAction, "view" | "edit">, string> = {
         cancelConfirm: "확정취소 기능은 아직 연결되지 않았습니다.",
         createVoucher: "전표생성 기능은 아직 연결되지 않았습니다.",
+    };
+
+    const handleCancelConfirm = async (ledgerId: number) => {
+        const item = items.find((row) => row.id === ledgerId);
+        const targetRecords = cards.filter((card) => {
+            const transactionId = getTransactionId(card as LoosePayRoll);
+
+            return transactionId !== undefined && item?.transactionIds.includes(transactionId);
+        });
+
+        if (targetRecords.length === 0 || isCancelingConfirm) {
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `${item?.ledgerName ?? "선택한 급여"}의 지급일을 비워 확정을 취소하시겠습니까?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setIsCancelingConfirm(true);
+
+        try {
+            for (const record of targetRecords) {
+                const resolvedId =
+                    getTransactionId(record as LoosePayRoll) ??
+                    getSalaryLedgerId(record as LoosePayRoll);
+
+                if (resolvedId === undefined) {
+                    continue;
+                }
+
+                await cancelPayRollConfirm.mutateAsync({
+                    salaryLedgerId: resolvedId,
+                    payload: record,
+                });
+            }
+
+            const canceledTransactionIds = new Set(
+                targetRecords
+                    .map((record) => getTransactionId(record as LoosePayRoll))
+                    .filter((transactionId): transactionId is number => transactionId !== undefined)
+            );
+
+            queryClient.setQueriesData<PayRollRecord[]>(
+                { queryKey: ["PayRollList"] },
+                (oldData) => {
+                    if (!Array.isArray(oldData)) {
+                        return oldData;
+                    }
+
+                    return oldData.map((record) => {
+                        const transactionId = getTransactionId(record as LoosePayRoll);
+
+                        if (transactionId === undefined || !canceledTransactionIds.has(transactionId)) {
+                            return record;
+                        }
+
+                        return {
+                            ...record,
+                            updatedAt: null,
+                            updated_at: null,
+                            transaction_updated_at: null,
+                            salary_ledger_updated_at: null,
+                            salary_updated_at: null,
+                        } as PayRollRecord;
+                    });
+                }
+            );
+
+            await queryClient.invalidateQueries({
+                queryKey: ["PayRollList"],
+            });
+            await refetchPayRollList();
+
+            window.alert("확정취소가 완료되었습니다.");
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "확정취소 처리 중 오류가 발생했습니다.";
+
+            console.error(error);
+            window.alert(message);
+        } finally {
+            setIsCancelingConfirm(false);
+        }
     };
 
     const handleTableAction = (action: PayRollTableAction, ledgerId: number) => {
         setSelectedLedgerId(ledgerId);
 
         if (action === "view") {
-            setIsPayRollModalOpen(true);
+            setActivePayRollModal("view");
+            return;
+        }
+
+        if (action === "edit") {
+            setActivePayRollModal("edit");
+            return;
+        }
+
+        if (action === "cancelConfirm") {
+            void handleCancelConfirm(ledgerId);
             return;
         }
 
@@ -522,7 +659,7 @@ const PayRollListPage = () => {
     };
 
     const handleClosePayRollModal = () => {
-        setIsPayRollModalOpen(false);
+        setActivePayRollModal(null);
     };
 
     const handleToggleAll = () => {
@@ -540,63 +677,97 @@ const PayRollListPage = () => {
         });
     };
 
-    const handleDeleteSelected = async () => {
+    const handleCreatePayRoll = () => {
+        window.alert("신규 기능은 아직 연결되지 않았습니다.");
+    };
+
+    const handleConfirmSelected = async () => {
         const targetTransactionIds = activeSelectedLedgerIds.flatMap((ledgerId) => {
             const item = items.find((row) => row.id === ledgerId);
             return item?.transactionIds ?? [];
         });
 
-        if (targetTransactionIds.length === 0 || isDeleting) {
-            return;
-        }
+        const targetRecords = cards.filter((card) => {
+            const transactionId = getTransactionId(card as LoosePayRoll);
+            return transactionId !== undefined && targetTransactionIds.includes(transactionId);
+        });
 
-        if (!canDeletePayRoll) {
-            window.alert("HR 관리자만 급여 대장을 삭제할 수 있습니다.");
+        if (targetRecords.length === 0 || isConfirmingPayRoll) {
             return;
         }
 
         const confirmed = window.confirm(
-            `선택한 급여 ${targetTransactionIds.length}건을 삭제하시겠습니까?`
+            `선택한 급여 ${targetRecords.length}건을 확정하시겠습니까?`
         );
 
         if (!confirmed) {
             return;
         }
 
-        setIsDeleting(true);
+        setIsConfirmingPayRoll(true);
 
         try {
-            await Promise.all(
-                targetTransactionIds.map((transactionId) =>
-                    deletePayRoll.mutateAsync(transactionId)
-                )
+            const now = formatLocalDateTime(new Date());
+
+            for (const record of targetRecords) {
+                const item = record as LoosePayRoll;
+                const transactionId = getTransactionId(item);
+
+                if (transactionId === undefined) {
+                    continue;
+                }
+
+                await confirmPayRollCreatedAt.mutateAsync({
+                    transactionId,
+                    payload: buildDateMutationPayload(item, now),
+                });
+            }
+
+            const confirmedTransactionIds = new Set(targetTransactionIds);
+
+            queryClient.setQueriesData<PayRollRecord[]>(
+                { queryKey: ["PayRollList"] },
+                (oldData) => {
+                    if (!Array.isArray(oldData)) {
+                        return oldData;
+                    }
+
+                    return oldData.map((record) => {
+                        const transactionId = getTransactionId(record as LoosePayRoll);
+
+                        if (transactionId === undefined || !confirmedTransactionIds.has(transactionId)) {
+                            return record;
+                        }
+
+                        return {
+                            ...record,
+                            updatedAt: now,
+                            updated_at: now,
+                            transaction_updated_at: now,
+                            salary_ledger_updated_at: now,
+                            salary_updated_at: now,
+                        } as PayRollRecord;
+                    });
+                }
             );
 
             await queryClient.invalidateQueries({
                 queryKey: ["PayRollList"],
             });
-
+            await refetchPayRollList();
             setSelectedLedgerIds([]);
 
-            if (
-                activeSelectedLedgerId !== null &&
-                activeSelectedLedgerIds.includes(activeSelectedLedgerId)
-            ) {
-                setSelectedLedgerId(null);
-                setIsPayRollModalOpen(false);
-            }
-
-            window.alert("선택한 급여 대장을 삭제했습니다.");
+            window.alert("확정이 완료되었습니다.");
         } catch (error) {
             const message =
                 error instanceof Error
                     ? error.message
-                    : "급여 대장을 삭제하는 동안 오류가 발생했습니다.";
+                    : "확정 처리 중 오류가 발생했습니다.";
 
             console.error(error);
             window.alert(message);
         } finally {
-            setIsDeleting(false);
+            setIsConfirmingPayRoll(false);
         }
     };
 
@@ -708,6 +879,23 @@ const PayRollListPage = () => {
                 <div className="payRollListPage-bottom-actions">
                     <button
                         type="button"
+                        className="payRollListPage-add-btn"
+                        onClick={handleCreatePayRoll}
+                    >
+                        신규
+                    </button>
+
+                    <button
+                        type="button"
+                        className="payRollListPage-disabled-btn"
+                        disabled={activeSelectedLedgerIds.length === 0 || isConfirmingPayRoll}
+                        onClick={handleConfirmSelected}
+                    >
+                        {isConfirmingPayRoll ? "확정 중..." : "확정"}
+                    </button>
+
+                    <button
+                        type="button"
                         className="payRollListPage-disabled-btn"
                         disabled={
                             activeSelectedLedgerIds.length === 0 &&
@@ -715,16 +903,7 @@ const PayRollListPage = () => {
                         }
                         onClick={handleClearSelection}
                     >
-                        선택 해제
-                    </button>
-
-                    <button
-                        type="button"
-                        className="payRollListPage-disabled-btn"
-                        disabled={activeSelectedLedgerIds.length === 0 || isDeleting}
-                        onClick={handleDeleteSelected}
-                    >
-                        {isDeleting ? "삭제 중..." : "삭제"}
+                        취소
                     </button>
                 </div>
 
@@ -766,7 +945,13 @@ const PayRollListPage = () => {
             </div>
 
             <PayRollUpdateModal
-                isOpen={isPayRollModalOpen && activeSelectedLedgerId !== null}
+                isOpen={activePayRollModal === "edit" && activeSelectedLedgerId !== null}
+                onClose={handleClosePayRollModal}
+                payrollLabel={selectedPayrollLabel}
+                records={selectedLedgerRecords}
+            />
+            <PayRollInfoModal
+                isOpen={activePayRollModal === "view" && activeSelectedLedgerId !== null}
                 onClose={handleClosePayRollModal}
                 payrollLabel={selectedPayrollLabel}
                 records={selectedLedgerRecords}

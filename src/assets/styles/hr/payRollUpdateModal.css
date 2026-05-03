@@ -5,13 +5,20 @@
 }
 
 .payRollUpdateModalScope .modal-Container {
-    width: min(980px, calc(100vw - 48px));
-    max-height: min(720px, calc(100vh - 48px));
-    height: auto;
+    width: min(900px, calc(100vw - 96px));
+    height: min(700px, calc(100vh - 72px));
+    max-height: calc(100vh - 72px);
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
+    border-radius: 8px;
     background: #ffffff;
+    overflow: hidden;
+}
+
+.payRollUpdateModalScope .modal-Header {
+    min-height: 24px;
+    padding: 4px 10px;
+    background: #5b5878;
 }
 
 .payRollUpdateModalScope .modal-Header p {
@@ -32,36 +39,48 @@
     flex: 1 1 auto;
     min-height: 0;
     margin: 0;
-    padding: 22px 16px 18px;
+    padding: 22px 18px 14px;
     background: #ffffff;
     overflow: auto;
+}
+
+.payRollUpdateModalScope .modal-Children {
+    min-height: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: #ffffff;
+}
+
+.payRollUpdateModalScope .modal-Footer {
+    padding: 0 18px 16px;
+    background: #ffffff;
 }
 
 .payRollUpdateModal-panel {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
 }
 
 .payRollUpdateModal-headerBlock {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
 }
 
 .payRollUpdateModal-heading {
     margin: 0;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    color: #1f3f8f;
+    color: var(--text-accent);
 }
 
 .payRollUpdateModal-ledgerName {
     margin: 0;
     text-align: center;
-    font-size: 18px;
-    font-weight: 500;
-    color: #2f3640;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
 }
 
 .payRollUpdateModal-tableWrap {
@@ -78,43 +97,47 @@
 
 .payRollUpdateModal-table th,
 .payRollUpdateModal-table td {
-    padding: 8px 6px;
-    border: 1px solid #e6e8ec;
-    font-size: 13px;
-    line-height: 1.25;
+    padding: 5px 4px;
+    border: 1px solid #d8dbe2;
+    font-size: 10px;
+    line-height: 1.2;
     text-align: center;
     color: #2f3640;
     word-break: keep-all;
 }
 
 .payRollUpdateModal-table th {
-    background: #fafbfc;
+    background: #f7f8fb;
     font-weight: 500;
+}
+
+.payRollUpdateModal-checkCell {
+    width: 4%;
 }
 
 .payRollUpdateModal-table th:nth-child(1),
 .payRollUpdateModal-table td:nth-child(1) {
-    width: 11%;
+    width: 4%;
 }
 
 .payRollUpdateModal-table th:nth-child(2),
 .payRollUpdateModal-table td:nth-child(2) {
-    width: 10%;
+    width: 11%;
 }
 
 .payRollUpdateModal-table th:nth-child(3),
 .payRollUpdateModal-table td:nth-child(3) {
-    width: 14%;
+    width: 10%;
 }
 
 .payRollUpdateModal-table th:nth-child(4),
 .payRollUpdateModal-table td:nth-child(4) {
-    width: 12%;
+    width: 14%;
 }
 
 .payRollUpdateModal-table th:nth-child(5),
 .payRollUpdateModal-table td:nth-child(5) {
-    width: 10%;
+    width: 12%;
 }
 
 .payRollUpdateModal-table th:nth-child(6),
@@ -124,22 +147,110 @@
 
 .payRollUpdateModal-table th:nth-child(7),
 .payRollUpdateModal-table td:nth-child(7) {
-    width: 14%;
+    width: 10%;
 }
 
 .payRollUpdateModal-table th:nth-child(8),
 .payRollUpdateModal-table td:nth-child(8) {
-    width: 10%;
+    width: 14%;
 }
 
 .payRollUpdateModal-table th:nth-child(9),
 .payRollUpdateModal-table td:nth-child(9) {
+    width: 10%;
+}
+
+.payRollUpdateModal-table th:nth-child(10),
+.payRollUpdateModal-table td:nth-child(10) {
     width: 9%;
+}
+
+.payRollUpdateModal-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.payRollUpdateModal-checkbox input {
+    display: none;
+}
+
+.payRollUpdateModal-checkbox span {
+    width: 11px;
+    height: 11px;
+    border: 1px solid #d7dbe5;
+    border-radius: 3px;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.payRollUpdateModal-checkbox input:checked + span {
+    border-color: #5b5878;
+    background: #5b5878;
+}
+
+.payRollUpdateModal-amountInput {
+    width: 100%;
+    height: 22px;
+    padding: 0 4px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: transparent;
+    color: #2f3640;
+    font: inherit;
+    text-align: right;
+    box-sizing: border-box;
+}
+
+.payRollUpdateModal-amountInput:hover,
+.payRollUpdateModal-amountInput:focus {
+    border-color: #b8bdd0;
+    background: #ffffff;
+    outline: none;
 }
 
 .payRollUpdateModal-empty {
     padding: 28px 16px;
     color: #6b7280;
+}
+
+.payRollUpdateModal-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+.payRollUpdateModal-button {
+    min-width: 52px;
+    height: 26px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.payRollUpdateModal-button--primary {
+    background: #3f4274;
+    color: #ffffff;
+}
+
+.payRollUpdateModal-button--primary:hover {
+    background: #32355f;
+}
+
+.payRollUpdateModal-button--secondary {
+    border-color: #d6d9e0;
+    background: #ffffff;
+    color: #3f4274;
+}
+
+.payRollUpdateModal-button--secondary:hover {
+    background: #f6f7fb;
 }
 
 @media (max-width: 768px) {
@@ -157,6 +268,6 @@
     }
 
     .payRollUpdateModal-ledgerName {
-        font-size: 16px;
+        font-size: 14px;
     }
 }
