@@ -2,6 +2,42 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 const API_BASE = "/api/hr/payroll";
+const SALARY_API_BASE = "/api/hr/salary";
+
+const getAxiosErrorMessage = (error: unknown) => {
+    if (!axios.isAxiosError(error)) {
+        return null;
+    }
+
+    const data = error.response?.data;
+
+    if (typeof data === "string" && data.trim() !== "") {
+        return data;
+    }
+
+    if (typeof data === "object" && data !== null) {
+        const responseData = data as Record<string, unknown>;
+
+        for (const key of ["message", "error", "detail", "trace"]) {
+            const value = responseData[key];
+
+            if (typeof value === "string" && value.trim() !== "") {
+                return value;
+            }
+        }
+    }
+
+    return error.message;
+};
+
+export type SalaryRecord = {
+    salaryId?: number;
+    salary_id?: number;
+    userId?: number;
+    user_id?: number;
+    basePay?: number;
+    base_pay?: number;
+};
 
 export type PayRollRecord = {
 
@@ -117,10 +153,13 @@ export type PayRollMutationPayload = {
     transactionId: number;
     vendorId:number;
     salary_ledgerId:number | null;
+    salaryLedgerId?: number | null;
     transactionNum:number;
     transactionType:string;
     transactionPrice:string;
+    transaction_price?: string;
     transactionMemo:string;
+    transaction_memo?: string;
     vendorCord:string | null;
     vendorName:string | null;
     vendorIsUse:string | null;
@@ -129,9 +168,18 @@ export type PayRollMutationPayload = {
     salaryStatus:string | null;
     salaryId:number;
     basePay:number;
+    base_pay?: number;
     bankTransferId:number;
     salaryDate:number | null;
+    salary_date?: number | null;
     salaryAmount:number | null;
+    salary_amount?: number | null;
+    overtimeAllowance?: number | null;
+    overtime_allowance?: number | null;
+    weekendAllowance?: number | null;
+    weekend_allowance?: number | null;
+    annualAllowance?: number | null;
+    annual_allowance?: number | null;
 
     userName:string | null;
     employeeId:string | null;
@@ -170,6 +218,14 @@ export type PayRollMutationPayload = {
     salary_updated_at?: string | null;
 };
 
+const normalizeArrayResponse = <T,>(data: T[] | { content?: T[] }) => {
+    if (Array.isArray(data)) {
+        return data;
+    }
+
+    return Array.isArray(data?.content) ? data.content : [];
+};
+
 export type PayRollDateMutationPayload = {
     transactionId?: number;
     vendorId?: number;
@@ -180,6 +236,31 @@ export type PayRollDateMutationPayload = {
     transactionMemo?: string;
     createdAt?: string | null;
     updatedAt?: string | null;
+};
+
+export type PayRollCreatePayload = {
+    userId: number;
+    user_id?: number;
+    bankTransferId: number;
+    bank_transfer_id?: number;
+    salaryDate: string;
+    salary_date?: string;
+    salaryAmount?: number | null;
+    salary_amount?: number | null;
+    basePay?: number;
+    base_pay?: number;
+    transactionMemo?: string;
+    transaction_memo?: string;
+    transactionType?: string;
+    transactionPrice?: string;
+    transaction_price?: string;
+    salaryStatus?: string;
+    salary_status?: string;
+    vendorId?: number;
+    vendor_id?: number;
+    createdAt?: string;
+    created_at?: string;
+    salary_ledger_created_at?: string;
 };
 
 const toUserEntityPayload = (payload: PayRollMutationPayload) => {
@@ -304,11 +385,32 @@ export function useGetPayRollList(search?: string, page = 0, size = 1000) {
                 throw error;
             }
 
-            if (Array.isArray(data)) {
-                return data;
+            return normalizeArrayResponse(data);
+        },
+        retry: false,
+    });
+}
+
+export function useGetSalaryList() {
+    return useQuery<SalaryRecord[]>({
+        queryKey: ["salaryList"],
+        queryFn: async () => {
+            let data: SalaryRecord[] | { content?: SalaryRecord[] };
+
+            try {
+                const response = await axios.get<SalaryRecord[] | { content?: SalaryRecord[] }>(
+                    SALARY_API_BASE,
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                data = response.data;
+            } catch {
+                return [];
             }
 
-            return Array.isArray(data?.content) ? data.content : [];
+            return normalizeArrayResponse(data);
         },
         retry: false,
     });
@@ -333,14 +435,28 @@ export function useGetPayRollInfo() {
 // 급여시즌 추가
 export function usePostPayRollRecord() {
     return useMutation({
-        mutationFn: async (payload: PayRollMutationPayload) => {
-            const { data } = await axios.post(
-                `${API_BASE}/add`,
-                toUserEntityPayload(payload),
-                {
-                    withCredentials: true,
+        mutationFn: async (payload: PayRollMutationPayload | PayRollCreatePayload) => {
+            let data: unknown;
+
+            try {
+                const response = await axios.post(
+                    `${API_BASE}/add`,
+                    toUserEntityPayload(payload as PayRollMutationPayload),
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                data = response.data;
+            } catch (error) {
+                const message = getAxiosErrorMessage(error);
+
+                if (message) {
+                    throw new Error(message);
                 }
-            );
+
+                throw error;
+            }
 
             return data;
         },

@@ -10,8 +10,10 @@ import {
     useGetPayRollList,
 } from "../../apis/hr/PayLollService.tsx";
 import "../../assets/styles/hr/payRollList.css";
+import PayRollAddModal from "../../components/hr/PayRollAddModal.tsx";
 import PayRollInfoModal from "../../components/hr/PayRollInfoModal.tsx";
 import PayRollUpdateModal from "../../components/hr/PayRollUpdateModal.tsx";
+import PayRollVoucherModal from "../../components/hr/PayRollVoucherModal.tsx";
 import PayRollTable, {
     type PayRollTableAction,
     type PayRollTableRow,
@@ -117,6 +119,33 @@ const parseIsoDate = (value: string) => {
     return parsed;
 };
 
+const parseCompactDate = (value: string | number | null | undefined) => {
+    if (value === null || value === undefined) {
+        return undefined;
+    }
+
+    const digits = String(value).replace(/\D/g, "");
+
+    if (digits.length !== 8) {
+        return undefined;
+    }
+
+    const year = Number(digits.slice(0, 4));
+    const month = Number(digits.slice(4, 6));
+    const day = Number(digits.slice(6, 8));
+    const parsed = new Date(year, month - 1, day);
+
+    if (
+        parsed.getFullYear() !== year ||
+        parsed.getMonth() !== month - 1 ||
+        parsed.getDate() !== day
+    ) {
+        return undefined;
+    }
+
+    return parsed;
+};
+
 const formatDateValue = (date: Date | undefined) => {
     if (!date) {
         return "-";
@@ -187,6 +216,10 @@ const getUpdatedAtDate = (record: Record<string, unknown>) => {
     return updatedAtText ? parseIsoDate(updatedAtText) : undefined;
 };
 
+const getPayrollDate = (record: Record<string, unknown>) =>
+    parseCompactDate(getStringValue(record, "salaryDate", "salary_date")) ??
+    getCreatedAtDate(record);
+
 const isSummaryMemoRecord = (record: Record<string, unknown>) =>
     getStringValue(record, "transactionMemo", "transaction_memo").includes("총합");
 
@@ -248,9 +281,9 @@ const buildRows = (cards: PayRollRecord[]) => {
             continue;
         }
 
-        const createdAt = getCreatedAtDate(record);
+        const payrollDate = getPayrollDate(record);
         const updatedAt = getUpdatedAtDate(record);
-        const createdDateValue = toFormattedDateValue(createdAt);
+        const createdDateValue = toFormattedDateValue(payrollDate);
         const payDateValue = toFormattedDateValue(updatedAt);
         const transactionId = getTransactionId(record);
         const groupId = createdDateValue ?? transactionId;
@@ -259,7 +292,7 @@ const buildRows = (cards: PayRollRecord[]) => {
             continue;
         }
 
-        const createdDateLabel = formatDateValue(createdAt);
+        const createdDateLabel = formatDateValue(payrollDate);
         const ledgerName =
             getStringValue(record, "transactionMemo", "transaction_memo") ||
             (createdDateLabel === "-" ? "급여" : `${createdDateLabel} 급여`);
@@ -418,6 +451,8 @@ const PayRollListPage = () => {
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [activePayRollModal, setActivePayRollModal] = useState<"view" | "edit" | null>(null);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
     const [selectedLedgerId, setSelectedLedgerId] = useState<number | null>(null);
     const [selectedLedgerIds, setSelectedLedgerIds] = useState<number[]>([]);
     const [isCancelingConfirm, setIsCancelingConfirm] = useState(false);
@@ -496,15 +531,19 @@ const PayRollListPage = () => {
             return [];
         }
 
+        const selectedTransactionIds = selectedLedger?.transactionIds ?? [];
+
         return cards.filter((card) => {
             const record = card as LoosePayRoll;
+            const transactionId = getTransactionId(record);
 
             return (
                 getVendorId(record) === PAYROLL_VENDOR_ID &&
-                toFormattedDateValue(getCreatedAtDate(record)) === activeSelectedLedgerId
+                transactionId !== undefined &&
+                selectedTransactionIds.includes(transactionId)
             );
         });
-    }, [cards, activeSelectedLedgerId]);
+    }, [cards, activeSelectedLedgerId, selectedLedger]);
 
     const selectedPayrollLabel = useMemo(() => {
         return selectedLedger?.ledgerName ?? "급여";
@@ -545,7 +584,7 @@ const PayRollListPage = () => {
 
     const actionMessages: Record<Exclude<PayRollTableAction, "view" | "edit">, string> = {
         cancelConfirm: "확정취소 기능은 아직 연결되지 않았습니다.",
-        createVoucher: "전표생성 기능은 아직 연결되지 않았습니다.",
+        createVoucher: "전표로 연결할 거래 내역이 없습니다.",
     };
 
     const handleCancelConfirm = async (ledgerId: number) => {
@@ -655,6 +694,18 @@ const PayRollListPage = () => {
             return;
         }
 
+        if (action === "createVoucher") {
+            const item = items.find((row) => row.id === ledgerId);
+
+            if (!item || item.transactionIds.length === 0) {
+                window.alert(actionMessages.createVoucher);
+                return;
+            }
+
+            setIsVoucherModalOpen(true);
+            return;
+        }
+
         window.alert(actionMessages[action]);
     };
 
@@ -678,7 +729,7 @@ const PayRollListPage = () => {
     };
 
     const handleCreatePayRoll = () => {
-        window.alert("신규 기능은 아직 연결되지 않았습니다.");
+        setIsCreateModalOpen(true);
     };
 
     const handleConfirmSelected = async () => {
@@ -947,12 +998,42 @@ const PayRollListPage = () => {
             <PayRollUpdateModal
                 isOpen={activePayRollModal === "edit" && activeSelectedLedgerId !== null}
                 onClose={handleClosePayRollModal}
+                onUpdated={async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: ["PayRollList"],
+                    });
+                    await refetchPayRollList();
+                }}
                 payrollLabel={selectedPayrollLabel}
                 records={selectedLedgerRecords}
+            />
+            <PayRollAddModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onCreated={async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: ["PayRollList"],
+                    });
+                    await refetchPayRollList();
+                }}
             />
             <PayRollInfoModal
                 isOpen={activePayRollModal === "view" && activeSelectedLedgerId !== null}
                 onClose={handleClosePayRollModal}
+                payrollLabel={selectedPayrollLabel}
+                records={selectedLedgerRecords}
+            />
+            <PayRollVoucherModal
+                isOpen={isVoucherModalOpen && activeSelectedLedgerId !== null}
+                onClose={() => setIsVoucherModalOpen(false)}
+                onDeleted={async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: ["PayRollList"],
+                    });
+                    await refetchPayRollList();
+                    setSelectedLedgerId(null);
+                    setSelectedLedgerIds([]);
+                }}
                 payrollLabel={selectedPayrollLabel}
                 records={selectedLedgerRecords}
             />

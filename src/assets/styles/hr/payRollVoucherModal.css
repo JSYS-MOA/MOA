@@ -1,0 +1,222 @@
+.payRollVoucherModalScope .modal-Overlay {
+    z-index: 1001;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.payRollVoucherModalScope .modal-Container {
+    width: min(650px, calc(100vw - 96px));
+    height: min(560px, calc(100vh - 72px));
+    max-height: calc(100vh - 72px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.payRollVoucherModalScope .modal-Header {
+    min-height: 24px;
+    padding: 4px 10px;
+    background: #5b5878;
+}
+
+.payRollVoucherModalScope .modal-Header p {
+    margin: 0;
+}
+
+.payRollVoucherModalScope .modal-Header button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.payRollVoucherModalScope .modal-Title {
+    display: none;
+}
+
+.payRollVoucherModalScope .modal-Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 18px 16px 10px;
+    background: #ffffff;
+    overflow: auto;
+}
+
+.payRollVoucherModalScope .modal-Children {
+    min-height: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: #ffffff;
+}
+
+.payRollVoucherModalScope .modal-Footer {
+    padding: 0 16px 14px;
+    background: #ffffff;
+}
+
+.payRollVoucherModal-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.payRollVoucherModal-heading {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-accent);
+}
+
+.payRollVoucherModal-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.payRollVoucherModal-field {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+}
+
+.payRollVoucherModal-field label {
+    font-size: 11px;
+    color: #2f3640;
+}
+
+.payRollVoucherModal-field input {
+    width: 100%;
+    height: 25px;
+    padding: 0 10px;
+    border: 1px solid #e1e4eb;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #2f3640;
+    font-size: 11px;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.payRollVoucherModal-tableWrap {
+    overflow: auto;
+}
+
+.common-Table.payRollVoucherModal-table {
+    width: 100%;
+    min-width: 580px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: #ffffff;
+    font-size: 10px;
+}
+
+.common-Table.payRollVoucherModal-table th,
+.common-Table.payRollVoucherModal-table td {
+    padding: 5px 4px;
+    border: 1px solid #d8dbe2;
+    color: #2f3640;
+    line-height: 1.2;
+    word-break: keep-all;
+    white-space: nowrap;
+}
+
+.common-Table.payRollVoucherModal-table th {
+    background: #f7f8fb;
+    color: #28314a;
+    font-weight: 500;
+    text-align: center;
+}
+
+.common-Table.payRollVoucherModal-table td {
+    background: #ffffff;
+}
+
+.common-Table.payRollVoucherModal-table th:nth-child(1),
+.common-Table.payRollVoucherModal-table td:nth-child(1) {
+    width: 5%;
+    text-align: center;
+}
+
+.common-Table.payRollVoucherModal-table th:nth-child(2),
+.common-Table.payRollVoucherModal-table td:nth-child(2) {
+    width: 15%;
+}
+
+.common-Table.payRollVoucherModal-table th:nth-child(3),
+.common-Table.payRollVoucherModal-table td:nth-child(3) {
+    width: 11%;
+}
+
+.common-Table.payRollVoucherModal-table th:nth-child(4),
+.common-Table.payRollVoucherModal-table td:nth-child(4),
+.common-Table.payRollVoucherModal-table th:nth-child(5),
+.common-Table.payRollVoucherModal-table td:nth-child(5),
+.common-Table.payRollVoucherModal-table th:nth-child(7),
+.common-Table.payRollVoucherModal-table td:nth-child(7),
+.common-Table.payRollVoucherModal-table th:nth-child(8),
+.common-Table.payRollVoucherModal-table td:nth-child(8) {
+    width: 13%;
+}
+
+.common-Table.payRollVoucherModal-table th:nth-child(6),
+.common-Table.payRollVoucherModal-table td:nth-child(6) {
+    width: 17%;
+}
+
+.payRollVoucherModal-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+.payRollVoucherModal-button {
+    min-width: 44px;
+    height: 26px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.payRollVoucherModal-button--primary {
+    background: #3f4274;
+    color: #ffffff;
+}
+
+.payRollVoucherModal-button--primary:hover {
+    background: #32355f;
+}
+
+.payRollVoucherModal-button--secondary {
+    border-color: #d6d9e0;
+    background: #ffffff;
+    color: #3f4274;
+}
+
+.payRollVoucherModal-button--secondary:hover {
+    background: #f6f7fb;
+}
+
+@media (max-width: 768px) {
+    .payRollVoucherModalScope .modal-Overlay {
+        padding: 12px;
+    }
+
+    .payRollVoucherModalScope .modal-Container {
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 24px);
+    }
+
+    .payRollVoucherModalScope .modal-Body {
+        padding: 16px 12px 10px;
+    }
+}

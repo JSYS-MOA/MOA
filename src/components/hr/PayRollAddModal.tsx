@@ -1,27 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import type { ChangeEvent, FormEvent } from "react";
-import type { HrCard } from "../../types/HrCard";
-import { useGetHrCardList } from "../../apis/hr/HrCardService";
-import { usePostLeaverCard } from "../../apis/hr/LeaverCardService";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { type HrCardRecord, useGetHrCardList } from "../../apis/hr/HrCardService";
+import {
+    type PayRollCreatePayload,
+    type PayRollRecord,
+    type SalaryRecord,
+    useGetPayRollList,
+    useGetSalaryList,
+    usePostPayRollRecord,
+} from "../../apis/hr/PayLollService";
+import "../../assets/styles/hr/payRollAddModal.css";
 import Modal from "../Modal";
-import "../../assets/styles/hr/leaverAddCardModal.css";
-import { createHrGradeOptions } from "../../constants/hrGradeOptions";
-import { getHrGradeNameById } from "../../constants/hrGradeOptions";
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
-};
-
-type LeaverCardFormState = {
-    employeeId: string;
-    userName: string;
-    startDate: string;
-    quitDate: string;
-    departmentId: string;
-    gradeName: string;
+    onCreated?: () => void | Promise<void>;
 };
 
 type DateParts = {
@@ -30,71 +24,112 @@ type DateParts = {
     day: string;
 };
 
-type Department = {
-    departmentId: number;
-    departmentCord?: string;
+type EmployeeRow = {
+    key: string;
+    userId: number | null;
+    employeeId: string;
+    userName: string;
     departmentName: string;
-    departmentIsUse?: number;
 };
 
-type Grade = {
-    gradeId: number;
-    gradeName: string;
+type SalarySnapshot = {
+    salaryId: number | null;
+    basePay: number;
 };
 
-type DepartmentResponse = Department[] | { content?: Department[]; value?: Department[] };
+const currentYear = new Date().getFullYear();
 
-type DateSelectInputProps = {
-    value: string;
-    onChange: (value: string) => void;
-    minYear: number;
-    maxYear: number;
-    calendarLabel: string;
-    disabled?: boolean;
+const toStringValue = (value: unknown) => {
+    if (typeof value === "string") {
+        return value.trim();
+    }
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+        return String(value);
+    }
+
+    return "";
 };
 
-const initialForm: LeaverCardFormState = {
-    employeeId: "",
-    userName: "",
-    startDate: "",
-    quitDate: "",
-    departmentId: "",
-    gradeName: "",
+const toNumberValue = (value: unknown) => {
+    if (typeof value === "number" && Number.isFinite(value)) {
+        return value;
+    }
+
+    if (typeof value === "string" && value.trim() !== "") {
+        const parsed = Number(value);
+
+        if (Number.isFinite(parsed)) {
+            return parsed;
+        }
+    }
+
+    return null;
 };
 
-const DEPARTMENT_QUERY_KEY = ["departmentOptions"] as const;
-const GRADE_QUERY_KEY = ["gradeOptions"] as const;
-const DEPARTMENT_API_BASE = "/api/base/dept";
-const EXCLUDED_DEPARTMENT_IDS = new Set([1]);
-const HIDDEN_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사"];
-const CURRENT_YEAR = new Date().getFullYear();
+const formatDateAsLocalDateTime = (value: string) => `${value}T13:00:00`;
 
-const GRADE_NAME_ALIASES: Record<string, string> = {
-    President: "사장",
-    President7: "사장",
-    "Vice President": "부사장",
-    "Executive Director": "상무",
-    "General Manager": "부장",
-    "Deputy General Manager": "과장",
-    "Assistant Manager": "대리",
-    Employee: "사원",
+const isActiveEmployeeRecord = (record: HrCardRecord) =>
+    toStringValue(record.quitDate ?? record.quit_date) === "";
+
+const toEmployeeRows = (records: HrCardRecord[]) =>
+    records
+        .filter(isActiveEmployeeRecord)
+        .map<EmployeeRow>((record, index) => {
+            const userId = toNumberValue(record.userId ?? record.user_id);
+            const employeeId = toStringValue(record.employeeId ?? record.employee_id);
+
+            return {
+                key: userId === null ? employeeId || String(index) : String(userId),
+                userId,
+                employeeId: employeeId || "-",
+                userName: toStringValue(record.userName ?? record.user_name) || "-",
+                departmentName:
+                    toStringValue(record.departmentName ?? record.department_name) || "-",
+            };
+        });
+
+const toSalarySnapshotMap = (records: PayRollRecord[]) => {
+    const salaryMap = new Map<number, SalarySnapshot>();
+
+    for (const record of records) {
+        const item = record as PayRollRecord & Record<string, unknown>;
+        const userId = toNumberValue(item.userId ?? item.user_id);
+        const basePay = toNumberValue(item.basePay ?? item.base_pay);
+
+        if (userId === null || basePay === null || salaryMap.has(userId)) {
+            continue;
+        }
+
+        salaryMap.set(userId, {
+            salaryId: toNumberValue(item.salaryId ?? item.salary_id),
+            basePay,
+        });
+    }
+
+    return salaryMap;
 };
 
-const DEPARTMENT_CODE_BY_ID: Record<number, string> = {
-    1: "council",
-    2: "HR-1",
-    3: "WML-1",
-    4: "ACLE-1",
+const toSalaryRecordSnapshotMap = (records: SalaryRecord[]) => {
+    const salaryMap = new Map<number, SalarySnapshot>();
+
+    for (const record of records) {
+        const item = record as SalaryRecord & Record<string, unknown>;
+        const userId = toNumberValue(item.userId ?? item.user_id);
+        const basePay = toNumberValue(item.basePay ?? item.base_pay);
+
+        if (userId === null || basePay === null) {
+            continue;
+        }
+
+        salaryMap.set(userId, {
+            salaryId: toNumberValue(item.salaryId ?? item.salary_id),
+            basePay,
+        });
+    }
+
+    return salaryMap;
 };
-
-const normalizeText = (value: string) => value.trim().replace(/\s+/g, "").toLowerCase();
-
-const getCanonicalGradeName = (value?: string | null) => {
-    const trimmed = value?.trim() ?? "";
-    return trimmed ? GRADE_NAME_ALIASES[trimmed] ?? trimmed : "";
-};
-
-const normalizeGradeText = (value: string) => normalizeText(getCanonicalGradeName(value));
 
 const getDateParts = (value: string): DateParts => {
     const [year = "", month = "", day = ""] = value.split("-");
@@ -109,657 +144,511 @@ const formatDateValue = ({ year, month, day }: DateParts) => {
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
 
-const validateLeaverAddDates = (startDate: string, quitDate: string) => {
-    if (startDate && quitDate && startDate > quitDate) {
-        throw new Error("퇴사일은 입사일보다 빠를 수 없습니다.");
-    }
-};
-
-const getDaysInMonth = (year: string, month: string) => {
-    if (!year || !month) {
-        return 31;
-    }
-
-    return new Date(Number(year), Number(month), 0).getDate();
-};
-
-const includesAnyNormalized = (value: string, keywords: string[]) =>
-    keywords.some((keyword) => normalizeText(value).includes(normalizeText(keyword)));
-
-const isSelectableGrade = (gradeName: string) =>
-    !includesAnyNormalized(getCanonicalGradeName(gradeName), HIDDEN_GRADE_KEYWORDS);
-
-const findDepartmentById = (departments: Department[], value: string) => {
-    const normalizedValue = value.trim();
-
-    if (!normalizedValue) {
-        return undefined;
-    }
-
-    return departments.find(
-        (department) => String(department.departmentId) === normalizedValue
-    );
-};
-
-const getDepartmentCord = (department?: Department) => {
-    if (!department) {
-        return "";
-    }
-
-    const code = department.departmentCord?.trim();
-    return code || DEPARTMENT_CODE_BY_ID[department.departmentId] || "";
-};
-
-const findGradeByName = (grades: Grade[], value: string) => {
-    const normalizedValue = normalizeGradeText(value);
-
-    if (!normalizedValue) {
-        return undefined;
-    }
-
-    return grades.find((grade) => normalizeGradeText(grade.gradeName) === normalizedValue);
-};
-
-const getResolvedGradeName = (gradeName?: string | null, gradeId?: number) => {
-    const canonicalGradeName = getCanonicalGradeName(gradeName);
-    return canonicalGradeName || getHrGradeNameById(gradeId);
-};
-
-const buildGradeOptions = () => createHrGradeOptions();
-
-const DateSelectInput = ({
-                             value,
-                             onChange,
-                             minYear,
-                             maxYear,
-                             calendarLabel,
-                             disabled = false,
-                         }: DateSelectInputProps) => {
-    const [parts, setParts] = useState<DateParts>(() => getDateParts(value));
+const DateSelect = ({
+    value,
+    onChange,
+}: {
+    value: string;
+    onChange: (value: string) => void;
+}) => {
     const dateInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setParts(getDateParts(value));
-    }, [value]);
-
-    const yearOptions = useMemo(
-        () =>
-            Array.from({ length: maxYear - minYear + 1 }, (_, index) =>
-                String(maxYear - index)
-            ),
-        [maxYear, minYear]
+    const parts = getDateParts(value);
+    const years = useMemo(
+        () => Array.from({ length: 8 }, (_, index) => String(currentYear - index)),
+        []
     );
-
-    const monthOptions = useMemo(
+    const months = useMemo(
         () => Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")),
         []
     );
+    const days = useMemo(() => {
+        const year = Number(parts.year || currentYear);
+        const month = Number(parts.month || 1);
+        const count = new Date(year, month, 0).getDate();
 
-    const dayOptions = useMemo(() => {
-        const dayCount = getDaysInMonth(parts.year, parts.month);
-        return Array.from({ length: dayCount }, (_, index) =>
+        return Array.from({ length: count }, (_, index) =>
             String(index + 1).padStart(2, "0")
         );
     }, [parts.month, parts.year]);
 
     const updatePart = (key: keyof DateParts, nextValue: string) => {
-        setParts((prev) => {
-            const nextParts = { ...prev, [key]: nextValue };
-
-            if (
-                (key === "year" || key === "month") &&
-                nextParts.day &&
-                Number(nextParts.day) > getDaysInMonth(nextParts.year, nextParts.month)
-            ) {
-                nextParts.day = "";
-            }
-
-            onChange(formatDateValue(nextParts));
-            return nextParts;
-        });
+        const nextParts = { ...parts, [key]: nextValue };
+        onChange(formatDateValue(nextParts));
     };
 
-    const openNativePicker = () => {
-        const input = dateInputRef.current;
+    const openDatePicker = () => {
+        const dateInput = dateInputRef.current as
+            | (HTMLInputElement & { showPicker?: () => void })
+            | null;
 
-        if (!input) {
+        if (!dateInput) {
             return;
         }
 
-        const pickerInput = input as HTMLInputElement & {
-            showPicker?: () => void;
-        };
-
-        if (pickerInput.showPicker) {
-            pickerInput.showPicker();
+        if (dateInput.showPicker) {
+            dateInput.showPicker();
             return;
         }
 
-        input.focus();
-        input.click();
+        dateInput.click();
+        dateInput.focus();
     };
 
     return (
-        <div className="leaverCardAddModal-dateRow">
-            <div className="leaverCardAddModal-dateBox leaverCardAddModal-dateBox--year">
-                <select
-                    className="leaverCardAddModal-dateSelect"
-                    value={parts.year}
-                    disabled={disabled}
-                    onChange={(event) => updatePart("year", event.target.value)}
-                    aria-label="연도"
-                >
-                    <option value="">연도</option>
-                    {yearOptions.map((year) => (
-                        <option key={year} value={year}>
-                            {year}
-                        </option>
-                    ))}
-                </select>
-                <span className="leaverCardAddModal-dateArrow" aria-hidden="true">
-                    v
-                </span>
-            </div>
-
-            <span className="leaverCardAddModal-dateDivider">/</span>
-
-            <div className="leaverCardAddModal-dateBox leaverCardAddModal-dateBox--month">
-                <select
-                    className="leaverCardAddModal-dateSelect"
-                    value={parts.month}
-                    disabled={disabled}
-                    onChange={(event) => updatePart("month", event.target.value)}
-                    aria-label="월"
-                >
-                    <option value="">월</option>
-                    {monthOptions.map((month) => (
-                        <option key={month} value={month}>
-                            {month}
-                        </option>
-                    ))}
-                </select>
-                <span className="leaverCardAddModal-dateArrow" aria-hidden="true">
-                    v
-                </span>
-            </div>
-
-            <span className="leaverCardAddModal-dateDivider">/</span>
-
-            <div className="leaverCardAddModal-dateBox leaverCardAddModal-dateBox--day">
-                <select
-                    className="leaverCardAddModal-dateSelect"
-                    value={parts.day}
-                    disabled={disabled}
-                    onChange={(event) => updatePart("day", event.target.value)}
-                    aria-label="일"
-                >
-                    <option value="">일</option>
-                    {dayOptions.map((day) => (
-                        <option key={day} value={day}>
-                            {day}
-                        </option>
-                    ))}
-                </select>
-                <span className="leaverCardAddModal-dateArrow" aria-hidden="true">
-                    v
-                </span>
-            </div>
-
-            <div className="leaverCardAddModal-dateCalendarWrap">
-                <input
-                    ref={dateInputRef}
-                    className="leaverCardAddModal-dateNativeInput"
-                    type="date"
-                    value={value}
-                    min={`${minYear}-01-01`}
-                    max={`${maxYear}-12-31`}
-                    disabled={disabled}
-                    onChange={(event) => {
-                        const nextValue = event.target.value;
-                        setParts(getDateParts(nextValue));
-                        onChange(nextValue);
-                    }}
-                    tabIndex={-1}
-                    aria-hidden="true"
-                />
-                <button
-                    type="button"
-                    className="leaverCardAddModal-dateCalendarButton"
-                    onClick={openNativePicker}
-                    disabled={disabled}
-                    aria-label={calendarLabel}
-                >
-                    <svg className="leaverCardAddModal-dateCalendarIcon" viewBox="0 0 24 24">
-                        <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
-                        <path d="M7.5 3.5v3" />
-                        <path d="M16.5 3.5v3" />
-                        <path d="M3.5 9.5h17" />
-                    </svg>
-                </button>
-            </div>
+        <div className="payRollAddModal-dateRow">
+            <input
+                ref={dateInputRef}
+                className="payRollAddModal-nativeDateInput"
+                type="date"
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                tabIndex={-1}
+                aria-hidden="true"
+            />
+            <select
+                className="payRollAddModal-select"
+                value={parts.year}
+                onChange={(event) => updatePart("year", event.target.value)}
+            >
+                {years.map((year) => (
+                    <option key={year} value={year}>
+                        {year}
+                    </option>
+                ))}
+            </select>
+            <span>/</span>
+            <select
+                className="payRollAddModal-select"
+                value={parts.month}
+                onChange={(event) => updatePart("month", event.target.value)}
+            >
+                {months.map((month) => (
+                    <option key={month} value={month}>
+                        {month}
+                    </option>
+                ))}
+            </select>
+            <span>/</span>
+            <select
+                className="payRollAddModal-select"
+                value={parts.day}
+                onChange={(event) => updatePart("day", event.target.value)}
+            >
+                {days.map((day) => (
+                    <option key={day} value={day}>
+                        {day}
+                    </option>
+                ))}
+            </select>
+            <button
+                type="button"
+                className="payRollAddModal-calendarButton"
+                aria-label="달력"
+                onClick={openDatePicker}
+            >
+                <FaRegCalendarAlt aria-hidden="true" />
+            </button>
         </div>
     );
 };
 
-const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
-    const [form, setForm] = useState<LeaverCardFormState>(initialForm);
-    const [selectedEmployeeUserId, setSelectedEmployeeUserId] = useState<number | null>(null);
-    const addLeaverCard = usePostLeaverCard();
-    const formId = "leaver-card-add-form";
-
-    const { data: departmentOptions = [] } = useQuery<Department[]>({
-        queryKey: DEPARTMENT_QUERY_KEY,
-        enabled: isOpen,
-        queryFn: async () => {
-            const response = await axios.get<DepartmentResponse>(DEPARTMENT_API_BASE, {
-                withCredentials: true,
-            });
-
-            return Array.isArray(response.data)
-                ? response.data
-                : response.data.content ?? response.data.value ?? [];
-        },
-    });
-
-    const { data: gradeOptions = [] } = useQuery<Grade[]>({
-        queryKey: GRADE_QUERY_KEY,
-        enabled: isOpen,
-        initialData: buildGradeOptions,
-        queryFn: async () => buildGradeOptions(),
-    });
-
-    const { data: hrCardOptions = [] } = useGetHrCardList() as {
-        data?: HrCard[];
-    };
-
-    const searchableDepartments = useMemo(() => {
-        return departmentOptions
-            .filter(
-                (department) =>
-                    department.departmentIsUse !== 0 &&
-                    department.departmentName?.trim() &&
-                    !EXCLUDED_DEPARTMENT_IDS.has(department.departmentId)
-            )
-            .sort((left, right) => left.departmentName.localeCompare(right.departmentName, "ko"));
-    }, [departmentOptions]);
-
-    const searchableGrades = useMemo(() => {
-        return gradeOptions
-            .filter((grade) => grade.gradeName?.trim() && isSelectableGrade(grade.gradeName))
-            .map((grade) => ({
-                ...grade,
-                gradeName: getCanonicalGradeName(grade.gradeName),
-            }))
-            .sort((left, right) => left.gradeId - right.gradeId);
-    }, [gradeOptions]);
-
-    const activeEmployees = useMemo(() => {
-        return hrCardOptions.filter((employee: HrCard) => !employee.quitDate?.trim());
-    }, [hrCardOptions]);
-
-    const selectedDepartment = useMemo(
-        () => findDepartmentById(searchableDepartments, form.departmentId),
-        [searchableDepartments, form.departmentId]
-    );
-
-    const selectedGrade = useMemo(
-        () => findGradeByName(searchableGrades, form.gradeName),
-        [searchableGrades, form.gradeName]
-    );
-
-    const resolvedDepartmentCord = selectedDepartment
-        ? getDepartmentCord(selectedDepartment)
-        : "";
-
-    const gradeIdValue = selectedGrade ? String(selectedGrade.gradeId) : "";
-
-    const matchingEmployees = useMemo(() => {
-        if (!form.departmentId.trim() || !form.gradeName.trim()) {
-            return [];
-        }
-
-        return activeEmployees
-            .filter(
-                (employee: HrCard) =>
-                    String(employee.departmentId) === form.departmentId &&
-                    normalizeGradeText(getResolvedGradeName(employee.gradeName, employee.gradeId)) ===
-                    normalizeGradeText(form.gradeName)
-            )
-            .sort((left: HrCard, right: HrCard) =>
-                String(left.userName ?? "").localeCompare(String(right.userName ?? ""), "ko")
-            );
-    }, [activeEmployees, form.departmentId, form.gradeName]);
-
-    const selectedEmployee = useMemo(() => {
-        if (selectedEmployeeUserId === null) {
-            return null;
-        }
-
-        return (
-            matchingEmployees.find(
-                (employee: HrCard) => employee.userId === selectedEmployeeUserId
-            ) ?? null
-        );
-    }, [matchingEmployees, selectedEmployeeUserId]);
-
-    const employeeSelectionMessage = useMemo(() => {
-        if (!form.departmentId.trim() || !form.gradeName.trim()) {
-            return "부서와 직급을 먼저 선택해 주세요.";
-        }
-
-        if (matchingEmployees.length === 0) {
-            return "선택한 조건에 맞는 직원이 없습니다.";
-        }
-
-        return "이름을 선택하면 입사일이 자동 입력됩니다.";
-    }, [form.departmentId, form.gradeName, matchingEmployees.length]);
+const EmployeeSelectModal = ({
+    isOpen,
+    employees,
+    selectedKeys,
+    onApply,
+    onClose,
+}: {
+    isOpen: boolean;
+    employees: EmployeeRow[];
+    selectedKeys: string[];
+    onApply: (keys: string[]) => void;
+    onClose: () => void;
+}) => {
+    const [search, setSearch] = useState("");
+    const [draftKeys, setDraftKeys] = useState<string[]>(selectedKeys);
 
     useEffect(() => {
-        if (
-            selectedEmployeeUserId === null ||
-            matchingEmployees.some(
-                (employee: HrCard) => employee.userId === selectedEmployeeUserId
-            )
-        ) {
-            return;
+        if (isOpen) {
+            setDraftKeys(selectedKeys);
+            setSearch("");
+        }
+    }, [isOpen, selectedKeys]);
+
+    const filteredEmployees = useMemo(() => {
+        const keyword = search.trim().toLowerCase();
+
+        if (!keyword) {
+            return employees;
         }
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSelectedEmployeeUserId(null);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setForm((prev) => ({
-            ...prev,
-            employeeId: "",
-            userName: "",
-            startDate: "",
-            quitDate: "",
-        }));
-    }, [matchingEmployees, selectedEmployeeUserId]);
+        return employees.filter((employee) =>
+            [employee.employeeId, employee.userName, employee.departmentName]
+                .join(" ")
+                .toLowerCase()
+                .includes(keyword)
+        );
+    }, [employees, search]);
 
-    const handleClose = () => {
-        setSelectedEmployeeUserId(null);
-        setForm(initialForm);
-        onClose();
-    };
+    const allFilteredSelected =
+        filteredEmployees.length > 0 &&
+        filteredEmployees.every((employee) => draftKeys.includes(employee.key));
 
-    if (!isOpen) {
-        return null;
-    }
+    const toggleAllFiltered = () => {
+        const filteredKeys = filteredEmployees.map((employee) => employee.key);
 
-    const handleChange = (
-        event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-    ) => {
-        const { name, value } = event.target;
-
-        if (name === "departmentId") {
-            setSelectedEmployeeUserId(null);
-            setForm((prev) => ({
-                ...prev,
-                departmentId: value,
-                employeeId: "",
-                userName: "",
-                startDate: "",
-                quitDate: "",
-            }));
-            return;
-        }
-
-        if (name === "gradeName") {
-            setSelectedEmployeeUserId(null);
-            setForm((prev) => ({
-                ...prev,
-                gradeName: value,
-                employeeId: "",
-                userName: "",
-                startDate: "",
-                quitDate: "",
-            }));
-            return;
-        }
-
-        setForm((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
-    const handleSelectEmployee = (employee: HrCard) => {
-        if (employee.userId === undefined) {
-            return;
-        }
-
-        setSelectedEmployeeUserId(employee.userId);
-        setForm((prev) => ({
-            ...prev,
-            employeeId: String(employee.employeeId ?? ""),
-            userName: employee.userName ?? "",
-            startDate: employee.startDate ?? "",
-            quitDate: "",
-            departmentId: employee.departmentId ? String(employee.departmentId) : prev.departmentId,
-            gradeName: getResolvedGradeName(employee.gradeName, employee.gradeId),
-        }));
-    };
-
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        try {
-            if (selectedEmployeeUserId === null) {
-                throw new Error("퇴사 처리할 직원을 선택해 주세요.");
+        setDraftKeys((prev) => {
+            if (allFilteredSelected) {
+                return prev.filter((key) => !filteredKeys.includes(key));
             }
 
-            if (!form.quitDate.trim()) {
-                throw new Error("퇴사일을 입력해 주세요.");
-            }
-
-            validateLeaverAddDates(form.startDate.trim(), form.quitDate.trim());
-
-            const payload = {
-                userId: selectedEmployeeUserId,
-                quitDate: form.quitDate.trim(),
-            };
-
-            await addLeaverCard.mutateAsync(payload);
-            handleClose();
-        } catch (error) {
-            const message =
-                error instanceof Error ? error.message : "퇴사자 카드 등록에 실패했습니다.";
-
-            console.error(error);
-            alert(message);
-        }
+            return Array.from(new Set([...prev, ...filteredKeys]));
+        });
     };
 
-    const footer = (
-        <div className="leaverCardAddModal-buttonRow">
-            <button
-                type="submit"
-                form={formId}
-                className="leaverCardAddModal-button leaverCardAddModal-button--primary"
-                disabled={addLeaverCard.isPending}
-            >
-                {addLeaverCard.isPending ? "저장 중..." : "저장"}
-            </button>
-            <button
-                type="button"
-                className="leaverCardAddModal-button leaverCardAddModal-button--secondary"
-                onClick={handleClose}
-            >
-                취소
-            </button>
-        </div>
-    );
+    const toggleEmployee = (key: string) => {
+        setDraftKeys((prev) =>
+            prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+        );
+    };
 
     return (
-        <div className="leaverCardModalScope leaverCardAddModalScope">
+        <div className="payRollEmployeeSelectModalScope">
             <Modal
-                title="퇴사자 카드 등록"
+                title="대상사원설정"
                 isOpen={isOpen}
-                onClose={handleClose}
-                footer={footer}
+                onClose={onClose}
+                footer={
+                    <div className="payRollAddModal-actions">
+                        <button
+                            type="button"
+                            className="payRollAddModal-button payRollAddModal-button--primary"
+                            onClick={() => onApply(draftKeys)}
+                        >
+                            적용
+                        </button>
+                        <button
+                            type="button"
+                            className="payRollAddModal-button payRollAddModal-button--secondary"
+                            onClick={onClose}
+                        >
+                            취소
+                        </button>
+                    </div>
+                }
             >
-                <form id={formId} className="leaverCardAddModal-form" onSubmit={handleSubmit}>
-                    <div className="leaverCardAddModal-section">
-                        <div className="leaverCardAddModal-row leaverCardAddModal-row--optionFields">
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">부서</label>
-                                <select
-                                    className="leaverCardAddModal-input leaverCardAddModal-select"
-                                    name="departmentId"
-                                    value={form.departmentId}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="" disabled>
-                                        부서를 선택해 주세요
-                                    </option>
-                                    {searchableDepartments.map((department) => (
-                                        <option
-                                            key={department.departmentId}
-                                            value={String(department.departmentId)}
-                                        >
-                                            {department.departmentName}
-                                        </option>
-                                    ))}
-                                </select>
-                                <span className="leaverCardAddModal-hint">
-                                    부서를 선택하면 코드가 자동으로 입력됩니다.
-                                </span>
-                            </div>
-
-                            <div className="leaverCardAddModal-field leaverCardAddModal-field--small">
-                                <label className="leaverCardAddModal-label">부서 코드</label>
-                                <input
-                                    className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
-                                    name="departmentCord"
-                                    type="text"
-                                    value={resolvedDepartmentCord}
-                                    readOnly
-                                    title="선택한 부서에 따라 자동 입력됩니다."
-                                />
-                            </div>
-
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">직급/직책</label>
-                                <select
-                                    className="leaverCardAddModal-input leaverCardAddModal-select"
-                                    name="gradeName"
-                                    value={form.gradeName}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="" disabled>
-                                        직급을 선택해 주세요
-                                    </option>
-                                    {searchableGrades.map((grade) => (
-                                        <option key={grade.gradeId} value={grade.gradeName}>
-                                            {grade.gradeName}
-                                        </option>
-                                    ))}
-                                </select>
-                                <span className="leaverCardAddModal-hint">
-                                    직급을 선택하면 코드가 자동으로 입력됩니다.
-                                </span>
-                            </div>
-
-                            <div className="leaverCardAddModal-field leaverCardAddModal-field--small">
-                                <label className="leaverCardAddModal-label">직급 코드</label>
-                                <input
-                                    className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
-                                    name="gradeId"
-                                    type="text"
-                                    value={gradeIdValue}
-                                    readOnly
-                                    required
-                                    title="선택한 직급에 따라 자동 입력됩니다."
-                                />
-                            </div>
+                <div className="payRollAddModal-panel">
+                    <div className="payRollAddModal-subHeader">
+                        <h3>대상사원설정</h3>
+                        <div className="payRollAddModal-search">
+                            <input
+                                type="text"
+                                placeholder="search"
+                                value={search}
+                                onChange={(event) => setSearch(event.target.value)}
+                            />
+                            <button type="button">검색</button>
                         </div>
                     </div>
 
-                    <div className="leaverCardAddModal-section">
-                        <div className="leaverCardAddModal-employeeSelector">
-                            <label className="leaverCardAddModal-label">이름</label>
-                            <span className="leaverCardAddModal-employeeHint">
-                                {employeeSelectionMessage}
-                            </span>
-
-                            {matchingEmployees.length > 0 ? (
-                                <div className="leaverCardAddModal-employeeList">
-                                    {matchingEmployees.map((employee: HrCard) => {
-                                        const isSelected =
-                                            employee.userId === selectedEmployeeUserId;
-
-                                        return (
-                                            <button
-                                                key={employee.userId}
-                                                type="button"
-                                                className={`leaverCardAddModal-employeeChip${
-                                                    isSelected ? " is-selected" : ""
-                                                }`}
-                                                onClick={() => handleSelectEmployee(employee)}
-                                            >
-                                                <span className="leaverCardAddModal-employeeName">
-                                                    {employee.userName}
-                                                </span>
-                                                <span className="leaverCardAddModal-employeeMeta">
-                                                    {employee.employeeId}
-                                                </span>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="leaverCardAddModal-employeeEmpty">
-                                    {employeeSelectionMessage}
-                                </div>
-                            )}
-
-                            {selectedEmployee && (
-                                <span className="leaverCardAddModal-employeeHint">
-                                    선택된 직원: {selectedEmployee.userName} (
-                                    {selectedEmployee.employeeId})
-                                </span>
-                            )}
-                        </div>
+                    <div className="payRollAddModal-tableWrap">
+                        <table className="payRollAddModal-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input
+                                            type="checkbox"
+                                            checked={allFilteredSelected}
+                                            onChange={toggleAllFiltered}
+                                        />
+                                    </th>
+                                    <th>사원번호</th>
+                                    <th>성명</th>
+                                    <th>부서명</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredEmployees.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={4} className="payRollAddModal-empty">
+                                            대상 사원이 없습니다.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredEmployees.map((employee) => (
+                                        <tr key={employee.key}>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={draftKeys.includes(employee.key)}
+                                                    onChange={() => toggleEmployee(employee.key)}
+                                                />
+                                            </td>
+                                            <td>{employee.employeeId}</td>
+                                            <td>{employee.userName}</td>
+                                            <td>{employee.departmentName}</td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div className="leaverCardAddModal-section">
-                        <div className="leaverCardAddModal-row leaverCardAddModal-row--dateFields">
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">입사일</label>
-                                <DateSelectInput
-                                    value={form.startDate}
-                                    onChange={(nextValue) =>
-                                        setForm((prev) => ({ ...prev, startDate: nextValue }))
-                                    }
-                                    disabled
-                                    minYear={CURRENT_YEAR - 30}
-                                    maxYear={CURRENT_YEAR + 5}
-                                    calendarLabel="입사일 달력 열기"
-                                />
-                            </div>
-
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">퇴사일</label>
-                                <DateSelectInput
-                                    value={form.quitDate}
-                                    onChange={(nextValue) =>
-                                        setForm((prev) => ({ ...prev, quitDate: nextValue }))
-                                    }
-                                    disabled={selectedEmployeeUserId === null}
-                                    minYear={CURRENT_YEAR - 30}
-                                    maxYear={CURRENT_YEAR + 5}
-                                    calendarLabel="퇴사일 달력 열기"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </Modal>
         </div>
     );
 };
 
-export default LeaverCardAddModal;
+const PayRollAddModal = ({ isOpen, onClose, onCreated }: Props) => {
+    const today = useMemo(() => new Date(), []);
+    const initialDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
+        2,
+        "0"
+    )}-${String(today.getDate()).padStart(2, "0")}`;
+    const { data: hrCards = [] } = useGetHrCardList();
+    const { data: payRollRecords = [] } = useGetPayRollList();
+    const { data: salaryRecords = [] } = useGetSalaryList();
+    const createPayRoll = usePostPayRollRecord();
+    const employees = useMemo(() => toEmployeeRows(hrCards), [hrCards]);
+    const payRollSalaryMap = useMemo(
+        () => toSalarySnapshotMap(payRollRecords),
+        [payRollRecords]
+    );
+    const salaryRecordMap = useMemo(
+        () => toSalaryRecordSnapshotMap(salaryRecords),
+        [salaryRecords]
+    );
+    const salaryMap = useMemo(() => {
+        const mergedMap = new Map(payRollSalaryMap);
+
+        for (const [userId, salary] of salaryRecordMap) {
+            mergedMap.set(userId, salary);
+        }
+
+        return mergedMap;
+    }, [payRollSalaryMap, salaryRecordMap]);
+    const [payDate, setPayDate] = useState(initialDate);
+    const [ledgerName, setLedgerName] = useState("");
+    const [targetType, setTargetType] = useState<"all" | "selected">("all");
+    const [selectedEmployeeKeys, setSelectedEmployeeKeys] = useState<string[]>([]);
+    const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+
+    const selectedCount =
+        targetType === "all" ? employees.length : selectedEmployeeKeys.length;
+
+    useEffect(() => {
+        if (!isOpen) {
+            setPayDate(initialDate);
+            setLedgerName("");
+            setTargetType("all");
+            setSelectedEmployeeKeys([]);
+            setIsEmployeeModalOpen(false);
+            setIsSaving(false);
+        }
+    }, [initialDate, isOpen]);
+
+    const handleApplyEmployees = (keys: string[]) => {
+        setSelectedEmployeeKeys(keys);
+        setTargetType("selected");
+        setIsEmployeeModalOpen(false);
+    };
+
+    useEffect(() => {
+        const activeEmployeeKeys = new Set(employees.map((employee) => employee.key));
+
+        setSelectedEmployeeKeys((prev) =>
+            prev.filter((key) => activeEmployeeKeys.has(key))
+        );
+    }, [employees]);
+
+    const handleSave = async () => {
+        if (isSaving) {
+            return;
+        }
+
+        const targetEmployees =
+            targetType === "all"
+                ? employees
+                : employees.filter((employee) => selectedEmployeeKeys.includes(employee.key));
+
+        if (targetEmployees.length === 0) {
+            window.alert("대상 사원을 선택해 주세요.");
+            return;
+        }
+
+        const missingSalaryEmployees = targetEmployees.filter(
+            (employee) => employee.userId === null || !salaryMap.has(employee.userId)
+        );
+
+        if (missingSalaryEmployees.length > 0) {
+            window.alert(
+                `급여 정보를 찾을 수 없는 사원이 있습니다: ${missingSalaryEmployees
+                    .map((employee) => employee.userName)
+                    .join(", ")}`
+            );
+            return;
+        }
+
+        const selectedDateTime = formatDateAsLocalDateTime(payDate);
+        const transactionMemo =
+            ledgerName.trim() ||
+            `${payDate.replaceAll("-", "/").slice(0, 7)} 일반전표`;
+
+        setIsSaving(true);
+
+        try {
+            for (const employee of targetEmployees) {
+                const userId = employee.userId;
+
+                if (userId === null) {
+                    continue;
+                }
+
+                const salary = salaryMap.get(userId);
+
+                if (!salary) {
+                    continue;
+                }
+
+                const payload: PayRollCreatePayload = {
+                    userId,
+                    user_id: userId,
+                    bankTransferId: 2,
+                    bank_transfer_id: 2,
+                    salaryDate: selectedDateTime,
+                    salary_date: selectedDateTime,
+                    salaryAmount: salary.basePay,
+                    salary_amount: salary.basePay,
+                    basePay: salary.basePay,
+                    base_pay: salary.basePay,
+                    transactionMemo,
+                    transaction_memo: transactionMemo,
+                    transactionType: "일반전표",
+                    transactionPrice: String(salary.basePay),
+                    transaction_price: String(salary.basePay),
+                    salaryStatus: "일반전표",
+                    salary_status: "일반전표",
+                    vendorId: 11,
+                    vendor_id: 11,
+                    createdAt: selectedDateTime,
+                    created_at: selectedDateTime,
+                    salary_ledger_created_at: selectedDateTime,
+                };
+
+                console.log("payroll add payload", payload);
+                await createPayRoll.mutateAsync(payload);
+            }
+
+            await onCreated?.();
+            window.alert("급여작업이 저장되었습니다.");
+            onClose();
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "급여작업 저장 중 오류가 발생했습니다.";
+
+            console.error(error);
+            window.alert(message);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    return (
+        <>
+            <div className="payRollAddModalScope">
+                <Modal
+                    title="급여작업"
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    footer={
+                        <div className="payRollAddModal-actions">
+                            <button
+                                type="button"
+                                className="payRollAddModal-button payRollAddModal-button--primary"
+                                onClick={handleSave}
+                                disabled={isSaving}
+                            >
+                                {isSaving ? "저장 중..." : "저장"}
+                            </button>
+                            <button
+                                type="button"
+                                className="payRollAddModal-button payRollAddModal-button--secondary"
+                                onClick={onClose}
+                                disabled={isSaving}
+                            >
+                                취소
+                            </button>
+                        </div>
+                    }
+                >
+                    <div className="payRollAddModal-panel">
+                        <h2 className="payRollAddModal-heading">급여작업등록</h2>
+
+                        <div className="payRollAddModal-formBox">
+                            <div className="payRollAddModal-fieldRow">
+                                <label>지급일</label>
+                                <DateSelect value={payDate} onChange={setPayDate} />
+                            </div>
+
+                            <div className="payRollAddModal-fieldRow">
+                                <label>급여대장명</label>
+                                <input
+                                    className="payRollAddModal-input"
+                                    type="text"
+                                    value={ledgerName}
+                                    onChange={(event) => setLedgerName(event.target.value)}
+                                />
+                            </div>
+
+                            <div className="payRollAddModal-fieldRow payRollAddModal-targetRow">
+                                <label>대상사원</label>
+                                <label className="payRollAddModal-radio">
+                                    <input
+                                        type="radio"
+                                        checked={targetType === "all"}
+                                        onChange={() => setTargetType("all")}
+                                    />
+                                    전체
+                                </label>
+                                <label className="payRollAddModal-radio">
+                                    <input
+                                        type="radio"
+                                        checked={targetType === "selected"}
+                                        onChange={() => {
+                                            setTargetType("selected");
+                                            setIsEmployeeModalOpen(true);
+                                        }}
+                                    />
+                                    선택
+                                </label>
+                                <button
+                                    type="button"
+                                    className="payRollAddModal-linkButton"
+                                    onClick={() => setIsEmployeeModalOpen(true)}
+                                >
+                                    사원설정
+                                </button>
+                                <span className="payRollAddModal-targetCount">
+                                    {selectedCount}명
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
+            </div>
+
+            <EmployeeSelectModal
+                isOpen={isEmployeeModalOpen}
+                employees={employees}
+                selectedKeys={selectedEmployeeKeys}
+                onApply={handleApplyEmployees}
+                onClose={() => setIsEmployeeModalOpen(false)}
+            />
+        </>
+    );
+};
+
+export default PayRollAddModal;

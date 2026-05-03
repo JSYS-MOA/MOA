@@ -1,6 +1,12 @@
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type { PayRollRecord } from "../../apis/hr/PayLollService.tsx";
+import { getHr2Data } from "../../apis/hr2/Hr2Service.tsx";
 import "../../assets/styles/hr/payRollInfoModal.css";
+import {
+    calculatePayRollAllowances,
+    normalizeAllowanceSourceRecords,
+} from "../../utils/payRollAllowanceCalculator";
 import Modal from "../Modal";
 
 type Props = {
@@ -24,6 +30,9 @@ type PayRollDetailRow = {
     annualAllowance: number | null;
     totalAmount: number | null;
 };
+
+const EMPTY_ALLOWANCE_RECORDS: unknown[] = [];
+const EMPTY_PAYROLL_RECORDS: PayRollRecord[] = [];
 
 const getStringValue = (record: Record<string, unknown>, ...keys: string[]) => {
     for (const key of keys) {
@@ -107,6 +116,25 @@ const formatYearMonth = (date: Date | undefined) => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
 
     return `${year}/${month}`;
+};
+
+const toPayrollMonth = (records: PayRollRecord[], payrollLabel?: string) => {
+    const firstRecord = records[0] as LoosePayRollRecord | undefined;
+    const salaryDate = firstRecord
+        ? parseCompactDate(getNumberValue(firstRecord, "salaryDate", "salary_date"))
+        : undefined;
+
+    if (salaryDate) {
+        return { year: salaryDate.getFullYear(), month: salaryDate.getMonth() + 1 };
+    }
+
+    const labelMatch = payrollLabel?.match(/(\d{4})[/-](\d{1,2})/);
+
+    if (labelMatch) {
+        return { year: Number(labelMatch[1]), month: Number(labelMatch[2]) };
+    }
+
+    return null;
 };
 
 const formatAmount = (value: number | null) =>
@@ -209,9 +237,78 @@ const PayRollInfoModal = ({
     isOpen,
     onClose,
     payrollLabel,
-    records = [],
+    records = EMPTY_PAYROLL_RECORDS,
 }: Props) => {
-    const rows = useMemo(() => buildRows(records), [records]);
+    const { data: workRecords = EMPTY_ALLOWANCE_RECORDS } = useQuery({
+        queryKey: ["payRollAllowanceWork"],
+        queryFn: async () => {
+            try {
+                return await getHr2Data("work");
+            } catch {
+                return EMPTY_ALLOWANCE_RECORDS;
+            }
+        },
+        enabled: isOpen,
+        retry: false,
+    });
+    const { data: vacationRecords = EMPTY_ALLOWANCE_RECORDS } = useQuery({
+        queryKey: ["payRollAllowanceVacation"],
+        queryFn: async () => {
+            try {
+                return await getHr2Data("vacation");
+            } catch {
+                return EMPTY_ALLOWANCE_RECORDS;
+            }
+        },
+        enabled: isOpen,
+        retry: false,
+    });
+    const payrollMonth = useMemo(
+        () => toPayrollMonth(records, payrollLabel),
+        [payrollLabel, records]
+    );
+    const rows = useMemo(() => {
+        const rawRows = buildRows(records);
+
+        return rawRows.map((row) => {
+            const calculated = calculatePayRollAllowances({
+                employee: {
+                    employeeId: row.employeeId,
+                    userName: row.userName,
+                    basePay: row.basePay,
+                },
+                workRecords: normalizeAllowanceSourceRecords(workRecords),
+                vacationRecords: normalizeAllowanceSourceRecords(vacationRecords),
+                payrollMonth,
+            });
+            const overtimeAllowance =
+                calculated.overtimeAllowance > 0
+                    ? calculated.overtimeAllowance
+                    : row.overtimeAllowance;
+            const weekendAllowance =
+                calculated.weekendAllowance > 0
+                    ? calculated.weekendAllowance
+                    : row.weekendAllowance;
+            const annualAllowance =
+                calculated.annualAllowance > 0
+                    ? calculated.annualAllowance
+                    : row.annualAllowance;
+
+            return {
+                ...row,
+                overtimeAllowance,
+                weekendAllowance,
+                annualAllowance,
+                totalAmount:
+                    row.basePay === null
+                        ? row.totalAmount
+                        : row.basePay +
+                          (overtimeAllowance ?? 0) +
+                          (weekendAllowance ?? 0) +
+                          (annualAllowance ?? 0),
+            };
+        });
+    }, [payrollMonth, records, vacationRecords, workRecords]);
     const resolvedPayrollLabel = useMemo(
         () => resolvePayrollLabel(payrollLabel, records),
         [payrollLabel, records]

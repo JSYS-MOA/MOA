@@ -1,11 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
-import type { PayRollRecord } from "../../apis/hr/PayLollService.tsx";
+import { useQuery } from "@tanstack/react-query";
+import {
+    type PayRollMutationPayload,
+    type PayRollRecord,
+    usePutPayRoll,
+} from "../../apis/hr/PayLollService.tsx";
+import { getHr2Data } from "../../apis/hr2/Hr2Service.tsx";
 import "../../assets/styles/hr/payRollUpdateModal.css";
+import {
+    calculatePayRollAllowances,
+    normalizeAllowanceSourceRecords,
+} from "../../utils/payRollAllowanceCalculator";
+import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
+    onUpdated?: () => void | Promise<void>;
     payrollLabel?: string;
     records?: PayRollRecord[];
 };
@@ -38,6 +50,9 @@ type PayRollEditableAmounts = Record<
 > & {
     isTotalManuallyEdited: boolean;
 };
+
+const EMPTY_ALLOWANCE_RECORDS: unknown[] = [];
+const EMPTY_PAYROLL_RECORDS: PayRollRecord[] = [];
 
 const getStringValue = (record: Record<string, unknown>, ...keys: string[]) => {
     for (const key of keys) {
@@ -123,12 +138,109 @@ const formatYearMonth = (date: Date | undefined) => {
     return `${year}/${month}`;
 };
 
+const toPayrollMonth = (records: PayRollRecord[], payrollLabel?: string) => {
+    const firstRecord = records[0] as LoosePayRollRecord | undefined;
+    const salaryDate = firstRecord
+        ? parseCompactDate(getNumberValue(firstRecord, "salaryDate", "salary_date"))
+        : undefined;
+
+    if (salaryDate) {
+        return { year: salaryDate.getFullYear(), month: salaryDate.getMonth() + 1 };
+    }
+
+    const labelMatch = payrollLabel?.match(/(\d{4})[/-](\d{1,2})/);
+
+    if (labelMatch) {
+        return { year: Number(labelMatch[1]), month: Number(labelMatch[2]) };
+    }
+
+    return null;
+};
+
 const formatAmountInput = (value: number | null) =>
     value === null ? "" : value.toLocaleString("ko-KR");
 
 const parseAmountInput = (value: string) => {
     const parsed = Number(value.replaceAll(",", "").trim());
     return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const getNullableStringValue = (record: Record<string, unknown>, ...keys: string[]) =>
+    getStringValue(record, ...keys) || null;
+
+const buildUpdatePayload = (
+    record: LoosePayRollRecord,
+    amounts: PayRollEditableAmounts
+): PayRollMutationPayload => {
+    const salaryLedgerId = getNumberValue(record, "salaryLedgerId", "salary_ledger_id");
+    const totalAmount = parseAmountInput(amounts.totalAmount);
+    const basePay = parseAmountInput(amounts.basePay);
+    const overtimeAllowance = parseAmountInput(amounts.overtimeAllowance);
+    const weekendAllowance = parseAmountInput(amounts.weekendAllowance);
+    const annualAllowance = parseAmountInput(amounts.annualAllowance);
+    const salaryDate = getNumberValue(record, "salaryDate", "salary_date");
+
+    return {
+        transactionId: getNumberValue(record, "transactionId", "transaction_id") ?? 0,
+        vendorId: getNumberValue(record, "vendorId", "vendor_id") ?? 0,
+        salary_ledgerId: salaryLedgerId,
+        salaryLedgerId,
+        transactionNum: getNumberValue(record, "transactionNum", "transaction_num") ?? 0,
+        transactionType: getStringValue(record, "transactionType", "transaction_type"),
+        transactionPrice: String(totalAmount),
+        transaction_price: String(totalAmount),
+        transactionMemo: getStringValue(record, "transactionMemo", "transaction_memo"),
+        transaction_memo: getStringValue(record, "transactionMemo", "transaction_memo"),
+        vendorCord: getNullableStringValue(record, "vendorCord", "vendor_cord"),
+        vendorName: getNullableStringValue(record, "vendorName", "vendor_name"),
+        vendorIsUse: getNullableStringValue(record, "vendorIsUse", "vendor_is_use"),
+        userId: getNumberValue(record, "userId", "user_id") ?? undefined,
+        transferId: getNumberValue(record, "transferId", "transfer_id") ?? 0,
+        salaryStatus: getNullableStringValue(record, "salaryStatus", "salary_status"),
+        salaryId: getNumberValue(record, "salaryId", "salary_id") ?? 0,
+        basePay,
+        base_pay: basePay,
+        bankTransferId: getNumberValue(record, "bankTransferId", "bank_transfer_id") ?? 0,
+        salaryDate,
+        salary_date: salaryDate,
+        salaryAmount: totalAmount,
+        salary_amount: totalAmount,
+        overtimeAllowance,
+        overtime_allowance: overtimeAllowance,
+        weekendAllowance,
+        weekend_allowance: weekendAllowance,
+        annualAllowance,
+        annual_allowance: annualAllowance,
+        userName: getNullableStringValue(record, "userName", "user_name"),
+        employeeId: getNullableStringValue(record, "employeeId", "employee_id"),
+        departmentId: getNumberValue(record, "departmentId", "department_id") ?? 0,
+        gradeId: getNumberValue(record, "gradeId", "grade_id") ?? 0,
+        bank: getNullableStringValue(record, "bank"),
+        account_num: getNullableStringValue(record, "account_num", "accountNum"),
+        allowanceId: getNumberValue(record, "allowanceId", "allowance_id") ?? 0,
+        allowanceCord: getStringValue(record, "allowanceCord", "allowance_cord"),
+        allowanceName: getStringValue(record, "allowanceName", "allowance_name"),
+        gradeName: getStringValue(record, "gradeName", "grade_name"),
+        departmentName: getStringValue(record, "departmentName", "department_name"),
+        transaction_created_at: getNullableStringValue(
+            record,
+            "transaction_created_at",
+            "createdAt",
+            "created_at"
+        ),
+        transaction_updated_at: getNullableStringValue(
+            record,
+            "transaction_updated_at",
+            "updatedAt",
+            "updated_at"
+        ),
+        transfe_created_at: getNullableStringValue(record, "transfe_created_at"),
+        transfe_updated_at: getNullableStringValue(record, "transfe_updated_at"),
+        salary_ledger_created_at: getNullableStringValue(record, "salary_ledger_created_at"),
+        salary_ledger_updated_at: getNullableStringValue(record, "salary_ledger_updated_at"),
+        salary_created_at: getNullableStringValue(record, "salary_created_at"),
+        salary_updated_at: getNullableStringValue(record, "salary_updated_at"),
+    };
 };
 
 const sumAmountFields = (amounts: Pick<
@@ -241,12 +353,86 @@ const resolvePayrollLabel = (payrollLabel: string | undefined, records: PayRollR
 const PayRollUpdateModal = ({
     isOpen,
     onClose,
+    onUpdated,
     payrollLabel,
-    records = [],
+    records = EMPTY_PAYROLL_RECORDS,
 }: Props) => {
-    const rows = useMemo(() => buildRows(records), [records]);
+    const updatePayRoll = usePutPayRoll();
+    const { data: workRecords = EMPTY_ALLOWANCE_RECORDS } = useQuery({
+        queryKey: ["payRollAllowanceWork"],
+        queryFn: async () => {
+            try {
+                return await getHr2Data("work");
+            } catch {
+                return EMPTY_ALLOWANCE_RECORDS;
+            }
+        },
+        enabled: isOpen,
+        retry: false,
+    });
+    const { data: vacationRecords = EMPTY_ALLOWANCE_RECORDS } = useQuery({
+        queryKey: ["payRollAllowanceVacation"],
+        queryFn: async () => {
+            try {
+                return await getHr2Data("vacation");
+            } catch {
+                return EMPTY_ALLOWANCE_RECORDS;
+            }
+        },
+        enabled: isOpen,
+        retry: false,
+    });
+    const payrollMonth = useMemo(
+        () => toPayrollMonth(records, payrollLabel),
+        [payrollLabel, records]
+    );
+    const rows = useMemo(() => {
+        const rawRows = buildRows(records);
+
+        return rawRows.map((row) => {
+            const calculated = calculatePayRollAllowances({
+                employee: {
+                    employeeId: row.employeeId,
+                    userName: row.userName,
+                    basePay: row.basePay,
+                },
+                workRecords: normalizeAllowanceSourceRecords(workRecords),
+                vacationRecords: normalizeAllowanceSourceRecords(vacationRecords),
+                payrollMonth,
+            });
+            const overtimeAllowance =
+                calculated.overtimeAllowance > 0
+                    ? calculated.overtimeAllowance
+                    : row.overtimeAllowance;
+            const weekendAllowance =
+                calculated.weekendAllowance > 0
+                    ? calculated.weekendAllowance
+                    : row.weekendAllowance;
+            const annualAllowance =
+                calculated.annualAllowance > 0
+                    ? calculated.annualAllowance
+                    : row.annualAllowance;
+
+            return {
+                ...row,
+                overtimeAllowance,
+                weekendAllowance,
+                annualAllowance,
+                totalAmount:
+                    row.basePay === null
+                        ? row.totalAmount
+                        : row.basePay +
+                          (overtimeAllowance ?? 0) +
+                          (weekendAllowance ?? 0) +
+                          (annualAllowance ?? 0),
+            };
+        });
+    }, [payrollMonth, records, vacationRecords, workRecords]);
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+    const [dirtyKeys, setDirtyKeys] = useState<string[]>([]);
     const [editableAmounts, setEditableAmounts] = useState<Record<string, PayRollEditableAmounts>>({});
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const resolvedPayrollLabel = useMemo(
         () => resolvePayrollLabel(payrollLabel, records),
         [payrollLabel, records]
@@ -256,7 +442,10 @@ const PayRollUpdateModal = ({
     useEffect(() => {
         if (!isOpen) {
             setSelectedKeys([]);
+            setDirtyKeys([]);
             setEditableAmounts({});
+            setIsConfirmOpen(false);
+            setIsUpdating(false);
             return;
         }
 
@@ -283,6 +472,9 @@ const PayRollUpdateModal = ({
         value: string
     ) => {
         const sanitizedValue = value.replace(/[^\d,]/g, "");
+
+        setDirtyKeys((prev) => (prev.includes(rowKey) ? prev : [...prev, rowKey]));
+        setSelectedKeys((prev) => (prev.includes(rowKey) ? prev : [...prev, rowKey]));
 
         setEditableAmounts((prev) => {
             const current = prev[rowKey];
@@ -358,110 +550,189 @@ const PayRollUpdateModal = ({
     };
 
     const handleUpdate = () => {
-        if (selectedKeys.length === 0) {
+        const targetKeys = Array.from(new Set([...selectedKeys, ...dirtyKeys]));
+
+        if (targetKeys.length === 0) {
             window.alert("수정할 급여 항목을 선택해 주세요.");
             return;
         }
 
-        window.alert("수정 기능은 아직 저장 API와 연결되지 않았습니다.");
+        setIsConfirmOpen(true);
+    };
+
+    const handleConfirmUpdate = async () => {
+        if (isUpdating) {
+            return;
+        }
+
+        const targetKeys = Array.from(new Set([...selectedKeys, ...dirtyKeys]));
+        const selectedRecordMap = new Map(
+            records.map((record, index) => {
+                const item = record as LoosePayRollRecord;
+                const key =
+                    getStringValue(item, "transactionId", "transaction_id", "salaryId", "salary_id") ||
+                    String(index);
+
+                return [key, item];
+            })
+        );
+
+        setIsUpdating(true);
+
+        try {
+            for (const selectedKey of targetKeys) {
+                const record = selectedRecordMap.get(selectedKey);
+                const amounts = editableAmounts[selectedKey];
+
+                if (!record || !amounts) {
+                    continue;
+                }
+
+                const salaryLedgerId =
+                    getNumberValue(record, "transactionId", "transaction_id") ??
+                    getNumberValue(record, "salaryLedgerId", "salary_ledger_id") ??
+                    getNumberValue(record, "salaryId", "salary_id");
+
+                if (salaryLedgerId === null) {
+                    continue;
+                }
+
+                await updatePayRoll.mutateAsync({
+                    salaryLedgerId,
+                    payload: buildUpdatePayload(record, amounts),
+                });
+            }
+
+            await onUpdated?.();
+            setDirtyKeys([]);
+            setSelectedKeys([]);
+            setIsConfirmOpen(false);
+            onClose();
+            window.alert("수정이 완료되었습니다.");
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "수정 처리 중 오류가 발생했습니다.";
+
+            console.error(error);
+            window.alert(message);
+        } finally {
+            setIsUpdating(false);
+        }
     };
 
     return (
-        <div className="payRollUpdateModalScope">
-            <Modal
-                title="급여작업"
-                isOpen={isOpen}
-                onClose={onClose}
-                footer={
-                    <div className="payRollUpdateModal-actions">
-                        <button
-                            type="button"
-                            className="payRollUpdateModal-button payRollUpdateModal-button--primary"
-                            onClick={handleUpdate}
-                        >
-                            수정
-                        </button>
-                        <button
-                            type="button"
-                            className="payRollUpdateModal-button payRollUpdateModal-button--secondary"
-                            onClick={onClose}
-                        >
-                            취소
-                        </button>
-                    </div>
-                }
-            >
-                <div className="payRollUpdateModal-panel">
-                    <div className="payRollUpdateModal-headerBlock">
-                        <h2 className="payRollUpdateModal-heading">급여대장</h2>
-                        <p className="payRollUpdateModal-ledgerName">{resolvedPayrollLabel}</p>
-                    </div>
+        <>
+            <div className="payRollUpdateModalScope">
+                <Modal
+                    title="급여작업"
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    footer={
+                        <div className="payRollUpdateModal-actions">
+                            <button
+                                type="button"
+                                className="payRollUpdateModal-button payRollUpdateModal-button--primary"
+                                onClick={handleUpdate}
+                                disabled={isUpdating}
+                            >
+                                {isUpdating ? "수정 중..." : "수정"}
+                            </button>
+                            <button
+                                type="button"
+                                className="payRollUpdateModal-button payRollUpdateModal-button--secondary"
+                                onClick={onClose}
+                                disabled={isUpdating}
+                            >
+                                취소
+                            </button>
+                        </div>
+                    }
+                >
+                    <div className="payRollUpdateModal-panel">
+                        <div className="payRollUpdateModal-headerBlock">
+                            <h2 className="payRollUpdateModal-heading">급여대장</h2>
+                            <p className="payRollUpdateModal-ledgerName">{resolvedPayrollLabel}</p>
+                        </div>
 
-                    <div className="payRollUpdateModal-tableWrap">
-                        <table className="payRollUpdateModal-table">
-                            <thead>
-                                <tr>
-                                    <th className="payRollUpdateModal-checkCell">
-                                        <label className="payRollUpdateModal-checkbox">
-                                            <input
-                                                type="checkbox"
-                                                checked={allSelected}
-                                                onChange={handleToggleAll}
-                                                aria-label="전체 선택"
-                                            />
-                                            <span />
-                                        </label>
-                                    </th>
-                                    <th>부서</th>
-                                    <th>성명</th>
-                                    <th>사번번호</th>
-                                    <th>직위/직급</th>
-                                    <th>기본급</th>
-                                    <th>야근수당</th>
-                                    <th>주말근무수당</th>
-                                    <th>연차수당</th>
-                                    <th>지급총액</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rows.length === 0 ? (
+                        <div className="payRollUpdateModal-tableWrap">
+                            <table className="payRollUpdateModal-table">
+                                <thead>
                                     <tr>
-                                        <td colSpan={10} className="payRollUpdateModal-empty">
-                                            급여 내역이 없습니다.
-                                        </td>
+                                        <th className="payRollUpdateModal-checkCell">
+                                            <label className="payRollUpdateModal-checkbox">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={allSelected}
+                                                    onChange={handleToggleAll}
+                                                    aria-label="전체 선택"
+                                                />
+                                                <span />
+                                            </label>
+                                        </th>
+                                        <th>부서</th>
+                                        <th>성명</th>
+                                        <th>사번번호</th>
+                                        <th>직위/직급</th>
+                                        <th>기본급</th>
+                                        <th>야근수당</th>
+                                        <th>주말근무수당</th>
+                                        <th>연차수당</th>
+                                        <th>지급총액</th>
                                     </tr>
-                                ) : (
-                                    rows.map((row) => (
-                                        <tr key={row.key}>
-                                            <td className="payRollUpdateModal-checkCell">
-                                                <label className="payRollUpdateModal-checkbox">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedKeys.includes(row.key)}
-                                                        onChange={() => handleToggleRow(row.key)}
-                                                        aria-label={`${row.userName} 선택`}
-                                                    />
-                                                    <span />
-                                                </label>
+                                </thead>
+                                <tbody>
+                                    {rows.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={10} className="payRollUpdateModal-empty">
+                                                급여 내역이 없습니다.
                                             </td>
-                                            <td>{row.departmentName}</td>
-                                            <td>{row.userName}</td>
-                                            <td>{row.employeeId}</td>
-                                            <td>{row.gradeName}</td>
-                                            <td>{renderAmountInput(row.key, "basePay")}</td>
-                                            <td>{renderAmountInput(row.key, "overtimeAllowance")}</td>
-                                            <td>{renderAmountInput(row.key, "weekendAllowance")}</td>
-                                            <td>{renderAmountInput(row.key, "annualAllowance")}</td>
-                                            <td>{renderAmountInput(row.key, "totalAmount")}</td>
                                         </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                                    ) : (
+                                        rows.map((row) => (
+                                            <tr key={row.key}>
+                                                <td className="payRollUpdateModal-checkCell">
+                                                    <label className="payRollUpdateModal-checkbox">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedKeys.includes(row.key)}
+                                                            onChange={() => handleToggleRow(row.key)}
+                                                            aria-label={`${row.userName} 선택`}
+                                                        />
+                                                        <span />
+                                                    </label>
+                                                </td>
+                                                <td>{row.departmentName}</td>
+                                                <td>{row.userName}</td>
+                                                <td>{row.employeeId}</td>
+                                                <td>{row.gradeName}</td>
+                                                <td>{renderAmountInput(row.key, "basePay")}</td>
+                                                <td>{renderAmountInput(row.key, "overtimeAllowance")}</td>
+                                                <td>{renderAmountInput(row.key, "weekendAllowance")}</td>
+                                                <td>{renderAmountInput(row.key, "annualAllowance")}</td>
+                                                <td>{renderAmountInput(row.key, "totalAmount")}</td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </Modal>
-        </div>
+                </Modal>
+            </div>
+
+            <ConfirmModal
+                isOpen={isConfirmOpen}
+                message={`선택한 급여 ${Array.from(new Set([...selectedKeys, ...dirtyKeys])).length}건을 수정하시겠습니까?`}
+                onConfirm={handleConfirmUpdate}
+                onClose={() => {
+                    if (!isUpdating) {
+                        setIsConfirmOpen(false);
+                    }
+                }}
+            />
+        </>
     );
 };
 
