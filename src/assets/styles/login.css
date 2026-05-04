@@ -1,16 +1,16 @@
 .login-Wrapper{
-    width: 552px; margin-top: -80px;
+    width: 521px; margin-top: -80px;
 }
 .login-Wrapper .logo{text-align: center; margin-bottom: 24px;}
 .login-Wrapper .logo h1{ font-weight: 600; letter-spacing: 2%;}
 .login-Wrapper .logo p{color:var(--text-secondary-30); margin-top: -2px; font-weight: 600}
 .login-Wrapper form{
     background: var(--color-inverse);
-    padding: 71px 48px 60px 48px;
+    padding: 71px 48px 52px 48px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    display: flex;          /* 추가 */
-    flex-direction: column; /* 추가 */
+    display: flex;
+    flex-direction: column;
 }
 .login-Wrapper .title{font-size: var(--font-sm); color: var(--text-secondary-70)}
 .login-Wrapper input{
@@ -43,7 +43,7 @@
     border-radius: 34px;
     background: var( --color-primary);
     border: none; color: var(  --text-inverse);
-    font-size: var(--font-lg);
+    font-size: 17px;
     margin-top: 30px;
     cursor: pointer;
 }
@@ -51,7 +51,7 @@
     background: #575568;}
 .login-Wrapper .privacy-Agree{
     font-size: 13px;
-    margin-top: 20px;
+    margin-top: 23px;
     color: var(--text-secondary);
     font-weight: 400;
     letter-spacing: 2%;
@@ -96,3 +96,9 @@
 }
 .login-Wrapper .login-Error span{display: flex;}
 
+@media (max-width: 768px) {
+    .login-Wrapper{width: 464px;}
+}
+@media (max-width: 520px) {
+    .login-Wrapper{width: 325px;}
+}

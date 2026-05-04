@@ -54,13 +54,13 @@ const InventoryInbounds = () => {
     { key: 'productCord', label: '품목코드' },
     { key: 'productName', label: '품목명'  },
     { key: 'storageName', label: '창고명' },
-    { key: 'logisticSno', label: '수량' }
+    { key: 'logisticSno', label: '수량',align:"center" }
   ]
 
   const ModalColumns : MColumn[] = [
     { key: 'logisticDate', label: '일자' },
     { key: 'productName', label: '품목명'  },
-    { key: 'incoming', label: '입고수량'  },
+    { key: 'incoming', label: '입고수량' , },
     { key: 'productPrice', label: '개별가격' },
     { key: 'totallogisticsPrice', label: '합계' }
   ]

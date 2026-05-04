@@ -225,6 +225,7 @@
 .Time-Header-Box {
  display: flex;
  gap: 3px;
+    align-items: center;
 }
 
 .modal-Table-Form-body input[type='checkbox'] {

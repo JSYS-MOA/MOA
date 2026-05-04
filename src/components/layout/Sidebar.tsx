@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import {useState} from "react";
 import "../../assets/styles/layout.css";
 import {logoutApi} from "../../apis/LoginService.tsx";
+import {useAuthStore} from "../../stores/useAuthStore.tsx";
 
 interface CategoryConfig {
     id: string;
@@ -31,7 +32,7 @@ interface SidebarProps {
 const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
     const navigate = useNavigate();
     const [openCategory, setOpenCategory] = useState<string | null>(null);
-
+    const { logout } = useAuthStore();
     // 상위메뉴
     const categorys:Record<number, CategoryConfig[]> = {
 
@@ -144,7 +145,11 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
                     );
                 })}
             </ul>
-            <div className="sidebar-footer" onClick={() => {logoutApi()}}>
+            <div className="sidebar-footer" onClick={async () => {
+                await logoutApi();
+                logout();
+                navigate("/");
+            }}>
                 <span>로그아웃</span>
                 <span className="icon-logout">⎗</span>
             </div>

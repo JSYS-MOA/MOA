@@ -26,7 +26,7 @@ const TaxInvoicePage = () => {
                         setSelectedId(item.transactionId);
                         setIsModalOpen(true);
                     }}
-                    style={{cursor: "pointer", color: "var(--color-primary)"}}
+                    style={{cursor: "pointer", color: "var(--text-accent)"}}
                 >
                     {val}
                 </span>

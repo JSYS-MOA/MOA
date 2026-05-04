@@ -1,7 +1,7 @@
 //자주 조회하는 데이터 -> react-query -> 캘린더 등
 //한번만 요청하는 것 -> async/await  -> 로그인
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useAuthStore} from "../stores/useAuthStore.tsx";
 import {useNavigate} from "react-router";
 import {loginApi} from "../apis/LoginService.tsx";
@@ -19,9 +19,13 @@ const Login = () =>{
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
   const [showTestAccount, setShowTestAccount] = useState(false);
-  const {login} = useAuthStore();
+  const {login, user} = useAuthStore();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user,navigate]);
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault(); //폼의 기본 동작 = 페이지 새로고침 => handleSubmit 안에 코드 실행 안됨 >이걸 막기위해
 
@@ -118,7 +122,8 @@ const Login = () =>{
                   인사팀 팀장 - 20200001 /
                   인사팀 - 20200002<br />
                   물류팀 - 20210002 /
-                  영업팀 - 20210003
+                  영업팀 - 20210003<br />
+                  비밀번호: 1234
                 </div>
             )}
           </form>

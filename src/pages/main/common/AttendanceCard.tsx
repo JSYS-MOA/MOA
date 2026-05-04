@@ -3,14 +3,17 @@ import "../../../assets/styles/main/attendanceCard.css";
 import { MdRefresh } from "react-icons/md";
 import {useQuery} from "@tanstack/react-query";
 import {checkInApi, checkOutApi, getTodayWorkApi} from "../../../apis/hr2/Hr2Service.tsx";
+import {useAuthStore} from "../../../stores/useAuthStore.tsx";
 
 const AttendanceCard = () => {
 
+    const {user} = useAuthStore();
     const [currentTime, setCurrentTime] = useState("00:00:00");
 
     const {data: todayWork, refetch} = useQuery({
         queryKey: ["todayWork"],
         queryFn: getTodayWorkApi,
+        enabled: !!user,
     });
 
     const startTime = todayWork?.startWork?.slice(11, 19) ?? "00:00:00";
