@@ -7,7 +7,7 @@ import {
     useRestoreLeaverCard,
     type LeaverCardRecord,
 } from "../../apis/hr/LeaverCardService";
-import "../../assets/styles/hr/leaverCardList.css";
+import "../../assets/styles/hr/leaverCardList.css"
 import LeaverCardAddModal from "../../components/hr/LeaverCardAddModal";
 import LeaverCardUpdateModal from "../../components/hr/LeaverCardUpdateModal";
 import LeaverTable from "../../components/hr/LeaverTable";
