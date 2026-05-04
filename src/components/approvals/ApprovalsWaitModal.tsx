@@ -81,7 +81,7 @@ const ApprovalsWaitModal = (  { items  , columns,onRefresh , setOnAlert , onClos
         onRefresh();
         onClose()
       },
-      onError: (error) => {
+      onError: (error : any ) => {
         console.error(error);
         setOnAlert(value + "중 오류가 발생했습니다.");
         onRefresh();
