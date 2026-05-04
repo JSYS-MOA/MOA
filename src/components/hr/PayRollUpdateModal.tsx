@@ -5,8 +5,8 @@ import {
     type PayRollRecord,
     useDeletePayRoll,
     usePutPayRoll,
+    getHrData
 } from "../../apis/hr/PayLollService.tsx";
-import { getHr2Data } from "../../apis/hr2/Hr2Service.tsx";
 import "../../assets/styles/hr/payRollUpdateModal.css";
 import {
     calculatePayRollAllowances,
@@ -379,7 +379,7 @@ const PayRollUpdateModal = ({
         queryKey: ["payRollAllowanceWork"],
         queryFn: async () => {
             try {
-                return await getHr2Data("work");
+                return await getHrData("work");
             } catch {
                 return EMPTY_ALLOWANCE_RECORDS;
             }
@@ -391,7 +391,7 @@ const PayRollUpdateModal = ({
         queryKey: ["payRollAllowanceVacation"],
         queryFn: async () => {
             try {
-                return await getHr2Data("vacation");
+                return await getHrData("vacation");
             } catch {
                 return EMPTY_ALLOWANCE_RECORDS;
             }

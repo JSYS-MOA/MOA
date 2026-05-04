@@ -1,8 +1,16 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
+import {hr2Configs} from "../../types/hr2Configs.tsx";
 import axios from "axios";
 
 const API_BASE = "http://localhost/api/hr/payroll";
 const SALARY_API_BASE = "http://localhost/api/hr/salary";
+
+
+const api = axios.create({
+    // baseURL: "http://localhost/",
+    baseURL: "https://moa-server.onrender.com",
+    withCredentials: true,
+});
 
 const getAxiosErrorMessage = (error: unknown) => {
     if (!axios.isAxiosError(error)) {
@@ -262,6 +270,14 @@ export type PayRollCreatePayload = {
     created_at?: string;
     salary_ledger_created_at?: string;
 };
+
+export const getHrData = async (path: keyof typeof hr2Configs) => {
+    const realUrl = hr2Configs[path].apiUrl;
+
+    const { data } = await api.get(realUrl);
+    return data;
+};
+
 
 const toUserEntityPayload = (payload: PayRollMutationPayload) => {
     const userEntityPayload: Record<string, unknown> = { ...payload };
