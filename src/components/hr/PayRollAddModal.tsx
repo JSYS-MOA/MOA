@@ -589,7 +589,7 @@ const PayRollAddModal = ({ isOpen, onClose, onCreated }: Props) => {
 
                         <div className="payRollAddModal-formBox">
                             <div className="payRollAddModal-fieldRow">
-                                <label>지급일</label>
+                                <label>생성일</label>
                                 <DateSelect value={payDate} onChange={setPayDate} />
                             </div>
 

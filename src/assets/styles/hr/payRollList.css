@@ -36,12 +36,55 @@
     justify-content: flex-end;
 }
 
+.payRollListPage-filter-row {
+    display: grid;
+    grid-template-columns: minmax(580px, 1.15fr) minmax(280px, 1fr) minmax(280px, 1fr);
+    align-items: center;
+    gap: var(--spacing-xs) var(--spacing-md);
+    margin: var(--spacing-sm);
+    text-align: left;
+}
+
+.payRollListPage-filter-group label {
+    flex: 0 0 52px;
+    white-space: nowrap;
+    color: var(--text-primary);
+}
+
+.payRollListPage-filter-group--date {
+    width: 100%;
+}
+
+.payRollListPage-filter-group--date label {
+    flex: 0 0 40px;
+}
+
+.payRollListPage-dateRange {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex: 1;
+    min-width: 0;
+}
+
+.payRollListPage-dateRange input {
+    flex: 1 1 170px;
+    width: auto;
+    min-width: 170px;
+    height: 30px;
+    padding: 0 var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--color-inverse);
+    box-sizing: border-box;
+}
+
 /* ====================== 검색 필터 ====================== */
 
 .payRollListPage-filter-box {
     overflow: hidden;
     max-height: 130px;
-    max-width: 1589px;
+    max-width: 100%;
     margin-bottom: var(--spacing-md);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
@@ -64,26 +107,12 @@
     opacity: 0;
 }
 
-.payRollListPage-filter-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: center;
-    gap:var(--spacing-xs) var(--spacing-sm);
-    margin: var(--spacing-sm);
-    text-align: left;
-}
-
 .payRollListPage-filter-group {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     margin: 0;
     min-width: 0;
-}
-
-.payRollListPage-filter-group label {
-    flex: 0 0 40px;
-    color: var(--text-primary);
 }
 
 /* 칩 입력창 */
@@ -513,25 +542,6 @@
     width: 18%;
 }
 
-.payRollListPage-filterRow {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-}
-
-.payRollListPage-dateRange {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    flex: 1;
-    min-width: 0;
-}
-
-.payRollListPage-dateRange input {
-    min-width: 0;
-    height: 30px;
-    padding: 0 var(--spacing-xs);
-    border-radius: var(--radius-sm);
-    background: var(--color-inverse);
-}
 
 .payRollListPage-dateRange span {
     color: var(--text-secondary);

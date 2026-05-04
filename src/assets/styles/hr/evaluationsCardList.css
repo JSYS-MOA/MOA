@@ -43,7 +43,7 @@
 .evaluationsCardListPage-filter-box {
     overflow: hidden;
     max-height: 130px;
-    max-width: 1589px;
+    max-width: 100%;
     margin-bottom: var(--spacing-md);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);

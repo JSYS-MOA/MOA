@@ -11,14 +11,14 @@
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    background: #ffffff;
+    background: var(--color-inverse);
     overflow: hidden;
 }
 
 .payRollVoucherModalScope .modal-Header {
     min-height: 24px;
     padding: 4px 10px;
-    background: #5b5878;
+    background: var(--text-accent);
 }
 
 .payRollVoucherModalScope .modal-Header p {
@@ -40,7 +40,7 @@
     min-height: 0;
     margin: 0;
     padding: 18px 16px 10px;
-    background: #ffffff;
+    background: var(--bg);
     overflow: auto;
 }
 
@@ -48,25 +48,30 @@
     min-height: 100%;
     padding: 0;
     border-radius: 0;
-    background: #ffffff;
 }
 
 .payRollVoucherModalScope .modal-Footer {
     padding: 0 16px 14px;
-    background: #ffffff;
+    background: var(--color-inverse);
 }
 
 .payRollVoucherModal-panel {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    background-color: var(--bg);
 }
 
 .payRollVoucherModal-heading {
     margin: 0 0 8px;
-    font-size: 14px;
+    font-size: 0;
     font-weight: 700;
     color: var(--text-accent);
+}
+
+.payRollVoucherModal-heading::before {
+    content: "\AE09\C5EC\B300\C7A5 \C0AD\C81C";
+    font-size: 14px;
 }
 
 .payRollVoucherModal-fields {
@@ -76,7 +81,7 @@
     margin-bottom: 16px;
     padding: 12px 18px;
     border-radius: 8px;
-    background: #ffffff;
+    background: var(--color-inverse);
 }
 
 .payRollVoucherModal-field {
@@ -88,17 +93,16 @@
 
 .payRollVoucherModal-field label {
     font-size: 11px;
-    color: #2f3640;
+    color: var(--text-primary);
 }
 
 .payRollVoucherModal-field input {
     width: 100%;
     height: 25px;
     padding: 0 10px;
-    border: 1px solid #e1e4eb;
+    border: 1px solid var(--border);
     border-radius: 4px;
-    background: #ffffff;
-    color: #2f3640;
+    color: var(--text-primary);
     font-size: 11px;
     box-sizing: border-box;
     pointer-events: none;
@@ -113,29 +117,29 @@
     min-width: 580px;
     border-collapse: collapse;
     table-layout: fixed;
-    background: #ffffff;
+    background: var(--color-inverse);
     font-size: 10px;
 }
 
 .common-Table.payRollVoucherModal-table th,
 .common-Table.payRollVoucherModal-table td {
     padding: 5px 4px;
-    border: 1px solid #d8dbe2;
-    color: #2f3640;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
     line-height: 1.2;
     word-break: keep-all;
     white-space: nowrap;
 }
 
 .common-Table.payRollVoucherModal-table th {
-    background: #f7f8fb;
-    color: #28314a;
+    background: var(--bg);
+    color: var(--text-primary);
     font-weight: 500;
     text-align: center;
 }
 
 .common-Table.payRollVoucherModal-table td {
-    background: #ffffff;
+    background: var(--color-inverse);
 }
 
 .common-Table.payRollVoucherModal-table th:nth-child(1),
@@ -182,28 +186,54 @@
     padding: 0 10px;
     border: 1px solid transparent;
     border-radius: 5px;
-    font-size: 11px;
+    font-size: 0;
     font-weight: 500;
     cursor: pointer;
+    position: relative;
+}
+
+.payRollVoucherModal-button::before {
+    font-size: 11px;
 }
 
 .payRollVoucherModal-button--primary {
-    background: #3f4274;
-    color: #ffffff;
+    background: var(--color-primary);
+    color: var(--color-inverse);
+}
+
+.payRollVoucherModal-actions .payRollVoucherModal-button:nth-child(1)::before {
+    content: "\C0AD\C81C";
+}
+
+.payRollVoucherModal-actions .payRollVoucherModal-button:nth-child(1):disabled::before {
+    content: "\C0AD\C81C \C911..";
 }
 
 .payRollVoucherModal-button--primary:hover {
-    background: #32355f;
+    background: var(--text-secondary-70);
 }
 
 .payRollVoucherModal-button--secondary {
-    border-color: #d6d9e0;
-    background: #ffffff;
-    color: #3f4274;
+    border-color: var(--border);
+    background: var(--color-inverse);
+    color: var(--text-accent);
+}
+
+.payRollVoucherModal-actions .payRollVoucherModal-button:nth-child(2)::before {
+    content: "\C0AD\C81C \CDE8\C18C";
+}
+
+.payRollVoucherModal-actions .payRollVoucherModal-button:nth-child(3)::before {
+    content: "\B2EB\AE30";
 }
 
 .payRollVoucherModal-button--secondary:hover {
-    background: #f6f7fb;
+    background: var(--color-inverse);
+}
+
+.payRollVoucherModal-button:disabled {
+    opacity: 0.55;
+    cursor: default;
 }
 
 @media (max-width: 768px) {

@@ -853,7 +853,7 @@ const PayRollListPage = () => {
 
             <div className={`payRollListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
                 <div className="payRollListPage-filter-row">
-                    <div>
+                    <div className="payRollListPage-filter-group payRollListPage-filter-group--date">
                         <label>일자</label>
                         <div className="payRollListPage-dateRange">
                             <input
@@ -869,16 +869,6 @@ const PayRollListPage = () => {
                             />
                         </div>
                     </div>
-
-                    <FilterChipInput
-                        label="부서"
-                        placeholder="부서명을 입력하세요"
-                        draftValue={departmentDraft}
-                        appliedValue={departmentFilter}
-                        onDraftChange={setDepartmentDraft}
-                        onClear={clearDepartmentFilter}
-                        onSubmit={applyFilters}
-                    />
 
                     <FilterChipInput
                         label="검색어"
@@ -905,11 +895,6 @@ const PayRollListPage = () => {
             <div className="payRollListPage-table-box">
                 <div className="payRollListPage-table-info">
                     <span>전체 {filteredItems.length}건</span>
-                    {selectedLedger && (
-                        <span className="payRollListPage-selectionInfo">
-                            선택됨 {selectedLedger.ledgerName}
-                        </span>
-                    )}
                 </div>
 
                 {isLoading ? (

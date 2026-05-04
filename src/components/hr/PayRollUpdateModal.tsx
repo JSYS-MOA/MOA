@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
     type PayRollMutationPayload,
     type PayRollRecord,
+    useDeletePayRoll,
     usePutPayRoll,
 } from "../../apis/hr/PayLollService.tsx";
 import { getHr2Data } from "../../apis/hr2/Hr2Service.tsx";
@@ -252,6 +253,21 @@ const sumAmountFields = (amounts: Pick<
     parseAmountInput(amounts.weekendAllowance) +
     parseAmountInput(amounts.annualAllowance);
 
+const createEditableAmounts = (rows: PayRollDetailRow[]) =>
+    Object.fromEntries(
+        rows.map((row) => [
+            row.key,
+            {
+                basePay: formatAmountInput(row.basePay),
+                overtimeAllowance: formatAmountInput(row.overtimeAllowance),
+                weekendAllowance: formatAmountInput(row.weekendAllowance),
+                annualAllowance: formatAmountInput(row.annualAllowance),
+                totalAmount: formatAmountInput(row.totalAmount),
+                isTotalManuallyEdited: false,
+            },
+        ])
+    ) as Record<string, PayRollEditableAmounts>;
+
 const isSummaryRecord = (record: LoosePayRollRecord) => {
     const transactionType = getStringValue(record, "transactionType", "transaction_type");
     const transactionMemo = getStringValue(record, "transactionMemo", "transaction_memo");
@@ -358,6 +374,7 @@ const PayRollUpdateModal = ({
     records = EMPTY_PAYROLL_RECORDS,
 }: Props) => {
     const updatePayRoll = usePutPayRoll();
+    const deletePayRoll = useDeletePayRoll();
     const { data: workRecords = EMPTY_ALLOWANCE_RECORDS } = useQuery({
         queryKey: ["payRollAllowanceWork"],
         queryFn: async () => {
@@ -401,30 +418,25 @@ const PayRollUpdateModal = ({
                 payrollMonth,
             });
             const overtimeAllowance =
-                calculated.overtimeAllowance > 0
-                    ? calculated.overtimeAllowance
-                    : row.overtimeAllowance;
+                row.overtimeAllowance ?? calculated.overtimeAllowance ?? null;
             const weekendAllowance =
-                calculated.weekendAllowance > 0
-                    ? calculated.weekendAllowance
-                    : row.weekendAllowance;
+                row.weekendAllowance ?? calculated.weekendAllowance ?? null;
             const annualAllowance =
-                calculated.annualAllowance > 0
-                    ? calculated.annualAllowance
-                    : row.annualAllowance;
+                row.annualAllowance ?? calculated.annualAllowance ?? null;
+            const computedTotal =
+                row.basePay === null
+                    ? null
+                    : row.basePay +
+                      (overtimeAllowance ?? 0) +
+                      (weekendAllowance ?? 0) +
+                      (annualAllowance ?? 0);
 
             return {
                 ...row,
                 overtimeAllowance,
                 weekendAllowance,
                 annualAllowance,
-                totalAmount:
-                    row.basePay === null
-                        ? row.totalAmount
-                        : row.basePay +
-                          (overtimeAllowance ?? 0) +
-                          (weekendAllowance ?? 0) +
-                          (annualAllowance ?? 0),
+                totalAmount: row.totalAmount ?? computedTotal,
             };
         });
     }, [payrollMonth, records, vacationRecords, workRecords]);
@@ -433,6 +445,8 @@ const PayRollUpdateModal = ({
     const [editableAmounts, setEditableAmounts] = useState<Record<string, PayRollEditableAmounts>>({});
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const resolvedPayrollLabel = useMemo(
         () => resolvePayrollLabel(payrollLabel, records),
         [payrollLabel, records]
@@ -445,25 +459,13 @@ const PayRollUpdateModal = ({
             setDirtyKeys([]);
             setEditableAmounts({});
             setIsConfirmOpen(false);
+            setIsDeleteConfirmOpen(false);
             setIsUpdating(false);
+            setIsDeleting(false);
             return;
         }
 
-        setEditableAmounts(
-            Object.fromEntries(
-                rows.map((row) => [
-                    row.key,
-                    {
-                        basePay: formatAmountInput(row.basePay),
-                        overtimeAllowance: formatAmountInput(row.overtimeAllowance),
-                        weekendAllowance: formatAmountInput(row.weekendAllowance),
-                        annualAllowance: formatAmountInput(row.annualAllowance),
-                        totalAmount: formatAmountInput(row.totalAmount),
-                        isTotalManuallyEdited: false,
-                    },
-                ])
-            )
-        );
+        setEditableAmounts(createEditableAmounts(rows));
     }, [isOpen, rows]);
 
     const handleAmountChange = (
@@ -560,6 +562,25 @@ const PayRollUpdateModal = ({
         setIsConfirmOpen(true);
     };
 
+    const handleDelete = () => {
+        if (selectedKeys.length === 0) {
+            window.alert("\uC0AD\uC81C\uD560 \uAE09\uC5EC \uD56D\uBAA9\uC744 \uC120\uD0DD\uD574 \uC8FC\uC138\uC694.");
+            return;
+        }
+
+        setIsDeleteConfirmOpen(true);
+    };
+
+    const handleClearSelection = () => {
+        if (isUpdating || isDeleting) {
+            return;
+        }
+
+        setSelectedKeys([]);
+        setIsConfirmOpen(false);
+        setIsDeleteConfirmOpen(false);
+    };
+
     const handleConfirmUpdate = async () => {
         if (isUpdating) {
             return;
@@ -622,6 +643,62 @@ const PayRollUpdateModal = ({
         }
     };
 
+    const handleConfirmDelete = async () => {
+        if (isDeleting) {
+            return;
+        }
+
+        const selectedRecordMap = new Map(
+            records.map((record, index) => {
+                const item = record as LoosePayRollRecord;
+                const key =
+                    getStringValue(item, "transactionId", "transaction_id", "salaryId", "salary_id") ||
+                    String(index);
+
+                return [key, item];
+            })
+        );
+
+        setIsDeleting(true);
+
+        try {
+            for (const selectedKey of selectedKeys) {
+                const record = selectedRecordMap.get(selectedKey);
+
+                if (!record) {
+                    continue;
+                }
+
+                const salaryLedgerId =
+                    getNumberValue(record, "transactionId", "transaction_id") ??
+                    getNumberValue(record, "salaryLedgerId", "salary_ledger_id") ??
+                    getNumberValue(record, "salaryId", "salary_id");
+
+                if (salaryLedgerId === null) {
+                    continue;
+                }
+
+                await deletePayRoll.mutateAsync(salaryLedgerId);
+            }
+
+            await onUpdated?.();
+            setSelectedKeys([]);
+            setIsDeleteConfirmOpen(false);
+            onClose();
+            window.alert("\uC0AD\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.");
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "\uC0AD\uC81C \uCC98\uB9AC \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.";
+
+            console.error(error);
+            window.alert(message);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <>
             <div className="payRollUpdateModalScope">
@@ -633,17 +710,32 @@ const PayRollUpdateModal = ({
                         <div className="payRollUpdateModal-actions">
                             <button
                                 type="button"
-                                className="payRollUpdateModal-button payRollUpdateModal-button--primary"
-                                onClick={handleUpdate}
-                                disabled={isUpdating}
+                                className="payRollUpdateModal-button payRollUpdateModal-button--secondary"
+                                onClick={handleClearSelection}
+                                disabled={isUpdating || isDeleting || selectedKeys.length === 0}
                             >
-                                {isUpdating ? "수정 중..." : "수정"}
+                                {"\uC0AD\uC81C \uCDE8\uC18C"}
                             </button>
                             <button
                                 type="button"
+                                className="payRollUpdateModal-button payRollUpdateModal-button--primary"
+                                onClick={handleUpdate}
+                                disabled={isUpdating || isDeleting || (selectedKeys.length === 0 && dirtyKeys.length === 0)}
+                            >
+                                {isUpdating ? "저장 중..." : "저장"}
+                            </button>
+                            <button
+                                type="button"
+                                className="payRollUpdateModal-button payRollUpdateModal-button--danger"
+                                onClick={handleDelete}
+                            >
+                                삭제
+                            </button>
+
+                            <button
+                                type="button"
                                 className="payRollUpdateModal-button payRollUpdateModal-button--secondary"
-                                onClick={onClose}
-                                disabled={isUpdating}
+                                onClick={handleClearSelection}
                             >
                                 취소
                             </button>
@@ -729,6 +821,16 @@ const PayRollUpdateModal = ({
                 onClose={() => {
                     if (!isUpdating) {
                         setIsConfirmOpen(false);
+                    }
+                }}
+            />
+            <ConfirmModal
+                isOpen={isDeleteConfirmOpen}
+                message={`\uC120\uD0DD\uD55C \uAE09\uC5EC ${selectedKeys.length}\uAC74\uC744 \uC0AD\uC81C\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?`}
+                onConfirm={handleConfirmDelete}
+                onClose={() => {
+                    if (!isDeleting) {
+                        setIsDeleteConfirmOpen(false);
                     }
                 }}
             />

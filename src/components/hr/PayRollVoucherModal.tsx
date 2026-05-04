@@ -257,6 +257,15 @@ const PayRollVoucherModal = ({
         );
     };
 
+    const handleClearSelection = () => {
+        if (isDeleting) {
+            return;
+        }
+
+        setSelectedIds([]);
+        setIsConfirmOpen(false);
+    };
+
     const handleDelete = () => {
         if (selectedIds.length === 0) {
             window.alert("삭제할 급여 내역을 선택해 주세요.");
@@ -308,16 +317,16 @@ const PayRollVoucherModal = ({
                             <button
                                 type="button"
                                 className="payRollVoucherModal-button payRollVoucherModal-button--primary"
-                                onClick={handleClose}
-                                disabled={isDeleting}
+                                onClick={handleDelete}
+                                disabled={isDeleting || selectedIds.length === 0}
                             >
                                 저장
                             </button>
                             <button
                                 type="button"
                                 className="payRollVoucherModal-button payRollVoucherModal-button--secondary"
-                                onClick={handleDelete}
-                                disabled={isDeleting}
+                                onClick={handleClearSelection}
+                                disabled={isDeleting || selectedIds.length === 0}
                             >
                                 {isDeleting ? "삭제 중..." : "삭제"}
                             </button>

@@ -282,30 +282,25 @@ const PayRollInfoModal = ({
                 payrollMonth,
             });
             const overtimeAllowance =
-                calculated.overtimeAllowance > 0
-                    ? calculated.overtimeAllowance
-                    : row.overtimeAllowance;
+                row.overtimeAllowance ?? calculated.overtimeAllowance ?? null;
             const weekendAllowance =
-                calculated.weekendAllowance > 0
-                    ? calculated.weekendAllowance
-                    : row.weekendAllowance;
+                row.weekendAllowance ?? calculated.weekendAllowance ?? null;
             const annualAllowance =
-                calculated.annualAllowance > 0
-                    ? calculated.annualAllowance
-                    : row.annualAllowance;
+                row.annualAllowance ?? calculated.annualAllowance ?? null;
+            const computedTotal =
+                row.basePay === null
+                    ? null
+                    : row.basePay +
+                      (overtimeAllowance ?? 0) +
+                      (weekendAllowance ?? 0) +
+                      (annualAllowance ?? 0);
 
             return {
                 ...row,
                 overtimeAllowance,
                 weekendAllowance,
                 annualAllowance,
-                totalAmount:
-                    row.basePay === null
-                        ? row.totalAmount
-                        : row.basePay +
-                          (overtimeAllowance ?? 0) +
-                          (weekendAllowance ?? 0) +
-                          (annualAllowance ?? 0),
+                totalAmount: row.totalAmount ?? computedTotal,
             };
         });
     }, [payrollMonth, records, vacationRecords, workRecords]);

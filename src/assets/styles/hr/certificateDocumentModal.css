@@ -186,7 +186,7 @@
     body {
         margin: 0;
         padding: 0;
-        background: #fff;
+        background: var(--color-inverse);
     }
 
     body * {

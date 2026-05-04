@@ -1,8 +1,8 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const API_BASE = "/api/hr/payroll";
-const SALARY_API_BASE = "/api/hr/salary";
+const API_BASE = "http://localhost/api/hr/payroll";
+const SALARY_API_BASE = "http://localhost/api/hr/salary";
 
 const getAxiosErrorMessage = (error: unknown) => {
     if (!axios.isAxiosError(error)) {

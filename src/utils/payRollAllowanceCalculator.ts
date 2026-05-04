@@ -196,28 +196,42 @@ const getWorkStatus = (record: PayRollAllowanceSourceRecord) =>
         "work_status"
     ).toLowerCase();
 
+const getAllowanceLabel = (record: PayRollAllowanceSourceRecord) =>
+    getStringValue(record, "allowanceName", "allowance_name").toLowerCase();
+
 const getCompactWorkStatus = (record: PayRollAllowanceSourceRecord) =>
-    getWorkStatus(record).replace(/\s/g, "");
+    `${getWorkStatus(record)} ${getAllowanceLabel(record)}`.replace(/\s/g, "");
 
 const isOvertimeWorkStatus = (record: PayRollAllowanceSourceRecord) => {
     const workStatus = getWorkStatus(record);
+    const allowanceLabel = getAllowanceLabel(record);
 
     return (
         workStatus.includes("\uC57C\uADFC") ||
         workStatus.includes("\uC5F0\uC7A5") ||
+        allowanceLabel.includes("\uC57C\uADFC") ||
+        allowanceLabel.includes("\uC5F0\uC7A5") ||
         workStatus.includes("night") ||
-        workStatus.includes("over")
+        workStatus.includes("over") ||
+        allowanceLabel.includes("night") ||
+        allowanceLabel.includes("over")
     );
 };
 
 const isWeekendWorkStatus = (record: PayRollAllowanceSourceRecord) => {
     const workStatus = getWorkStatus(record);
+    const allowanceLabel = getAllowanceLabel(record);
     const compactWorkStatus = getCompactWorkStatus(record);
 
     return (
         compactWorkStatus.includes("\uC8FC\uB9D0\uADFC\uBB34") ||
         compactWorkStatus.includes("\uD734\uC77C\uADFC\uBB34") ||
-        workStatus.includes("weekend")
+        allowanceLabel.includes("\uC8FC\uB9D0") ||
+        allowanceLabel.includes("\uD734\uC77C") ||
+        workStatus.includes("weekend") ||
+        workStatus.includes("holiday") ||
+        allowanceLabel.includes("weekend") ||
+        allowanceLabel.includes("holiday")
     );
 };
 
@@ -347,9 +361,11 @@ export const calculatePayRollAllowances = ({
         .reduce((total, record) => total + getWorkAmount(record, basePay, DAILY_WORK_HOURS), 0);
 
     const annualAllowance = Math.round(
-        (basePay / STANDARD_MONTHLY_HOURS) *
-            DAILY_WORK_HOURS *
-            getRemainingVacationDays(vacationRecords, employee)
+        payrollMonth?.month === 4
+            ? (basePay / STANDARD_MONTHLY_HOURS) *
+              DAILY_WORK_HOURS *
+              getRemainingVacationDays(vacationRecords, employee)
+            : 0
     );
 
     return {
