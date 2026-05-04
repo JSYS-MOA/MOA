@@ -1,7 +1,7 @@
 import {hr2Configs} from "../../types/hr2Configs.tsx";
 import {useState} from "react";
 import {saveHr2Data} from "../../apis/hr2/Hr2Service.tsx";
-import HRSearchModal from "./HRSearchModal.tsx";
+// import HRSearchModal from "./HRSearchModal.tsx";
 import FilterDate from "./FilterDate.tsx";
 
 
@@ -170,13 +170,13 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
             <div>
                 {/* 3층 검색 모달: SearchModal이 만들어지면 활성화 */}
-                {isSearchOpen && (
+                {/* {isSearchOpen && (
                     <HRSearchModal
                         searchType={currentField?.searchType} // "user" 또는 "allowance"
                         onSelect={handleSearchResult}        // 선택 시 데이터 자동 매핑
                         onClose={() => setSearchOpen(false)}  // 닫기
                     />
-                )}
+                )} */}
             </div>
          </div>
         </div>

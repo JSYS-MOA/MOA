@@ -560,11 +560,11 @@ const PayRollListPage = () => {
         setCurrentPage(1);
     };
 
-    const clearDepartmentFilter = () => {
-        setDepartmentDraft("");
-        setDepartmentFilter("");
-        setCurrentPage(1);
-    };
+    // const clearDepartmentFilter = () => {
+    //     setDepartmentDraft("");
+    //     setDepartmentFilter("");
+    //     setCurrentPage(1);
+    // };
 
     const handleToggleItem = (ledgerId: number) => {
         setSelectedLedgerIds((prev) =>

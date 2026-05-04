@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { PayRollRecord ,  getHrData} from "../../apis/hr/PayLollService.tsx";
+import  { type PayRollRecord ,  getHrData} from "../../apis/hr/PayLollService.tsx";
 import "../../assets/styles/hr/payRollInfoModal.css";
 import {
     calculatePayRollAllowances,
