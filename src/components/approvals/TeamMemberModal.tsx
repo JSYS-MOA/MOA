@@ -86,7 +86,7 @@ const TeamMemberModal = (  { items  , columns, onRefresh , setOnAlert , onClose}
         onRefresh();
         onClose()
       },
-      onError: (error) => {
+      onError: (error : any ) => {
         console.error(error);
         setOnAlert("사용자 정보가 올바르지 않습니다.");
         onRefresh();

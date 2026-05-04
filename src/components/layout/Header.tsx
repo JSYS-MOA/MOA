@@ -19,7 +19,9 @@ interface HeaderProps {
 
 const Header = ({menuList, userDept, onMenuClick}:HeaderProps) => {
 
-  if (!menuList || menuList.length === 0 || !userDept) {
+    // || !userDept 부서명이 없는 경우도 있어서 삭제
+
+  if (!menuList || menuList.length === 0 ) {
         return <header>로딩 중...</header>;
   }
 
@@ -41,7 +43,7 @@ const Header = ({menuList, userDept, onMenuClick}:HeaderProps) => {
 
     return (
     <header className="header-container">
-        <div className="header-logo">MOA</div>
+        <div className="header-logo" onClick={()=>onMenuClick(1)}>MOA</div>
         <ul className="header-nav">
             {Array.isArray(uniqueMenuList) && uniqueMenuList.map((item) => {
                 const config = menuData[item.menuNum];

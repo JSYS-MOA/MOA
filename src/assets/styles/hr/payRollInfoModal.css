@@ -1,0 +1,370 @@
+.payRollInfoModalScope .modal-Overlay {
+    z-index: 1001;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.payRollInfoModalScope .modal-Container {
+    width: min(820px, calc(100vw - 96px));
+    height: min(700px, calc(100vh - 72px));
+    max-height: calc(100vh - 72px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+}
+
+.payRollInfoModalScope .modal-Header {
+    min-height: 24px;
+    padding: 4px 10px;
+    background: var(--text-accent);
+}
+
+.payRollInfoModalScope .modal-Header p {
+    margin: 0;
+}
+
+.payRollInfoModalScope .modal-Header button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.payRollInfoModalScope .modal-Title {
+    display: none;
+}
+
+.payRollInfoModalScope .modal-Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 20px 18px 12px;
+    background: var(--bg);
+    overflow: auto;
+}
+
+.payRollInfoModalScope .modal-Children {
+    min-height: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.payRollInfoModalScope .modal-Footer {
+    padding: 0 18px 16px;
+    background: var(--bg);
+}
+
+/* 안쪽 흰색 둥근 박스 */
+.payRollInfoModal-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    min-height: 100%;
+    padding: 18px 16px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: var(--text-inverse);
+}
+
+.payRollInfoModal-headerBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.payRollInfoModal-heading {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-accent);
+}
+
+.payRollInfoModal-ledgerName {
+    margin: 0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.payRollInfoModal-tableWrap {
+    width: 100%;
+    overflow: auto;
+    border-radius: 8px;
+    background: var(--text-inverse);
+}
+
+.payRollInfoModal-table {
+    width: 100%;
+    min-width: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: var(--text-inverse);
+}
+
+.payRollInfoModal-table th,
+.payRollInfoModal-table td {
+    padding: 5px 4px;
+    border: 1px solid var(--border);
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--text-secondary-70);
+    word-break: keep-all;
+}
+
+.payRollInfoModal-table th {
+    background: var(--bg);
+    font-weight: 500;
+}
+
+.payRollInfoModal-table td {
+    background: var(--text-inverse);
+}
+
+.payRollInfoModal-table th:nth-child(1),
+.payRollInfoModal-table td:nth-child(1) {
+    width: 11%;
+}
+
+.payRollInfoModal-table th:nth-child(2),
+.payRollInfoModal-table td:nth-child(2) {
+    width: 10%;
+}
+
+.payRollInfoModal-table th:nth-child(3),
+.payRollInfoModal-table td:nth-child(3) {
+    width: 14%;
+}
+
+.payRollInfoModal-table th:nth-child(4),
+.payRollInfoModal-table td:nth-child(4) {
+    width: 12%;
+}
+
+.payRollInfoModal-table th:nth-child(5),
+.payRollInfoModal-table td:nth-child(5) {
+    width: 10%;
+}
+
+.payRollInfoModal-table th:nth-child(6),
+.payRollInfoModal-table td:nth-child(6) {
+    width: 10%;
+}
+
+.payRollInfoModal-table th:nth-child(7),
+.payRollInfoModal-table td:nth-child(7) {
+    width: 14%;
+}
+
+.payRollInfoModal-table th:nth-child(8),
+.payRollInfoModal-table td:nth-child(8) {
+    width: 10%;
+}
+
+.payRollInfoModal-table th:nth-child(9),
+.payRollInfoModal-table td:nth-child(9) {
+    width: 9%;
+}
+
+.payRollInfoModal-empty {
+    padding: 28px 16px;
+    color: var(--text-secondary-70);
+}
+
+.payRollInfoModal-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+.payRollInfoModal-button {
+    min-width: 52px;
+    height: 26px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.payRollInfoModal-button--primary {
+    background: var(--text-accent);
+    color: var(--text-inverse);
+}
+
+.payRollInfoModal-button--primary:hover {
+    background: var(--text-primary);
+}
+
+.payRollInfoModal-button--secondary {
+    border-color: var(--border);
+    background: var(--text-inverse);
+    color: var(--text-accent);
+}
+
+.payRollInfoModal-button--secondary:hover {
+    background: var(--bg);
+}
+
+@media (max-width: 768px) {
+    .payRollInfoModalScope .modal-Overlay {
+        padding: 12px;
+    }
+
+    .payRollInfoModalScope .modal-Container {
+        width: calc(100vw - 24px);
+        height: calc(100vh - 24px);
+        max-height: calc(100vh - 24px);
+    }
+
+    .payRollInfoModalScope .modal-Body {
+        padding: 14px 12px 10px;
+    }
+
+    .payRollInfoModal-panel {
+        padding: 14px 10px;
+    }
+
+    .payRollInfoModal-ledgerName {
+        font-size: 16px;
+    }
+}
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        background: var(--color-inverse);;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .payRollInfoModalScope,
+    .payRollInfoModalScope * {
+        visibility: visible;
+    }
+
+    .payRollInfoModalScope {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background: var(--color-inverse);;
+    }
+
+    .payRollInfoModalScope .modal-Overlay {
+        position: static;
+        inset: auto;
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 0;
+        background: transparent;
+        justify-content: initial;
+        align-items: initial;
+    }
+
+    .payRollInfoModalScope .modal-Container {
+        width: 277mm;
+        max-width: 100%;
+        max-height: none;
+        height: auto;
+        margin: 0 auto;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: var(--color-inverse);;
+        overflow: visible;
+        transform: none;
+        left: auto;
+        right: auto;
+    }
+
+    .payRollInfoModalScope .modal-Header,
+    .payRollInfoModalScope .modal-Title,
+    .payRollInfoModalScope .modal-Footer,
+    .payRollInfoModal-actions {
+        display: none;
+    }
+
+    .payRollInfoModalScope .modal-Body,
+    .payRollInfoModalScope .modal-Children {
+        margin: 0;
+        padding: 0;
+        display: block;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .payRollInfoModal-panel {
+        width: 277mm;
+        max-width: 100%;
+        min-height: 176mm;
+        margin: 0 auto;
+        padding: 0 0 12mm;
+        box-sizing: border-box;
+        gap: 12px;
+        border-radius: 0;
+        background: var(--color-inverse);;
+        align-items: stretch;
+        justify-content: flex-start;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .payRollInfoModal-heading {
+        width: 100%;
+        text-align: center;
+        margin: 0 0 8px 0;
+        color: var(--text-accent);
+    }
+
+    .payRollInfoModal-ledgerName {
+        color: var(--text-primary);
+    }
+
+    .payRollInfoModal-tableWrap {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        overflow: visible;
+        background: var(--color-inverse);;
+    }
+
+    .payRollInfoModal-table {
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        table-layout: fixed;
+        background: var(--color-inverse);
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .payRollInfoModal-table th,
+    .payRollInfoModal-table td {
+        padding: 4px 3px;
+        font-size: 9px;
+        color: var(--text-primary);
+        border-color: var(--border);
+        background: var(--color-inverse);
+    }
+
+    .payRollInfoModal-table th {
+        background: var(--bg);
+    }
+}

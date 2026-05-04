@@ -17,6 +17,10 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
         ? baseConfigs[apiType as keyof typeof baseConfigs]
         : null;
 
+    //페이지네이션
+    const [page, setPage] = useState(0); // 현재 페이지 (0부터 시작)
+    const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -31,11 +35,16 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
         if (!config) return;
         setLoading(true);
         try {
-            const data = await getBaseData(apiType as keyof typeof baseConfigs);
+            const data = await getBaseData(apiType as keyof typeof baseConfigs, page);
 
-            console.log("🔥 들어온 데이터:", data);
             const item = Array.isArray(data) ? data : (data.content || []);
+            console.log("필터링 후 items에 들어갈 데이터:", item);
             setItems(item);
+
+            if (data && typeof data.totalPages === 'number') {
+                setTotalPages(data.totalPages);
+            }
+
         } catch (err) {
             console.error(`${config.title} 데이터 로드 실패:`, err);
             setItems([]);
@@ -46,9 +55,8 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
 
     // 4. 메뉴(type)가 바뀔 때마다 실행
     useEffect(() => {
-        setItems([]); // 메뉴 이동 시 이전 데이터 잔상 제거
         fetchData();
-    }, [apiType]);
+    }, [apiType, page]);
 
     // 잘못된 경로 접근 시 처리
     if (!config) {
@@ -89,7 +97,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
             return;
         }
 
-        if (!window.confirm(`주의: 연결된 직급 정보도 함께 삭제됩니다.\n선택한 ${selectedIds.length}건의 데이터를 삭제하시겠습니까?`)) return;
+        if (!window.confirm(`주의: 연결된 정보도 함께 삭제됩니다.\n선택한 ${selectedIds.length}건의 데이터를 삭제하시겠습니까?`)) return;
 
         try {
             setLoading(true);
@@ -140,7 +148,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                     <Table
                         idKey={config.idKey}
                         items={items}
-                        columns={config.columns.map(col => ({
+                        columns={config.columns.map((col:any) => ({
                             ...col,
                             render: (val: any, item: any) =>
                                 // 특정 컬럼 클릭 시 모달 열리게 렌더링 주입
@@ -149,10 +157,10 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                                         onClick={() => handleEditOpen(item)}
                                         style={{cursor:'pointer', textDecoration:'underline', color: 'blue'}}
                                     >
-                                        {val}
+                                        {col.render? col.render(val, item) : val}
                                     </span>
                                 ) : (
-                                    val
+                                    col.render? col.render(val, item) : val
                                 )
                         }))}
                         showCheckbox={true}
@@ -178,6 +186,31 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                 fetchData={fetchData}
                 columns={config.columns}
             />
+            <div className="pagination" style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
+                <button
+                    disabled={page === 0}
+                    onClick={() => setPage(prev => prev - 1)}
+                >
+                    이전
+                </button>
+
+                {[...Array(totalPages)].map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setPage(i)}
+                        style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'blue' : 'black' }}
+                    >
+                        {i + 1}
+                    </button>
+                ))}
+
+                <button
+                    disabled={page >= totalPages - 1}
+                    onClick={() => setPage(prev => prev + 1)}
+                >
+                    다음
+                </button>
+            </div>
         </div>
     );
 };

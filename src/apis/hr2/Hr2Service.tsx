@@ -2,14 +2,20 @@ import axios from "axios";
 import {hr2Configs} from "../../types/hr2Configs.tsx";
 
 const api = axios.create({
-    baseURL: "http://localhost/",
+     baseURL: "http://localhost/",
+    // baseURL: "https://moa-server.onrender.com/",
     withCredentials: true,
 });
 
-export const getHr2Data = async (path: keyof typeof hr2Configs) => {
+export const getHr2Data = async (path: keyof typeof hr2Configs, page = 0, size = 15, filterDTO: any) => {
     const realUrl = hr2Configs[path].apiUrl;
 
-    const { data } = await api.get(realUrl);
+    const { data } = await api.get(`${realUrl}`,{
+        params: {
+            page,
+            size,
+            ...filterDTO
+    }});
     return data;
 };
 //

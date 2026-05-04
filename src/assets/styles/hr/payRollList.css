@@ -1,0 +1,555 @@
+/* ====================== 인사카드 목록 상단 ====================== */
+.payRollListPage-page {
+    width: 100%;
+}
+
+
+.payRollListPage-table-box {
+    margin-top: var(--spacing-md);
+}
+
+.payRollListPage-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.payRollListPage-star {
+    gap: var(--spacing-xs);
+    cursor: pointer;
+    font-size: var(--font-xl);
+    margin-right: var(--spacing-xs);
+    font-weight: bolder;
+}
+
+
+.payRollListPage-title {
+    margin: 0;
+    font-size: var(--font-xl);
+    color: var(--text-accent);
+    font-weight: bolder;
+}
+
+.payRollListPage-top-search-btn {
+    margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.payRollListPage-filter-row {
+    display: grid;
+    grid-template-columns: minmax(580px, 1.15fr) minmax(280px, 1fr) minmax(280px, 1fr);
+    align-items: center;
+    gap: var(--spacing-xs) var(--spacing-md);
+    margin: var(--spacing-sm);
+    text-align: left;
+}
+
+.payRollListPage-filter-group label {
+    flex: 0 0 52px;
+    white-space: nowrap;
+    color: var(--text-primary);
+}
+
+.payRollListPage-filter-group--date {
+    width: 100%;
+}
+
+.payRollListPage-filter-group--date label {
+    flex: 0 0 40px;
+}
+
+.payRollListPage-dateRange {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex: 1;
+    min-width: 0;
+}
+
+.payRollListPage-dateRange input {
+    flex: 1 1 170px;
+    width: auto;
+    min-width: 170px;
+    height: 30px;
+    padding: 0 var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--color-inverse);
+    box-sizing: border-box;
+}
+
+/* ====================== 검색 필터 ====================== */
+
+.payRollListPage-filter-box {
+    overflow: hidden;
+    max-height: 130px;
+    max-width: 100%;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--text-inverse);
+    opacity: 1;
+    transition:
+            max-height 0.2s ease,
+            padding 0.2s ease,
+            opacity 0.2s ease,
+            margin-bottom 0.2s ease,
+            border-width 0.2s ease;
+}
+
+.payRollListPage-filter-box.is-collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
+}
+
+.payRollListPage-filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin: 0;
+    min-width: 0;
+}
+
+/* 칩 입력창 */
+.payRollListPage-chip-input {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 28px;
+    padding-right: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    background: var(--color-inverse);
+    overflow: hidden;
+}
+
+.payRollListPage-chip-input.has-chip {
+    padding-block: var(--spacing-xs);
+}
+
+.payRollListPage-chip-input:focus-within {
+    border-color: var(--border);
+    box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
+}
+
+.payRollListPage-chip-input-icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    align-self: stretch;
+    border-right: 1px solid var(--border);
+}
+
+.payRollListPage-chip-input-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    transform: translateY(-60%);
+    box-sizing: border-box;
+}
+
+.payRollListPage-chip-input-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--border);
+    transform: translateY(4px) rotate(45deg);
+}
+
+.payRollListPage-chip-input input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 28px;
+    padding: 0 var(--spacing-xs);
+    border: 0;
+    outline: none;
+    background: var(--color-inverse);
+}
+
+.payRollListPage-chip-input input::placeholder {
+    color: var(--border-dark);
+}
+
+.payRollListPage-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    max-width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 999px;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    line-height: 1;
+}
+
+.payRollListPage-chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.payRollListPage-chip-input .payRollListPage-chip {
+    margin-right: 4px;
+}
+
+.payRollListPage-chip-input.has-chip input {
+    min-width: 48px;
+}
+
+.payRollListPage-chip-x {
+    border: none;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.payRollListPage-chip-x:hover {
+    opacity: 0.7;
+}
+
+.payRollListPage-chip-clear {
+    align-self: stretch;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: var(--color-inverse);
+    color: var(--border);
+    font-size: var(--font-lg);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.payRollListPage-chip-clear:disabled {
+    cursor: default;
+}
+
+.payRollListPage-chip-clear:not(:disabled):hover {
+    color: var(--border-dark);
+}
+
+.payRollListPage-filter-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: var(--spacing-sm);
+    border-top: 1px solid var(--border);
+}
+
+.payRollListPage-search-btn {
+    margin: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
+}
+
+/* ====================== 목록 정보 / 하단 버튼 ====================== */
+
+.payRollListPage-table-info {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+    text-align: left;
+}
+
+.payRollListPage-bottom-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--spacing-xs);
+    margin-top: 16px;
+}
+
+/* 공통 버튼 */
+.payRollListPage-top-search-btn,
+.payRollListPage-search-btn,
+.payRollListPage-add-btn,
+.payRollListPage-paging-prev-btn,
+.payRollListPage-paging-next-btn {
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-inverse);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    height: var(--spacing-lg);
+}
+
+.payRollListPage-top-search-btn:hover,
+.payRollListPage-search-btn:hover,
+.payRollListPage-add-btn:hover,
+.payRollListPage-paging-prev-btn:hover,
+.payRollListPage-paging-next-btn:hover {
+    background: var(--color-danger);
+    color: var(--color-inverse);
+
+}
+
+.payRollListPage-disabled-btn {
+    color: var(--color-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    height: var(--spacing-lg);
+}
+
+.payRollListPage-disabled-btn:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+/* ====================== 페이징 ====================== */
+
+.payRollListPage-paging-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.payRollListPage-paging-group-min {
+    display: flex;
+    align-items: center;
+    gap:var(--spacing-xs);
+}
+
+.payRollListPage-paging-num-btn {
+    background: none;
+    border: 0;
+    color: var(--border-dark);
+    font-size: var(--font-xl);
+    padding: 4px var(--spacing-xs);
+    cursor: pointer;
+}
+
+.payRollListPage-paging-num-btn:disabled {
+    color: var(--text-accent);
+    border-radius: var(--radius-sm);
+    cursor: default;
+}
+
+
+
+
+
+
+
+.payRollTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    table-layout: fixed;
+}
+
+.payRollTable-th,
+.payRollTable-td {
+    height: 20px;
+    padding: 6px var(--spacing-xs);
+    border: 1px solid var(--border);
+    font-size: var(--font-lg);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.payRollTable-th {
+    background-color: var(--color-gray-100);
+    color: var(--text-accent);
+}
+
+.payRollTable-td {
+    background: var(--color-inverse);
+}
+
+.payRollTable tbody tr:hover .payRollTable-td {
+    background: var(--color-gray-50);
+}
+
+.payRollTable-nameButton {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-accent);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.payRollTable-nameButton:hover,
+.payRollTable-nameButton:focus-visible {
+    text-decoration: underline;
+}
+
+.payRollTable-checkbox-cell {
+    text-align: center;
+}
+
+.payRollTable-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.payRollTable-checkbox input {
+    display: none;
+}
+
+.payRollTable-checkbox .checkmark {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid var(--border-dark);
+    border-radius: 3px;
+    background: var(--bg);
+    cursor: pointer;
+}
+
+.payRollTable-checkbox input:checked + .checkmark {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.payRollTable-empty {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.payRollTable-statusValue {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: var(--font-sm);
+    line-height: 1;
+}
+
+.payRollTable-statusValue.is-complete {
+    background: #ebf5ef;
+    color: #24704b;
+}
+
+.payRollTable-statusValue.is-pending {
+    background: #fff4e3;
+    color: #8a5b10;
+}
+
+.payRollTable-statusValue.is-default {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.payRollTable-linkCell {
+    white-space: normal;
+}
+
+.payRollTable-linkGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.payRollTable-linkPrimary,
+.payRollTable-linkAction {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-accent);
+    font: inherit;
+    cursor: pointer;
+}
+
+.payRollTable-linkPrimary {
+    font-weight: 600;
+}
+
+.payRollTable-linkPrimary:hover,
+.payRollTable-linkPrimary:focus-visible,
+.payRollTable-linkAction:hover,
+.payRollTable-linkAction:focus-visible {
+    text-decoration: underline;
+}
+
+.payRollTable-linkActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+}
+
+.payRollTable th:nth-child(1),
+.payRollTable td:nth-child(1) {
+    width: 4%;
+}
+
+.payRollTable th:nth-child(2),
+.payRollTable td:nth-child(2) {
+    width: 10%;
+}
+
+.payRollTable th:nth-child(3),
+.payRollTable td:nth-child(3) {
+    width: 22%;
+}
+
+.payRollTable th:nth-child(4),
+.payRollTable td:nth-child(4) {
+    width: 12%;
+}
+
+.payRollTable th:nth-child(5),
+.payRollTable td:nth-child(5) {
+    width: 10%;
+}
+
+.payRollTable th:nth-child(6),
+.payRollTable td:nth-child(6) {
+    width: 14%;
+}
+
+.payRollTable th:nth-child(7),
+.payRollTable td:nth-child(7) {
+    width: 10%;
+}
+
+.payRollTable th:nth-child(8),
+.payRollTable td:nth-child(8) {
+    width: 18%;
+}
+
+
+.payRollListPage-dateRange span {
+    color: var(--text-secondary);
+    flex: 0 0 auto;
+}
+
+.payRollListPage-selectionInfo {
+    margin-left: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+}

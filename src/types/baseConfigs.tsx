@@ -1,3 +1,8 @@
+const renderUseStatus = (val: any) => {
+    // 값이 없거나 null이면 기본값 0으로 처리
+    const status = (val === undefined || val === null) ? 0 : Number(val);
+    return status === 1 ? "사용" : "미사용";
+};
 
 export const baseConfigs = {
     adminRole: {
@@ -18,7 +23,8 @@ export const baseConfigs = {
                 key: "isUse",
                 label: "사용여부",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -41,7 +47,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -53,7 +60,7 @@ export const baseConfigs = {
         columns: [
             { key: "approvalLineCord", label: "결재라인코드" },
             { key: "approvalLineName", label: "결재라인명" },
-            { key: "approvalLineIsUse", label: "사용여부" }
+            { key: "approvalLineIsUse", label: "사용여부", render: renderUseStatus }
         ],
         // 등록/수정 모달(Modal)에 나타날 입력창들
         fields: [
@@ -64,7 +71,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -91,7 +99,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -114,7 +123,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -137,7 +147,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -164,7 +175,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -189,7 +201,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }]
+                options: [{ label: "사용", value: 1 }, { label: "미사용", value: 0 }],
+                render: renderUseStatus
             }
         ]
     },
@@ -212,7 +225,8 @@ export const baseConfigs = {
                 label: "사용여부",
                 align:"center",
                 type: "select",
-                options: [{label: "사용", value: 1}, {label: "미사용", value: 0}]
+                options: [{label: "사용", value: 1}, {label: "미사용", value: 0}],
+                render: renderUseStatus
             }
         ]
     },
