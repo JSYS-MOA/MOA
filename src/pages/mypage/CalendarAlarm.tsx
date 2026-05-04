@@ -24,7 +24,6 @@ const CalendarAlarm = () => {
         if(!user) return;
         const checkAlarms = async () => {
             try {
-                console.log("캘린더 계속 호출됨")
                 const data = await getCalendarsApi();
                 const now = new Date().getTime();
                 data.filter((e: any) => e.alarm !== 10).forEach((e: any) => {
