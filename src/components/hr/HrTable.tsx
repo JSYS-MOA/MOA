@@ -21,7 +21,7 @@ type ColumnKey =
 
 
 const columns: Array<{ key: ColumnKey; label: string; align?: "left" | "center" | "right"; }> = [
-    { key: "startDate", label: "입사일" ,align:"center"},
+    { key: "startDate", label: "입사일" , align:"center"},
     { key: "employeeId", label: "사원번호" },
     { key: "userName", label: "이름" },
     { key: "departmentName", label: "부서" },
@@ -80,7 +80,7 @@ const HrTable = ({
             ) : (
                 items.map((item) => (
                     <tr key={item.userId}>
-                        <td style={{textAlign:"center"}}>
+                        <td style={{textAlign:"center"}} >
                             <input
                                 type="checkbox"
                                 checked={selectedUserIds.includes(item.userId)}
@@ -92,7 +92,7 @@ const HrTable = ({
                         {columns.map((column) => (
                             <td
                                 key={`${item.userId}-${column.key}`}
-
+                                style={{textAlign: column.align}}
                             >
                                 {column.key === "userName" ? (
                                     <button

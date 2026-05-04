@@ -153,7 +153,6 @@
 .hrCardAddModal-textarea,
 .hrCardAddModal-dateSelect {
     width: 100%;
-    min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
     box-sizing: border-box;
     border: 1px solid var(--border);
@@ -276,8 +275,7 @@
 
 .hrCardAddModal-dateCalendarWrap {
     position: relative;
-    width: 40px;
-    height: 40px;
+
 }
 
 .hrCardAddModal-dateNativeInput {
@@ -326,7 +324,6 @@
 
 .hrCardAddModal-addressButton {
     flex: 0 0 auto;
-    min-height: 40px;
     padding: var(--spacing-xs) 14px;
     border: 1px solid var(--border);
     background-color: var(--color-inverse);

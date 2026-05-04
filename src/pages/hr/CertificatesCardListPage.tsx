@@ -376,11 +376,11 @@ const CertificatesCardListPage = () => {
                     />
                 )}
 
-                <div className="certificatesCardListPage-paging-group">
-                    <div className="certificatesCardListPage-paging-group-min">
+                <div className="hrCardListPage-paging-group">
+                    <div className="Page-Btn-container">
                         <button
                             type="button"
-                            className="certificatesCardListPage-paging-prev-btn"
+                            className="btn-Primary"
                             onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
                             disabled={resolvedCurrentPage === 1}
                         >
@@ -401,7 +401,7 @@ const CertificatesCardListPage = () => {
 
                         <button
                             type="button"
-                            className="certificatesCardListPage-paging-next-btn"
+                            className="btn-Primary"
                             onClick={() =>
                                 setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
                             }

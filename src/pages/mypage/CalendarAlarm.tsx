@@ -9,7 +9,7 @@ interface AlarmItem{
     eventStartDate: string;
 }
 
-const POLL_INTERVAL = 1000;
+const POLL_INTERVAL = 300000;
 const ALARM_BEFORE = 10 * 60 * 1000;
 
 const CalendarAlarm = () => {

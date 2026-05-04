@@ -254,7 +254,6 @@
 .hrCardAddModal-textarea,
 .hrCardAddModal-dateSelect {
     width: 100%;
-    min-height: 40px;
     padding: var(--spacing-xs) var(--spacing-sm);
     box-sizing: border-box;
     border: 1px solid var(--border);
@@ -262,12 +261,14 @@
     background-color: var(--color-inverse);
     color: var(--text-primary);
 }
-
+.hrCardAddModal-textarea{margin-top: 6px}
 .hrCardAddModal-input::placeholder,
 .hrCardAddModal-textarea::placeholder {
     color: var(--text-secondary-30);
 }
-
+.hrCardAddModal-textarea:focus{
+    outline: 1px solid var(--border);
+}
 .hrCardAddModal-select {
     appearance: auto;
     padding-right: var(--spacing-sm);
@@ -348,12 +349,12 @@
 }
 
 .hrCardAddModal-dateBox--year {
-    width: 92px;
+    width: 100% !important;
 }
 
 .hrCardAddModal-dateBox--month,
 .hrCardAddModal-dateBox--day {
-    width: 68px;
+    width: 100% !important;
 }
 
 .hrCardAddModal-dateSelect {
@@ -383,8 +384,6 @@
 
 .hrCardAddModal-dateCalendarWrap {
     position: relative;
-    flex: 0 0 40px;
-    width: 328px;
     height: 28px;
     align-items: center;
     display: flex;
@@ -451,12 +450,12 @@
 }
 
 .hrCardAddModal-addressButton {
-    flex: 0 0 auto;
-    min-height: 42px;
-    padding: var(--spacing-xs) 16px;
+    padding: 5px 8px !important;
     border: 1px solid var(--border);
     background-color: var(--color-inverse);
     white-space: nowrap;
+    font-size: var(--font-xs);
+    font-weight: 300;
 }
 
 /* ====================== Footer Buttons ====================== */

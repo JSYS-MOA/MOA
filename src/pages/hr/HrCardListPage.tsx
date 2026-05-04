@@ -436,7 +436,8 @@ const HrCardListPage = () => {
             </div>
 
             <div className="hrCardListPage-table-box">
-                <div className="hrCardListPage-table-info">
+                <div className="hrCardListPage-table-info"
+                     style={{fontSize:"14px"}}>
                     <span>전체 {filteredItems.length}건</span>
                 </div>
 
