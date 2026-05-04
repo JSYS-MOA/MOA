@@ -18,7 +18,7 @@ const ApprovalCard = () => {
     return(
         <div className="main-Card">
             <div className="card-Header">
-                <p>내 결제근황</p>
+                <p>내 결재근황</p>
                 <MdRefresh size={19}
                            color="lightgray"
                            onClick={() => void refetch()}
