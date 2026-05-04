@@ -4,7 +4,7 @@ import {
     type CertificatesCardRecord,
     useGetCertificatesCardList,
 } from "../../apis/hr/CertificatesCardService";
-import "../../assets/styles/hr/CertificatesCardList.css";
+import "../../assets/styles/hr/certificatesCardList.css";
 import CertificatesCardUpdateModal from "../../components/hr/CertificatesCardUpdateModal";
 import CertificatesTable from "../../components/hr/CertificatesTable";
 import {

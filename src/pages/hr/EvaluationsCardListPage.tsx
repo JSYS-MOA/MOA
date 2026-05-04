@@ -4,7 +4,7 @@ import {
     type EvaluationsCardRecord,
     useGetHrCardList as useGetEvaluationsCardList,
 } from "../../apis/hr/EvaluationsCardService";
-import "../../assets/styles/hr/EvaluationsCardList.css";
+import "../../assets/styles/hr/evaluationsCardList.css";
 import EvaluationsCardUpdateModal from "../../components/hr/EvaluationsCardUpdateModal";
 import EvaluationsTable from "../../components/hr/EvaluationsTable";
 import {
