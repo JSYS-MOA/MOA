@@ -83,22 +83,6 @@
     font-weight: 200;
 }
 
-/* 공용 */
-.Page-Btn-container{
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-   position: absolute;
-  left: 50%;
-   top: 40%;
-   transform: translate(-50%, -50%);
-}
-
-.Btn-container{
-  display: flex;
-  gap: 6px;
-  margin-top: 12px;
-}
 
 .modal-Row-Item-title{
   width: 80px;
@@ -180,7 +164,6 @@
   font-weight: 300;
   width: 100%;
     font-size: var(--font-xs);
-    margin-top: 18px;
 }
 .modal-Table-Form thead tr {
     background: var(--color-gray-100);
@@ -242,11 +225,13 @@
 .Time-Header-Box {
  display: flex;
  gap: 3px;
+    align-items: center;
 }
 
 .modal-Table-Form-body input[type='checkbox'] {
   height: 12px;
   width: 12px;
+    vertical-align: middle;
 }
 
 .modal-Table-Form input[type='checkbox']:focus,
@@ -259,4 +244,22 @@
 
 .Select-Pointer {
   cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .common-Table-Wrapper {
+        overflow-x: auto;
+    }
+
+    .common-Table-Wrapper .common-Table {
+        min-width: 900px;
+    }
+
+    .inventory-Table-Wrapper {
+        overflow-x: auto;
+    }
+
+    .inventory-Table-Wrapper .inventory-table {
+        min-width: 900px;
+    }
 }

@@ -28,7 +28,7 @@ const SalesJournals = () => {
                         setSelectedId(item.transactionId);
                         setIsDetailOpen(true);
                     }}
-                    style={{cursor: "pointer", color: "var(--color-primary)"}}
+                    style={{cursor: "pointer", color: "var(--text-accent)"}}
                 >
                     {val}
                 </span>

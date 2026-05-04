@@ -23,7 +23,6 @@
     gap: 8px;
 }
 
-
 /* 공통 카드 */
 .main-Card{
     background: var(--color-inverse);
@@ -82,6 +81,7 @@
     padding: 10px 16px;
     box-sizing: border-box;
     height: 578px;
+    overflow: hidden;
 }
 .mainCalendar-Header{
     display: flex;
@@ -96,36 +96,48 @@
 }
 .calendar-Body{
     margin-top: 30px;
-}
-.logisticsTeam-Wrapper{
-
-    background: var(--color-inverse);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    width: 100%;
-    padding: 10px 16px 20px;
-    box-sizing: border-box;
-    height: auto;
+    overflow-y: auto;
+    height: 490px;
 }
 
-/* notice */
-.notice-Wrapper{
-    background: var(--color-inverse);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    width: 100%;
-    padding: 10px 16px;
-    box-sizing: border-box;
-    height: 278px;
+
+
+@media (max-width: 1025px) {
+    .mainPage-Wrapper {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-width: unset;
+    }
+    .main-Card {
+        height: auto;
+        min-height: 278px;
+    }
+
+    .calendar-Wrapper {
+        height: auto;
+    }
+
+    .calendar-Body {
+        height: auto;
+        max-height: 490px;
+    }
+
+    .right-Section {
+        height: auto;
+        overflow: visible;
+    }
+
+    .left-Section {
+        height: auto;
+    }
+
+    .notice-Wrapper {
+        height: auto;
+    }
+
 }
-.notice-Header{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-}
-.notice-Header p{
-    font-size: var(--font-sm);
-    font-weight: 400;
-    color: var(--text-primary);
+@media (max-width: 768px) {
+    .left-Section .top-Card{
+        grid-template-columns: 1fr;
+    }
 }

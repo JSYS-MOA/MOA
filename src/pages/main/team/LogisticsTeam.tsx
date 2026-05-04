@@ -30,7 +30,7 @@ const LogisticsTeam = () => {
     const {  mutate } = useGetInboundsInfo()
 
     return (
-        <div className="logisticsTeam-Wrapper">
+        <div className="team-Wrapper">
             <TeamLayout
                 title="입고현황"
                 linkTo="/inventory/inbounds"

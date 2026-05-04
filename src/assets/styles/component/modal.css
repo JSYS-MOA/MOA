@@ -50,9 +50,23 @@
     background: var(--color-inverse);
     padding: 15px 20px 20px;
     border-radius: var(--radius-lg);
-    flex: 0 ;    
+    flex: 1;
 }
 .modal-Footer{
     padding: 13px 15px;
     background: var(--color-modal);
+}
+
+@media (max-width: 1024px)
+
+{
+    .modal-Container {
+    width: 590px;
+    height: 726px;
+}
+}@media (max-width: 768px) {
+    .modal-Container {
+        min-width: 590px;
+    }
+
 }
