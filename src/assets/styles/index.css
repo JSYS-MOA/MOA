@@ -204,7 +204,7 @@ button {
 
 /* 버튼 */
 .btn-Primary{
-  padding: 3px 12px;
+  padding: 5px 12px;
   background: var(--color-primary);
   color: var(--text-inverse);
   border-radius: var(--radius-md);
@@ -216,7 +216,7 @@ button {
 }
 
 .btn-Secondary{
-  padding: 3px 12px;
+  padding: 5px 12px;
   background: var(--color-inverse);
   color: var(--text-primary);
   border-radius: var(--radius-md);
