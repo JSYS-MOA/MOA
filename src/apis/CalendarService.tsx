@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const API = "http://localhost/api";
-const API = "https://moa-server.onrender.com/api";
+ const API = "http://localhost/api";
+// const API = "https://moa-server.onrender.com/api";
 
 // 캘린더 목록 조회
 export async function getCalendarsApi(type?: string) {
