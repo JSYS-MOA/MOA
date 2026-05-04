@@ -37,8 +37,12 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
     const [formData, setFormData] = useState<HRFormData>((baseData as HRFormData) || ({} as HRFormData));
     const [currentField, setCurrentField] = useState<any>(null);
+    
     const [isSearchOpen, setSearchOpen] = useState(false);
 
+    //임시 사용
+   console.log(isSearchOpen + " " + currentField)
+    
 
     if (!isOpen || !config) return null;
 
@@ -76,27 +80,27 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
     };
 
 // 3. 검색 결과 처리 핸들러 (수당코드 등 자동 채우기 핵심 로직)
-    const handleSearchResult = (selectedData: any) => {
-        if (!currentField || !currentField.mapTo) return;
-        console.log("원본 데이터 전체:", selectedData);
-        const { mapTo } = currentField;
-        const updates: any = {};
+    // const handleSearchResult = (selectedData: any) => {
+    //     if (!currentField || !currentField.mapTo) return;
+    //     console.log("원본 데이터 전체:", selectedData);
+    //     const { mapTo } = currentField;
+    //     const updates: any = {};
 
-        // mapTo 설정대로 데이터 매핑 (예: allowanceName -> selectedData['allowanceName'])
-        Object.keys(mapTo).forEach((formKey) => {
-            const dataKey = mapTo[formKey];
-            updates[formKey] = selectedData[dataKey];
-        });
+    //     // mapTo 설정대로 데이터 매핑 (예: allowanceName -> selectedData['allowanceName'])
+    //     Object.keys(mapTo).forEach((formKey) => {
+    //         const dataKey = mapTo[formKey];
+    //         updates[formKey] = selectedData[dataKey];
+    //     });
 
-        console.log("업데이트될 데이터:", updates)
+    //     console.log("업데이트될 데이터:", updates)
 
-        setFormData((prev) => ({
-            ...prev,
-            ...updates
-        }));
+    //     setFormData((prev) => ({
+    //         ...prev,
+    //         ...updates
+    //     }));
 
-        setSearchOpen(false); // 검색 완료 후 모달 닫기
-    };
+    //     setSearchOpen(false); // 검색 완료 후 모달 닫기
+    // };
 
     return (
 
