@@ -1,0 +1,272 @@
+.CertificateDocumentModalScope .modal-Overlay {
+    z-index: 1001;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.CertificateDocumentModalScope .modal-Container {
+    width: min(860px, 100%);
+    max-height: min(920px, calc(100vh - 48px));
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.CertificateDocumentModalScope .modal-Header p,
+.CertificateDocumentModalScope .modal-Title p {
+    margin: 0;
+}
+
+.CertificateDocumentModalScope .modal-Header button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.CertificateDocumentModalScope .modal-Title {
+    margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
+    color: var(--text-accent);
+    font-size: var(--font-xl);
+    font-weight: 700;
+}
+
+.CertificateDocumentModalScope .modal-Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow-y: auto;
+}
+
+.CertificateDocumentModalScope .modal-Footer {
+    padding: 0 var(--spacing-sm) var(--spacing-sm);
+    background: transparent;
+}
+
+.CertificateDocumentModal-footer {
+    display: flex;
+    gap: var(--spacing-xs);
+    padding: 0 var(--spacing-xs) var(--spacing-xs);
+}
+
+.CertificateDocumentModal-button {
+    min-width: 64px;
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.CertificateDocumentModal-button--primary {
+    background: var(--color-primary);
+    color: var(--text-inverse);
+}
+
+.CertificateDocumentModal-button--secondary {
+    background: var(--color-inverse);
+    color: var(--text-primary);
+}
+
+.CertificateDocument-paper {
+    margin: 0 var(--spacing-sm) var(--spacing-sm);
+    padding: 40px 44px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: #111827;
+}
+
+.CertificateDocument-paper__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+}
+
+.CertificateDocument-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.CertificateDocument-subtitle {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.CertificateDocument-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.CertificateDocument-table th,
+.CertificateDocument-table td {
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    line-height: 1.5;
+    vertical-align: middle;
+    text-align: left;
+    word-break: break-word;
+}
+
+.CertificateDocument-table th {
+    width: 18%;
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+.CertificateDocument-table td {
+    width: 32%;
+    background: #fff;
+}
+
+.CertificateDocument-content {
+    margin-top: 66px;
+    margin-bottom: 336px;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #111827;
+}
+
+.CertificateDocument-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.CertificateDocument-footer__date {
+    font-size: 15px;
+    color: #111827;
+    margin-bottom: 42px;
+}
+
+.CertificateDocument-footer__issuer {
+    margin-left: auto;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: #111827;
+}
+
+@media (max-width: 768px) {
+    .CertificateDocumentModalScope .modal-Overlay {
+        padding: 12px;
+    }
+
+    .CertificateDocument-paper {
+        padding: 24px 20px;
+    }
+
+    .CertificateDocument-table th,
+    .CertificateDocument-table td {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 12mm;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        background: var(--color-inverse);
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .CertificateDocumentModalScope,
+    .CertificateDocumentModalScope * {
+        visibility: visible;
+    }
+
+    .CertificateDocumentModalScope {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .CertificateDocumentModalScope .modal-Overlay {
+        position: static;
+        inset: auto;
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 0;
+        background: transparent;
+        justify-content: initial;
+        align-items: initial;
+    }
+
+    .CertificateDocumentModalScope .modal-Container {
+        width: 100%;
+        max-width: none;
+        max-height: none;
+        height: auto;
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .CertificateDocumentModalScope .modal-Header,
+    .CertificateDocumentModalScope .modal-Title,
+    .CertificateDocumentModalScope .modal-Footer {
+        display: none;
+    }
+
+    .CertificateDocumentModalScope .modal-Body {
+        margin: 0;
+        padding: 0;
+        display: block;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .CertificateDocument-paper {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .CertificateDocument-table {
+        width: 100%;
+    }
+
+    .CertificateDocument-content {
+        margin-top: 66px;
+        margin-bottom: 380px;
+    }
+
+    .CertificateDocument-footer__date {
+        margin-bottom: 16px;
+        margin-bottom: 42px;
+    }
+
+    .CertificateDocument-footer__issuer {
+    margin-left: auto;
+        margin-right: 5px;
+    }
+}

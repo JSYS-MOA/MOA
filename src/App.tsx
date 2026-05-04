@@ -12,6 +12,11 @@ import MyCalendar from "./pages/mypage/MyCalendar.tsx";
 import Base from "./pages/base/Base.tsx";
 import Admin from './pages/admin/Admin.tsx';
 import HRLists from "./pages/hr2/HRLists.tsx";
+import HrCardListPage from "./pages/hr/HrCardListPage.tsx";
+import LeaverCardListPage from "./pages/hr/LeaverCardListPage.tsx";
+import CertificatesCardListPage from "./pages/hr/CertificatesCardListPage.tsx";
+import EvaluationsCardListPage from "./pages/hr/EvaluationsCardListPage.tsx";
+import PayRollListPage from "./pages/hr/PayRollListPage.tsx";
 import SalesJournals from "./pages/sales/SalesJournals.tsx";
 import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
 import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
@@ -69,7 +74,19 @@ const App = () => {
 
                 <Route element={<PrivateRoute />}>
                     <Route element={<MainLayout />}>
+                        <Route path="/hr">
+                            <Route path="cards" element={<HrCardListPage />} />
+                            <Route path="leavers" element={<LeaverCardListPage />} />
+                            <Route path="certificates" element={<CertificatesCardListPage />} />
+                            <Route path="evaluations" element={<EvaluationsCardListPage />} />
+                            <Route path="payroll" element={<PayRollListPage />} />
+                        </Route>
+                    </Route>
+                </Route>
 
+
+                <Route element={<PrivateRoute />}>
+                    <Route element={<MainLayout />}>
                         <Route path="/inventory/*" element={<InventoryRouter />} />
                         <Route path="/gw/*" element={<GwRouter />} />
                         
@@ -84,8 +101,12 @@ const App = () => {
 
                     </Route>
                 </Route>
-
                 
+            
+            
+            
+
+            
 
         </Routes>    
     </>

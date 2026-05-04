@@ -1,0 +1,267 @@
+.payRollAddModalScope .modal-Overlay,
+.payRollEmployeeSelectModalScope .modal-Overlay {
+    z-index: 1002;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.payRollAddModalScope .modal-Container {
+    width: min(620px, calc(100vw - 96px));
+    height: min(560px, calc(100vh - 72px));
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.payRollEmployeeSelectModalScope .modal-Container {
+    width: min(560px, calc(100vw - 96px));
+    height: min(500px, calc(100vh - 72px));
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.payRollAddModalScope .modal-Header,
+.payRollEmployeeSelectModalScope .modal-Header {
+    min-height: 24px;
+    padding: 4px 10px;
+    background: #5b5878;
+}
+
+.payRollAddModalScope .modal-Title,
+.payRollEmployeeSelectModalScope .modal-Title {
+    display: none;
+}
+
+.payRollAddModalScope .modal-Body,
+.payRollEmployeeSelectModalScope .modal-Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 20px 18px 14px;
+    background: #f6f6f7;
+    overflow: auto;
+}
+
+.payRollAddModalScope .modal-Children,
+.payRollEmployeeSelectModalScope .modal-Children {
+    min-height: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.payRollAddModalScope .modal-Footer,
+.payRollEmployeeSelectModalScope .modal-Footer {
+    padding: 0 18px 14px;
+    background: #f6f6f7;
+}
+
+.payRollAddModal-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-height: 100%;
+}
+
+.payRollAddModal-heading,
+.payRollAddModal-subHeader h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2a5a;
+}
+
+.payRollAddModal-formBox {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.payRollAddModal-fieldRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 28px;
+}
+
+.payRollAddModal-fieldRow > label:first-child {
+    flex: 0 0 70px;
+    font-size: 12px;
+    color: #2f3640;
+}
+
+.payRollAddModal-input {
+    flex: 1;
+    height: 28px;
+    padding: 0 8px;
+    border: 1px solid #d8dbe2;
+    border-radius: 4px;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.payRollAddModal-dateRow {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+}
+
+.payRollAddModal-nativeDateInput {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 28px;
+    height: 28px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.payRollAddModal-select {
+    height: 28px;
+    min-width: 64px;
+    border: 1px solid #d8dbe2;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #2f3640;
+}
+
+.payRollAddModal-calendarButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #d8dbe2;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #8a90a0;
+    cursor: pointer;
+}
+
+.payRollAddModal-targetRow {
+    flex-wrap: wrap;
+}
+
+.payRollAddModal-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #2f3640;
+}
+
+.payRollAddModal-linkButton {
+    height: 26px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 4px;
+    background: #5b5878;
+    color: #ffffff;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.payRollAddModal-targetCount {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.payRollAddModal-subHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.payRollAddModal-search {
+    display: flex;
+    gap: 6px;
+}
+
+.payRollAddModal-search input {
+    width: 130px;
+    height: 26px;
+    padding: 0 8px;
+    border: 1px solid #d8dbe2;
+    border-radius: 4px;
+}
+
+.payRollAddModal-search button {
+    height: 26px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 4px;
+    background: #5b5878;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.payRollAddModal-tableWrap {
+    overflow: auto;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+.payRollAddModal-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.payRollAddModal-table th,
+.payRollAddModal-table td {
+    height: 28px;
+    padding: 4px 8px;
+    border: 1px solid #e2e5eb;
+    font-size: 11px;
+    text-align: center;
+    color: #2f3640;
+}
+
+.payRollAddModal-table th {
+    color: #1f2a5a;
+    background: #f8f9fb;
+}
+
+.payRollAddModal-table th:first-child,
+.payRollAddModal-table td:first-child {
+    width: 36px;
+}
+
+.payRollAddModal-empty {
+    color: #6b7280;
+}
+
+.payRollAddModal-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+.payRollAddModal-button {
+    min-width: 42px;
+    height: 26px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.payRollAddModal-button--primary {
+    background: #4b4d78;
+    color: #ffffff;
+}
+
+.payRollAddModal-button--secondary {
+    border-color: #d6d9e0;
+    background: #ffffff;
+    color: #3f4274;
+}

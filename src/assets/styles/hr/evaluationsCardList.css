@@ -1,0 +1,407 @@
+/* ====================== 인사카드 목록 상단 ====================== */
+
+.evaluationsCardListPage-page {
+    width: 100%;
+}
+
+.evaluationsCardListPage-table-box {
+    margin-top: var(--spacing-md);
+}
+
+.evaluationsCardListPage-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.evaluationsCardListPage-title {
+    margin: 0;
+    font-size: var(--font-xl);
+    color: var(--text-accent);
+    font-weight: bolder;
+}
+
+.evaluationsCardListPage-star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.evaluationsCardListPage-top-search-btn {
+    margin: var(--spacing-sm) 0 var(--spacing-xs) auto;
+}
+
+/* ====================== 검색 필터 ====================== */
+
+.evaluationsCardListPage-filter-box {
+    overflow: hidden;
+    max-height: 130px;
+    max-width: 100%;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--text-inverse);
+    opacity: 1;
+    transition:
+            max-height 0.2s ease,
+            padding 0.2s ease,
+            opacity 0.2s ease,
+            margin-bottom 0.2s ease,
+            border-width 0.2s ease;
+}
+
+.evaluationsCardListPage-filter-box.is-collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
+}
+
+.evaluationsCardListPage-filter-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap:var(--spacing-xs) var(--spacing-sm);
+    margin: var(--spacing-sm);
+    text-align: left;
+}
+
+.evaluationsCardListPage-filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin: 0;
+    min-width: 0;
+}
+
+.evaluationsCardListPage-filter-group label {
+    flex: 0 0 40px;
+    color: var(--text-primary);
+}
+
+/* 칩 입력창 */
+.evaluationsCardListPage-chip-input {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 28px;
+    padding-right: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    background: var(--color-inverse);
+    overflow: hidden;
+}
+
+.evaluationsCardListPage-chip-input.has-chip {
+    padding-block: var(--spacing-xs);
+}
+
+.evaluationsCardListPage-chip-input:focus-within {
+    border-color: var(--border);
+    box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
+}
+
+.evaluationsCardListPage-chip-input-icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    align-self: stretch;
+    border-right: 1px solid var(--border);
+}
+
+.evaluationsCardListPage-chip-input-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    transform: translateY(-60%);
+    box-sizing: border-box;
+}
+
+.evaluationsCardListPage-chip-input-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--border);
+    transform: translateY(4px) rotate(45deg);
+}
+
+.evaluationsCardListPage-chip-input input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 28px;
+    padding: 0 var(--spacing-xs);
+    border: 0;
+    outline: none;
+    background: var(--color-inverse);
+}
+
+.evaluationsCardListPage-chip-input input::placeholder {
+    color: var(--border-dark);
+}
+
+.evaluationsCardListPage-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    max-width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 999px;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    line-height: 1;
+}
+
+.evaluationsCardListPage-chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.evaluationsCardListPage-chip-input .evaluationsCardListPage-chip {
+    margin-right: 4px;
+}
+
+.evaluationsCardListPage-chip-input.has-chip input {
+    min-width: 48px;
+}
+
+.evaluationsCardListPage-chip-x {
+    border: none;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.evaluationsCardListPage-chip-x:hover {
+    opacity: 0.7;
+}
+
+.evaluationsCardListPage-chip-clear {
+    align-self: stretch;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: var(--color-inverse);
+    color: var(--border);
+    font-size: var(--font-lg);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.evaluationsCardListPage-chip-clear:disabled {
+    cursor: default;
+}
+
+.evaluationsCardListPage-chip-clear:not(:disabled):hover {
+    color: var(--border-dark);
+}
+
+.evaluationsCardListPage-filter-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: var(--spacing-sm);
+    border-top: 1px solid var(--border);
+}
+
+.evaluationsCardListPage-search-btn {
+    margin: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
+}
+
+/* ====================== 목록 정보 / 하단 버튼 ====================== */
+
+.evaluationsCardListPage-table-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+    text-align: left;
+}
+
+.evaluationsCardListPage-bottom-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--spacing-xs);
+    margin-top: 16px;
+}
+
+/* 공통 버튼 */
+.evaluationsCardListPage-top-search-btn,
+.evaluationsCardListPage-search-btn,
+.evaluationsCardListPage-add-btn,
+.evaluationsCardListPage-paging-prev-btn,
+.evaluationsCardListPage-paging-next-btn {
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-inverse);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    height: var(--spacing-lg);
+}
+
+.evaluationsCardListPage-top-search-btn:hover,
+.evaluationsCardListPage-search-btn:hover,
+.evaluationsCardListPage-add-btn:hover,
+.evaluationsCardListPage-paging-prev-btn:hover,
+.evaluationsCardListPage-paging-next-btn:hover {
+    background: var(--color-danger);
+    color: var(--color-inverse);
+
+}
+
+.evaluationsCardListPage-disabled-btn {
+    color: var(--color-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    height: var(--spacing-lg);
+}
+
+.evaluationsCardListPage-disabled-btn:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+/* ====================== 페이징 ====================== */
+
+.evaluationsCardListPage-paging-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.evaluationsCardListPage-paging-group-min {
+    display: flex;
+    align-items: center;
+    gap:var(--spacing-xs);
+}
+
+.evaluationsCardListPage-paging-num-btn {
+    background: none;
+    border: 0;
+    color: var(--border-dark);
+    font-size: var(--font-xl);
+    padding: 4px var(--spacing-xs);
+    cursor: pointer;
+}
+
+.evaluationsCardListPage-paging-num-btn:disabled {
+    color: var(--text-accent);
+    border-radius: var(--radius-sm);
+    cursor: default;
+}
+
+/* ====================== 테이블 ====================== */
+
+.evaluationsTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    table-layout: fixed;
+}
+
+.evaluationsTable-th,
+.evaluationsTable-td {
+    height: 20px;
+    padding: 6px var(--spacing-xs);
+    border: 1px solid var(--border);
+    font-size: var(--font-lg);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.evaluationsTable-th {
+    background-color: var(--color-gray-100);
+    color: var(--text-accent);
+}
+
+.evaluationsTable-td {
+    background: var(--color-inverse);
+}
+
+.evaluationsTable-nameButton {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-accent);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.evaluationsTable-nameButton:hover,
+.evaluationsTable-nameButton:focus-visible {
+    text-decoration: underline;
+}
+
+.evaluationsTable tbody tr:hover {
+    background-color: var(--color-gray-100);
+}
+
+/* 체크박스 열 */
+.evaluationsTable-empty {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+/* 열 너비 */
+
+.evaluationsTable th:nth-child(1),
+.evaluationsTable td:nth-child(1) {
+    width: 7%;
+}
+
+.evaluationsTable th:nth-child(2),
+.evaluationsTable td:nth-child(2) {
+    width: 7%;
+}
+
+.evaluationsTable th:nth-child(3),
+.evaluationsTable td:nth-child(3) {
+    width: 7%;
+}
+
+.evaluationsTable th:nth-child(4),
+.evaluationsTable td:nth-child(4) {
+    width: 7%;
+}
+
+.evaluationsTable th:nth-child(5),
+.evaluationsTable td:nth-child(5) {
+    width: 72%;
+}
