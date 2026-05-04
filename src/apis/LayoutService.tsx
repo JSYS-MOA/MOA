@@ -7,7 +7,9 @@ const API = "https://moa-server.onrender.com/api";
 export async function layoutApi(){
  
     const { user } = useAuthStore.getState(); 
+    console.log( user);
     const employeeId = user?.employeeId;
+    console.log( employeeId)
 
     if (!employeeId) {
         console.error("아이디가 없습니다!");
