@@ -457,7 +457,11 @@ const PayRollListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isStarred, setIsStarred] = useState(false);
     const [keywordDraft, setKeywordDraft] = useState("");
-    const [departmentDraft, setDepartmentDraft] = useState("");
+
+    //set 안써서 주석처리
+    // const [departmentDraft, setDepartmentDraft] = useState("");
+    const [departmentDraft] = useState("");
+
     const [keywordFilter, setKeywordFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [startDateDraft, setStartDateDraft] = useState("");
@@ -560,6 +564,7 @@ const PayRollListPage = () => {
         setCurrentPage(1);
     };
 
+    // 필터 사용 안해서 없앰
     // const clearDepartmentFilter = () => {
     //     setDepartmentDraft("");
     //     setDepartmentFilter("");
