@@ -9,7 +9,7 @@ import Base from '../pages/base/Base';
     <Routes>
       <Route index element={<Approvals/>} />
       <Route path="approvals" element={<Approvals/>} />
-      <Route path="approvalForms" element={<Base apiType="form" />} />
+      <Route path="approvalForms" element={<Base apiType="document" />} />
       <Route path='teamMembers' element={<TeamMembers/>} />
       <Route path='approvalWait' element={<ApprovalsWait/>}/>
     </Routes>
