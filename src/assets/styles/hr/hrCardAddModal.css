@@ -384,8 +384,10 @@
 .hrCardAddModal-dateCalendarWrap {
     position: relative;
     flex: 0 0 40px;
-    width: 40px;
-    height: 40px;
+    width: 328px;
+    height: 28px;
+    align-items: center;
+    display: flex;
 }
 
 .hrCardAddModal-dateNativeInput {
@@ -411,14 +413,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 28px !important;
+    height: 28px !important;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background-color: var(--color-inverse);
     color: var(--text-secondary-50);
-    cursor: pointer;
-}
+    cursor: pointer;}
 
 .hrCardAddModal-dateCalendarButton:disabled {
     opacity: 0.6;
