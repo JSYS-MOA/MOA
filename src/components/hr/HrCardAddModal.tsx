@@ -840,184 +840,34 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
             onClose={onClose}
             footer={footer}
         >
-            <form id={formId} className="hrCardAddModal-form" onSubmit={handleSubmit}>
-                    <div className="hrCardAddModal-row">
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">사번번호</label>
-                            <input
-                                className="hrCardAddModal-input"
-                                name="employeeId"
-                                type="text"
-                                value={form.employeeId}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">권한 코드</label>
-                            <input
-                                className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                name="roleId"
-                                type="text"
-                                value={selectedRole ? String(selectedRole.roleId) : ""}
-                                readOnly
-                                required
-                                title="부서와 직급 선택 결과로 자동 입력됩니다."
-                            />
-                            <span className="hrCardAddModal-hint">{roleHintText}</span>
-                        </div>
-
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">성명</label>
-                            <input
-                                className="hrCardAddModal-input"
-                                name="userName"
-                                type="text"
-                                value={form.userName}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">비밀번호</label>
-                            <input
-                                className="hrCardAddModal-input"
-                                name="password"
-                                type="text"
-                                value={form.password}
-                                onChange={handleChange}
-                                autoComplete="new-password"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="hrCardAddModal-row hrCardAddModal-row--optionFields">
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">부서</label>
-                            <select
-                                className="hrCardAddModal-input hrCardAddModal-select"
-                                name="departmentId"
-                                value={form.departmentId}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="" disabled>
-                                    부서를 선택하세요
-                                </option>
-                                {searchableDepartments.map((department) => (
-                                    <option
-                                        key={department.departmentId}
-                                        value={String(department.departmentId)}
-                                    >
-                                        {department.departmentName}
-                                    </option>
-                                ))}
-                            </select>
-                            <span className="hrCardAddModal-hint">
-                                부서를 선택하면 코드가 자동으로 입력됩니다.
-                            </span>
-                        </div>
-
-                        <div className="hrCardAddModal-field hrCardAddModal-field--small">
-                            <label className="hrCardAddModal-label">부서 코드</label>
-                            <input
-                                className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                name="departmentCord"
-                                type="text"
-                                value={resolvedDepartmentCord}
-                                readOnly
-                                title="선택한 부서에 따라 자동 입력됩니다."
-                            />
-                        </div>
-
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">직급/직책</label>
-                            <select
-                                className="hrCardAddModal-input hrCardAddModal-select"
-                                name="gradeId"
-                                value={form.gradeId}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="" disabled>
-                                    직급을 선택하세요
-                                </option>
-                                {searchableGrades.map((grade) => (
-                                    <option
-                                        key={grade.gradeId}
-                                        value={String(grade.gradeId)}
-                                    >
-                                        {grade.gradeName}
-                                    </option>
-                                ))}
-                            </select>
-                            <span className="hrCardAddModal-hint">
-                                직급을 선택하면 코드가 자동으로 입력됩니다.
-                            </span>
-                        </div>
-
-                        <div className="hrCardAddModal-field hrCardAddModal-field--small">
-                            <label className="hrCardAddModal-label">직급 코드</label>
-                            <input
-                                className="hrCardAddModal-input hrCardAddModal-input--readonly"
-                                name="gradeId"
-                                type="text"
-                                value={form.gradeId}
-                                readOnly
-                                required
-                                title="선택한 직급에 따라 자동 입력됩니다."
-                            />
-                        </div>
-                    </div>
-
-                    <div className="hrCardAddModal-row">
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">이메일</label>
-                            <div className="hrCardAddModal-emailRow">
+            <form id={formId} onSubmit={handleSubmit}>
+                    <div className="modal-Row">
+                        <div className="modal-Row-Group">
+                            <div className="modal-Row-Item">
+                                <label>사번번호</label>
                                 <input
-                                    className="hrCardAddModal-input"
+                                    name="employeeId"
                                     type="text"
-                                    value={emailParts.local}
-                                    onChange={(event) =>
-                                        updateEmail(event.target.value, emailParts.domain)
-                                    }
-                                    placeholder="id"
-                                    inputMode="email"
+                                    value={form.employeeId}
+                                    onChange={handleChange}
+                                    required
                                 />
-                                <span className="hrCardAddModal-emailAt">@</span>
+                            </div>
+                            <div className="modal-Row-Item">
+                                <label>권한 코드</label>
                                 <input
-                                    className="hrCardAddModal-input"
+                                    name="roleId"
                                     type="text"
-                                    value={emailParts.domain}
-                                    onChange={(event) =>
-                                        updateEmail(emailParts.local, event.target.value)
-                                    }
-                                    placeholder="domain.com"
-                                    inputMode="email"
+                                    value={selectedRole ? String(selectedRole.roleId) : ""}
+                                    readOnly
+                                    required
+                                    title="부서와 직급 선택 결과로 자동 입력됩니다."
                                 />
                             </div>
                         </div>
                     </div>
-
-                    <div className="hrCardAddModal-row hrCardAddModal-row--dateFields">
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">입사일</label>
-                            <DateSelectInput
-                                value={form.startDate}
-                                onChange={(nextValue) =>
-                                    setForm((prev) => ({ ...prev, startDate: nextValue }))
-                                }
-                                minYear={CURRENT_YEAR - 30}
-                                maxYear={CURRENT_YEAR + 5}
-                                calendarLabel="입사일 달력 열기"
-                            />
-                        </div>
-
-                        <div className="hrCardAddModal-field">
-                            <label className="hrCardAddModal-label">생년월일</label>
+                    <div className="modal-Row">
+                            <label>생년월일</label>
                             <DateSelectInput
                                 value={form.birth}
                                 onChange={(nextValue) =>
@@ -1028,8 +878,142 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                 calendarLabel="생년월일 달력 열기"
                             />
                         </div>
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label>직급 코드</label>
+                                    <input
+                                        name="gradeId"
+                                        type="text"
+                                        value={form.gradeId}
+                                        readOnly
+                                        required
+                                        title="선택한 직급에 따라 자동 입력됩니다."
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label>성명</label>
+                                    <input
+                                        name="userName"
+                                        type="text"
+                                        value={form.userName}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label>비밀번호</label>
+                                    <input
+                                        name="password"
+                                        type="text"
+                                        value={form.password}
+                                        onChange={handleChange}
+                                        autoComplete="new-password"
+                                        required
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label>부서</label>
+                                    <select
+                                        name="departmentId"
+                                        value={form.departmentId}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            부서를 선택하세요
+                                        </option>
+                                        {searchableDepartments.map((department) => (
+                                            <option
+                                                key={department.departmentId}
+                                                value={String(department.departmentId)}
+                                            >
+                                                {department.departmentName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label>부서 코드</label>
+                                    <input
+                                        name="departmentCord"
+                                        type="text"
+                                        value={resolvedDepartmentCord}
+                                        readOnly
+                                        title="선택한 부서에 따라 자동 입력됩니다."
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label>직급/직책</label>
+                                    <select
+                                        name="gradeId"
+                                        value={form.gradeId}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            직급을 선택하세요
+                                        </option>
+                                        {searchableGrades.map((grade) => (
+                                            <option
+                                                key={grade.gradeId}
+                                                value={String(grade.gradeId)}
+                                            >
+                                                {grade.gradeName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    <div className="modal-Row">
+                        <div className="modal-Row-Group">
+                            <div className="modal-Row-Item">
+                                <label>이메일</label>
+                                <div>
+                                    <input
+                                        type="text"
+                                        value={emailParts.local}
+                                        onChange={(event) =>
+                                            updateEmail(event.target.value, emailParts.domain)
+                                        }
+                                        placeholder="id"
+                                        inputMode="email"
+                                    />
+                                    <span className="hrCardAddModal-emailAt">@</span>
+                                    <input
+                                        type="text"
+                                        value={emailParts.domain}
+                                        onChange={(event) =>
+                                            updateEmail(emailParts.local, event.target.value)
+                                        }
+                                        placeholder="domain.com"
+                                        inputMode="email"
+                                    />
+                                </div>
+                            </div>
+                            <div className="modal-Row-Item">
+                                <label>입사일</label>
+                                <DateSelectInput
+                                    value={form.startDate}
+                                    onChange={(nextValue) =>
+                                        setForm((prev) => ({ ...prev, startDate: nextValue }))
+                                    }
+                                    minYear={CURRENT_YEAR - 30}
+                                    maxYear={CURRENT_YEAR + 5}
+                                    calendarLabel="입사일 달력 열기"
+                                />
+                            </div>
+                        </div>
                     </div>
-
                     <div className="hrCardAddModal-row">
                         <div className="hrCardAddModal-field">
                             <label className="hrCardAddModal-label">전화번호</label>

@@ -458,7 +458,7 @@ const HrCardListPage = () => {
                     {user && (
                         <button
                             type="button"
-                            className="hrCardListPage-add-btn"
+                            className="btn-Primary"
                             onClick={() => setIsAddModalOpen(true)}
                         >
                             추가
@@ -467,7 +467,7 @@ const HrCardListPage = () => {
 
                     <button
                         type="button"
-                        className="hrCardListPage-disabled-btn"
+                        className="btn-Secondary"
                         disabled={selectedUserIds.length === 0 || isDeleting}
                         onClick={handleDeleteSelected}
                     >
@@ -476,10 +476,10 @@ const HrCardListPage = () => {
                 </div>
 
                 <div className="hrCardListPage-paging-group">
-                    <div className="hrCardListPage-paging-group-min">
+                    <div className="Page-Btn-container">
                         <button
                             type="button"
-                            className="hrCardListPage-paging-prev-btn"
+                            className="btn-Primary"
                             onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
                             disabled={resolvedCurrentPage === 1}
                         >
@@ -500,7 +500,7 @@ const HrCardListPage = () => {
 
                         <button
                             type="button"
-                            className="hrCardListPage-paging-next-btn"
+                            className="btn-Primary"
                             onClick={() =>
                                 setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
                             }
