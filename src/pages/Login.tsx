@@ -26,6 +26,7 @@ const Login = () =>{
       navigate("/home");
     }
   }, [user,navigate]);
+
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault(); //폼의 기본 동작 = 페이지 새로고침 => handleSubmit 안에 코드 실행 안됨 >이걸 막기위해
 
@@ -50,6 +51,7 @@ const Login = () =>{
       const data = await loginApi(employeeId, password);
       login(data);
       navigate("/home")
+      console.log(data)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setLoginError(
