@@ -1,7 +1,8 @@
 import { useQuery , useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const Api_BASE = "http://localhost/api/admin/levels";
+// const Api_BASE = "http://localhost/api/admin/levels";
+const Api_BASE = "https://moa-server.onrender.com/api/levels";
 
  // 조회 및 검색
   export function useGetRole( search?: string , page? : number  ,  size? : number ) {
