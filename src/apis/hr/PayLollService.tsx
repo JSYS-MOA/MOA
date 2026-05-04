@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import {hr2Configs} from "../../types/hr2Configs.tsx";
+import {hr1Configs} from "../../types/hr1Configs.tsx";
 import axios from "axios";
 
 const API_BASE = "http://localhost/api/hr/payroll";
@@ -271,8 +271,8 @@ export type PayRollCreatePayload = {
     salary_ledger_created_at?: string;
 };
 
-export const getHrData = async (path: keyof typeof hr2Configs) => {
-    const realUrl = hr2Configs[path].apiUrl;
+export const getHrData = async (path: keyof typeof hr1Configs) => {
+    const realUrl = hr1Configs[path].apiUrl;
 
     const { data } = await api.get(realUrl);
     return data;
