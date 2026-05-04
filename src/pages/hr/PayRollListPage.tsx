@@ -14,10 +14,7 @@ import PayRollAddModal from "../../components/hr/PayRollAddModal.tsx";
 import PayRollInfoModal from "../../components/hr/PayRollInfoModal.tsx";
 import PayRollUpdateModal from "../../components/hr/PayRollUpdateModal.tsx";
 import PayRollVoucherModal from "../../components/hr/PayRollVoucherModal.tsx";
-import PayRollTable, {
-    type PayRollTableAction,
-    type PayRollTableRow,
-} from "../../components/hr/PayRollTable.tsx";
+import PayRollTable, { type PayRollTableAction, type PayRollTableRow,} from "../../components/hr/PayRollTable.tsx";
 
 const ITEMS_PER_PAGE = 10;
 const PAYROLL_VENDOR_ID = 11;

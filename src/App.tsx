@@ -15,10 +15,11 @@ import LeaverCardListPage from "./pages/hr/LeaverCardListPage.tsx";
 import CertificatesCardListPage from "./pages/hr/CertificatesCardListPage.tsx";
 import EvaluationsCardListPage from "./pages/hr/EvaluationsCardListPage.tsx";
 import PayRollListPage from "./pages/hr/PayRollListPage.tsx";
-import SalesJournals from "./pages/sales/SalesJournals.tsx";
-import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
-import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
-import MonthlyRevenuePage from "./pages/sales/MonthlyRevenuePage.tsx";
+
+// import SalesJournals from "./pages/sales/SalesJournals.tsx";
+// import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
+// import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
+// import MonthlyRevenuePage from "./pages/sales/MonthlyRevenuePage.tsx";
 
 // 라우터 모움
 import InventoryRouter from "./routes/InventoryRoutes.tsx";
