@@ -229,6 +229,12 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
                        );
                    }
 
+                   if (col.key === 'approverInfo.userName') {
+                       return (
+                           <></>
+                       );
+                   }
+
                    if (col.key === 'approvaContent') {
                        return (
                            <div className='modal-Row' key={col.key} style={{ display: 'block', marginTop:"14px"}}>
