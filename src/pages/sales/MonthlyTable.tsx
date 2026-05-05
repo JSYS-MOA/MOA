@@ -17,8 +17,6 @@ const MonthlyTable = ({title, queryKey, queryFn}: MonthlyTableProps) => {
     const totalRow: VendorMonthly = {
         vendorCode:"",
         vendorName:"합계",
-        //모든 거래처의 i월 금액을 합산
-        //reduce -> 배열.reduce((누적값,현재값) => {},초기값);
         monthly:Array(12).fill(0).map((_,i) =>
             vendors.reduce((sum ,v) => sum + (v.monthly[i] ?? 0),0)
         ),

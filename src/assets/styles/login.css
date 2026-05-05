@@ -1,16 +1,16 @@
 .login-Wrapper{
-    width: 552px; margin: 160px auto;
+    width: 521px; margin-top: -80px;
 }
 .login-Wrapper .logo{text-align: center; margin-bottom: 24px;}
 .login-Wrapper .logo h1{ font-weight: 600; letter-spacing: 2%;}
 .login-Wrapper .logo p{color:var(--text-secondary-30); margin-top: -2px; font-weight: 600}
 .login-Wrapper form{
     background: var(--color-inverse);
-    padding: 71px 48px 40px 48px;
+    padding: 71px 48px 52px 48px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    display: flex;          /* 추가 */
-    flex-direction: column; /* 추가 */
+    display: flex;
+    flex-direction: column;
 }
 .login-Wrapper .title{font-size: var(--font-sm); color: var(--text-secondary-70)}
 .login-Wrapper input{
@@ -43,18 +43,33 @@
     border-radius: 34px;
     background: var( --color-primary);
     border: none; color: var(  --text-inverse);
-    font-size: var(--font-lg);
+    font-size: 17px;
     margin-top: 30px;
     cursor: pointer;
 }
 .login-Wrapper .submit-Btn:hover{
     background: #575568;}
-.login-Wrapper .privacy-Agree{font-size: 13px; margin-top: var(--spacing-lg); color: var(--text-secondary); font-weight: 400; letter-spacing: 2%}
-.login-Wrapper .privacy-Agree span{text-decoration: underline}
-.login-Wrapper .login-FindPassword{
-    color: var(--text-secondary-50);
-    font-size: 13px; display: block;
-    text-align: right; margin-top: 23px;
+.login-Wrapper .privacy-Agree{
+    font-size: 13px;
+    margin-top: 23px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 2%;
+    text-align: right;
+}
+.login-Wrapper .privacy-Agree span{
+    text-decoration: underline;
+    cursor: pointer;
+}
+.test-Account-Box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    background: var(--color-gray-50);
+    line-height: 1.8;
+    margin-top:18px;
 }
 .login-Wrapper .login-Error{
     width: 100%;
@@ -81,3 +96,9 @@
 }
 .login-Wrapper .login-Error span{display: flex;}
 
+@media (max-width: 768px) {
+    .login-Wrapper{width: 464px;}
+}
+@media (max-width: 520px) {
+    .login-Wrapper{width: 325px;}
+}

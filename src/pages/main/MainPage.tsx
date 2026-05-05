@@ -8,6 +8,8 @@ const MainPage = () => {
 
     const { user } = useAuthStore();
 
+    console.log(user);
+
     if(user?.departmentId === 2 || user?.departmentId === 1) return <MainPageLayout><HrTeam /></MainPageLayout>
     if(user?.departmentId === 3) return <MainPageLayout><LogisticsTeam /></MainPageLayout>
     if(user?.departmentId === 4) return <MainPageLayout><SalesTeam /></MainPageLayout>

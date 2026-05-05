@@ -7,7 +7,6 @@ import Table from "../../components/inventory/InventoryTable";
 import Modal from "../../components/inventory/InventoryModal";
 import Alert from "../../components/inventory/Alert";
 import "../../assets/styles/component/table.css"
-import Button from "../../components/Button";
 
 
 const Inventory = () => {
@@ -56,8 +55,8 @@ const Inventory = () => {
     { key: 'productCord', label: '품목코드' },
     { key: 'productName', label: '품목명'  },
     { key: 'storageName', label: '창고명' },
-    { key: 'productPrice', label: '입고단가' },
-    { key: 'inventorySno', label: '총재고수량' }
+    { key: 'productPrice', label: '입고단가' ,align:"right"},
+    { key: 'inventorySno', label: '총재고수량',align:"center" }
   ]
 
   const ModalColumns : MColumn[] = [

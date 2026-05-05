@@ -72,3 +72,13 @@
     border-radius: 50%;
     background: var(--color-primary);
 }
+
+@media (max-width: 768px) {
+    .attendance-Info{
+        display: none;
+    }
+    .attendance-Btn{
+        grid-template-columns:1fr;
+    }
+    .btn-checkin, .btn-checkout{ padding: 25px}
+}

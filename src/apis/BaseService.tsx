@@ -2,8 +2,9 @@ import axios from "axios";
 import {baseConfigs} from "../types/baseConfigs.tsx";
 
     const api = axios.create({
-        baseURL: "http://localhost/",
-        withCredentials: true,
+         baseURL: "http://localhost/",
+        // baseURL: "https://moa-server.onrender.com",
+        withCredentials: true
     });
 // GET 요청용 (조회)
     export const getBaseData = async (path: keyof typeof baseConfigs, page = 0, size = 15) => {

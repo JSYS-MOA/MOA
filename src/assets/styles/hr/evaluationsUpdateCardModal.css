@@ -1,0 +1,553 @@
+/* ====================== Modal Backdrop ====================== */
+.evaluationsCardAddModal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ====================== Modal Panel ====================== */
+.evaluationsCardAddModal-panel {
+    width: min(800px, 100%);
+    max-height: 900px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ====================== Header Bar ====================== */
+.evaluationsCardAddModal-min-title {
+    height: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--text-accent);
+    color: var(--text-inverse);
+}
+
+.evaluationsCardAddModal-min-text {
+    margin-left: var(--spacing-sm);
+    font-size: var(--font-xs);
+}
+
+.evaluationsCardAddModal-closeButton {
+    margin-right: var(--spacing-sm);
+    border: 0;
+    background: transparent;
+    color: var(--text-inverse);
+    font-size: var(--font-lg);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* ====================== Title ====================== */
+.evaluationsCardAddModal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.evaluationsCardAddModal-title {
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    margin-left: var(--spacing-sm);
+    color: var(--text-accent);
+    font-size: var(--font-xl);
+    font-weight: 700;
+}
+
+/* Shared button base */
+.evaluationsCardAddModal-addressButton,
+.evaluationsCardAddModal-button {
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* ====================== Form Layout ====================== */
+.evaluationsCardAddModal-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin: 0 var(--spacing-sm);
+    border-radius: var(--radius-lg);
+    background: var(--color-inverse);
+}
+
+.evaluationsCardAddModal-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--color-inverse);
+}
+
+.evaluationsCardAddModal-section > .evaluationsCardAddModal-row {
+    padding: 0;
+}
+
+.evaluationsCardAddModal-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-row--optionFields {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(140px, 1fr) minmax(0, 1.6fr) minmax(140px, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-row--dateFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-row--stackedDateFields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-field {
+    flex: 1 1 150px;
+}
+
+.evaluationsCardAddModal-field,
+.evaluationsCardAddModal-column {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: center;
+    align-content: start;
+    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xs);
+    text-align: center;
+}
+
+.evaluationsCardAddModal-column {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-field--small {
+    min-width: 140px;
+}
+
+.evaluationsCardAddModal-label {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    white-space: nowrap;
+}
+
+.evaluationsCardAddModal-field > :not(.evaluationsCardAddModal-label),
+.evaluationsCardAddModal-column > :not(.evaluationsCardAddModal-label) {
+    grid-column: 2;
+    min-width: 0;
+}
+
+.evaluationsCardAddModal-hint {
+    grid-column: 2;
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+.evaluationsCardAddModal-employeeSelector {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-employeeHint,
+.evaluationsCardAddModal-employeeList,
+.evaluationsCardAddModal-employeeEmpty {
+    grid-column: 2;
+}
+
+.evaluationsCardAddModal-employeeHint {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+.evaluationsCardAddModal-employeeList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.evaluationsCardAddModal-employeeEmpty {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary-70);
+    font-size: var(--font-sm);
+    background-color: var(--bg);
+}
+
+.evaluationsCardAddModal-employeeChip {
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    text-align: left;
+    cursor: pointer;
+}
+
+.evaluationsCardAddModal-employeeChip.is-selected {
+    border-color: var(--color-primary);
+    background-color: rgba(33, 74, 168, 0.08);
+}
+
+.evaluationsCardAddModal-employeeName {
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 600;
+}
+
+.evaluationsCardAddModal-employeeMeta {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+/* ====================== Inputs ====================== */
+.evaluationsCardAddModal-input,
+.evaluationsCardAddModal-textarea,
+.evaluationsCardAddModal-dateSelect {
+    width: 100%;
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+}
+
+.evaluationsCardAddModal-input::placeholder,
+.evaluationsCardAddModal-textarea::placeholder {
+    color: var(--text-secondary-30);
+}
+
+.evaluationsCardAddModal-select {
+    appearance: auto;
+    padding-right: var(--spacing-sm);
+}
+
+.evaluationsCardAddModal-select:invalid {
+    color: var(--text-secondary-30);
+}
+
+.evaluationsCardAddModal-input--readonly {
+    background-color: var(--color-inverse);
+    color: var(--text-secondary-70);
+}
+
+.evaluationsCardAddModal-textarea {
+    min-height: 72px;
+    resize: vertical;
+}
+
+/* ====================== Email ====================== */
+.evaluationsCardAddModal-emailRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.evaluationsCardAddModal-emailAt {
+    color: var(--text-secondary-70);
+    font-size: var(--font-lg);
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* ====================== Phone ====================== */
+.evaluationsCardAddModal-phoneRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    justify-self: start;
+    width: 100%;
+    max-width: 280px;
+}
+
+.evaluationsCardAddModal-phoneBox {
+    flex: 0 0 84px;
+    min-width: 84px;
+}
+
+.evaluationsCardAddModal-phoneBox--short {
+    flex: 0 0 64px;
+    min-width: 64px;
+}
+
+.evaluationsCardAddModal-phoneDash {
+    color: #57606a;
+    font-size: var(--font-sm);
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* ====================== Date ====================== */
+.evaluationsCardAddModal-dateRow {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.evaluationsCardAddModal-dateBox {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.evaluationsCardAddModal-dateBox--year {
+    width: 88px;
+}
+
+.evaluationsCardAddModal-dateBox--month,
+.evaluationsCardAddModal-dateBox--day {
+    width: 64px;
+}
+
+.evaluationsCardAddModal-dateSelect {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.evaluationsCardAddModal-dateArrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary-50);
+    font-size: var(--font-xs);
+}
+
+.evaluationsCardAddModal-dateDivider {
+    color: var(--text-secondary-50);
+    font-size: var(--font-sm);
+    line-height: 1;
+}
+
+.evaluationsCardAddModal-dateCalendarWrap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.evaluationsCardAddModal-dateNativeInput {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.evaluationsCardAddModal-dateInputRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.evaluationsCardAddModal-dateInputField {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.evaluationsCardAddModal-dateCalendarButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-secondary-50);
+    cursor: pointer;
+}
+
+.evaluationsCardAddModal-dateCalendarButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.evaluationsCardAddModal-dateCalendarIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ====================== Address ====================== */
+.evaluationsCardAddModal-addressRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.evaluationsCardAddModal-addressRow .evaluationsCardAddModal-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.evaluationsCardAddModal-addressButton {
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: var(--spacing-xs) 14px;
+    border: 1px solid var(--border);
+    background-color: var(--color-inverse);
+    white-space: nowrap;
+}
+
+/* ====================== Footer Buttons ====================== */
+.evaluationsCardAddModal-buttonRow {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    padding: 0 var(--spacing-xs) var(--spacing-xs);
+}
+
+.evaluationsCardAddModal-button {
+    min-width: 50px;
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+}
+
+.evaluationsCardAddModal-button--secondary {
+    border-color: var(--border);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+}
+
+.evaluationsCardAddModal-button--primary {
+    border-color: var(--border);
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
+}
+
+.evaluationsCardAddModal-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ====================== Update Modal ====================== */
+.evaluationsCardUpdateModal-topFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.evaluationsCardUpdateModal-field--top {
+    grid-template-columns: 60px minmax(0, 1fr);
+}
+
+.evaluationsCardUpdateModal-inlineOptions {
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+    .evaluationsCardUpdateModal-topFields,
+    .evaluationsCardAddModal-row--optionFields,
+    .evaluationsCardAddModal-row--dateFields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.evaluationsCardModalScope .modal-Overlay {
+    z-index: 999;
+    padding: var(--spacing-md);
+    box-sizing: border-box;
+}
+
+.evaluationsCardModalScope .modal-Container {
+    width: min(800px, 100%);
+    max-height: min(900px, calc(100vh - (var(--spacing-md) * 2)));
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.evaluationsCardModalScope .modal-Header p,
+.evaluationsCardModalScope .modal-Title p {
+    margin: 0;
+}
+
+.evaluationsCardModalScope .modal-Header button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.evaluationsCardModalScope .modal-Title {
+    margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
+    color: var(--text-accent);
+    font-size: var(--font-xl);
+    font-weight: 700;
+}
+
+.evaluationsCardModalScope .modal-Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow-y: auto;
+}
+
+.evaluationsCardModalScope .modal-Footer {
+    padding: 0 var(--spacing-sm) var(--spacing-sm);
+    background: transparent;
+}

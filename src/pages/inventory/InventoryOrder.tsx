@@ -73,15 +73,15 @@ const InventoryOrder = () => {
   }
 
   const columns : Column[] = [
-    { key: 'orderformId', label: '발주번호 ' },
-    { key: 'orderformDate', label: '발주일자' },
+    { key: 'orderformId', label: '발주번호 ' ,align:"center"},
+    { key: 'orderformDate', label: '발주일자', align:"center"},
     { key: 'vendorName', label: '거래처명 '  },
     { key: 'productName', label: '품목명' },
-    { key: 'orderSno', label: '수량' },
-    { key: 'stockInDate', label: '납기일' },
-    { key: 'unitPrice', label: '단가' },
-    { key: 'totalPrice', label: '금액' },
-    { key: 'orderStatus', label: '상태' }
+    { key: 'orderSno', label: '수량',align:"center" },
+    { key: 'stockInDate', label: '납기일',align:"center" },
+    { key: 'unitPrice', label: '단가' ,align:"right"},
+    { key: 'totalPrice', label: '금액' ,align:"right"},
+    { key: 'orderStatus', label: '상태',align:"center" }
   ]
 
   const ModalColumns : MColumn[] = [

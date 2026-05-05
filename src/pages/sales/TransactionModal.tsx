@@ -162,22 +162,24 @@ const TransactionModal = ({isOpen, onClose, transactionId, onSuccess}: Transacti
                     <div>
                         <div className="btn-Wrap">
                             <button className="btn-Primary" onClick={handleUpdate}>저장</button>
-                            <div style={{position: "relative"}}>
-                                <button
-                                    className="btn-Secondary"
-                                    onClick={() => setShowTaxBtn(prev => !prev)}
-                                    style={{display:"flex",alignItems:"center", gap:"25px"}}
-                                >
-                                    인쇄 {showTaxBtn ?  <IoMdArrowDropdown size={17} /> : <IoMdArrowDropup size={17}/> }
-                                </button>
-                                {showTaxBtn && (
-                                    <div className="toggle-Btn-Ab">
-                                        <div onClick={() => { setIsTaxOpen(true); setShowTaxBtn(false); }}>
-                                            전자세금계산서
+                            {isEditMode && transaction?.orderformId != null && (
+                                <div style={{position: "relative"}}>
+                                    <button
+                                        className="btn-Secondary"
+                                        onClick={() => setShowTaxBtn(prev => !prev)}
+                                        style={{display:"flex",alignItems:"center", gap:"25px"}}
+                                    >
+                                        인쇄 {showTaxBtn ?  <IoMdArrowDropdown size={17} /> : <IoMdArrowDropup size={17}/> }
+                                    </button>
+                                    {showTaxBtn && (
+                                        <div className="toggle-Btn-Ab">
+                                            <div onClick={() => { setIsTaxOpen(true); setShowTaxBtn(false); }}>
+                                                전자세금계산서
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
+                                    )}
+                                </div>
+                            )}
                             <button className="btn-Secondary" onClick={handleCloseAttempt}>취소</button>
                         </div>
                     </div>

@@ -2,7 +2,8 @@ import axios from "axios";
 import {hr2Configs} from "../../types/hr2Configs.tsx";
 
 const api = axios.create({
-    baseURL: "http://localhost/",
+     baseURL: "http://localhost/",
+    // baseURL: "https://moa-server.onrender.com/",
     withCredentials: true,
 });
 
@@ -40,28 +41,18 @@ export const deleteHr2Data = async (path: keyof typeof hr2Configs, id: number | 
     return data;
 };
 
-export const getUserData = async (path: keyof typeof hr2Configs, keyword: string) =>{
-    const realUrl = hr2Configs[path].apiUrl;
+//출근
+export const checkInApi = async () => {
+    await api.post("/api/hr/attendances/checkin");
+};
 
-    try {
-        const {data} = await api.get(`${realUrl}`,{params: {keyword}});
-        console.log("realUrl: "+`${realUrl}`);
-        return data;
-    } catch (e) {
-        console.error(`${path} 데이터 조회 실패:`, e);
-        return [];
-    }
-}
-export const getAllowanceData = async (path: keyof typeof hr2Configs, keyword: string) =>{
-    const realUrl = hr2Configs[path].apiUrl;
+//퇴근
+export const checkOutApi = async () => {
+    await api.post("/api/hr/attendances/checkout");
+};
 
-    try {
-
-        const {data} = await api.get(`${realUrl}`,{params: {keyword}});
-        console.log("realUrl: "+`${realUrl}`);
-        return data;
-    } catch (e) {
-        console.error(`${path} 데이터 조회 실패:`, e);
-        return [];
-    }
-}
+//오늘 출퇴근 조회
+export const getTodayWorkApi = async () => {
+    const {data} = await api.get("/api/hr/attendances/today");
+    return data;
+};

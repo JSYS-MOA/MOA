@@ -151,7 +151,7 @@ const ApprovalsAddModal = (  {  columns, onRefresh , setOnAlert , onClose }: {
         onRefresh();
         onClose()
       },
-      onError: (error) => {
+      onError: (error : any ) => {
         console.error(error);
         setOnAlert("등록 중 오류가 발생했습니다.");
       }

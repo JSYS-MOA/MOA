@@ -11,7 +11,6 @@ const InventoryTable = (
   page : number
   handleInbound? : (item: TableProps, e : React.MouseEvent) => void ,
   onItemClick?: (item: TableProps, e : React.MouseEvent) => void ,
-
   }) => {
 
   console.log(items)
@@ -23,7 +22,7 @@ const InventoryTable = (
 
               <thead>
               <tr>
-                  { items ? <th>순번</th> : null}
+                  { items ? <th style={{textAlign:"center"}}>순번</th> : null}
                   {columns.map(col => <th key={col.key}>{col.label}</th>)}
               </tr>
               </thead>
@@ -37,7 +36,10 @@ const InventoryTable = (
                           const rawValue = item[col.key as keyof TableProps];
 
                           return (
-                              <td key={col.key}>
+                              <td
+                                  key={col.key}
+                                  style={{textAlign: col.align ?? "left"}}
+                              >
                                   {(() => {
                                       if (typeof rawValue === 'string' && rawValue.includes('T') && col.key === 'reqDate') {
                                           return rawValue.split('T')[0];

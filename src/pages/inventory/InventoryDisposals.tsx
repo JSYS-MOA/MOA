@@ -52,10 +52,10 @@ const InventoryDisposals = () => {
     }
 
   const columns : Column[] = [
-    { key: 'reqDate', label: '일자 ' },
+    { key: 'reqDate', label: '일자 ',align:"center" },
     { key: 'productCord', label: '품목코드' },
     { key: 'productName', label: '품목명'  },
-    { key: 'defectSno', label: '수량' },
+    { key: 'defectSno', label: '수량',align:"center" },
     { key: 'defectMemo', label: '처리유형' }
   ]
 

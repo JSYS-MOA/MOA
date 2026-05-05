@@ -13,7 +13,7 @@ const InventoryModal = (  { items , maxPage , title, columns ,onClose, keySno , 
   keytype : string
   })  => {
 
-  // console.log(maxPage)
+   console.log(maxPage)
 
   const totalSno = items.reduce((acc, item) => {
     const targetItem = item as any; 
