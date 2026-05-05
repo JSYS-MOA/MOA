@@ -24,6 +24,7 @@ const MainLayout = () => {
 
     const [activeMenu, setActiveMenu] = useState<number>(1);
     const [layoutData, setLayoutData] = useState<LayoutData>();
+    const isMainPage = location.pathname === "/home";
 
 // [2] 백엔드 데이터 호출 (세션 방식)
     useEffect(() => {
@@ -74,7 +75,7 @@ const MainLayout = () => {
                         layoutData={layoutData}
                     />
                 )}
-                <main className="main">
+                <main className={isMainPage ? "" : "main"}>
                     <Outlet />
                 </main>
                 

@@ -24,22 +24,29 @@ const ApprovalsTable = (
               </thead>
 
               <tbody className="inventory-table-body">
-              {items.map((item, idx) => (
-                  <tr key={idx} >
-                      <td>{ 10 * page + idx + 1}</td>
+                  {items.length === 0 ? (
+                      <tr>
+                          <td colSpan={columns.length+1} style={{textAlign: "center"}}>
+                              결재 내역이 없습니다.
+                          </td>
+                      </tr>
+                  ) : (
+                  items.map((item, idx) => (
+                      <tr key={idx} >
+                          <td>{ 10 * page + idx + 1}</td>
 
-                      {columns.map(col => (
-                          <td key={col.key}>
-                              {col.key === 'approvaInfo' && (
-                                  <button
-                                      className='btn-Secondary'
-                                      onClick={(e) => {
-                                          e.stopPropagation();
-                                          onItemClick?.(item , e);
-                                      }}>
-                                      보기
-                                  </button>
-                              )}
+                          {columns.map(col => (
+                              <td key={col.key}>
+                                  {col.key === 'approvaInfo' && (
+                                      <button
+                                          className='btn-sc'
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              onItemClick?.(item , e);
+                                          }}>
+                                          보기
+                                      </button>
+                                  )}
 
                               {(() => {
                                   const columnKey = col.key as string;
@@ -59,7 +66,8 @@ const ApprovalsTable = (
                       ))}
 
                   </tr>
-              ))}
+                    ))
+                  )}
               </tbody>
 
           </table>
