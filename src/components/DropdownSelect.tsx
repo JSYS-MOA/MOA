@@ -1,4 +1,4 @@
-import {SlArrowDown} from "react-icons/sl";
+ import {SlArrowDown} from "react-icons/sl";
 import {useState} from "react";
 import "../assets/styles/component/dropdownSelect.css";
 

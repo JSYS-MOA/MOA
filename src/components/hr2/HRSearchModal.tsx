@@ -36,11 +36,10 @@ const HRSearchModal = ({ searchType, onSelect, onClose }: SearchModalProps) => {
     };
 
     return (
-        <div>
-            <div>
-                <h3>{searchType === "user" ? "사원 검색" : "수당 검색"}</h3>
+        <div className="modal-Overlay">
+            <div className="modal-Container">
 
-                <div>
+                <div className="modal-Header">
                     <input
                         type="text"
                         value={keyword}
@@ -50,7 +49,7 @@ const HRSearchModal = ({ searchType, onSelect, onClose }: SearchModalProps) => {
                     <button onClick={handleSearch}>검색</button>
                 </div>
 
-                <div>
+                <div className="modal-Title">
                     <table>
                         <thead>
                         <tr>
@@ -58,10 +57,11 @@ const HRSearchModal = ({ searchType, onSelect, onClose }: SearchModalProps) => {
                             <th>{searchType === "user" ? "사원번호" : "수당코드"}</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="modal-Body">
                         {results.length > 0 ? (
                             results.map((item, idx) => (
                             <tr
+                                className="modal-Children"
                                 key={idx}
                                 onClick={() => onSelect(item)}
                                 style={{ cursor: 'pointer' }}
@@ -70,7 +70,7 @@ const HRSearchModal = ({ searchType, onSelect, onClose }: SearchModalProps) => {
                                 <td>{searchType === "user" ? item.employeeId : item.allowanceCord}</td>
                             </tr>
                         ))) : (
-                            <tr>
+                            <tr className="modal-Children">
                                 <td colSpan={2}>
                                     검색 결과가 없습니다.
                                 </td>
@@ -80,7 +80,7 @@ const HRSearchModal = ({ searchType, onSelect, onClose }: SearchModalProps) => {
                     </table>
                 </div>
 
-                <div>
+                <div className="modal-Footer">
                     <button onClick={onClose}>닫기</button>
                 </div>
             </div>

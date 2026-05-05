@@ -1,0 +1,111 @@
+import { getHr2Data } from "../../apis/hr2/Hr2Service.tsx";
+import Calendar from "../../components/Calendar.tsx";
+import { useEffect, useState } from "react";
+import { hr2Configs } from "../../types/hr2Configs.tsx";
+import type { CalendarEvent } from "../../types/calendar.ts";
+import Modal from "../../components/Modal.tsx";
+
+const toCalendarEvents = (data: any[]) => {
+    return data.map(item => ({
+        calendarId: item.workId,
+        eventStartDate: item.workDate,
+        eventEndDate: item.workDate,
+        calendarCategoryName: item.userName,
+        color: "#4CAF50",
+        dotColor: "#4CAF50",
+    }));
+};
+
+const HRCalendar = () => {
+
+    const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+    // 1️⃣ 날짜 선택
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+    // 2️⃣ 리스트 모달
+    const [listOpen, setListOpen] = useState(false);
+    const [listData, setListData] = useState<any[]>([]);
+
+    // 3️⃣ 상세 모달
+    const [detailOpen, setDetailOpen] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    useEffect(() => {
+        const load = async () => {
+            const data = await getHr2Data(
+                (hr2Configs as any).calendar.apiUrl,
+                0,
+                100,
+                {}
+            );
+            setEvents(toCalendarEvents(data.content ?? data) as any);
+        };
+
+        load();
+    }, []);
+
+    // 캘린더 클릭 → 날짜 기준 리스트
+    const handleDateClick = async (id: number) => {
+        setSelectedDate(String(id));
+        setListOpen(true);
+
+        // 날짜 기준 리스트 API
+        const data = await getHr2Data(
+            (hr2Configs as any).calendar.apiUrl,
+            0,
+            100,
+            { workDate: id }
+        );
+
+        setListData(data.content ?? data);
+    };
+
+    // 리스트 클릭 → 상세 모달
+    const handleRowClick = (id: number) => {
+        setSelectedId(id);
+        setDetailOpen(true);
+    };
+
+    return (
+        <div>
+
+            {/* 캘린더 */}
+            <Calendar
+                events={events}
+                onEventClick={handleDateClick}
+            />
+
+            {/* 리스트 모달 */}
+            <Modal
+                title={`출근 리스트 (${selectedDate})`}
+                isOpen={listOpen}
+                onClose={() => setListOpen(false)}
+            >
+                <div>
+                    {listData.map((item) => (
+                        <div
+                            key={item.workId}
+                            onClick={() => handleRowClick(item.workId)}
+                        >
+                            {item.userName}
+                        </div>
+                    ))}
+                </div>
+            </Modal>
+
+            <Modal
+                title="상세"
+                isOpen={detailOpen}
+                onClose={() => setDetailOpen(false)}
+            >
+                <div>
+                    {selectedId}   출/퇴근기록부
+                </div>
+            </Modal>
+
+        </div>
+    );
+};
+
+export default HRCalendar;

@@ -152,5 +152,21 @@ export const hr2Configs = {
         filterFields: [],
         columns: [],
         modalOnly: true
+    },
+    calendar: {
+        hasCrud: true,
+        title: "출/퇴근기록부",
+        apiUrl: "/api/hr/attendances/calendar",
+        idKey: "workId",
+        tap: [{id: "departmentId", label: "팀별", type: "groupButton", option: []}],
+        count: [{key: "totalCount", label: "date", clickable: true}],
+        // 표(Table)에 보여줄 컬럼들
+        columns: [
+            {key: "workDate", label: "일자"},
+            {key: "userName", label: "성명", clickable: true},
+            {key: "departmentName", label: "소속부서"},
+            {key: "startWork", label: "출근시간"},
+            {key: "finishWork", label: "퇴근시간"}
+        ]
     }
 }
