@@ -9,7 +9,9 @@ interface AlarmItem{
     eventStartDate: string;
 }
 
-const POLL_INTERVAL = 300000;
+// const POLL_INTERVAL = 1000;
+// 5분 마다 갱신으로 변경
+const FIVE_MINUTES = 5 * 60 * 1000;
 const ALARM_BEFORE = 10 * 60 * 1000;
 
 const CalendarAlarm = () => {
@@ -57,7 +59,8 @@ const CalendarAlarm = () => {
             }
         }
         void checkAlarms();
-        const timer = setInterval(checkAlarms, POLL_INTERVAL);
+
+        const timer = setInterval(checkAlarms, FIVE_MINUTES);
         return () => clearInterval(timer);
         },[user]);
 

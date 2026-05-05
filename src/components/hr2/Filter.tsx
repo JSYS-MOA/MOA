@@ -134,7 +134,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     onChange={(val: any) => setDates({...dates, end: val})}
                 />
             </div>
-            {!(config as any).modalOnly &&config.filterFields?.map((field:any) => (
+            {!(config as any).modalOnly &&(config as any).filterFields?.map((field:any) => (
                 <div key={field.id} style={{ width: "200px" }}>
                     <TestTagInput
                         placeholder={field.label}

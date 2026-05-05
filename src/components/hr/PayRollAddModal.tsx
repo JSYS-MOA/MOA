@@ -270,7 +270,14 @@ const EmployeeSelectModal = ({
 
     useEffect(() => {
         if (isOpen) {
-            setDraftKeys(selectedKeys);
+            // 1. 현재 draftKeys와 새로 들어온 selectedKeys가 다른지 체크
+            const isDifferent = 
+                draftKeys.length !== selectedKeys.length || 
+                !selectedKeys.every(key => draftKeys.includes(key));
+
+            if (isDifferent) {
+                setDraftKeys(selectedKeys);
+            }
             setSearch("");
         }
     }, [isOpen, selectedKeys]);

@@ -227,9 +227,11 @@ const HrCardListPage = () => {
 
     useEffect(() => {
         const validUserIds = new Set(items.map((item) => item.userId));
+        const nextSelected = selectedUserIds.filter((userId) => validUserIds.has(userId));
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSelectedUserIds((prev) => prev.filter((userId) => validUserIds.has(userId)));
+         if (selectedUserIds.length !== nextSelected.length) {
+            setSelectedUserIds(nextSelected);
+        }
     }, [items]);
 
     const filteredItems = useMemo(() => {

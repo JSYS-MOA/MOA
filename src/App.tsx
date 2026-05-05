@@ -26,6 +26,7 @@ import InventoryRouter from "./routes/InventoryRoutes.tsx";
 import GwRouter from './routes/GwRoutes.tsx';
 import SalesRoutes from "./routes/SalesRoutes.tsx";
 import MyRoutes from "./routes/MyRoutes.tsx";
+import HRCalendar from './pages/hr2/HRCalendar.tsx';
 
 
 
@@ -59,6 +60,8 @@ const App = () => {
 
                 <Route element={<PrivateRoute />}>
 
+{/* 
+                    hr/attendances/calendar */}
 
                     {/* 메인페이지는 여기 있어야됨 -> 링크이동이 안 돼서 임시로 mainLayout안에 둠*/}
                     <Route element={<MainLayout />}>
@@ -66,8 +69,8 @@ const App = () => {
                         <Route path="/home" element={<MainPage />} />
                         <Route path="/my/*" element={<MyRoutes />} />
                         <Route path="/base/:type" element={<Base />} />
-                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                         <Route path="/admin/levels" element={<Admin />} />
+                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                         <Route path="/hr/:type" element={<HRLists />} />
                     </Route>
                 </Route>
@@ -75,6 +78,10 @@ const App = () => {
                 <Route element={<PrivateRoute />}>
                     <Route element={<MainLayout />}>
                         <Route path="/hr">
+                            {/* 윤아 */}
+                             <Route path="attendances/calendar" element={<HRCalendar />} />
+
+                            {/* 성현 */}
                             <Route path="cards" element={<HrCardListPage />} />
                             <Route path="leavers" element={<LeaverCardListPage />} />
                             <Route path="certificates" element={<CertificatesCardListPage />} />

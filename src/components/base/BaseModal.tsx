@@ -55,17 +55,18 @@ const BaseModal = ({ title, isOpen, apiType,onClose, baseData, fetchData, column
     };
 
     return (
-        <div>
+        <div className="modal-Overlay">
+            <div className="modal-Container">
             {/* 상단: 헤더 */}
-            <div>
+            <div className="modal-Header">
                 <span>{title} {baseData ? "수정" : "등록"}</span>
                 <button onClick={onClose}>X</button>
             </div>
 
             {/* 중단: 입력 폼 영역 */}
-            <div>
+            <div className="modal-Container">
                 {columns.map((col) => (
-                    <div key={col.key}>
+                    <div key={col.key} className="modal-Title">
                         <label>{col.label}</label>
 
                         {/* '사용여부'처럼 선택형인 경우와 일반 입력형 구분 */}
@@ -99,9 +100,10 @@ const BaseModal = ({ title, isOpen, apiType,onClose, baseData, fetchData, column
             </div>
 
             {/* 하단: 액션 버튼 (사진 하단 위치) */}
-            <div>
+            <div className="modal-Footer">
                 <button onClick={handleSave}>저장</button>
                 <button onClick={onClose}>취소</button>
+            </div>
             </div>
         </div>
     );
