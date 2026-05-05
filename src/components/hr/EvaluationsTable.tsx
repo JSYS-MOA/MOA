@@ -29,7 +29,7 @@ const EvaluationsTable = ({
     onSelectItem,
 }: EvaluationsTableViewProps) => {
     return (
-        <table className="common-Table" style={{marginTop:"12px"}}>
+        <table className="common-Table" style={{marginTop:"5px"}}>
             <thead>
                 <tr>
                     {columns.map((column) => (

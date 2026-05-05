@@ -592,20 +592,18 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     );
 
     return (
-        <div className="leaverCardModalScope leaverCardAddModalScope">
             <Modal
                 title="퇴사자 카드 등록"
                 isOpen={isOpen}
                 onClose={handleClose}
                 footer={footer}
             >
-                <form id={formId} className="leaverCardAddModal-form" onSubmit={handleSubmit}>
-                    <div className="leaverCardAddModal-section">
-                        <div className="leaverCardAddModal-row leaverCardAddModal-row--optionFields">
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">부서</label>
+                <form id={formId} onSubmit={handleSubmit}>
+                    <div className="modal-Row">
+                        <div className="modal-Row-Group">
+                            <div className="modal-Row-Item">
+                                <label>부서</label>
                                 <select
-                                    className="leaverCardAddModal-input leaverCardAddModal-select"
                                     name="departmentId"
                                     value={form.departmentId}
                                     onChange={handleChange}
@@ -623,15 +621,10 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                                         </option>
                                     ))}
                                 </select>
-                                <span className="leaverCardAddModal-hint">
-                                    부서를 선택하면 코드가 자동으로 입력됩니다.
-                                </span>
                             </div>
-
-                            <div className="leaverCardAddModal-field leaverCardAddModal-field--small">
-                                <label className="leaverCardAddModal-label">부서 코드</label>
+                            <div className="modal-Row-Item">
+                                <label>부서 코드</label>
                                 <input
-                                    className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
                                     name="departmentCord"
                                     type="text"
                                     value={resolvedDepartmentCord}
@@ -639,11 +632,13 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                                     title="선택한 부서에 따라 자동 입력됩니다."
                                 />
                             </div>
-
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">직급/직책</label>
+                        </div>
+                    </div>
+                    <div className="modal-Row">
+                        <div className="modal-Row-Group">
+                            <div className="modal-Row-Item">
+                                <label >직급/직책</label>
                                 <select
-                                    className="leaverCardAddModal-input leaverCardAddModal-select"
                                     name="gradeName"
                                     value={form.gradeName}
                                     onChange={handleChange}
@@ -656,17 +651,12 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                                         <option key={grade.gradeId} value={grade.gradeName}>
                                             {grade.gradeName}
                                         </option>
-                                    ))}
+                                            ))}
                                 </select>
-                                <span className="leaverCardAddModal-hint">
-                                    직급을 선택하면 코드가 자동으로 입력됩니다.
-                                </span>
                             </div>
-
-                            <div className="leaverCardAddModal-field leaverCardAddModal-field--small">
-                                <label className="leaverCardAddModal-label">직급 코드</label>
+                            <div className="modal-Row-Item">
+                                <label>직급 코드</label>
                                 <input
-                                    className="leaverCardAddModal-input leaverCardAddModal-input--readonly"
                                     name="gradeId"
                                     type="text"
                                     value={gradeIdValue}
@@ -677,16 +667,10 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                             </div>
                         </div>
                     </div>
-
-                    <div className="leaverCardAddModal-section">
-                        <div className="leaverCardAddModal-employeeSelector">
-                            <label className="leaverCardAddModal-label">이름</label>
-                            <span className="leaverCardAddModal-employeeHint">
-                                {employeeSelectionMessage}
-                            </span>
-
+                    <div className="modal-Row">
+                            <label>이름</label>
                             {matchingEmployees.length > 0 ? (
-                                <div className="leaverCardAddModal-employeeList">
+                                <div>
                                     {matchingEmployees.map((employee: HrCard) => {
                                         const isSelected =
                                             employee.userId === selectedEmployeeUserId;
@@ -700,10 +684,10 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                                                 }`}
                                                 onClick={() => handleSelectEmployee(employee)}
                                             >
-                                                <span className="leaverCardAddModal-employeeName">
+                                                <span>
                                                     {employee.userName}
                                                 </span>
-                                                <span className="leaverCardAddModal-employeeMeta">
+                                                <span>
                                                     {employee.employeeId}
                                                 </span>
                                             </button>
@@ -723,7 +707,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                                 </span>
                             )}
                         </div>
-                    </div>
+
 
                     <div className="leaverCardAddModal-section">
                         <div className="leaverCardAddModal-row leaverCardAddModal-row--dateFields">
@@ -758,7 +742,6 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                     </div>
                 </form>
             </Modal>
-        </div>
     );
 };
 

@@ -27,7 +27,7 @@
 .payRollEmployeeSelectModalScope .modal-Header {
     min-height: 24px;
     padding: 4px 10px;
-    background: #5b5878;
+    background: var(--color-primary);
 }
 
 .payRollAddModalScope .modal-Title,

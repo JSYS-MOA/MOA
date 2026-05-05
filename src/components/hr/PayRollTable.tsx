@@ -1,4 +1,4 @@
-import "../../assets/styles/hr/payRollList.css";
+import "../../assets/styles/hr/hrPage.css";
 
 export type PayRollTableRow = {
     id: number;
@@ -33,12 +33,12 @@ type ColumnKey =
     | "totalAmount"
     | "status";
 
-const columns: Array<{ key: ColumnKey; label: string }> = [
-    { key: "yearMonth", label: "일자" },
+const columns: Array<{ key: ColumnKey; label: string;align?: "left" | "center" | "right"; }> = [
+    { key: "yearMonth", label: "일자", align:"center" },
     { key: "ledgerName", label: "대장명" },
-    { key: "payDate", label: "지급일" },
-    { key: "employeeCount", label: "인원 수" },
-    { key: "totalAmount", label: "총 금액" },
+    { key: "payDate", label: "지급일" , align:"center"},
+    { key: "employeeCount", label: "인원 수" , align:"center"},
+    { key: "totalAmount", label: "총 금액", align:"right" },
     { key: "status", label: "상태" },
 ];
 
@@ -89,11 +89,11 @@ const PayRollTable = ({
     };
 
     return (
-        <table className="payRollTable">
+        <table className="common-Table" style={{marginTop:"5px"}}>
             <thead>
                 <tr>
-                    <th className="payRollTable-th payRollTable-checkbox-cell">
-                        <label className="payRollTable-checkbox">
+                    <th>
+                        <label>
                             <input
                                 type="checkbox"
                                 checked={allSelected}
@@ -105,12 +105,12 @@ const PayRollTable = ({
                     </th>
 
                     {columns.map((column) => (
-                        <th key={column.key} className="payRollTable-th">
+                        <th key={column.key}>
                             {column.label}
                         </th>
                     ))}
 
-                    <th className="payRollTable-th">링크</th>
+                    <th>링크</th>
                 </tr>
             </thead>
 
@@ -124,8 +124,8 @@ const PayRollTable = ({
                 ) : (
                     items.map((item) => (
                         <tr key={item.id}>
-                            <td className="payRollTable-td payRollTable-checkbox-cell">
-                                <label className="payRollTable-checkbox">
+                            <td style={{textAlign:"center"}}>
+                                <label >
                                     <input
                                         type="checkbox"
                                         checked={selectedLedgerIds.includes(item.id)}
@@ -138,13 +138,13 @@ const PayRollTable = ({
 
                             {columns.map((column) => (
                                 <td
+                                    style={{textAlign: column.align}}
                                     key={`${item.id}-${column.key}`}
-                                    className="payRollTable-td"
                                 >
                                     {column.key === "ledgerName" ? (
                                         <button
+                                            style={{fontSize:"12px"}}
                                             type="button"
-                                            className="payRollTable-nameButton"
                                             onClick={() => onSelectItem(item.id)}
                                         >
                                             {item[column.key]}
@@ -159,26 +159,26 @@ const PayRollTable = ({
                                 </td>
                             ))}
 
-                            <td className="payRollTable-td payRollTable-linkCell">
-                                <div className="payRollTable-linkGroup">
-                                    <div className="payRollTable-linkActions">
+                            <td style={{width:"18%", whiteSpace:"nowrap"}} >
+                                <div >
+                                    <div style={{ display:"flex" ,width:"100%", justifyContent:"space-between"}}>
                                         <button
+                                            className="btn-sc"
                                             type="button"
-                                            className="payRollTable-linkAction"
                                             onClick={() => handleAction("view", item.id)}
                                         >
                                             조회
                                         </button>
                                         <button
+                                            className="btn-sc"
                                             type="button"
-                                            className="payRollTable-linkAction"
                                             onClick={() => handleAction("edit", item.id)}
                                         >
                                             수정
                                         </button>
                                         <button
+                                            className="btn-sc"
                                             type="button"
-                                            className="payRollTable-linkAction"
                                             onClick={() =>
                                                 handleAction("cancelConfirm", item.id)
                                             }
@@ -186,8 +186,8 @@ const PayRollTable = ({
                                             확정취소
                                         </button>
                                         <button
+                                            className="btn-sc"
                                             type="button"
-                                            className="payRollTable-linkAction"
                                             onClick={() =>
                                                 handleAction("createVoucher", item.id)
                                             }

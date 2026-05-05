@@ -50,7 +50,7 @@ const HrTable = ({
         items.length > 0 && items.every((item) => selectedUserIds.includes(item.userId));
 
     return (
-        <table className="common-Table">
+        <table className="common-Table" style={{marginTop:"5px"}}>
             <thead>
             <tr>
                 <th>
