@@ -241,10 +241,9 @@ const DateSelectInput = ({
     };
 
     return (
-        <div className="leaverCardAddModal-dateRow">
-            <div className="leaverCardAddModal-dateBox leaverCardAddModal-dateBox--year">
+        <div style={{display: "flex", alignItems: "center", gap: "10px",width:"100%"}}>
+            <div className="hrCardAddModal-dateBox--year">
                 <select
-                    className="leaverCardAddModal-dateSelect"
                     value={parts.year}
                     disabled={disabled}
                     onChange={(event) => updatePart("year", event.target.value)}
@@ -257,16 +256,12 @@ const DateSelectInput = ({
                         </option>
                     ))}
                 </select>
-                <span className="leaverCardAddModal-dateArrow" aria-hidden="true">
-                    v
-                </span>
             </div>
 
-            <span className="leaverCardAddModal-dateDivider">/</span>
+            <span>/</span>
 
-            <div className="leaverCardAddModal-dateBox leaverCardAddModal-dateBox--month">
+            <div className="hrCardAddModal-dateBox--month">
                 <select
-                    className="leaverCardAddModal-dateSelect"
                     value={parts.month}
                     disabled={disabled}
                     onChange={(event) => updatePart("month", event.target.value)}
@@ -279,16 +274,12 @@ const DateSelectInput = ({
                         </option>
                     ))}
                 </select>
-                <span className="leaverCardAddModal-dateArrow" aria-hidden="true">
-                    v
-                </span>
             </div>
 
-            <span className="leaverCardAddModal-dateDivider">/</span>
+            <span >/</span>
 
-            <div className="leaverCardAddModal-dateBox leaverCardAddModal-dateBox--day">
+            <div className="hrCardAddModal-dateBox--day">
                 <select
-                    className="leaverCardAddModal-dateSelect"
                     value={parts.day}
                     disabled={disabled}
                     onChange={(event) => updatePart("day", event.target.value)}
@@ -301,15 +292,12 @@ const DateSelectInput = ({
                         </option>
                     ))}
                 </select>
-                <span className="leaverCardAddModal-dateArrow" aria-hidden="true">
-                    v
-                </span>
             </div>
 
-            <div className="leaverCardAddModal-dateCalendarWrap">
+            <div className="hrCardAddModal-dateCalendarWrap">
                 <input
                     ref={dateInputRef}
-                    className="leaverCardAddModal-dateNativeInput"
+                    className="hrCardAddModal-dateNativeInput"
                     type="date"
                     value={value}
                     min={`${minYear}-01-01`}
@@ -325,12 +313,12 @@ const DateSelectInput = ({
                 />
                 <button
                     type="button"
-                    className="leaverCardAddModal-dateCalendarButton"
+                    className="hrCardAddModal-dateCalendarButton"
                     onClick={openNativePicker}
                     disabled={disabled}
                     aria-label={calendarLabel}
                 >
-                    <svg className="leaverCardAddModal-dateCalendarIcon" viewBox="0 0 24 24">
+                    <svg className="hrCardAddModal-dateCalendarIcon" viewBox="0 0 24 24">
                         <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
                         <path d="M7.5 3.5v3" />
                         <path d="M16.5 3.5v3" />
@@ -572,18 +560,18 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
     };
 
     const footer = (
-        <div className="leaverCardAddModal-buttonRow">
+        <div className="btn-Wrap">
             <button
                 type="submit"
                 form={formId}
-                className="leaverCardAddModal-button leaverCardAddModal-button--primary"
+                className="btn-Primary"
                 disabled={addLeaverCard.isPending}
             >
                 {addLeaverCard.isPending ? "저장 중..." : "저장"}
             </button>
             <button
                 type="button"
-                className="leaverCardAddModal-button leaverCardAddModal-button--secondary"
+                className="btn-Secondary"
                 onClick={handleClose}
             >
                 취소
@@ -670,7 +658,7 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                     <div className="modal-Row">
                             <label>이름</label>
                             {matchingEmployees.length > 0 ? (
-                                <div>
+                                <div style={{width:"100%"}}>
                                     {matchingEmployees.map((employee: HrCard) => {
                                         const isSelected =
                                             employee.userId === selectedEmployeeUserId;
@@ -700,45 +688,43 @@ const LeaverCardAddModal = ({ isOpen, onClose }: Props) => {
                                 </div>
                             )}
 
-                            {selectedEmployee && (
-                                <span className="leaverCardAddModal-employeeHint">
-                                    선택된 직원: {selectedEmployee.userName} (
-                                    {selectedEmployee.employeeId})
-                                </span>
-                            )}
+
                         </div>
+                    <div className="modal-Row">
+                        <label></label>
+                        {selectedEmployee && (
+                            <span className="leaverCardAddModal-employeeHint">
+                                        선택된 직원: {selectedEmployee.userName} (
+                                {selectedEmployee.employeeId})
+                                    </span>
+                        )}
+                    </div>
+                    <div className="modal-Row">
+                        <label>입사일</label>
+                        <DateSelectInput
+                            value={form.startDate}
+                            onChange={(nextValue) =>
+                                setForm((prev) => ({ ...prev, startDate: nextValue }))
+                        }
+                            disabled
+                            minYear={CURRENT_YEAR - 30}
+                            maxYear={CURRENT_YEAR + 5}
+                            calendarLabel="입사일 달력 열기"
+                        />
+                    </div>
 
-
-                    <div className="leaverCardAddModal-section">
-                        <div className="leaverCardAddModal-row leaverCardAddModal-row--dateFields">
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">입사일</label>
-                                <DateSelectInput
-                                    value={form.startDate}
-                                    onChange={(nextValue) =>
-                                        setForm((prev) => ({ ...prev, startDate: nextValue }))
-                                    }
-                                    disabled
-                                    minYear={CURRENT_YEAR - 30}
-                                    maxYear={CURRENT_YEAR + 5}
-                                    calendarLabel="입사일 달력 열기"
-                                />
-                            </div>
-
-                            <div className="leaverCardAddModal-field">
-                                <label className="leaverCardAddModal-label">퇴사일</label>
-                                <DateSelectInput
-                                    value={form.quitDate}
-                                    onChange={(nextValue) =>
-                                        setForm((prev) => ({ ...prev, quitDate: nextValue }))
-                                    }
-                                    disabled={selectedEmployeeUserId === null}
-                                    minYear={CURRENT_YEAR - 30}
-                                    maxYear={CURRENT_YEAR + 5}
-                                    calendarLabel="퇴사일 달력 열기"
-                                />
-                            </div>
-                        </div>
+                    <div className="modal-Row">
+                        <label>퇴사일</label>
+                        <DateSelectInput
+                            value={form.quitDate}
+                            onChange={(nextValue) =>
+                                setForm((prev) => ({ ...prev, quitDate: nextValue }))
+                        }
+                            disabled={selectedEmployeeUserId === null}
+                            minYear={CURRENT_YEAR - 30}
+                            maxYear={CURRENT_YEAR + 5}
+                            calendarLabel="퇴사일 달력 열기"
+                        />
                     </div>
                 </form>
             </Modal>

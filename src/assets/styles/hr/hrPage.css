@@ -411,3 +411,93 @@ textarea {
     background: var(--color-inverse);
     box-sizing: border-box;
 }
+
+/*leaver*/
+.leaverCardAddModal-hint {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+.leaverCardAddModal-employeeSelector {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+
+
+.leaverCardAddModal-employeeHint {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+    display: block;
+}
+
+.leaverCardAddModal-employeeList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.leaverCardAddModal-employeeEmpty {
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+    background-color: var(--bg);
+    width: 100%;
+}
+
+.leaverCardAddModal-employeeChip {
+    display: inline-block;
+    flex-direction: column;
+    align-items: flex-start;
+    margin:6px 0 0 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    padding: 6px 8px;
+
+}
+
+.leaverCardAddModal-employeeChip.is-selected {
+    padding: 6px 8px;
+    display: inline-block;
+    align-items: center;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+    background-color: var(--color-inverse);
+    width: 100%;
+}
+
+.leaverCardAddModal-employeeName {
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 600;
+}
+
+.leaverCardAddModal-employeeMeta {
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+.leaverCardAddModal-input {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+}
