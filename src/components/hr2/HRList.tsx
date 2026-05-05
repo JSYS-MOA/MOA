@@ -100,7 +100,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
                 ...col,
                 render: (val: any, item: any) => {
                     // 1. 기존 config에 설정된 render(예: renderVacationDays)가 있다면 먼저 실행
-                    const renderedValue = col.render ? (col.render as any)(val, item) : val;
+                    const renderedValue = (col as any).render ? (col as any).render(val, item) : val;
 
                     // 2. clickable 설정이 되어 있다면 span으로 감싸고, 아니면 그냥 값 반환
                     if ((col as { clickable?: boolean }).clickable) {

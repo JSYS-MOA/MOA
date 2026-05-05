@@ -104,15 +104,13 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
     return (
 
-        <div>
+        <div className="modal-Overlay">
 
-            <div>
+            <div className="modal-Container">
 
 
 
-                {/* 헤더 */}
-
-                <div>
+                <div className="modal-Header">
 
                     <h2>{(config as any).title} {baseData ? '수정' : '등록'}</h2>
 
@@ -127,9 +125,9 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
                 <div>
                     {fields.map((f:any) => {
                         return (
-                            <div key={f.key}>
+                            <div key={f.key} className="modal-Title">
                                 <label>{f.label}</label>
-                                <div>
+                                <div className="modal-Body">
                                     {f.isDate ? (
                                         <FilterDate
                                             value={formData[f.key] || ""}
@@ -164,11 +162,11 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
                 {/* 하단 버튼 */}
 
-                <div>
+                <div className="confirm-Footer btn-Wrap">
 
-                    <button onClick={handleSave}>저장</button>
+                    <button className="btn-Primary" onClick={handleSave}>저장</button>
 
-                    <button onClick={onClose}>취소</button>
+                    <button className="btn-Secondary" onClick={onClose}>취소</button>
 
                 </div>
 
