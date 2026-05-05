@@ -1,8 +1,8 @@
 import axios from "axios";
 import type {Transaction, VendorMonthly} from "../types/transaction.ts";
 
- const API = "http://localhost/api";
-// const API = "https://moa-server.onrender.com/api";
+//  const API = "http://localhost/api";
+const API = "https://moa-server.onrender.com/api";
 
 //전체조회
 export const getTransactionsApi = async () => {
