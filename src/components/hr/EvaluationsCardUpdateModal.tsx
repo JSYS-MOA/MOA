@@ -306,9 +306,6 @@ const EvaluationsCardUpdateModal = ({
     const readOnlyInputClassName =
         "evaluationsCardAddModal-input evaluationsCardAddModal-input--readonly";
 
-    const textareaClassName = isFormReadOnly
-        ? "evaluationsCardAddModal-textarea evaluationsCardAddModal-input--readonly"
-        : "evaluationsCardAddModal-textarea";
 
     const matchedDepartment = useMemo(
         () =>
@@ -768,7 +765,7 @@ const EvaluationsCardUpdateModal = ({
                                     </div>
                                 )}
 
-                                <div className="modal-Row">
+                                <div className="modal-Row" style={{marginTop:"4px"}}>
                                         <label
                                             htmlFor="evaluations-performance"
                                         >
@@ -785,29 +782,6 @@ const EvaluationsCardUpdateModal = ({
                                         />
                                     </div>
                             </>
-                        )}
-
-                        {!hasReferenceInfo && (
-                            <div className="evaluationsCardAddModal-row">
-                                <div className="evaluationsCardAddModal-column">
-                                    <label
-                                        className="evaluationsCardAddModal-label"
-                                        htmlFor="evaluations-performance"
-                                    >
-                                        평가
-                                    </label>
-
-                                    <textarea
-                                        id="evaluations-performance"
-                                        name="performance"
-                                        value={form.performance}
-                                        onChange={handleChange}
-                                        readOnly={isFormReadOnly}
-                                        className={textareaClassName}
-                                        rows={3}
-                                    />
-                                </div>
-                            </div>
                         )}
 
                         {noticeMessage && (

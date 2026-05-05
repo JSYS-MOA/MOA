@@ -9,7 +9,7 @@ import {
     useConfirmPayRollCreatedAt,
     useGetPayRollList,
 } from "../../apis/hr/PayLollService.tsx";
-import "../../assets/styles/hr/payRollList.css";
+import "../../assets/styles/hr/hrPage.css";
 import PayRollAddModal from "../../components/hr/PayRollAddModal.tsx";
 import PayRollInfoModal from "../../components/hr/PayRollInfoModal.tsx";
 import PayRollUpdateModal from "../../components/hr/PayRollUpdateModal.tsx";
@@ -830,33 +830,35 @@ const PayRollListPage = () => {
     };
 
     return (
-        <div className="payRollListPage-page">
-            <div className="payRollListPage-header">
-                <button
-                    type="button"
-                    className="payRollListPage-star"
-                    aria-pressed={isStarred}
-                    onClick={() => setIsStarred((prev) => !prev)}
-                >
-                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
-                </button>
+        <>
+            <div className="hrPage-page-filter">
+                <div className="favorite-Header">
+                    <button
+                        type="button"
+                        aria-pressed={isStarred}
+                        onClick={() => setIsStarred((prev) => !prev)}
+                    >
+                        <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                    </button>
+                    <span>급여대장 목록</span>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="top-search-btn"
+                        aria-expanded={isSearchOpen}
+                        onClick={() => setIsSearchOpen((prev) => !prev)}
+                    >
+                        검색 조건 {isSearchOpen ? "닫기" : "열기"}
+                    </button>
+                </div>
 
-                <h1 className="payRollListPage-title">급여 대장 목록</h1>
-
-                <button
-                    type="button"
-                    className="payRollListPage-top-search-btn"
-                    aria-expanded={isSearchOpen}
-                    onClick={() => setIsSearchOpen((prev) => !prev)}
-                >
-                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
-                </button>
             </div>
 
-            <div className={`payRollListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="payRollListPage-filter-row">
-                    <div className="payRollListPage-filter-group payRollListPage-filter-group--date">
-                        <label>일자</label>
+            <div className={`filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="filter-row">
+                    <div style={{display:"flex", alignItems:"center"}}>
+                        <label style={{marginRight:"16px"}}>일자</label>
                         <div className="payRollListPage-dateRange">
                             <input
                                 type="date"
@@ -1024,7 +1026,7 @@ const PayRollListPage = () => {
                 payrollLabel={selectedPayrollLabel}
                 records={selectedLedgerRecords}
             />
-        </div>
+        </>
     );
 };
 
