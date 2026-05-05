@@ -229,7 +229,7 @@ const HrCardListPage = () => {
         const validUserIds = new Set(items.map((item) => item.userId));
         const nextSelected = selectedUserIds.filter((userId) => validUserIds.has(userId));
 
-         if (selectedUserIds.length !== nextSelected.length) {
+        if (selectedUserIds.length !== nextSelected.length) {
             setSelectedUserIds(nextSelected);
         }
     }, [items]);
