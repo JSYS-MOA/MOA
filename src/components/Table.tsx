@@ -44,7 +44,7 @@ const Table = <T,>({
     };
 
     return (
-        <div style={wrapperStyle}>
+        <div style={wrapperStyle} className="table-Wrapper">
             <table className={`common-Table ${className ?? ""}`}>
                 <thead>
                 <tr>

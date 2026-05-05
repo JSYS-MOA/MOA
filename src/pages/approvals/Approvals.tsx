@@ -79,8 +79,8 @@ const Approvals = () => {
       { key: 'approvaTitle', label: '제목' },
       { key: 'writerInfo.userName', label: '기안자' },
       { key: 'approverInfo.userName', label: '결재자' },
-      { key: 'approvaContent', label: '내용' },
       { key: 'approvaMemu', label: '비고' },
+      { key: 'approvaContent', label: '내용' },
   ]
 
   return (

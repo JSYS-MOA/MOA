@@ -1,0 +1,478 @@
+/* ====================== 모달 배경 ====================== */
+.hrCardAddModal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ====================== 모달 본체 ====================== */
+.hrCardAddModal-panel {
+    width: min(800px, 100%);
+    max-height: 900px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ====================== 상단 타이틀 바 ====================== */
+.hrCardAddModal-min-title {
+    height: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--text-accent);
+    color: var(--text-inverse);
+}
+
+.hrCardAddModal-min-text {
+    margin-left: var(--spacing-sm);
+    font-size: var(--font-xs);
+}
+
+.hrCardAddModal-closeButton {
+    margin-right: var(--spacing-sm);
+    border: 0;
+    background: transparent;
+    color: var(--text-inverse);
+    font-size: var(--font-lg);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* ====================== 헤더 ====================== */
+.hrCardAddModal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.hrCardAddModal-title {
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    margin-left: var(--spacing-sm);
+    color: var(--text-accent);
+    font-size: var(--font-xl);
+    font-weight: 700;
+}
+
+/* 공통 버튼 기본 */
+.hrCardAddModal-addressButton,
+.hrCardAddModal-button {
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* ====================== 폼 ====================== */
+.hrCardAddModal-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin: 0 var(--spacing-sm);
+    border-radius: var(--radius-lg);
+    background: var(--color-inverse);
+}
+
+.hrCardAddModal-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.hrCardAddModal-row--optionFields {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(140px, 1fr) minmax(0, 1.6fr) minmax(140px, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.hrCardAddModal-row--dateFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.hrCardAddModal-field {
+    flex: 1 1 150px;
+}
+
+.hrCardAddModal-field,
+.hrCardAddModal-column {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: center;
+    align-content: start;
+    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xs);
+    text-align: center;
+}
+
+.hrCardAddModal-column {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--spacing-xs);
+}
+
+.hrCardAddModal-field--small {
+    min-width: 140px;
+}
+
+.hrCardAddModal-label {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    white-space: nowrap;
+}
+
+.hrCardAddModal-field > :not(.hrCardAddModal-label),
+.hrCardAddModal-column > :not(.hrCardAddModal-label) {
+    grid-column: 2;
+    min-width: 0;
+}
+
+.hrCardAddModal-hint {
+    grid-column: 2;
+    color: var(--text-secondary-70);
+    font-size: var(--font-xs);
+}
+
+/* ====================== 입력 요소 공통 ====================== */
+.hrCardAddModal-input,
+.hrCardAddModal-textarea,
+.hrCardAddModal-dateSelect {
+    width: 100%;
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+}
+
+.hrCardAddModal-input::placeholder,
+.hrCardAddModal-textarea::placeholder {
+    color: var(--text-secondary-30);
+}
+
+.hrCardAddModal-select {
+    appearance: auto;
+    padding-right: var(--spacing-sm);
+}
+
+.hrCardAddModal-select:invalid {
+    color: var(--text-secondary-30);
+}
+
+.hrCardAddModal-input--readonly {
+    background-color: var(--color-inverse);
+    color: var(--text-secondary-70);
+}
+
+.hrCardAddModal-textarea {
+    min-height: 72px;
+    resize: vertical;
+}
+
+/* ====================== 이메일 ====================== */
+.hrCardAddModal-emailRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.hrCardAddModal-emailAt {
+    color: var(--text-secondary-70);
+    font-size: var(--font-lg);
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* ====================== 전화번호 ====================== */
+.hrCardAddModal-phoneRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.hrCardAddModal-phoneBox {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.hrCardAddModal-phoneBox--short {
+    flex: 0 0 96px;
+}
+
+.hrCardAddModal-phoneDash {
+    color: #57606a;
+    font-size: var(--font-sm);
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* ====================== 날짜 ====================== */
+.hrCardAddModal-dateRow {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.hrCardAddModal-dateBox {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.hrCardAddModal-dateBox--year {
+    width: 88px;
+}
+
+.hrCardAddModal-dateBox--month,
+.hrCardAddModal-dateBox--day {
+    width: 64px;
+}
+
+.hrCardAddModal-dateSelect {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.hrCardAddModal-dateArrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary-50);
+    font-size: var(--font-xs);
+}
+
+.hrCardAddModal-dateDivider {
+    color: var(--text-secondary-50);
+    font-size: var(--font-sm);
+    line-height: 1;
+}
+
+.hrCardAddModal-dateCalendarWrap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.hrCardAddModal-dateNativeInput {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hrCardAddModal-dateCalendarButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-secondary-50);
+    cursor: pointer;
+}
+
+.hrCardAddModal-dateCalendarIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ====================== 주소 ====================== */
+.hrCardAddModal-addressRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.hrCardAddModal-addressRow .hrCardAddModal-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.hrCardAddModal-addressButton {
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: var(--spacing-xs) 14px;
+    border: 1px solid var(--border);
+    background-color: var(--color-inverse);
+    white-space: nowrap;
+}
+
+/* ====================== 하단 버튼 ====================== */
+.hrCardAddModal-buttonRow {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    padding: 0 var(--spacing-xs) var(--spacing-xs);
+}
+
+.hrCardAddModal-button {
+    min-width: 50px;
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+}
+
+.hrCardAddModal-button--secondary {
+    border-color: var(--border);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+}
+
+.hrCardAddModal-button--primary {
+    border-color: var(--border);
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
+}
+
+.hrCardAddModal-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ====================== 수정 모달 상단 ====================== */
+.hrCardUpdateModal-topFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.hrCardUpdateModal-field--top {
+    grid-template-columns: 60px minmax(0, 1fr);
+}
+
+.hrCardUpdateModal-inlineOptions {
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+    .hrCardUpdateModal-topFields,
+    .hrCardAddModal-row--optionFields,
+    .hrCardAddModal-row--dateFields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hrCardModalScope .modal-Overlay {
+    z-index: 999;
+    padding: var(--spacing-md);
+    box-sizing: border-box;
+}
+
+.hrCardModalScope .modal-Container {
+    width: min(800px, 100%);
+    max-height: min(900px, calc(100vh - (var(--spacing-md) * 2)));
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.hrCardModalScope .modal-Header p,
+.hrCardModalScope .modal-Title p {
+    margin: 0;
+}
+
+.hrCardModalScope .modal-Header button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.hrCardModalScope .modal-Title {
+    margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
+    color: var(--text-accent);
+    font-size: var(--font-xl);
+    font-weight: 700;
+}
+
+.hrCardModalScope .modal-Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow-y: auto;
+}
+
+.hrCardModalScope .modal-Footer {
+    padding: 0 var(--spacing-sm) var(--spacing-sm);
+    background: transparent;
+}
+
+.hrCardModalScope .hrCardAddModal-form {
+    padding-bottom: var(--spacing-sm);
+}
+
+.hrCardModalScope .hrCardUpdateModal-topFields,
+.hrCardModalScope .hrCardAddModal-row {
+    gap: var(--spacing-sm);
+}
+
+.hrCardModalScope .hrCardAddModal-field,
+.hrCardModalScope .hrCardAddModal-column,
+.hrCardModalScope .hrCardUpdateModal-field--top {
+    grid-template-columns: 96px minmax(0, 1fr);
+    text-align: left;
+}
+
+.hrCardModalScope .hrCardAddModal-label {
+    font-weight: 600;
+    text-align: left;
+}
+
+.hrCardModalScope .hrCardAddModal-hint {
+    line-height: 1.45;
+}
+
+.hrCardModalScope .hrCardAddModal-row--optionFields {
+    grid-template-columns: minmax(0, 1.6fr) minmax(160px, 1fr) minmax(0, 1.6fr) minmax(160px, 1fr);
+}
+
+.hrCardModalScope .hrCardAddModal-input,
+.hrCardModalScope .hrCardAddModal-textarea,
+.hrCardModalScope .hrCardAddModal-dateSelect {
+    min-height: 42px;
+}

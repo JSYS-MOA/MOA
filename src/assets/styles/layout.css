@@ -54,6 +54,15 @@
 /* --------사이드바css--------- */
 
 /* --------------------------- */
-main{
+
+.main{
+    flex: 1;
+    position: relative;
     padding: 24px 29px;
+    min-height: 0;
+}
+.layout-wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }

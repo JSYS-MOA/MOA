@@ -394,7 +394,7 @@ const CalendarWriteModal = ({isOpen, onClose, calendarId, onSuccess}: CalendarWr
                 </div>
             </Modal>
             <CalendarMemberModal
-                key={JSON.stringify(form.sharedUserIds)}
+                key={`${JSON.stringify(form.sharedUserIds)}_${isMemberModalOpen}`}
                 isOpen={isMemberModalOpen}
                 onClose={() => setIsMemberModalOpen(false)}
                 selectedIds={form.sharedUserIds}

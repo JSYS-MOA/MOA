@@ -1,7 +1,10 @@
 import { useQuery , useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const Api_BASE = "http://localhost/api/admin/levels";
+// const Api_BASE = "http://localhost/api/admin/levels";
+// const Api_role = "http://localhost/api/select/role";
+const Api_BASE = "https://moa-server.onrender.com/api/admin/levels";
+const Api_role = "https://moa-server.onrender.com/api/select/role";
 
  // 조회 및 검색
   export function useGetRole( search?: string , page? : number  ,  size? : number ) {
@@ -48,7 +51,7 @@ const Api_BASE = "http://localhost/api/admin/levels";
       return useQuery({
         queryKey: ["roleCord", roleCord ], 
         queryFn: async () => {
-          const { data } = await axios.get(`http://localhost/api/select/role`, {   
+          const { data } = await axios.get(Api_role, {   
             params: {
               roleCord : roleCord 
             }

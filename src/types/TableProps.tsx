@@ -83,4 +83,5 @@ export interface TableProps {
 export interface Column {
   key: keyof TableProps;
   label: string;
+  align?: "left" | "center" | "right";
 }

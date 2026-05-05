@@ -246,7 +246,7 @@ console.log(finalPayload);
         </div>
 
       <div className='modal-Body' >
-        <div className="inventory-table-body">
+        <div className="modal-Children" style={{flex:"none"}}>
           <div className='modal-Row'>
             <div className='modal-Row-Item-title'>
              <label>출고요청일자</label>
@@ -255,77 +255,78 @@ console.log(finalPayload);
           </div>
         </div>
 
+        <div className="table-Content">
+          <table className='modal-Table-Form'>
 
-        <table className='modal-Table-Form'>
-
-          <thead className="modal-Table-Form-header">
-              <tr>
-                { itemList ? <th>순번</th> : null}
-                {columns.map(col => <th key={col.key}>{col.label}</th>)}
-                <th>비고</th>
-              </tr>
+            <thead className="modal-Table-Form-header">
+            <tr>
+              { itemList ? <th>순번</th> : null}
+              {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              <th>비고</th>
+            </tr>
             </thead>
 
-          <tbody className="modal-Table-Form-body">
-          {itemList.map((item, idx) => (
-          <tr key={idx} onClick={()=>{onselectInventory(idx)}}>
-            <td >{idx + 1}</td>
-            {columns.map(col => (
-              <>
-              {(() => {
-                const fieldKey = col.key as keyof ModalProps;
-                      
-                      if(col.key === 'defectStatus') {
-                        return <td key={col.key} onClick={(e) => e.stopPropagation()} >
-                          <input
-                          type='checkbox'
-                          name={col.key}    
-                          onChange={(e) => {e.stopPropagation(); handleInputChange(idx, col.key, e.target.checked ? '불량' : '정상');}}
-                        /></td>
-                        
-                      } else if(col.key === 'defectMemo') {
-                        return <td key={col.key} onClick={(e) => e.stopPropagation()} >
-                        <input
-                          name={col.key}
-                          value={item[fieldKey] ?? ''}
-                          onClick={(e) => e.stopPropagation()}           
-                          onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
-                        /></td>
-                        
-                      } else if( col.key === keySno ) {
-                        return <td key={col.key} onClick={(e) => e.stopPropagation()} >
-                        <input
-                          name={col.key}
-                          value={item[fieldKey] ?? 0 }   
-                          onClick={(e) => e.stopPropagation()}        
-                          onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
-                        /></td>
-                      } else {
-                          return <td key={col.key}>
-                          <input
-                          name={col.key}
-                          value={item[fieldKey] ?? ''}
-                          readOnly          
-                        /> </td>
-                      }
+            <tbody className="modal-Table-Form-body">
+            {itemList.map((item, idx) => (
+                <tr key={idx} onClick={()=>{onselectInventory(idx)}}>
+                  <td >{idx + 1}</td>
+                  {columns.map(col => (
+                      <>
+                        {(() => {
+                          const fieldKey = col.key as keyof ModalProps;
 
-                    })()}
-                </>
-              ))}
-              
-                <td onClick={(e) => e.stopPropagation()}>              
+                          if(col.key === 'defectStatus') {
+                            return <td key={col.key} onClick={(e) => e.stopPropagation()} >
+                              <input
+                                  type='checkbox'
+                                  name={col.key}
+                                  onChange={(e) => {e.stopPropagation(); handleInputChange(idx, col.key, e.target.checked ? '불량' : '정상');}}
+                              /></td>
+
+                          } else if(col.key === 'defectMemo') {
+                            return <td key={col.key} onClick={(e) => e.stopPropagation()} >
+                              <input
+                                  name={col.key}
+                                  value={item[fieldKey] ?? ''}
+                                  onClick={(e) => e.stopPropagation()}
+                                  onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
+                              /></td>
+
+                          } else if( col.key === keySno ) {
+                            return <td key={col.key} onClick={(e) => e.stopPropagation()} >
+                              <input
+                                  name={col.key}
+                                  value={item[fieldKey] ?? 0 }
+                                  onClick={(e) => e.stopPropagation()}
+                                  onChange={(e) => {e.stopPropagation();  handleInputChange(idx, col.key, e.target.value); }}
+                              /></td>
+                          } else {
+                            return <td key={col.key}>
+                              <input
+                                  name={col.key}
+                                  value={item[fieldKey] ?? ''}
+                                  readOnly
+                              /> </td>
+                          }
+
+                        })()}
+                      </>
+                  ))}
+
+                  <td onClick={(e) => e.stopPropagation()}>
                     <button
-                      className='Del-button' 
-                      onClick={(e) => handleRemoveRow(idx, e)}
+                        className='Del-button'
+                        onClick={(e) => handleRemoveRow(idx, e)}
                     >
                       삭제
                     </button>
-                </td>
-          </tr>
-        ))}
-        </tbody>
-      
-        </table>
+                  </td>
+                </tr>
+            ))}
+            </tbody>
+
+          </table>
+        </div>
         
         <button className="btn-Primary" style={{marginTop:"4px",padding:"6px"}} type='submit' onClick={(e) => handleAddList(e)}> 품목추가</button>
 

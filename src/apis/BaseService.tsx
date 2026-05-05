@@ -2,14 +2,16 @@ import axios from "axios";
 import {baseConfigs} from "../types/baseConfigs.tsx";
 
     const api = axios.create({
-        baseURL: "http://localhost/",
-        withCredentials: true,
+        //  baseURL: "http://localhost/",
+        baseURL: "https://moa-server.onrender.com",
+        withCredentials: true
     });
 // GET 요청용 (조회)
-    export const getBaseData = async (path: keyof typeof baseConfigs) => {
+    export const getBaseData = async (path: keyof typeof baseConfigs, page = 0, size = 15) => {
         const realUrl = baseConfigs[path].apiUrl;
 
-        const { data } = await api.get(realUrl); // path에는 "whse"나 "allow"만 들어옴
+        const { data } = await api.get(`${realUrl}?page=${page}&size=${size}`); // path에는 "whse"나 "allow"만 들어옴
+        console.log("서버에서 온 원본 데이터:", data);
         return data;
     };
 

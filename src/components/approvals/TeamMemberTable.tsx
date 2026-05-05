@@ -12,34 +12,36 @@ const TeamMemberTable = (
   }) => {
   
   return (
-    <table className="inventory-table">
-    
-      <thead className="inventory-table-header">
-        <tr>
-          { items ? <th>순번</th> : null}
-          {columns.map(col => <th key={col.key}>{col.label}</th>)}
-        </tr>
-      </thead>
+      <div className="inventory-Table-Wrapper">
+          <table className="inventory-table">
 
-      <tbody className="inventory-table-body">
-        {items.map((item, idx) => (
-        <tr className='Select-Pointer' key={idx} onClick={(e)=>onItemClick?.(item , e)}>
-          <td>{ 10 * page + idx + 1}</td>
+              <thead className="inventory-table-header">
+              <tr>
+                  { items ? <th>순번</th> : null}
+                  {columns.map(col => <th key={col.key}>{col.label}</th>)}
+              </tr>
+              </thead>
 
-          {columns.map(col => (
-            
-            <td key={col.key}>
-              
-              {item[col.key as keyof TableProps]|| ""}
-  
-            </td>
-          ))}    
+              <tbody className="inventory-table-body">
+              {items.map((item, idx) => (
+                  <tr className='Select-Pointer' key={idx} onClick={(e)=>onItemClick?.(item , e)}>
+                      <td>{ 10 * page + idx + 1}</td>
 
-        </tr>
-      ))}
-      </tbody>
+                      {columns.map(col => (
 
-    </table>
+                          <td key={col.key}>
+
+                              {item[col.key as keyof TableProps]|| ""}
+
+                          </td>
+                      ))}
+
+                  </tr>
+              ))}
+              </tbody>
+
+          </table>
+      </div>
   )
 }
 

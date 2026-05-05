@@ -99,3 +99,19 @@ tbody tr.notice-IsNotice-Row:hover {
 .mainPage-Table.logisticsTeam tbody tr td:nth-child(2) {
     text-align: left;
 }
+@media (max-width: 1024px) {
+    .mainPage-Table {
+        height: auto;
+        max-height: 300px;
+    }
+
+    .logisticsTeam {
+        height: auto;
+        max-height: 290px;
+    }
+
+    .notice-IsLoading {
+        height: auto;
+        min-height: 280px;
+    }
+}

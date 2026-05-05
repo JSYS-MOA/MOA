@@ -7,18 +7,26 @@ import {authCheck} from "./apis/LoginService.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import MainPage from "./pages/main/MainPage.tsx";
 import axios from "axios";
-import MyInfo from "./pages/mypage/MyInfo.tsx";
-import MyCalendar from "./pages/mypage/MyCalendar.tsx";
 import Base from "./pages/base/Base.tsx";
 import Admin from './pages/admin/Admin.tsx';
-import SalesJournals from "./pages/sales/SalesJournals.tsx";
-import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
-import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
-import MonthlyRevenuePage from "./pages/sales/MonthlyRevenuePage.tsx";
+import HRLists from "./pages/hr2/HRLists.tsx";
+import HrCardListPage from "./pages/hr/HrCardListPage.tsx";
+import LeaverCardListPage from "./pages/hr/LeaverCardListPage.tsx";
+import CertificatesCardListPage from "./pages/hr/CertificatesCardListPage.tsx";
+import EvaluationsCardListPage from "./pages/hr/EvaluationsCardListPage.tsx";
+import PayRollListPage from "./pages/hr/PayRollListPage.tsx";
+
+// import SalesJournals from "./pages/sales/SalesJournals.tsx";
+// import TaxInvoicePage from "./pages/sales/TaxInvoicePage.tsx";
+// import MonthlyExpensePage from "./pages/sales/MonthlyExpensePage.tsx";
+// import MonthlyRevenuePage from "./pages/sales/MonthlyRevenuePage.tsx";
 
 // 라우터 모움
 import InventoryRouter from "./routes/InventoryRoutes.tsx";
 import GwRouter from './routes/GwRoutes.tsx';
+import SalesRoutes from "./routes/SalesRoutes.tsx";
+import MyRoutes from "./routes/MyRoutes.tsx";
+import HRCalendar from './pages/hr2/HRCalendar.tsx';
 
 
 
@@ -52,38 +60,51 @@ const App = () => {
 
                 <Route element={<PrivateRoute />}>
 
+{/* 
+                    hr/attendances/calendar */}
 
                     {/* 메인페이지는 여기 있어야됨 -> 링크이동이 안 돼서 임시로 mainLayout안에 둠*/}
                     <Route element={<MainLayout />}>
 
                         <Route path="/home" element={<MainPage />} />
+                        <Route path="/my/*" element={<MyRoutes />} />
                         <Route path="/base/:type" element={<Base />} />
-                        <Route path="/my/profile" element={<MyInfo />} />
-                        <Route path="/my/calendars" element={<MyCalendar />} />
-                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
                         <Route path="/admin/levels" element={<Admin />} />
+                        <Route path="/hr/annualLeaves" element={<Base apiType="annualLeaves" />} />
+                        <Route path="/hr/:type" element={<HRLists />} />
                     </Route>
                 </Route>
 
                 <Route element={<PrivateRoute />}>
                     <Route element={<MainLayout />}>
+                        <Route path="/hr">
+                            {/* 윤아 */}
+                             <Route path="attendances/calendar" element={<HRCalendar />} />
 
-                        <Route path="/inventory/*" element={<InventoryRouter />} />
-                        <Route path="/gw/*" element={<GwRouter />} />
-                        
-                        <Route path="/sales">
-                            <Route path="journals" element={<SalesJournals/>} />
-                            <Route path="taxInv" element={<TaxInvoicePage/>} />
-                            <Route path="expense" element={<MonthlyExpensePage/>} />
-                            <Route path="revenue" element={<MonthlyRevenuePage/>} />
+                            {/* 성현 */}
+                            <Route path="cards" element={<HrCardListPage />} />
+                            <Route path="leavers" element={<LeaverCardListPage />} />
+                            <Route path="certificates" element={<CertificatesCardListPage />} />
+                            <Route path="evaluations" element={<EvaluationsCardListPage />} />
+                            <Route path="payroll" element={<PayRollListPage />} />
                         </Route>
-
-
-
                     </Route>
                 </Route>
 
+
+                <Route element={<PrivateRoute />}>
+                    <Route element={<MainLayout />}>
+                        <Route path="/inventory/*" element={<InventoryRouter />} />
+                        <Route path="/gw/*" element={<GwRouter />} />
+                        <Route path="/sales/*" element={<SalesRoutes />} />
+                    </Route>
+                </Route>
                 
+            
+            
+            
+
+            
 
         </Routes>    
     </>
