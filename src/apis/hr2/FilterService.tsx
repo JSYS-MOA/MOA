@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    //  baseURL: "http://localhost/",
-    baseURL: "https://moa-server.onrender.com/",
+     baseURL: "http://localhost/",
+    // baseURL: "https://moa-server.onrender.com/",
     withCredentials: true,
 });
 

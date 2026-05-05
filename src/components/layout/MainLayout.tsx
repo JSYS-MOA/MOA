@@ -26,6 +26,7 @@ const MainLayout = () => {
     const [layoutData, setLayoutData] = useState<LayoutData>();
 
 // [2] 백엔드 데이터 호출 (세션 방식)
+
     useEffect(() => {
         const init = async () => {
             try {
