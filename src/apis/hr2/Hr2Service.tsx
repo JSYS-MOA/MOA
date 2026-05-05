@@ -1,9 +1,10 @@
 import axios from "axios";
 import {hr2Configs} from "../../types/hr2Configs.tsx";
 
+
 const api = axios.create({
-     baseURL: "http://localhost/",
-    // baseURL: "https://moa-server.onrender.com/",
+    //  baseURL: "http://localhost/",
+    baseURL: "https://moa-server.onrender.com/",
     withCredentials: true,
 });
 
@@ -43,7 +44,7 @@ export const deleteHr2Data = async (path: keyof typeof hr2Configs, id: number | 
 
 //출근
 export const checkInApi = async () => {
-    await api.post("/api/hr/attendances/checkin");
+    await api.post(`/api/hr/attendances/checkin`);
 };
 
 //퇴근
