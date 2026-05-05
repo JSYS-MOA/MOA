@@ -1,5 +1,5 @@
 import type { HrTableProps } from "../../types/HrTableProps";
-import "../../assets/styles/hr/certificatesCardList.css";
+import "../../assets/styles/hr/hrPage.css";
 
 type CertificatesTableProps = HrTableProps;
 

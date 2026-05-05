@@ -10,7 +10,7 @@ import {
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
 import { useAuthStore } from "../../stores/useAuthStore";
-import "../../assets/styles/hr/hrCardUpdateModal.css";
+import "../../assets/styles/hr/hrPage.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { getHrGradeNameById, resolveHrGradeId } from "../../constants/hrGradeOptions";
 import type { HrCard } from "../../types/HrCard";
@@ -1149,9 +1149,8 @@ const HrCardUpdateModal = ({
                                         </div>
                                     </div>
                                 </div>
-                                <div className="modal-Row">
+                                <div className="modal-Row" style={{gap:"3px"}}>
                                     <label>주소</label>
-                                    <div className="hrCardAddModal-addressRow">
                                         <input
                                             name="address"
                                             className={inputClassName}
@@ -1161,28 +1160,27 @@ const HrCardUpdateModal = ({
                                         />
                                         <button
                                             type="button"
-                                            className="hrCardAddModal-addressButton"
+                                            style={{whiteSpace:"nowrap"}}
+                                            className="btn-Secondary"
                                             onClick={handleSearchAddress}
                                             disabled={isReadOnly}
                                         >
                                             주소검색
                                         </button>
                                     </div>
-                                </div>
-
-                                <div className="modal-Row">
-                                    <label>인사평가</label>
-                                    <textarea
-                                        name="performance"
-                                        className={textareaClassName}
-                                        value={form.performance}
-                                        onChange={handleChange}
-                                        readOnly={isReadOnly}
-                                        rows={3}
-                                    />
-                                </div>
-                            </form>
-                        </>
+                                    <div className="modal-Row">
+                                        <label>인사평가</label>
+                                        <textarea
+                                            name="performance"
+                                            className={textareaClassName}
+                                            value={form.performance}
+                                            onChange={handleChange}
+                                            readOnly={isReadOnly}
+                                            rows={3}
+                                        />
+                                    </div>
+                                </form>
+                             </>
                     )}
             </Modal>
             <ConfirmModal

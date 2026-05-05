@@ -4,7 +4,7 @@ import {
     type EvaluationsCardRecord,
     useGetHrCardList as useGetEvaluationsCardList,
 } from "../../apis/hr/EvaluationsCardService";
-import "../../assets/styles/hr/evaluationsCardList.css";
+import "../../assets/styles/hr/hrPage.css";
 import EvaluationsCardUpdateModal from "../../components/hr/EvaluationsCardUpdateModal";
 import EvaluationsTable from "../../components/hr/EvaluationsTable";
 import {
@@ -162,17 +162,17 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="evaluationsCardListPage-filter-group">
+        <div className="filter-group">
             <label>{label}</label>
-            <div className={`evaluationsCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="evaluationsCardListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="chip-input-icon" aria-hidden="true" />
 
                 {hasAppliedValue && (
-                    <span className="evaluationsCardListPage-chip">
+                    <span className="chip">
                         <span>{appliedValue}</span>
                         <button
                             type="button"
-                            className="evaluationsCardListPage-chip-x"
+                            className="chip-x"
                             onClick={onClear}
                         >
                             x
@@ -190,7 +190,7 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="evaluationsCardListPage-chip-clear"
+                    className="chip-clear"
                     aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
@@ -292,21 +292,22 @@ const EvaluationsCardListPage = () => {
     };
 
     return (
-        <div className="evaluationsCardListPage-page">
+        <>
+        <div className="hrPage-page-filter">
             <div className="favorite-Header">
                 <button
                     type="button"
-                    className="evaluationsCardListPage-star"
                     aria-pressed={isStarred}
                     onClick={() => setIsStarred((prev) => !prev)}
                 >
                     <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
                 </button>
-                <span>인사 평가</span>
-
+                <span>인사평가</span>
+            </div>
+            <div>
                 <button
                     type="button"
-                    className="evaluationsCardListPage-top-search-btn"
+                    className="top-search-btn"
                     aria-expanded={isSearchOpen}
                     onClick={() => setIsSearchOpen((prev) => !prev)}
                 >
@@ -314,9 +315,11 @@ const EvaluationsCardListPage = () => {
                 </button>
             </div>
 
-            <div className={`evaluationsCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="evaluationsCardListPage-filter-row">
-                    <div className="evaluationsCardListPage-filter-1">
+        </div>
+
+            <div className={`filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="filter-row">
+                    <div>
                         <FilterChipInput
                             label="부서"
                             placeholder="부서명 입력"
@@ -328,7 +331,7 @@ const EvaluationsCardListPage = () => {
                         />
                     </div>
 
-                    <div className="evaluationsCardListPage-filter-2">
+                    <div>
                         <FilterChipInput
                             label="직급"
                             placeholder="직급명 입력"
@@ -340,7 +343,7 @@ const EvaluationsCardListPage = () => {
                         />
                     </div>
 
-                    <div className="evaluationsCardListPage-filter-3">
+                    <div>
                         <FilterChipInput
                             label="검색어"
                             placeholder="이름, 사번"
@@ -353,10 +356,10 @@ const EvaluationsCardListPage = () => {
                     </div>
                 </div>
 
-                <div className="evaluationsCardListPage-filter-actions">
+                <div className="filter-actions">
                     <button
                         type="button"
-                        className="evaluationsCardListPage-search-btn"
+                        className="btn-Primary"
                         onClick={applyFilters}
                     >
                         검색
@@ -365,7 +368,7 @@ const EvaluationsCardListPage = () => {
             </div>
 
             <div className="evaluationsCardListPage-table-box">
-                <div className="evaluationsCardListPage-table-info">
+                <div className="evaluationsCardListPage-table-info" style={{fontSize:"14px"}}>
                     <span>전체 {filteredItems.length}건</span>
                 </div>
 
@@ -380,11 +383,11 @@ const EvaluationsCardListPage = () => {
                     />
                 )}
 
-                <div className="evaluationsCardListPage-paging-group">
-                    <div className="evaluationsCardListPage-paging-group-min">
+                <div className="Evalutions-paging-group">
+                    <div className="Page-Btn-container">
                         <button
                             type="button"
-                            className="evaluationsCardListPage-paging-prev-btn"
+                            className="btn-Primary"
                             onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
                             disabled={resolvedCurrentPage === 1}
                         >
@@ -394,7 +397,7 @@ const EvaluationsCardListPage = () => {
                         {pageNumbers.map((pageNumber) => (
                             <button
                                 type="button"
-                                className="evaluationsCardListPage-paging-num-btn"
+                                className="paging-num-btn"
                                 key={pageNumber}
                                 onClick={() => setCurrentPage(pageNumber)}
                                 disabled={pageNumber === resolvedCurrentPage}
@@ -405,7 +408,7 @@ const EvaluationsCardListPage = () => {
 
                         <button
                             type="button"
-                            className="evaluationsCardListPage-paging-next-btn"
+                            className="btn-Primary"
                             onClick={() =>
                                 setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
                             }
@@ -416,13 +419,12 @@ const EvaluationsCardListPage = () => {
                     </div>
                 </div>
             </div>
-
             <EvaluationsCardUpdateModal
                 isOpen={modalTarget !== null}
                 userId={typeof modalTarget === "number" ? modalTarget : null}
                 onClose={handleCloseUpdateModal}
             />
-        </div>
+        </>
     );
 };
 

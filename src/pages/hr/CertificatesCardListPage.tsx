@@ -4,7 +4,7 @@ import {
     type CertificatesCardRecord,
     useGetCertificatesCardList,
 } from "../../apis/hr/CertificatesCardService";
-import "../../assets/styles/hr/certificatesCardList.css";
+import "../../assets/styles/hr/hrPage.css";
 import CertificatesCardUpdateModal from "../../components/hr/CertificatesCardUpdateModal";
 import CertificatesTable from "../../components/hr/CertificatesTable";
 import {
@@ -162,17 +162,17 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="certificatesCardListPage-filter-group">
+        <div className="filter-group">
             <label>{label}</label>
-            <div className={`certificatesCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="certificatesCardListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="chip-input-icon" aria-hidden="true" />
 
                 {hasAppliedValue && (
-                    <span className="certificatesCardListPage-chip">
+                    <span className="chip">
                         <span>{appliedValue}</span>
                         <button
                             type="button"
-                            className="certificatesCardListPage-chip-x"
+                            className="chip-x"
                             onClick={onClear}
                         >
                             x
@@ -190,7 +190,7 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="certificatesCardListPage-chip-clear"
+                    className="chip-clear"
                     aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
@@ -292,133 +292,135 @@ const CertificatesCardListPage = () => {
     };
 
     return (
-        <div className="certificatesCardListPage-page">
-            <div className="favorite-Header">
-                <button
-                    type="button"
-                    className="certificatesCardListPage-star"
-                    aria-pressed={isStarred}
-                    onClick={() => setIsStarred((prev) => !prev)}
-                >
-                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
-                </button>
-                <span>인사 관리 현황</span>
-
-                <button
-                    type="button"
-                    className="certificatesCardListPage-top-search-btn"
-                    aria-expanded={isSearchOpen}
-                    onClick={() => setIsSearchOpen((prev) => !prev)}
-                >
-                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
-                </button>
-            </div>
-
-            <div className={`certificatesCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="certificatesCardListPage-filter-row">
-                    <div className="certificatesCardListPage-filter-1">
-                        <FilterChipInput
-                            label="부서"
-                            placeholder="부서명 입력"
-                            draftValue={departmentDraft}
-                            appliedValue={departmentFilter}
-                            onDraftChange={setDepartmentDraft}
-                            onClear={clearDepartmentFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-
-                    <div className="certificatesCardListPage-filter-2">
-                        <FilterChipInput
-                            label="직급"
-                            placeholder="직급명 입력"
-                            draftValue={gradeDraft}
-                            appliedValue={gradeFilter}
-                            onDraftChange={setGradeDraft}
-                            onClear={clearGradeFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-
-                    <div className="certificatesCardListPage-filter-3">
-                        <FilterChipInput
-                            label="검색어"
-                            placeholder="이름, 사번"
-                            draftValue={keywordDraft}
-                            appliedValue={keywordFilter}
-                            onDraftChange={setKeywordDraft}
-                            onClear={clearKeywordFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-                </div>
-
-                <div className="certificatesCardListPage-filter-actions">
+        <>
+            <div className="hrPage-page-filter">
+                <div className="favorite-Header">
                     <button
                         type="button"
-                        className="certificatesCardListPage-search-btn"
-                        onClick={applyFilters}
+                        aria-pressed={isStarred}
+                        onClick={() => setIsStarred((prev) => !prev)}
                     >
-                        검색
+                        <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                    </button>
+                    <span>인사 관리 현황</span>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="top-search-btn"
+                        aria-expanded={isSearchOpen}
+                        onClick={() => setIsSearchOpen((prev) => !prev)}
+                    >
+                        검색 조건 {isSearchOpen ? "닫기" : "열기"}
                     </button>
                 </div>
-            </div>
 
-            <div className="certificatesCardListPage-table-box">
-                {isLoading ? (
-                    <div>인사 발령 목록을 불러오는 중입니다.</div>
-                ) : isError ? (
-                    <div>인사 발령 목록을 불러오지 못했습니다.</div>
-                ) : (
-                    <CertificatesTable
-                        items={paginatedItems}
-                        onSelectItem={handleOpenUpdateModal}
-                    />
-                )}
+                </div>
 
-                <div className="hrCardListPage-paging-group">
-                    <div className="Page-Btn-container">
+                <div className={`filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                    <div className="filter-row">
+                        <div>
+                            <FilterChipInput
+                                label="부서"
+                                placeholder="부서명 입력"
+                                draftValue={departmentDraft}
+                                appliedValue={departmentFilter}
+                                onDraftChange={setDepartmentDraft}
+                                onClear={clearDepartmentFilter}
+                                onSubmit={applyFilters}
+                            />
+                        </div>
+
+                        <div>
+                            <FilterChipInput
+                                label="직급"
+                                placeholder="직급명 입력"
+                                draftValue={gradeDraft}
+                                appliedValue={gradeFilter}
+                                onDraftChange={setGradeDraft}
+                                onClear={clearGradeFilter}
+                                onSubmit={applyFilters}
+                            />
+                        </div>
+
+                        <div>
+                            <FilterChipInput
+                                label="검색어"
+                                placeholder="이름, 사번"
+                                draftValue={keywordDraft}
+                                appliedValue={keywordFilter}
+                                onDraftChange={setKeywordDraft}
+                                onClear={clearKeywordFilter}
+                                onSubmit={applyFilters}
+                            />
+                        </div>
+                </div>
+
+                    <div className="filter-actions">
                         <button
                             type="button"
                             className="btn-Primary"
-                            onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
-                            disabled={resolvedCurrentPage === 1}
+                            onClick={applyFilters}
                         >
-                            이전
-                        </button>
-
-                        {pageNumbers.map((pageNumber) => (
-                            <button
-                                type="button"
-                                className="certificatesCardListPage-paging-num-btn"
-                                key={pageNumber}
-                                onClick={() => setCurrentPage(pageNumber)}
-                                disabled={pageNumber === resolvedCurrentPage}
-                            >
-                                {pageNumber}
-                            </button>
-                        ))}
-
-                        <button
-                            type="button"
-                            className="btn-Primary"
-                            onClick={() =>
-                                setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
-                            }
-                            disabled={resolvedCurrentPage === totalPages}
-                        >
-                            다음
+                            검색
                         </button>
                     </div>
-                </div>
             </div>
+                <div className="certificatesCardListPage-table-box">
+                    {isLoading ? (
+                        <div>인사 발령 목록을 불러오는 중입니다.</div>
+                    ) : isError ? (
+                        <div>인사 발령 목록을 불러오지 못했습니다.</div>
+                    ) : (
+                        <CertificatesTable
+                            items={paginatedItems}
+                            onSelectItem={handleOpenUpdateModal}
+                        />
+                    )}
 
-            <CertificatesCardUpdateModal
-                isOpen={modalTarget !== null}
-                userId={typeof modalTarget === "number" ? modalTarget : null}
-                onClose={handleCloseUpdateModal}
-            />
-        </div>
+                    <div className="CertificatesPage-paging-group">
+                        <div className="Page-Btn-container">
+                            <button
+                                type="button"
+                                className="btn-Primary"
+                                onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
+                                disabled={resolvedCurrentPage === 1}
+                            >
+                                이전
+                            </button>
+
+                            {pageNumbers.map((pageNumber) => (
+                                <button
+                                    type="button"
+                                    className="certificatesCardListPage-paging-num-btn"
+                                    key={pageNumber}
+                                    onClick={() => setCurrentPage(pageNumber)}
+                                    disabled={pageNumber === resolvedCurrentPage}
+                                >
+                                    {pageNumber}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                className="btn-Primary"
+                                onClick={() =>
+                                    setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
+                                }
+                                disabled={resolvedCurrentPage === totalPages}
+                            >
+                                다음
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <CertificatesCardUpdateModal
+                    isOpen={modalTarget !== null}
+                    userId={typeof modalTarget === "number" ? modalTarget : null}
+                    onClose={handleCloseUpdateModal}
+                />
+    </>
     );
 };
 

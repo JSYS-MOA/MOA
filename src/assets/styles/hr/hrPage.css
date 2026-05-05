@@ -1,0 +1,392 @@
+.hrCardAddModal-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin: 0 var(--spacing-sm);
+    border-radius: var(--radius-lg);
+    background: var(--color-inverse);
+}
+
+.hrCardAddModal-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+
+.hrCardAddModal-dateCalendarWrap {
+    position: relative;
+
+}
+
+.hrCardAddModal-dateNativeInput {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hrCardAddModal-dateCalendarButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-secondary-50);
+    cursor: pointer;
+}
+
+.hrCardAddModal-dateCalendarIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.hrCardAddModal-dateRow {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+}
+
+.hrCardAddModal-dateBox {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.hrCardAddModal-dateBox--year {
+    width: 100% !important;
+}
+
+.hrCardAddModal-dateBox--month,
+.hrCardAddModal-dateBox--day {
+    width: 100% !important;
+}
+
+.hrCardAddModal-dateSelect {
+    width: 100%;
+    padding: var(--spacing-xs) 24px var(--spacing-xs) var(--spacing-xs);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.hrCardAddModal-dateArrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary-50);
+    font-size: var(--font-xs);
+}
+
+.hrCardAddModal-dateDivider {
+    flex: 0 0 auto;
+    color: var(--text-secondary-50);
+    font-size: var(--font-sm);
+    line-height: 1;
+}
+
+.hrCardAddModal-dateCalendarWrap {
+    position: relative;
+    height: 28px;
+    align-items: center;
+    display: flex;
+}
+
+.hrCardAddModal-dateNativeInput {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hrCardAddModal-dateInputRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.hrCardAddModal-dateInputField {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.hrCardAddModal-dateCalendarButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px !important;
+    height: 28px !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-secondary-50);
+    cursor: pointer;}
+
+.hrCardAddModal-dateCalendarButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.hrPage-page-filter{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.filter-box {
+    overflow: hidden;
+    padding: 14px;
+    max-width: 100%;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--text-inverse);
+    opacity: 1;
+    transition:
+            max-height 0.2s ease,
+            padding 0.2s ease,
+            opacity 0.2s ease,
+            margin-bottom 0.2s ease,
+            border-width 0.2s ease;
+}
+
+.filter-box.is-collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap:var(--spacing-xs) var(--spacing-sm);
+    text-align: left;
+}
+
+.top-search-btn {
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--color-inverse);
+    padding: 4px 8px;
+    cursor: pointer;
+    background: var(--color-primary);
+}
+.top-search-btn:hover{
+    background: var(--color-danger);
+    color: var(--color-inverse);
+
+}
+
+textarea {
+    min-height: 72px;
+    resize: vertical;
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-inverse);
+    color: var(--text-primary);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin: 0;
+    min-width: 0;
+}
+
+.filter-group label {
+    flex: 0 0 40px;
+    color: var(--text-primary);
+    font-size: var(--font-xs);
+}
+
+
+/* 칩 입력창 */
+.chip-input {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 20px !important;
+    padding-right: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    background: var(--color-inverse);
+    overflow: hidden;
+}
+
+.chip-input.has-chip {
+    padding-block: var(--spacing-xs);
+}
+
+.chip-input:focus-within {
+    border-color: var(--border);
+    box-shadow: 0 0 0 3px rgba(236, 239, 243, 0.7);
+}
+
+.chip-input-icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    align-self: stretch;
+    border-right: 1px solid var(--border);
+}
+
+.chip-input-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    transform: translateY(-60%);
+    box-sizing: border-box;
+}
+
+.chip-input-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--border);
+    transform: translateY(4px) rotate(45deg);
+}
+
+.chip-input input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 20px;
+    padding: 0 var(--spacing-xs);
+    border: 0;
+    outline: none;
+    background: var(--color-inverse);
+}
+
+.chip-input input::placeholder {
+    color: var(--border-dark);
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    max-width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 999px;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    line-height: 1;
+}
+
+.chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chip-input .chip {
+    margin-right: 4px;
+}
+
+.chip-input.has-chip input {
+    min-width: 48px;
+}
+
+.chip-x {
+    border: none;
+    background: var(--text-accent);
+    color: var(--color-inverse);
+    font-size: var(--font-xs);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.chip-x:hover {
+    opacity: 0.7;
+}
+
+.chip-clear {
+    align-self: stretch;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: var(--color-inverse);
+    color: var(--border);
+    font-size: var(--font-lg);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.chip-clear:disabled {
+    cursor: default;
+}
+
+.chip-clear:not(:disabled):hover {
+    color: var(--border-dark);
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    padding-top: 8px;
+}
+
+.search-btn {
+    margin: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
+}
+.Page-Btn-container{gap: 14px; font-size: 14px}
+
+.paging-num-btn {
+    background: none;
+    border: 0;
+    color: var(--border-dark);
+    font-size: 16px;
+    gap: 14px;
+    cursor: pointer;
+}
+
+.paging-num-btn:disabled {
+    color: var(--text-accent);
+    border-radius: var(--radius-sm);
+    cursor: default;
+}

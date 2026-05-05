@@ -7,7 +7,7 @@ import {
     type HrCardMutationPayload,
 } from "../../apis/hr/HrCardService";
 import Modal from "../Modal";
-import "../../assets/styles/hr/hrCardAddModal.css";
+import "../../assets/styles/hr/hrPage.css";
 import { createHrGradeOptions } from "../../constants/hrGradeOptions";
 import { openDaumPostcode } from "../../utils/daumPostcode";
 
@@ -1068,9 +1068,8 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="modal-Row">
+                                <div className="modal-Row" style={{gap:"3px"}}>
                                     <label>주소</label>
-                                    <div className="hrCardAddModal-addressRow">
                                         <input
                                             name="address"
                                             type="text"
@@ -1078,14 +1077,14 @@ const HrCardAddModal = ({ isOpen, onClose }: Props) => {
                                             onChange={handleChange}
                                         />
                                         <button
+                                            style={{whiteSpace:"nowrap"}}
                                             type="button"
-                                            className="hrCardAddModal-addressButton"
+                                            className="btn-Secondary"
                                             onClick={handleSearchAddress}
                                         >
                                             주소검색
                                         </button>
                                     </div>
-                                </div>
     
                                 <div className="modal-Row">
                                     <label>인사평가</label>
