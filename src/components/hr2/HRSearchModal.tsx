@@ -35,60 +35,6 @@
 //         }
 //     };
 
-<<<<<<< HEAD
-    return (
-        <div className="modal-Overlay">
-            <div className="modal-Container">
-
-                <div className="modal-Header">
-                    <input
-                        type="text"
-                        value={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
-                        placeholder="검색어 입력..."
-                    />
-                    <button onClick={handleSearch}>검색</button>
-                </div>
-
-                <div className="modal-Title">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>{searchType === "user" ? "성명" : "수당명"}</th>
-                            <th>{searchType === "user" ? "사원번호" : "수당코드"}</th>
-                        </tr>
-                        </thead>
-                        <tbody className="modal-Body">
-                        {results.length > 0 ? (
-                            results.map((item, idx) => (
-                            <tr
-                                className="modal-Children"
-                                key={idx}
-                                onClick={() => onSelect(item)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <td>{searchType === "user" ? item.userName : item.allowanceName}</td>
-                                <td>{searchType === "user" ? item.employeeId : item.allowanceCord}</td>
-                            </tr>
-                        ))) : (
-                            <tr className="modal-Children">
-                                <td colSpan={2}>
-                                    검색 결과가 없습니다.
-                                </td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div className="modal-Footer">
-                    <button onClick={onClose}>닫기</button>
-                </div>
-            </div>
-        </div>
-    );
-};
-=======
 //     return (
 //         <div>
 //             <div>
@@ -141,6 +87,5 @@
 //         </div>
 //     );
 // };
->>>>>>> 2400afebcd08e20b96a57c8dfe205c5f5bc055f3
 
 // export default HRSearchModal;
