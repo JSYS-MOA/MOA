@@ -1,8 +1,8 @@
 import axios from "axios";
 import {useAuthStore} from "../stores/useAuthStore.tsx";
 
-//  const API = "http://localhost/api";
-const API = "https://moa-server.onrender.com/api";
+ const API = "http://localhost/api";
+// const API = "https://moa-server.onrender.com/api";
 
 export async function layoutApi(){
  

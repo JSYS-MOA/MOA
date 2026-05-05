@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-// const LEAVER_API_BASE = "http://localhost/api/hr/leavers";
-// const HR_CARD_API_BASE = "http://localhost/api/hr/cards";
+const LEAVER_API_BASE = "http://localhost/api/hr/leavers";
+const HR_CARD_API_BASE = "http://localhost/api/hr/cards";
 
-const LEAVER_API_BASE = "https://moa-server.onrender.com/api/hr/leavers";
-const HR_CARD_API_BASE = "https://moa-server.onrender.com/api/hr/cards";
+// const LEAVER_API_BASE = "https://moa-server.onrender.com/api/hr/leavers";
+// const HR_CARD_API_BASE = "https://moa-server.onrender.com/api/hr/cards";
 
 export type LeaverCardRecord = {
     userId: number;
