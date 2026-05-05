@@ -22,8 +22,18 @@ const MainLayout = () => {
 
     const navigate = useNavigate();
 
-    const [activeMenu, setActiveMenu] = useState<number>(1);
+
+    // 2. localStorage에서 저장값 가져오기
+    const [activeMenu, setActiveMenu] = useState<number>(() => {
+        const saved = localStorage.getItem("activeMenu");
+        return saved ? Number(saved) : 1;
+    });
     const [layoutData, setLayoutData] = useState<LayoutData>();
+
+    // 1. localStorage에 activeMenu 저장하기
+    useEffect(() => {
+        localStorage.setItem("activeMenu", String(activeMenu));
+    }, [activeMenu]);
 
 // [2] 백엔드 데이터 호출 (세션 방식)
     useEffect(() => {

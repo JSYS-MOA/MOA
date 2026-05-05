@@ -10,12 +10,22 @@ const api = axios.create({
 export const getHr2Data = async (path: keyof typeof hr2Configs, page = 0, size = 15, filterDTO: any) => {
     const realUrl = hr2Configs[path].apiUrl;
 
-    const { data } = await api.get(`${realUrl}`,{
+    // 서버로 보내기 전, 값이 없는 필드(null, undefined, "")를 제거하여
+    // 서버의 @RequestParam이나 DTO 바인딩 에러를 방지합니다.
+    const cleanFilter = Object.entries(filterDTO).reduce((acc: any, [key, value]) => {
+        if (value !== null && value !== undefined && value !== "" && value !== "null") {
+            acc[key] = value;
+        }
+        return acc;
+    }, {});
+
+    const { data } = await api.get(`${realUrl}`, {
         params: {
             page,
             size,
-            ...filterDTO
-    }});
+            ...cleanFilter // 정제된 필터만 전송
+        }
+    });
     return data;
 };
 //
