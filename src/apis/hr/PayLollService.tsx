@@ -246,7 +246,11 @@ export type PayRollDateMutationPayload = {
     transactionPrice?: number;
     transactionMemo?: string;
     createdAt?: string | null;
+    created_at?: string | null;
     updatedAt?: string | null;
+    updated_at?: string | null;
+    clearUpdatedAt?: boolean;
+    clear_updated_at?: boolean;
 };
 
 export type PayRollCreatePayload = {
@@ -290,89 +294,6 @@ const toUserEntityPayload = (payload: PayRollMutationPayload) => {
     delete userEntityPayload.accountOwner;
 
     return userEntityPayload;
-};
-
-const getStringValue = (record: Record<string, unknown>, ...keys: string[]) => {
-    for (const key of keys) {
-        const value = record[key];
-
-        if (typeof value === "string") {
-            return value;
-        }
-
-        if (typeof value === "number" && Number.isFinite(value)) {
-            return String(value);
-        }
-    }
-
-    return "";
-};
-
-const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
-    for (const key of keys) {
-        const value = record[key];
-
-        if (typeof value === "number" && Number.isFinite(value)) {
-            return value;
-        }
-
-        if (typeof value === "string" && value.trim() !== "") {
-            const parsed = Number(value.replaceAll(",", ""));
-
-            if (Number.isFinite(parsed)) {
-                return parsed;
-            }
-        }
-    }
-
-    return 0;
-};
-
-const toCancelConfirmPayload = (record: PayRollRecord) => {
-    const item = record as PayRollRecord & Record<string, unknown>;
-    const salaryLedgerId = getNumberValue(item, "salaryLedgerId", "salary_ledger_id");
-
-    return {
-        transactionId: getNumberValue(item, "transactionId", "transaction_id"),
-        vendorId: getNumberValue(item, "vendorId", "vendor_id"),
-        salaryLedgerId,
-        salary_ledgerId: salaryLedgerId,
-        orderformId: getNumberValue(item, "orderformId", "orderform_id") || null,
-        transactionNum: getNumberValue(item, "transactionNum", "transaction_num"),
-        transactionType: getStringValue(item, "transactionType", "transaction_type"),
-        transactionPrice: getStringValue(item, "transactionPrice", "transaction_price"),
-        transactionMemo: getStringValue(item, "transactionMemo", "transaction_memo"),
-        vendorCord: getStringValue(item, "vendorCord", "vendor_cord") || null,
-        vendorName: getStringValue(item, "vendorName", "vendor_name") || null,
-        vendorIsUse: getStringValue(item, "vendorIsUse", "vendor_is_use") || null,
-        userId: getNumberValue(item, "userId", "user_id"),
-        transferId: getNumberValue(item, "transferId", "transfer_id"),
-        salaryStatus: getStringValue(item, "salaryStatus", "salary_status") || null,
-        salaryId: getNumberValue(item, "salaryId", "salary_id"),
-        basePay: getNumberValue(item, "basePay", "base_pay"),
-        bankTransferId: getNumberValue(item, "bankTransferId", "bank_transfer_id"),
-        updatedAt: null,
-        updated_at: null,
-        transaction_updated_at: null,
-        salary_ledger_updated_at: null,
-        salary_updated_at: null,
-        salaryDate: getNumberValue(item, "salaryDate", "salary_date") || null,
-        salaryAmount: getNumberValue(item, "salaryAmount", "salary_amount"),
-        overtimeAllowance: getNumberValue(item, "overtimeAllowance", "overtime_allowance"),
-        weekendAllowance: getNumberValue(item, "weekendAllowance", "weekend_allowance"),
-        annualAllowance: getNumberValue(item, "annualAllowance", "annual_allowance"),
-        userName: getStringValue(item, "userName", "user_name") || null,
-        employeeId: getStringValue(item, "employeeId", "employee_id") || null,
-        departmentId: getNumberValue(item, "departmentId", "department_id"),
-        gradeId: getNumberValue(item, "gradeId", "grade_id"),
-        bank: getStringValue(item, "bank") || null,
-        account_num: getStringValue(item, "account_num", "accountNum") || null,
-        allowanceId: getNumberValue(item, "allowanceId", "allowance_id"),
-        allowanceCord: getStringValue(item, "allowanceCord", "allowance_cord"),
-        allowanceName: getStringValue(item, "allowanceName", "allowance_name"),
-        gradeName: getStringValue(item, "gradeName", "grade_name"),
-        departmentName: getStringValue(item, "departmentName", "department_name"),
-    };
 };
 
 // 급여시즌 목록 조회
@@ -509,21 +430,31 @@ export function usePutPayRoll() {
 export function useCancelPayRollConfirm() {
     return useMutation({
         mutationFn: async ({
-                               salaryLedgerId,
+                               transactionId,
                                payload,
                            }: {
-            salaryLedgerId: number;
-            payload: PayRollRecord;
+            transactionId: number;
+            payload: PayRollDateMutationPayload;
         }) => {
-            const { data } = await axios.put(
-                `${API_BASE}/${salaryLedgerId}`,
-                toUserEntityPayload(toCancelConfirmPayload(payload) as PayRollMutationPayload),
-                {
-                    withCredentials: true,
-                }
-            );
+            try {
+                const { data } = await axios.put(
+                    `${API_BASE}/${transactionId}`,
+                    payload,
+                    {
+                        withCredentials: true,
+                    }
+                );
 
-            return data;
+                return data;
+            } catch (error) {
+                const message = getAxiosErrorMessage(error);
+
+                if (message) {
+                    throw new Error(message);
+                }
+
+                throw error;
+            }
         },
     });
 }

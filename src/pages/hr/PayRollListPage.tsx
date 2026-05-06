@@ -84,9 +84,6 @@ const getNumberValue = (record: Record<string, unknown>, ...keys: string[]) => {
 const getTransactionId = (record: Record<string, unknown>) =>
     getNumberValue(record, "transactionId", "transaction_id");
 
-const getSalaryLedgerId = (record: Record<string, unknown>) =>
-    getNumberValue(record, "salaryLedgerId", "salary_ledger_id");
-
 const getVendorId = (record: Record<string, unknown>) =>
     getNumberValue(record, "vendorId", "vendor_id");
 
@@ -240,7 +237,19 @@ const buildDateMutationPayload = (
             "salary_ledger_created_at",
             "salary_created_at"
         ) || null,
+    created_at:
+        getStringValue(
+            record,
+            "createdAt",
+            "created_at",
+            "transaction_created_at",
+            "salary_ledger_created_at",
+            "salary_created_at"
+        ) || null,
     updatedAt,
+    updated_at: updatedAt,
+    clearUpdatedAt: updatedAt === null ? true : undefined,
+    clear_updated_at: updatedAt === null ? true : undefined,
 });
 
 const buildRows = (cards: PayRollRecord[]) => {
@@ -613,17 +622,19 @@ const PayRollListPage = () => {
 
         try {
             for (const record of targetRecords) {
-                const resolvedId =
-                    getTransactionId(record as LoosePayRoll) ??
-                    getSalaryLedgerId(record as LoosePayRoll);
+                const transactionId = getTransactionId(record as LoosePayRoll);
 
-                if (resolvedId === undefined) {
+                if (
+                    typeof transactionId !== "number" ||
+                    !Number.isFinite(transactionId) ||
+                    transactionId <= 0
+                ) {
                     continue;
                 }
 
                 await cancelPayRollConfirm.mutateAsync({
-                    salaryLedgerId: resolvedId,
-                    payload: record,
+                    transactionId,
+                    payload: buildDateMutationPayload(record as LoosePayRoll, null),
                 });
             }
 
