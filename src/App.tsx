@@ -28,13 +28,14 @@ import SalesRoutes from "./routes/SalesRoutes.tsx";
 import MyRoutes from "./routes/MyRoutes.tsx";
 import HRCalendar from './pages/hr2/HRCalendar.tsx';
 
-const navigate = useNavigate();
-const location = useLocation();
 
 const App = () => {
     const { login } = useAuthStore();
     const [isLoading, setIsLoading] = useState(true)
-
+    
+    const navigate = useNavigate();
+    const location = useLocation();
+    
     useEffect(()=>{
         authCheck()
             .then((data) => {
