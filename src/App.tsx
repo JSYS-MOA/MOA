@@ -35,19 +35,19 @@ const App = () => {
     
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     useEffect(()=>{
         authCheck()
             .then((data) => {
                 login(data);
-                 if (location.pathname === "/login") {
+                 if (location.pathname === "/") {
                     navigate("/", { replace: true });
                 }
             })
             .catch((error)=>{
                 if(axios.isAxiosError(error) && error.response?.status === 401) {
-                    if (location.pathname !== "/login") {
-                     navigate("/login", { replace: true });
+                    if (location.pathname !== "/") {
+                     navigate("/", { replace: true });
                     }
                 }else{
                     console.error("authCheck error",error);
