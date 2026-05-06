@@ -28,6 +28,7 @@ const MainLayout = () => {
         return saved ? Number(saved) : 1;
     });
     const [layoutData, setLayoutData] = useState<LayoutData>();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const isMainPage = location.pathname === "/home";
 
     // 1. localStorage에 activeMenu 저장하기
@@ -76,13 +77,17 @@ const MainLayout = () => {
                 activeMenu={activeMenu || 0}
                 menuList={layoutData?.menuList || []}
                 onMenuClick={handleMenuClick}
+                onHamburgerClick={() => setIsSidebarOpen(!isSidebarOpen)}
             />
 
             <div className="main-content-layout" style={{ display: 'flex', height:"100%" }}>
-                {activeMenu !== null && activeMenu !== 1 && layoutData && (
+                {layoutData && (activeMenu !== 1 || isSidebarOpen) && (
                     <Sidebar
                         activeMenu={activeMenu}
                         layoutData={layoutData}
+                        isOpen={isSidebarOpen}
+                        onClose={() => setIsSidebarOpen(false)}
+                        onMenuClick={handleMenuClick}
                     />
                 )}
                 <main className={isMainPage ? "" : "main"}>

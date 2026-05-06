@@ -6,11 +6,12 @@ interface HeaderProps {
     userDept: string;
     activeMenu: number; // 현재 활성화된 메뉴 번호
     onMenuClick: (menuId: number) => void; // 부모의 setActiveMenu를 실행할 함수
+    onHamburgerClick: () => void;
 }
 
 
 
-const Header = ({menuList, userDept, onMenuClick}:HeaderProps) => {
+const Header = ({menuList, userDept, onMenuClick,onHamburgerClick}:HeaderProps) => {
 
     // || !userDept 부서명이 없는 경우도 있어서 삭제
 
@@ -60,7 +61,7 @@ const Header = ({menuList, userDept, onMenuClick}:HeaderProps) => {
                     })}
                 </ul>
             </div>
-        <div className="header-Open">
+        <div className="header-hamburger" onClick={onHamburgerClick}>
             <RxHamburgerMenu size={19}/>
         </div>
     </header>
