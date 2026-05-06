@@ -10,7 +10,7 @@ const api = axios.create({
 
 export const getHr2Data = async (path: keyof typeof hr2Configs, page = 0, size = 15, filterDTO: any) => {
     const realUrl = hr2Configs[path].apiUrl;
-
+    console.log("전달된 apiType:", realUrl);
     const { data } = await api.get(`${realUrl}`,{
         params: {
             page,
