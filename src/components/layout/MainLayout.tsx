@@ -28,6 +28,7 @@ const MainLayout = () => {
         return saved ? Number(saved) : 1;
     });
     const [layoutData, setLayoutData] = useState<LayoutData>();
+    const isMainPage = location.pathname === "/home";
 
     // 1. localStorage에 activeMenu 저장하기
     useEffect(() => {
@@ -83,7 +84,7 @@ const MainLayout = () => {
                         layoutData={layoutData}
                     />
                 )}
-                <main className="main">
+                <main className={isMainPage ? "" : "main"}>
                     <Outlet />
                 </main>
                 

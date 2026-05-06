@@ -17,7 +17,7 @@
 .payRollInfoModalScope .modal-Header {
     min-height: 24px;
     padding: 4px 10px;
-    background: var(--text-accent);
+    background: var(--color-primary);
 }
 
 .payRollInfoModalScope .modal-Header p {
@@ -192,7 +192,7 @@
 }
 
 .payRollInfoModal-button--primary {
-    background: var(--text-accent);
+    background: var(--color-primary);
     color: var(--text-inverse);
 }
 

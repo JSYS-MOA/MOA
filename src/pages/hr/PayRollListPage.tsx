@@ -9,7 +9,7 @@ import {
     useConfirmPayRollCreatedAt,
     useGetPayRollList,
 } from "../../apis/hr/PayLollService.tsx";
-import "../../assets/styles/hr/payRollList.css";
+import "../../assets/styles/hr/hrPage.css";
 import PayRollAddModal from "../../components/hr/PayRollAddModal.tsx";
 import PayRollInfoModal from "../../components/hr/PayRollInfoModal.tsx";
 import PayRollUpdateModal from "../../components/hr/PayRollUpdateModal.tsx";
@@ -404,15 +404,15 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="payRollListPage-filter-group">
+        <div className="filter-group">
             <label>{label}</label>
-            <div className={`payRollListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="payRollListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="chip-input-icon" aria-hidden="true" />
 
                 {hasAppliedValue && (
-                    <span className="payRollListPage-chip">
+                    <span className="chip">
                         <span>{appliedValue}</span>
-                        <button type="button" className="payRollListPage-chip-x" onClick={onClear}>
+                        <button type="button" className="chip-x" onClick={onClear}>
                             x
                         </button>
                     </span>
@@ -428,7 +428,7 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="payRollListPage-chip-clear"
+                    className="chip-clear"
                     aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
@@ -830,33 +830,35 @@ const PayRollListPage = () => {
     };
 
     return (
-        <div className="payRollListPage-page">
-            <div className="payRollListPage-header">
-                <button
-                    type="button"
-                    className="payRollListPage-star"
-                    aria-pressed={isStarred}
-                    onClick={() => setIsStarred((prev) => !prev)}
-                >
-                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
-                </button>
+        <>
+            <div className="hrPage-page-filter">
+                <div className="favorite-Header">
+                    <button
+                        type="button"
+                        aria-pressed={isStarred}
+                        onClick={() => setIsStarred((prev) => !prev)}
+                    >
+                        <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                    </button>
+                    <span>급여대장 목록</span>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="top-search-btn"
+                        aria-expanded={isSearchOpen}
+                        onClick={() => setIsSearchOpen((prev) => !prev)}
+                    >
+                        검색 조건 {isSearchOpen ? "닫기" : "열기"}
+                    </button>
+                </div>
 
-                <h1 className="payRollListPage-title">급여 대장 목록</h1>
-
-                <button
-                    type="button"
-                    className="payRollListPage-top-search-btn"
-                    aria-expanded={isSearchOpen}
-                    onClick={() => setIsSearchOpen((prev) => !prev)}
-                >
-                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
-                </button>
             </div>
 
-            <div className={`payRollListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="payRollListPage-filter-row">
-                    <div className="payRollListPage-filter-group payRollListPage-filter-group--date">
-                        <label>일자</label>
+            <div className={`filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="filter-row">
+                    <div style={{display:"flex", alignItems:"center"}}>
+                        <label style={{marginRight:"16px", fontSize:"12px"}}>일자</label>
                         <div className="payRollListPage-dateRange">
                             <input
                                 type="date"
@@ -883,10 +885,10 @@ const PayRollListPage = () => {
                     />
                 </div>
 
-                <div className="payRollListPage-filter-actions">
+                <div className="filter-actions">
                     <button
                         type="button"
-                        className="payRollListPage-search-btn"
+                        className="btn-Primary"
                         onClick={applyFilters}
                     >
                         검색
@@ -896,7 +898,7 @@ const PayRollListPage = () => {
 
             <div className="payRollListPage-table-box">
                 <div className="payRollListPage-table-info">
-                    <span>전체 {filteredItems.length}건</span>
+                    <span style={{fontSize:"14px"}}>전체 {filteredItems.length}건</span>
                 </div>
 
                 {isLoading ? (
@@ -914,10 +916,10 @@ const PayRollListPage = () => {
                     />
                 )}
 
-                <div className="payRollListPage-bottom-actions">
+                <div className="btn-Wrap" style={{marginTop:"12px"}}>
                     <button
                         type="button"
-                        className="payRollListPage-add-btn"
+                        className="btn-Primary"
                         onClick={handleCreatePayRoll}
                     >
                         신규
@@ -925,7 +927,7 @@ const PayRollListPage = () => {
 
                     <button
                         type="button"
-                        className="payRollListPage-disabled-btn"
+                        className="btn-Secondary"
                         disabled={activeSelectedLedgerIds.length === 0 || isConfirmingPayRoll}
                         onClick={handleConfirmSelected}
                     >
@@ -934,7 +936,7 @@ const PayRollListPage = () => {
 
                     <button
                         type="button"
-                        className="payRollListPage-disabled-btn"
+                        className="btn-Secondary"
                         disabled={
                             activeSelectedLedgerIds.length === 0 &&
                             activeSelectedLedgerId === null
@@ -946,10 +948,10 @@ const PayRollListPage = () => {
                 </div>
 
                 <div className="payRollListPage-paging-group">
-                    <div className="payRollListPage-paging-group-min">
+                    <div className="Page-Btn-container">
                         <button
                             type="button"
-                            className="payRollListPage-paging-prev-btn"
+                            className="btn-Primary"
                             onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
                             disabled={resolvedCurrentPage === 1}
                         >
@@ -959,7 +961,7 @@ const PayRollListPage = () => {
                         {pageNumbers.map((pageNumber) => (
                             <button
                                 type="button"
-                                className="payRollListPage-paging-num-btn"
+                                className="paging-num-btn"
                                 key={pageNumber}
                                 onClick={() => setCurrentPage(pageNumber)}
                                 disabled={pageNumber === resolvedCurrentPage}
@@ -970,7 +972,7 @@ const PayRollListPage = () => {
 
                         <button
                             type="button"
-                            className="payRollListPage-paging-next-btn"
+                            className="btn-Primary"
                             onClick={() =>
                                 setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
                             }
@@ -1024,7 +1026,7 @@ const PayRollListPage = () => {
                 payrollLabel={selectedPayrollLabel}
                 records={selectedLedgerRecords}
             />
-        </div>
+        </>
     );
 };
 

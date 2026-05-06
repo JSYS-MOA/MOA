@@ -11,13 +11,13 @@ type LeaverTableSelectionProps = {
     onSelectItem: (userId: number) => void;
 };
 
-const columns: Array<{ key: keyof LeaverTableProps; label: string }> = [
-    { key: "startDate", label: "입사일" },
-    { key: "quitDate", label: "퇴사일" },
+const columns: Array<{ key: keyof LeaverTableProps; label: string;  align?: "left" | "center" | "right"; }> = [
+    { key: "startDate", label: "입사일" , align:"center"},
+    { key: "quitDate", label: "퇴사일" , align:"center"},
     { key: "employeeId", label: "사원번호" },
-    { key: "userName", label: "이름" },
-    { key: "departmentName", label: "부서" },
-    { key: "gradeName", label: "직급" },
+    { key: "userName", label: "이름" , align:"center"},
+    { key: "departmentName", label: "부서", align:"center" },
+    { key: "gradeName", label: "직급" , align:"center"},
     { key: "phone", label: "연락처" },
     { key: "email", label: "이메일" },
     { key: "address", label: "주소" },
@@ -42,11 +42,11 @@ const LeaverTable = ({
         items.length > 0 && items.every((item) => selectedUserIds.includes(item.userId));
 
     return (
-        <table className="leaverTable">
+        <table className="common-Table" style={{marginTop:"5px"}}>
             <thead>
             <tr>
-                <th className="leaverTable-th leaverTable-checkbox-cell">
-                    <label className="leaverTable-checkbox">
+                <th >
+                    <label>
                         <input
                             type="checkbox"
                             checked={allSelected}
@@ -58,7 +58,7 @@ const LeaverTable = ({
                 </th>
 
                 {columns.map((column) => (
-                    <th key={String(column.key)} className="leaverTable-th">
+                    <th key={String(column.key)}>
                         {column.label}
                     </th>
                 ))}
@@ -75,8 +75,8 @@ const LeaverTable = ({
             ) : (
                 items.map((item) => (
                     <tr key={item.userId}>
-                        <td className="leaverTable-th leaverTable-checkbox-cell">
-                            <label className="leaverTable-checkbox">
+                        <td style={{textAlign:"center"}} >
+                            <label>
                                 <input
                                     type="checkbox"
                                     checked={selectedUserIds.includes(item.userId)}
@@ -90,12 +90,11 @@ const LeaverTable = ({
                         {columns.map((column) => (
                             <td
                                 key={`${item.userId}-${String(column.key)}`}
-                                className="leaverTable-td"
+                                style={{textAlign: column.align}}
                             >
                                 {column.key === "userName" ? (
                                     <button
                                         type="button"
-                                        className="leaverTable-nameButton"
                                         onClick={() => onSelectItem(item.userId)}
                                     >
                                         {formatCellValue(item[column.key])}

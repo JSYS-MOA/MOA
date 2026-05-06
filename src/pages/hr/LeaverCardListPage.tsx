@@ -7,7 +7,7 @@ import {
     useRestoreLeaverCard,
     type LeaverCardRecord,
 } from "../../apis/hr/LeaverCardService";
-import "../../assets/styles/hr/leaverCardList.css"
+import "../../assets/styles/hr/hrPage.css"
 import LeaverCardAddModal from "../../components/hr/LeaverCardAddModal";
 import LeaverCardUpdateModal from "../../components/hr/LeaverCardUpdateModal";
 import LeaverTable from "../../components/hr/LeaverTable";
@@ -112,17 +112,17 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="leaverCardListPage-filter-group">
+        <div className="filter-group">
             <label>{label}</label>
-            <div className={`leaverCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="leaverCardListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="chip-input-icon" aria-hidden="true" />
 
                 {hasAppliedValue && (
-                    <span className="leaverCardListPage-chip">
+                    <span className="chip">
                         <span>{appliedValue}</span>
                         <button
                             type="button"
-                            className="leaverCardListPage-chip-x"
+                            className="chip-x"
                             onClick={onClear}
                         >
                             x
@@ -140,7 +140,7 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="leaverCardListPage-chip-clear"
+                    className="chip-clear"
                     aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
@@ -382,32 +382,34 @@ const LeaverCardListPage = () => {
     };
 
     return (
-        <div className="leaverCardListPage-page">
-            <div className="leaverCardListPage-header">
-                <button
-                    type="button"
-                    className="leaverCardListPage-star"
-                    aria-pressed={isStarred}
-                    onClick={() => setIsStarred((prev) => !prev)}
-                >
-                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
-                </button>
+        <>
+            <div className="hrPage-page-filter">
+                <div className="favorite-Header">
+                    <button
+                        type="button"
+                        aria-pressed={isStarred}
+                        onClick={() => setIsStarred((prev) => !prev)}
+                    >
+                        <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                    </button>
+                    <span>퇴사자 카드 목록</span>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="top-search-btn"
+                        aria-expanded={isSearchOpen}
+                        onClick={() => setIsSearchOpen((prev) => !prev)}
+                    >
+                        검색 조건 {isSearchOpen ? "닫기" : "열기"}
+                    </button>
+                </div>
 
-                <h1 className="leaverCardListPage-title">퇴사자 카드 목록</h1>
-
-                <button
-                    type="button"
-                    className="leaverCardListPage-top-search-btn"
-                    aria-expanded={isSearchOpen}
-                    onClick={() => setIsSearchOpen((prev) => !prev)}
-                >
-                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
-                </button>
             </div>
 
-            <div className={`leaverCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="leaverCardListPage-filter-row">
-                    <div className="leaverCardListPage-filter-1">
+            <div className={`filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                <div className="filter-row">
+                    <div>
                         <FilterChipInput
                             label="부서"
                             placeholder="부서명을 입력하세요"
@@ -419,7 +421,7 @@ const LeaverCardListPage = () => {
                         />
                     </div>
 
-                    <div className="leaverCardListPage-filter-2">
+                    <div>
                         <FilterChipInput
                             label="직급"
                             placeholder="직급명을 입력하세요"
@@ -431,7 +433,7 @@ const LeaverCardListPage = () => {
                         />
                     </div>
 
-                    <div className="leaverCardListPage-filter-3">
+                    <div>
                         <FilterChipInput
                             label="검색어"
                             placeholder="이름, 사번, 이메일"
@@ -444,10 +446,10 @@ const LeaverCardListPage = () => {
                     </div>
                 </div>
 
-                <div className="leaverCardListPage-filter-actions">
+                <div className="filter-actions">
                     <button
                         type="button"
-                        className="leaverCardListPage-search-btn"
+                        className="btn-Primary"
                         onClick={applyFilters}
                     >
                         검색
@@ -455,8 +457,8 @@ const LeaverCardListPage = () => {
                 </div>
             </div>
 
-            <div className="leaverCardListPage-table-box">
-                <div className="leaverCardListPage-table-info">
+            <div>
+                <div   style={{fontSize:"14px"}}>
                     <span>전체 {filteredItems.length}건</span>
                 </div>
 
@@ -474,11 +476,11 @@ const LeaverCardListPage = () => {
                     />
                 )}
 
-                <div className="leaverCardListPage-bottom-actions">
+                <div className="btn-Wrap" style={{marginTop:"12px"}}>
                     {user && (
                         <button
                             type="button"
-                            className="leaverCardListPage-add-btn"
+                            className="btn-Primary"
                             onClick={() => setIsAddModalOpen(true)}
                         >
                             추가
@@ -487,7 +489,7 @@ const LeaverCardListPage = () => {
 
                     <button
                         type="button"
-                        className="leaverCardListPage-add-btn"
+                        className="btn-Primary"
                         disabled={selectedUserIds.length === 0 || isRestoring}
                         onClick={handleRestoreSelected}
                     >
@@ -496,7 +498,7 @@ const LeaverCardListPage = () => {
 
                     <button
                         type="button"
-                        className="leaverCardListPage-disabled-btn"
+                        className="btn-Secondary"
                         disabled={selectedUserIds.length === 0 || isDeleting}
                         onClick={handleDeleteSelected}
                     >
@@ -504,11 +506,11 @@ const LeaverCardListPage = () => {
                     </button>
                 </div>
 
-                <div className="leaverCardListPage-paging-group">
-                    <div className="leaverCardListPage-paging-group-min">
+                <div className="hrCardListPage-paging-group">
+                    <div className="Page-Btn-container">
                         <button
                             type="button"
-                            className="leaverCardListPage-paging-prev-btn"
+                            className="btn-Primary"
                             onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
                             disabled={resolvedCurrentPage === 1}
                         >
@@ -518,7 +520,7 @@ const LeaverCardListPage = () => {
                         {pageNumbers.map((pageNumber) => (
                             <button
                                 type="button"
-                                className="leaverCardListPage-paging-num-btn"
+                                className="paging-num-btn"
                                 key={pageNumber}
                                 onClick={() => setCurrentPage(pageNumber)}
                                 disabled={pageNumber === resolvedCurrentPage}
@@ -529,7 +531,7 @@ const LeaverCardListPage = () => {
 
                         <button
                             type="button"
-                            className="leaverCardListPage-paging-next-btn"
+                            className="btn-Primary"
                             onClick={() =>
                                 setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
                             }
@@ -551,7 +553,7 @@ const LeaverCardListPage = () => {
                 userId={selectedDetailUserId}
                 onClose={handleCloseUpdateModal}
             />
-        </div>
+        </>
     );
 };
 
