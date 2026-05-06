@@ -120,7 +120,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
 
 
     return (
-        <div className="filter-container">
+        <div className="filter-container" style={{display:"flex",gap:"12px"}}>
             {/* 1. 무조건 있는 날짜 컴포넌트 */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <FilterDate
@@ -135,7 +135,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                 />
             </div>
             {!(config as any).modalOnly &&(config as any).filterFields?.map((field:any) => (
-                <div key={field.id} style={{ width: "200px" }}>
+                <div key={field.id} style={{ width: "200px" ,flex:"1"}}>
                     <TestTagInput
                         placeholder={field.label}
                         selectedItems={searchValues[field.id] || []}
@@ -152,9 +152,9 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                         onClear={() => setSearchValues((prev:any) => ({ ...prev, [field.id]: [] }))}
                     />
                 </div>
-                ))}
+            ))}
 
-            <button onClick={() => handleSearchClick()}>검색</button>
+            <button onClick={() => handleSearchClick()} className="btn-Primary">검색</button>
 
             {/* 3. 공용 모달 연결 */}
             <Modal
@@ -221,7 +221,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                                     onClick={() => {
                                         setSearchValues({ ...searchValues, [tap.id]: "" });
                                         handleSearchClick("");
-                                }}
+                                    }}
                                 >전체</button>
 
                                 {/* 받아온 옵션들  */}

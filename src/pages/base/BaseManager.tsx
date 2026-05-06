@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import {baseConfigs} from "../../types/baseConfigs.tsx";
 import Table from "../../components/Table.tsx";
 import BaseModal from "../../components/base/BaseModal.tsx";
-import Button from "../../components/Button.tsx";
 import {deleteBaseData, getBaseData} from "../../apis/BaseService.tsx";
 
 // 인사 - 연차기본사항 포함
@@ -139,7 +138,10 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
     return (
         <div>
             <div>
-                <h1>{config.title} 리스트</h1>
+                <div className="favorite-Header">
+                    <FaStar size={18} color="#C4C4C4"/>
+                    <span>{config.title} 리스트</span>
+                </div>
 
                 {/* 테이블 영역 */}
                 {loading ? (
@@ -155,7 +157,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                                 col.key.toLowerCase().includes('cord') ? (
                                     <span
                                         onClick={() => handleEditOpen(item)}
-                                        style={{cursor:'pointer', textDecoration:'underline', color: 'blue'}}
+                                        style={{cursor:'pointer', textDecoration:'underline', color: 'var(--text-accent)'}}
                                     >
                                         {col.render? col.render(val, item) : val}
                                     </span>
@@ -169,9 +171,9 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                     />
                 )}
             </div>
-            <div>
-                <Button label="등록" onClick={handleInsertOpen} />
-                <Button label="삭제" onClick={handleDelete} />
+            <div className="btn-Wrap" style={{marginTop:"12px"}}>
+                <button type="submit" onClick={handleInsertOpen} className="btn-Primary" >등록</button>
+                <button type="submit" onClick={handleDelete}  className="btn-Secondary">삭제</button>
             </div>
             <BaseModal
                 key={selectedItem? selectedItem[config.idKey] : ('new' as any)}

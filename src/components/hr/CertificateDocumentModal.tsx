@@ -99,7 +99,6 @@ const CertificateDocumentModal = ({
     };
 
     return (
-        <div className="CertificateDocumentModalScope">
             <Modal
                 title={certificateTitle}
                 isOpen={isOpen}
@@ -108,14 +107,14 @@ const CertificateDocumentModal = ({
                     <div className="CertificateDocumentModal-footer">
                         <button
                             type="button"
-                            className="CertificateDocumentModal-button CertificateDocumentModal-button--primary"
+                            className="btn-Primary"
                             onClick={handlePrint}
                         >
                             인쇄
                         </button>
                         <button
                             type="button"
-                            className="CertificateDocumentModal-button CertificateDocumentModal-button--secondary"
+                            className="btn-Secondary"
                             onClick={onClose}
                         >
                             닫기
@@ -174,7 +173,6 @@ const CertificateDocumentModal = ({
                     </div>
                 </div>
             </Modal>
-        </div>
     );
 };
 
