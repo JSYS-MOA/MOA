@@ -26,7 +26,7 @@ const HrTeam = () => {
     
     const {data = [], refetch} = useQuery({
         queryKey: ["approval"],
-        queryFn: () => getHr2Data("approvalWait", 0, 5, {}),
+        queryFn: () => getHr2Data("approvalWait", 0, 10, {}),
     });
     
     const columns: TableColumn<any>[] = config.columns.map(col => ({

@@ -147,7 +147,7 @@
     table-layout: fixed;
 }
 .team-Table thead tr th:nth-child(1), .team-Table tbody tr td:nth-child(1){
-    width: 50%;
+    width: 20%;
 }
 .team-Table thead tr th:nth-child(2),.team-Table tbody tr td:nth-child(2){
     width: 20%;
@@ -187,7 +187,7 @@
 }
 .team-Table.logisticsTeam thead tr th:nth-child(2),
 .team-Table.logisticsTeam tbody tr td:nth-child(2) {
-    width: 50%;
+    width: 20%;
 }
 
 .team-Table.logisticsTeam tbody tr td:nth-child(2) {
