@@ -1,5 +1,5 @@
 import type { HrTableProps } from "../../types/HrTableProps";
-import "../../assets/styles/hr/certificatesCardList.css";
+import "../../assets/styles/hr/hrPage.css";
 
 type CertificatesTableProps = HrTableProps;
 
@@ -17,7 +17,7 @@ type ColumnKey =
     | "email"
     | "address";
 
-const columns: Array<{ key: ColumnKey; label: string }> = [
+const columns: Array<{ key: ColumnKey; label: string; align?: "left" | "center" | "right"; }> = [
     { key: "employeeId", label: "사번" },
     { key: "userName", label: "이름" },
     { key: "departmentName", label: "부서" },
@@ -40,11 +40,11 @@ const CertificatesTable = ({
     onSelectItem,
 }: CertificatesTableViewProps) => {
     return (
-        <table className="certificatesTable">
+        <table className="common-Table">
             <thead>
                 <tr>
                     {columns.map((column) => (
-                        <th key={String(column.key)} className="certificatesTable-th">
+                        <th key={String(column.key)} >
                             {column.label}
                         </th>
                     ))}
@@ -63,8 +63,9 @@ const CertificatesTable = ({
                         <tr key={item.userId}>
                             {columns.map((column) => (
                                 <td
+                                    style={{textAlign: column.align}}
                                     key={`${item.userId}-${String(column.key)}`}
-                                    className="certificatesTable-td"
+
                                 >
                                     {column.key === "userName" ? (
                                         <button

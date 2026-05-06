@@ -18,7 +18,7 @@
 .payRollUpdateModalScope .modal-Header {
     min-height: 24px;
     padding: 4px 10px;
-    background: var(--text-accent);
+    background: var(--color-primary);
 }
 
 .payRollUpdateModalScope .modal-Header p {

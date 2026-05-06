@@ -11,7 +11,7 @@ import {
 } from "../../apis/hr/EvaluationsCardService";
 import ConfirmModal from "../ConfirmModal";
 import Modal from "../Modal";
-import "../../assets/styles/hr/evaluationsUpdateCardModal.css";
+import "../../assets/styles/hr/hrPage.css";
 import {
     createHrGradeOptions,
     getHrGradeNameById,
@@ -306,9 +306,6 @@ const EvaluationsCardUpdateModal = ({
     const readOnlyInputClassName =
         "evaluationsCardAddModal-input evaluationsCardAddModal-input--readonly";
 
-    const textareaClassName = isFormReadOnly
-        ? "evaluationsCardAddModal-textarea evaluationsCardAddModal-input--readonly"
-        : "evaluationsCardAddModal-textarea";
 
     const matchedDepartment = useMemo(
         () =>
@@ -620,17 +617,16 @@ const EvaluationsCardUpdateModal = ({
 
     return (
         <>
-            <div className="evaluationsCardModalScope">
                 <Modal
                     title={isCreateMode ? "인사 평가 등록" : "인사 평가 수정"}
                     isOpen={isOpen}
                     onClose={handleRequestClose}
                     footer={
-                        <div className="evaluationsCardAddModal-buttonRow">
+                        <div className="btn-Wrap">
                             <button
                                 type="submit"
                                 form={formId}
-                                className="evaluationsCardAddModal-button evaluationsCardAddModal-button--primary"
+                                className="btn-Primary"
                                 disabled={isSubmitDisabled}
                             >
                                 {submitLabel}
@@ -638,7 +634,7 @@ const EvaluationsCardUpdateModal = ({
 
                             <button
                                 type="button"
-                                className="evaluationsCardAddModal-button evaluationsCardAddModal-button--secondary"
+                                className="btn-Secondary"
                                 onClick={handleRequestClose}
                                 disabled={isSaving}
                             >
@@ -649,118 +645,114 @@ const EvaluationsCardUpdateModal = ({
                 >
                     <form
                         id={formId}
-                        className="evaluationsCardAddModal-form"
                         onSubmit={handleSubmit}
                     >
-                        <div className="evaluationsCardUpdateModal-topFields">
-                            <div className="evaluationsCardAddModal-field evaluationsCardUpdateModal-field--top">
-                                <label
-                                    className="evaluationsCardAddModal-label"
-                                    htmlFor="evaluations-employeeId"
-                                >
-                                    사번
-                                </label>
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label
+                                        htmlFor="evaluations-employeeId"
+                                    >
+                                        사번
+                                    </label>
 
-                                <input
-                                    id="evaluations-employeeId"
-                                    name="employeeId"
-                                    value={form.employeeId}
-                                    onChange={handleChange}
-                                    className={readOnlyInputClassName}
-                                    readOnly
-                                />
-                            </div>
+                                    <input
+                                        id="evaluations-employeeId"
+                                        name="employeeId"
+                                        value={form.employeeId}
+                                        onChange={handleChange}
+                                        readOnly
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label
+                                        htmlFor="evaluations-userName"
+                                    >
+                                        이름
+                                    </label>
 
-                            <div className="evaluationsCardAddModal-field evaluationsCardUpdateModal-field--top">
-                                <label
-                                    className="evaluationsCardAddModal-label"
-                                    htmlFor="evaluations-userName"
-                                >
-                                    이름
-                                </label>
-
-                                <input
-                                    id="evaluations-userName"
-                                    name="userName"
-                                    value={form.userName}
-                                    onChange={handleChange}
-                                    className={readOnlyInputClassName}
-                                    readOnly
-                                />
+                                    <input
+                                        id="evaluations-userName"
+                                        name="userName"
+                                        value={form.userName}
+                                        onChange={handleChange}
+                                        readOnly
+                                    />
+                                </div>
                             </div>
                         </div>
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label
+                                        className="evaluationsCardAddModal-label"
+                                        htmlFor="evaluations-departmentName"
+                                    >
+                                        부서
+                                    </label>
 
-                        <div className="evaluationsCardAddModal-row evaluationsCardAddModal-row--optionFields">
-                            <div className="evaluationsCardAddModal-column">
-                                <label
-                                    className="evaluationsCardAddModal-label"
-                                    htmlFor="evaluations-departmentName"
-                                >
-                                    부서
-                                </label>
+                                    <input
+                                        id="evaluations-departmentName"
+                                        name="departmentName"
+                                        value={form.departmentName}
+                                        onChange={handleChange}
+                                        className={readOnlyInputClassName}
+                                        readOnly
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label
+                                        className="evaluationsCardAddModal-label"
+                                        htmlFor="evaluations-gradeName"
+                                    >
+                                        직급
+                                    </label>
 
-                                <input
-                                    id="evaluations-departmentName"
-                                    name="departmentName"
-                                    value={form.departmentName}
-                                    onChange={handleChange}
-                                    className={readOnlyInputClassName}
-                                    readOnly
-                                />
-                            </div>
-
-                            <div className="evaluationsCardAddModal-column">
-                                <label
-                                    className="evaluationsCardAddModal-label"
-                                    htmlFor="evaluations-gradeName"
-                                >
-                                    직급
-                                </label>
-
-                                <input
-                                    id="evaluations-gradeName"
-                                    name="gradeName"
-                                    value={form.gradeName}
-                                    onChange={handleChange}
-                                    className={readOnlyInputClassName}
-                                    readOnly
-                                />
+                                    <input
+                                        id="evaluations-gradeName"
+                                        name="gradeName"
+                                        value={form.gradeName}
+                                        onChange={handleChange}
+                                        className={readOnlyInputClassName}
+                                        readOnly
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         {hasReferenceInfo && (
                             <>
                                 {(form.email || form.phone) && (
-                                    <div className="evaluationsCardAddModal-row">
-                                        <div className="evaluationsCardAddModal-field">
-                                            <label className="evaluationsCardAddModal-label">
-                                                이메일
-                                            </label>
+                                    <div className="modal-Row">
+                                        <div className="modal-Row-Group">
+                                            <div className="modal-Row-Item">
+                                                <label className="evaluationsCardAddModal-label">
+                                                    이메일
+                                                </label>
 
-                                            <input
-                                                value={form.email}
-                                                readOnly
-                                                className={readOnlyInputClassName}
-                                            />
-                                        </div>
+                                                <input
+                                                    value={form.email}
+                                                    readOnly
+                                                    className={readOnlyInputClassName}
+                                                />
+                                            </div>
+                                            <div className="modal-Row-Item">
+                                                <label className="evaluationsCardAddModal-label">
+                                                    연락처
+                                                </label>
 
-                                        <div className="evaluationsCardAddModal-field">
-                                            <label className="evaluationsCardAddModal-label">
-                                                연락처
-                                            </label>
-
-                                            <input
-                                                value={form.phone}
-                                                readOnly
-                                                className={readOnlyInputClassName}
-                                            />
+                                                <input
+                                                    value={form.phone}
+                                                    readOnly
+                                                    className={readOnlyInputClassName}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
 
                                 {form.address && (
-                                    <div className="evaluationsCardAddModal-row">
-                                        <div className="evaluationsCardAddModal-column">
+                                    <div className="modal-Row">
                                             <label className="evaluationsCardAddModal-label">
                                                 주소
                                             </label>
@@ -770,14 +762,11 @@ const EvaluationsCardUpdateModal = ({
                                                 readOnly
                                                 className={readOnlyInputClassName}
                                             />
-                                        </div>
                                     </div>
                                 )}
 
-                                <div className="evaluationsCardAddModal-row">
-                                    <div className="evaluationsCardAddModal-column">
+                                <div className="modal-Row" style={{marginTop:"4px"}}>
                                         <label
-                                            className="evaluationsCardAddModal-label"
                                             htmlFor="evaluations-performance"
                                         >
                                             평가
@@ -789,35 +778,10 @@ const EvaluationsCardUpdateModal = ({
                                             value={form.performance}
                                             onChange={handleChange}
                                             readOnly={isFormReadOnly}
-                                            className={textareaClassName}
                                             rows={3}
                                         />
                                     </div>
-                                </div>
                             </>
-                        )}
-
-                        {!hasReferenceInfo && (
-                            <div className="evaluationsCardAddModal-row">
-                                <div className="evaluationsCardAddModal-column">
-                                    <label
-                                        className="evaluationsCardAddModal-label"
-                                        htmlFor="evaluations-performance"
-                                    >
-                                        평가
-                                    </label>
-
-                                    <textarea
-                                        id="evaluations-performance"
-                                        name="performance"
-                                        value={form.performance}
-                                        onChange={handleChange}
-                                        readOnly={isFormReadOnly}
-                                        className={textareaClassName}
-                                        rows={3}
-                                    />
-                                </div>
-                            </div>
                         )}
 
                         {noticeMessage && (
@@ -835,7 +799,6 @@ const EvaluationsCardUpdateModal = ({
                         )}
                     </form>
                 </Modal>
-            </div>
 
             <ConfirmModal
                 isOpen={isExitConfirmOpen}

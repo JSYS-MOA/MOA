@@ -1,4 +1,4 @@
-import "../../assets/styles/hr/evaluationsCardList.css";
+import "../../assets/styles/hr/hrPage.css";
 import type {HrTableProps} from "../../types/HrTableProps.ts";
 
 type EvaluationsTableProps = HrTableProps;
@@ -29,7 +29,7 @@ const EvaluationsTable = ({
     onSelectItem,
 }: EvaluationsTableViewProps) => {
     return (
-        <table className="evaluationsTable">
+        <table className="common-Table" style={{marginTop:"5px"}}>
             <thead>
                 <tr>
                     {columns.map((column) => (
@@ -53,7 +53,6 @@ const EvaluationsTable = ({
                             {columns.map((column) => (
                                 <td
                                     key={`${item.userId}-${String(column.key)}`}
-                                    className="evaluationsTable-td"
                                 >
                                     {column.key === "userName" ? (
                                         <button

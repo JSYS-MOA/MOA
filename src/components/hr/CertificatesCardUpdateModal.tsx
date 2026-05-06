@@ -441,13 +441,6 @@ const CertificatesCardUpdateModal = ({
     const isSaving = postCertificatesCard.isPending || putCertificatesCard.isPending;
     const canEdit = !restrictEditToHrLead || user?.roleId === 2;
 
-    const inputClassName =
-        isSaving || !canEdit
-            ? "certificatesCardAddModal-input certificatesCardAddModal-input--readonly"
-            : "certificatesCardAddModal-input";
-
-    const readOnlyInputClassName =
-        "certificatesCardAddModal-input certificatesCardAddModal-input--readonly";
 
     const selectableDepartments = useMemo(
         () =>
@@ -908,24 +901,23 @@ const CertificatesCardUpdateModal = ({
 
     return (
         <>
-            <div className="certificatesCardModalScope">
                 <Modal
                     title={isCreateMode ? "인사 발령 등록" : "인사 발령 수정"}
                     isOpen={isOpen}
                     onClose={handleRequestClose}
                     footer={
-                        <div className="certificatesCardAddModal-buttonRow">
+                        <div className="btn-Wrap">
                             <button
                                 type="submit"
                                 form={formId}
-                                className="certificatesCardAddModal-button certificatesCardAddModal-button--primary"
+                                className="btn-Primary"
                                 disabled={isSaving || !canEdit}
                             >
                                 {submitLabel}
                             </button>
                             <button
                                 type="button"
-                                className="certificatesCardAddModal-button certificatesCardAddModal-button--secondary"
+                                className="btn-Secondary"
                                 onClick={handleRequestClose}
                                 disabled={isSaving}
                             >
@@ -936,47 +928,139 @@ const CertificatesCardUpdateModal = ({
                 >
                     <form
                         id={formId}
-                        className="certificatesCardAddModal-form"
                         onSubmit={handleSubmit}
                     >
-                        <div className="certificatesCardUpdateModal-topFields">
-                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                <label
-                                    className="certificatesCardAddModal-label"
-                                    htmlFor="certificates-employeeId"
-                                >
-                                    사번
-                                </label>
-                                <input
-                                    id="certificates-employeeId"
-                                    name="employeeId"
-                                    value={form.employeeId}
-                                    onChange={handleChange}
-                                    className={readOnlyInputClassName}
-                                    readOnly
-                                />
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label
+                                        htmlFor="certificates-employeeId"
+                                    >
+                                        사번
+                                    </label>
+                                    <input
+                                        id="certificates-employeeId"
+                                        name="employeeId"
+                                        value={form.employeeId}
+                                        onChange={handleChange}
+                                        readOnly
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label
+                                        htmlFor="certificates-userName"
+                                    >
+                                        이름
+                                    </label>
+                                    <input
+                                        id="certificates-userName"
+                                        name="userName"
+                                        value={form.userName}
+                                        onChange={handleChange}
+                                        readOnly
+                                    />
+                                </div>
                             </div>
-
-                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                <label
-                                    className="certificatesCardAddModal-label"
-                                    htmlFor="certificates-userName"
-                                >
-                                    이름
-                                </label>
-                                <input
-                                    id="certificates-userName"
-                                    name="userName"
-                                    value={form.userName}
-                                    onChange={handleChange}
-                                    className={readOnlyInputClassName}
-                                    readOnly
-                                />
+                        </div>
+                        {!isCreateMode && (
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label>
+                                        원래 부서
+                                    </label>
+                                    <input
+                                        value={originalDepartmentDisplay}
+                                        readOnly
+                                    />
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label>
+                                        원래 직급
+                                    </label>
+                                    <input
+                                        value={originalGradeDisplay}
+                                        readOnly
+                                    />
+                                </div>
                             </div>
+                        </div>
+                            )}
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label
+                                        htmlFor="certificates-departmentId"
+                                    >
+                                        발령 부서
+                                    </label>
+                                    <select
+                                        id="certificates-departmentId"
+                                        name="departmentId"
+                                        value={form.departmentId}
+                                        onChange={handleChange}
+                                        disabled={isSaving || !canEdit || isLoadingDepartments}
+                                    >
+                                        <option value="">부서를 선택하세요</option>
 
-                            <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
+                                        {selectableDepartments.map((department) => (
+                                            <option
+                                                key={department.departmentId}
+                                                value={department.departmentId}
+                                            >
+                                                {department.departmentName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label>
+                                        부서코드
+                                    </label>
+                                    <input
+                                        value={resolvedDepartmentCord}
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-Row">
+                            <div className="modal-Row-Group">
+                                <div className="modal-Row-Item">
+                                    <label
+                                        htmlFor="certificates-gradeId"
+                                    >
+                                        발령 직급
+                                    </label>
+                                    <select
+                                        id="certificates-gradeId"
+                                        name="gradeId"
+                                        value={form.gradeId}
+                                        onChange={handleChange}
+                                        disabled={isSaving || !canEdit}
+                                    >
+                                        <option value="">직급을 선택하세요</option>
+
+                                        {selectableGrades.map((grade) => (
+                                            <option key={grade.gradeId} value={grade.gradeId}>
+                                                {grade.gradeName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="modal-Row-Item">
+                                    <label>
+                                        직급코드
+                                    </label>
+                                    <input
+                                        value={resolvedGradeId}
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                            <div className="modal-Row">
                                 <label
-                                    className="certificatesCardAddModal-label"
                                     htmlFor="certificates-roleId"
                                 >
                                     권한
@@ -989,158 +1073,41 @@ const CertificatesCardUpdateModal = ({
                                             ? `${calculatedRole.roleId} / ${calculatedRole.label}`
                                             : form.roleId
                                     }
-                                    className={readOnlyInputClassName}
                                     readOnly
                                     title="부서와 직급을 선택하면 자동으로 계산됩니다."
                                 />
                             </div>
-                        </div>
-
-                        {!isCreateMode && (
-                            <div className="certificatesCardUpdateModal-topFields">
-                                <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                    <label className="certificatesCardAddModal-label">
-                                        원래 부서
-                                    </label>
-                                    <input
-                                        value={originalDepartmentDisplay}
-                                        readOnly
-                                        className={readOnlyInputClassName}
-                                    />
-                                </div>
-
-                                <div className="certificatesCardAddModal-field certificatesCardUpdateModal-field--top">
-                                    <label className="certificatesCardAddModal-label">
-                                        원래 직급
-                                    </label>
-                                    <input
-                                        value={originalGradeDisplay}
-                                        readOnly
-                                        className={readOnlyInputClassName}
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="certificatesCardAddModal-row certificatesCardAddModal-row--optionFields">
-                            <div className="certificatesCardAddModal-column">
-                                <label
-                                    className="certificatesCardAddModal-label"
-                                    htmlFor="certificates-departmentId"
-                                >
-                                    발령 부서
-                                </label>
-                                <select
-                                    id="certificates-departmentId"
-                                    name="departmentId"
-                                    value={form.departmentId}
-                                    onChange={handleChange}
-                                    className={`${inputClassName} certificatesCardAddModal-select`}
-                                    disabled={isSaving || !canEdit || isLoadingDepartments}
-                                >
-                                    <option value="">부서를 선택하세요</option>
-
-                                    {selectableDepartments.map((department) => (
-                                        <option
-                                            key={department.departmentId}
-                                            value={department.departmentId}
-                                        >
-                                            {department.departmentName}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="certificatesCardAddModal-column">
-                                <label className="certificatesCardAddModal-label">
-                                    부서코드
-                                </label>
-                                <input
-                                    value={resolvedDepartmentCord}
-                                    readOnly
-                                    className={readOnlyInputClassName}
-                                />
-                            </div>
-
-                            <div className="certificatesCardAddModal-column">
-                                <label
-                                    className="certificatesCardAddModal-label"
-                                    htmlFor="certificates-gradeId"
-                                >
-                                    발령 직급
-                                </label>
-                                <select
-                                    id="certificates-gradeId"
-                                    name="gradeId"
-                                    value={form.gradeId}
-                                    onChange={handleChange}
-                                    className={`${inputClassName} certificatesCardAddModal-select`}
-                                    disabled={isSaving || !canEdit}
-                                >
-                                    <option value="">직급을 선택하세요</option>
-
-                                    {selectableGrades.map((grade) => (
-                                        <option key={grade.gradeId} value={grade.gradeId}>
-                                            {grade.gradeName}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="certificatesCardAddModal-column">
-                                <label className="certificatesCardAddModal-label">
-                                    직급코드
-                                </label>
-                                <input
-                                    value={resolvedGradeId}
-                                    readOnly
-                                    className={readOnlyInputClassName}
-                                />
-                            </div>
-                        </div>
-
-                        {hasReferenceInfo && (
-                            <>
-                                <div className="certificatesCardAddModal-row">
-                                    <div className="certificatesCardAddModal-field">
-                                        <label className="certificatesCardAddModal-label">
-                                            이메일
-                                        </label>
-                                        <input
-                                            value={form.email}
-                                            readOnly
-                                            className={readOnlyInputClassName}
-                                        />
+                            {hasReferenceInfo && (
+                                <>
+                                    <div className="modal-Row">
+                                            <label>
+                                                이메일
+                                            </label>
+                                            <input
+                                                value={form.email}
+                                                readOnly
+                                            />
                                     </div>
 
-                                    <div className="certificatesCardAddModal-field">
-                                        <label className="certificatesCardAddModal-label">
+                                    <div className="modal-Row">
+                                        <label>
                                             연락처
                                         </label>
                                         <input
                                             value={form.phone}
                                             readOnly
-                                            className={readOnlyInputClassName}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="certificatesCardAddModal-row">
-                                    <div className="certificatesCardAddModal-column">
-                                        <label className="certificatesCardAddModal-label">
+                                    <div className="modal-Row">
+                                        <label>
                                             주소
                                         </label>
                                         <input
                                             value={form.address}
                                             readOnly
-                                            className={readOnlyInputClassName}
                                         />
-                                        <span className="certificatesCardAddModal-hint">
-                                            주소, 연락처, 이메일은 이 화면에서 변경하지 않습니다.
-                                        </span>
-                                    </div>
-                                </div>
-                            </>
+                                     </div>
+                                 </>
                         )}
 
                         {noticeMessage && (
@@ -1157,7 +1124,6 @@ const CertificatesCardUpdateModal = ({
                         )}
                     </form>
                 </Modal>
-            </div>
 
             <ConfirmModal
                 isOpen={isExitConfirmOpen}

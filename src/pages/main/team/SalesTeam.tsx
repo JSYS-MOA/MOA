@@ -31,7 +31,7 @@ const SalesTeam = () => {
     return(
         <div className="sales-Wrapper">
             <TeamLayout
-                title="월별 매출 실적"
+                title="월별 매입/매출 실적"
                 linkTo="/sales/expense"
                 onRefresh={handleRefresh}
             >

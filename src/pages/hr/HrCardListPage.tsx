@@ -6,7 +6,7 @@ import {
     useGetHrCardList,
     type HrCardRecord,
 } from "../../apis/hr/HrCardService";
-import "../../assets/styles/hr/hrCardList.css";
+import "../../assets/styles/hr/hrPage.css";
 import HrCardAddModal from "../../components/hr/HrCardAddModal";
 import HrCardUpdateModal from "../../components/hr/HrCardUpdateModal";
 import HrTable from "../../components/hr/HrTable.tsx";
@@ -152,17 +152,17 @@ const FilterChipInput = ({
     };
 
     return (
-        <div className="hrCardListPage-filter-group">
+        <div className="filter-group">
             <label>{label}</label>
-            <div className={`hrCardListPage-chip-input${hasAppliedValue ? " has-chip" : ""}`}>
-                <span className="hrCardListPage-chip-input-icon" aria-hidden="true" />
+            <div className={`chip-input${hasAppliedValue ? " has-chip" : ""}`}>
+                <span className="chip-input-icon" aria-hidden="true" />
 
                 {hasAppliedValue && (
-                    <span className="hrCardListPage-chip">
+                    <span className="chip">
                         <span>{appliedValue}</span>
                         <button
                             type="button"
-                            className="hrCardListPage-chip-x"
+                            className="chip-x"
                             onClick={onClear}
                         >
                             x
@@ -180,7 +180,7 @@ const FilterChipInput = ({
 
                 <button
                     type="button"
-                    className="hrCardListPage-chip-clear"
+                    className="chip-clear"
                     aria-label={`${label} 초기화`}
                     onClick={handleClear}
                     disabled={!hasAnyValue}
@@ -227,11 +227,9 @@ const HrCardListPage = () => {
 
     useEffect(() => {
         const validUserIds = new Set(items.map((item) => item.userId));
-        const nextSelected = selectedUserIds.filter((userId) => validUserIds.has(userId));
 
-         if (selectedUserIds.length !== nextSelected.length) {
-            setSelectedUserIds(nextSelected);
-        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectedUserIds((prev) => prev.filter((userId) => validUserIds.has(userId)));
     }, [items]);
 
     const filteredItems = useMemo(() => {
@@ -365,166 +363,170 @@ const HrCardListPage = () => {
     };
 
     return (
-        <div className="hrCardListPage-page">
-            <div className="favorite-Header">
-                <button
-                    type="button"
-                    className="hrCardListPage-star"
-                    aria-pressed={isStarred}
-                    onClick={() => setIsStarred((prev) => !prev)}
-                >
-                    <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
-                </button>
-                <span>인사카드 목록</span>
-
-                <button
-                    type="button"
-                    className="hrCardListPage-top-search-btn"
-                    aria-expanded={isSearchOpen}
-                    onClick={() => setIsSearchOpen((prev) => !prev)}
-                >
-                    검색 조건 {isSearchOpen ? "닫기" : "열기"}
-                </button>
-            </div>
-
-            <div className={`hrCardListPage-filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
-                <div className="hrCardListPage-filter-row">
-                    <div className="hrCardListPage-filter-1">
-                        <FilterChipInput
-                            label="부서"
-                            placeholder="부서명 입력"
-                            draftValue={departmentDraft}
-                            appliedValue={departmentFilter}
-                            onDraftChange={setDepartmentDraft}
-                            onClear={clearDepartmentFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-
-                    <div className="hrCardListPage-filter-2">
-                        <FilterChipInput
-                            label="직급"
-                            placeholder="직급명 입력"
-                            draftValue={gradeDraft}
-                            appliedValue={gradeFilter}
-                            onDraftChange={setGradeDraft}
-                            onClear={clearGradeFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-
-                    <div className="hrCardListPage-filter-3">
-                        <FilterChipInput
-                            label="검색어"
-                            placeholder="이름, 사번, 이메일"
-                            draftValue={keywordDraft}
-                            appliedValue={keywordFilter}
-                            onDraftChange={setKeywordDraft}
-                            onClear={clearKeywordFilter}
-                            onSubmit={applyFilters}
-                        />
-                    </div>
-                </div>
-
-                <div className="hrCardListPage-filter-actions">
+        <>
+            <div className="hrPage-page-filter">
+                <div className="favorite-Header">
                     <button
                         type="button"
-                        className="hrCardListPage-search-btn"
-                        onClick={applyFilters}
+                        aria-pressed={isStarred}
+                        onClick={() => setIsStarred((prev) => !prev)}
                     >
-                        검색
+                        <FaStar size={18} color={isStarred ? "#f2c94c" : "#c4c4c4"} />
+                    </button>
+                    <span>인사카드 목록</span>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="top-search-btn"
+                        aria-expanded={isSearchOpen}
+                        onClick={() => setIsSearchOpen((prev) => !prev)}
+                    >
+                        검색 조건 {isSearchOpen ? "닫기" : "열기"}
                     </button>
                 </div>
+
             </div>
 
-            <div className="hrCardListPage-table-box">
-                <div className="hrCardListPage-table-info">
-                    <span>전체 {filteredItems.length}건</span>
-                </div>
+                <div className={`filter-box${isSearchOpen ? "" : " is-collapsed"}`}>
+                    <div className="filter-row">
+                        <div>
+                            <FilterChipInput
+                                label="부서"
+                                placeholder="부서명 입력"
+                                draftValue={departmentDraft}
+                                appliedValue={departmentFilter}
+                                onDraftChange={setDepartmentDraft}
+                                onClear={clearDepartmentFilter}
+                                onSubmit={applyFilters}
+                            />
+                        </div>
 
-                {isLoading ? (
-                    <div>인사카드 목록을 불러오는 중입니다.</div>
-                ) : isError ? (
-                    <div>인사카드 목록을 불러오지 못했습니다.</div>
-                ) : (
-                    <HrTable
-                        items={paginatedItems}
-                        selectedUserIds={selectedUserIds}
-                        onToggleItem={handleToggleItem}
-                        onToggleAll={handleToggleAll}
-                        onSelectItem={handleOpenUpdateModal}
-                    />
-                )}
+                        <div>
+                            <FilterChipInput
+                                label="직급"
+                                placeholder="직급명 입력"
+                                draftValue={gradeDraft}
+                                appliedValue={gradeFilter}
+                                onDraftChange={setGradeDraft}
+                                onClear={clearGradeFilter}
+                                onSubmit={applyFilters}
+                            />
+                        </div>
 
-                <div className="hrCardListPage-bottom-actions">
-                    {user && (
+                        <div>
+                            <FilterChipInput
+                                label="검색어"
+                                placeholder="이름, 사번, 이메일"
+                                draftValue={keywordDraft}
+                                appliedValue={keywordFilter}
+                                onDraftChange={setKeywordDraft}
+                                onClear={clearKeywordFilter}
+                                onSubmit={applyFilters}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="filter-actions">
                         <button
                             type="button"
-                            className="hrCardListPage-add-btn"
-                            onClick={() => setIsAddModalOpen(true)}
+                            className="btn-Primary"
+                            onClick={applyFilters}
                         >
-                            추가
+                            검색
                         </button>
+                    </div>
+                </div>
+
+                <div className="hrCardListPage-table-box">
+                    <div className="hrCardListPage-table-info"
+                         style={{fontSize:"14px"}}>
+                        <span>전체 {filteredItems.length}건</span>
+                    </div>
+
+                    {isLoading ? (
+                        <div>인사카드 목록을 불러오는 중입니다.</div>
+                    ) : isError ? (
+                        <div>인사카드 목록을 불러오지 못했습니다.</div>
+                    ) : (
+                        <HrTable
+                            items={paginatedItems}
+                            selectedUserIds={selectedUserIds}
+                            onToggleItem={handleToggleItem}
+                            onToggleAll={handleToggleAll}
+                            onSelectItem={handleOpenUpdateModal}
+                        />
                     )}
 
-                    <button
-                        type="button"
-                        className="hrCardListPage-disabled-btn"
-                        disabled={selectedUserIds.length === 0 || isDeleting}
-                        onClick={handleDeleteSelected}
-                    >
-                        {isDeleting ? "삭제 중..." : "삭제"}
-                    </button>
-                </div>
-
-                <div className="hrCardListPage-paging-group">
-                    <div className="hrCardListPage-paging-group-min">
-                        <button
-                            type="button"
-                            className="hrCardListPage-paging-prev-btn"
-                            onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
-                            disabled={resolvedCurrentPage === 1}
-                        >
-                            이전
-                        </button>
-
-                        {pageNumbers.map((pageNumber) => (
+                    <div className="btn-Wrap" style={{marginTop:"12px"}}>
+                        {user && (
                             <button
                                 type="button"
-                                className="hrCardListPage-paging-num-btn"
-                                key={pageNumber}
-                                onClick={() => setCurrentPage(pageNumber)}
-                                disabled={pageNumber === resolvedCurrentPage}
+                                className="btn-Primary"
+                                onClick={() => setIsAddModalOpen(true)}
                             >
-                                {pageNumber}
+                                추가
                             </button>
-                        ))}
+                        )}
 
                         <button
                             type="button"
-                            className="hrCardListPage-paging-next-btn"
-                            onClick={() =>
-                                setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
-                            }
-                            disabled={resolvedCurrentPage === totalPages}
+                            className="btn-Secondary"
+                            disabled={selectedUserIds.length === 0 || isDeleting}
+                            onClick={handleDeleteSelected}
                         >
-                            다음
+                            {isDeleting ? "삭제 중..." : "삭제"}
                         </button>
                     </div>
+
+                    <div className="hrCardListPage-paging-group">
+                        <div className="Page-Btn-container">
+                            <button
+                                type="button"
+                                className="btn-Primary"
+                                onClick={() => setCurrentPage(Math.max(resolvedCurrentPage - 1, 1))}
+                                disabled={resolvedCurrentPage === 1}
+                            >
+                                이전
+                            </button>
+
+                            {pageNumbers.map((pageNumber) => (
+                                <button
+                                    type="button"
+                                    className="paging-num-btn"
+                                    key={pageNumber}
+                                    onClick={() => setCurrentPage(pageNumber)}
+                                    disabled={pageNumber === resolvedCurrentPage}
+                                >
+                                    {pageNumber}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                className="btn-Primary"
+                                onClick={() =>
+                                    setCurrentPage(Math.min(resolvedCurrentPage + 1, totalPages))
+                                }
+                                disabled={resolvedCurrentPage === totalPages}
+                            >
+                                다음
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <HrCardAddModal
-                isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
-            />
+                <HrCardAddModal
+                    isOpen={isAddModalOpen}
+                    onClose={() => setIsAddModalOpen(false)}
+                />
 
-            <HrCardUpdateModal
-                isOpen={selectedDetailUserId !== null}
-                userId={selectedDetailUserId}
-                onClose={handleCloseUpdateModal}
-            />
-        </div>
+                <HrCardUpdateModal
+                    isOpen={selectedDetailUserId !== null}
+                    userId={selectedDetailUserId}
+                    onClose={handleCloseUpdateModal}
+                />
+        </>
     );
 };
 

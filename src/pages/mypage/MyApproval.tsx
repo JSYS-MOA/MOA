@@ -59,7 +59,7 @@ const MyApproval = () => {
             {data != null ? (<>
                     <div className="favorite-Header">
                         <FaStar size={18} color="#C4C4C4"/>
-                        <span>결재신청</span>
+                        <span>내 결재 현황</span>
                     </div>
                     <Table
                         items={data.content}
