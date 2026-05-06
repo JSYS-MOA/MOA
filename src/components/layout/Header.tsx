@@ -1,12 +1,4 @@
 import '../../assets/styles/layout.css';
-/*
-*
-* 📌 메인페이지는 - Header만, sidebar 없음
-*    나머지들은 Header+Sidebar
-*
-*
-* */
-
 
 interface HeaderProps {
     menuList: any[];

@@ -3,6 +3,9 @@ import {useState} from "react";
 import "../../assets/styles/layout.css";
 import {logoutApi} from "../../apis/LoginService.tsx";
 import {useAuthStore} from "../../stores/useAuthStore.tsx";
+import {IoLogOutOutline} from "react-icons/io5";
+import {FaBell} from "react-icons/fa6";
+import {SlArrowDown} from "react-icons/sl";
 
 interface CategoryConfig {
     id: string;
@@ -50,7 +53,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
         ],
         5: [ // 인사
             { id: 'hr-pay', title: '급여관리', keywords: ['attendances'] },
-            { id: 'hr-leavers', title: '퇴사자관리', keywords: ['leavers', "leaversPrint"] },
+            { id: 'hr-leavers', title: '퇴사자관리', keywords: ['leavers'] },
             { id: 'hr-info', title: '인사관리', keywords: ['cards', 'certificates', 'evaluations', 'payroll'] },
             { id: 'hr-work', title: '근태관리', keywords: ['approvalWait', 'calendar', 'annualLeaves', 'Print'] }
         ],
@@ -81,11 +84,11 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
     };
 
     return (
-        <aside className="sidebar" style={{width:"273px", background:"#5E5C77"}}>
+        <aside className="sidebar">
             <div className="sidebar-notification">
-                <span className="icon-bell">🔔</span>
-                <span className="notif-text">1개의 새 알림이 있습니다</span>
-                <span className="notif-dot"></span>
+                <FaBell className="notifi-bell" />
+                <span className="notif-text">새 알림이 있습니다</span>
+                <span className="notif-dot">●</span>
             </div>
             <div className="sidebar-user-card">
                 <div className="user-avatar-circle">
@@ -94,8 +97,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
                 <div className="user-info-detail">
                     <div className="user-name-row">
                         <span className="u-name">{layoutData.userName}님</span>
-                        <span className="icon-arrow-right">▶</span>
-                    </div>
+                     </div>
                     <p className="u-sub-info">
                         {layoutData.departmentName} | {layoutData.gradeName} | {layoutData.employeeId}
                     </p>
@@ -122,7 +124,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
                                 className={`side-menu-Item group-Title ${isOpen ? 'is-Active' : ''}`}
                                 onClick={() => handleToggle(cat.id)}
                             >
-                                <span className="icon-Arrow">{isOpen ? '∨' : '>'}</span>
+                                <span className="icon-Arrow">{isOpen ? <SlArrowDown/> : <SlArrowDown style={{transform:"rotate(270deg)"}} />}</span>
                                 {cat.title}
                             </div>
                             {isOpen && (
@@ -151,8 +153,8 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
                 navigate("/");
             }}>
                 <span>로그아웃</span>
-                <span className="icon-logout">⎗</span>
-            </div>
+                <span><IoLogOutOutline className="icon-logout"/></span>
+             </div>
         </aside>
     )
 }

@@ -127,7 +127,7 @@ export const hr2Configs = {
         // 표(Table)에 보여줄 컬럼들
         columns: [
             { key: "approvaDate", label: "일자", render: renderDate },
-            { key: "approvaId", label: "문서번호", clickable: true },
+            { key: "approvaId", label: "문서번호"},
             { key: "approvaTitle", label: "제목" },
             { key: "writer", label: "기안자" },
             { key: "documentName", label: "구분" },
