@@ -118,13 +118,12 @@
     }
 }
 
-
 .team-Table{
     width: 100%;
     border-collapse: collapse;
     margin-top: 24px;
     border:1px solid var(--border);
-    height: 500px;
+    height: 503px;
     overflow-y: auto;
     display: block;
     overflow-x:hidden;

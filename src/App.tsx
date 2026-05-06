@@ -1,4 +1,4 @@
-import {Route, Routes} from 'react-router-dom';
+import {useNavigate, useLocation , Route, Routes} from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import Login from './pages/Login';
 import {useAuthStore} from "./stores/useAuthStore.tsx";
@@ -28,7 +28,8 @@ import SalesRoutes from "./routes/SalesRoutes.tsx";
 import MyRoutes from "./routes/MyRoutes.tsx";
 import HRCalendar from './pages/hr2/HRCalendar.tsx';
 
-
+const navigate = useNavigate();
+const location = useLocation();
 
 const App = () => {
     const { login } = useAuthStore();
@@ -38,10 +39,15 @@ const App = () => {
         authCheck()
             .then((data) => {
                 login(data);
+                 if (location.pathname === "/login") {
+                    navigate("/", { replace: true });
+                }
             })
             .catch((error)=>{
                 if(axios.isAxiosError(error) && error.response?.status === 401) {
-                    //
+                    if (location.pathname !== "/login") {
+                     navigate("/login", { replace: true });
+                    }
                 }else{
                     console.error("authCheck error",error);
                 }
@@ -49,7 +55,7 @@ const App = () => {
             .finally(()=>{
                 setIsLoading(false)
             });
-    },[login]);
+    },[login, navigate, location.pathname]);
 
     if (isLoading) return null;
 
