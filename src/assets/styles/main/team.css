@@ -147,10 +147,10 @@
     table-layout: fixed;
 }
 .team-Table thead tr th:nth-child(1), .team-Table tbody tr td:nth-child(1){
-    width: 15%;
+    width: 10%;
 }
 .team-Table thead tr th:nth-child(2),.team-Table tbody tr td:nth-child(2){
-    width: 10%;
+    width: 8%;
     text-align: center;
 }
 .team-Table thead tr th:nth-child(3),.team-Table tbody tr td:nth-child(3){
@@ -183,11 +183,11 @@
 
 .team-Table.logisticsTeam thead tr th:nth-child(1),
 .team-Table.logisticsTeam tbody tr td:nth-child(1) {
-    width: 15%;
+    width: 10%;
 }
 .team-Table.logisticsTeam thead tr th:nth-child(2),
 .team-Table.logisticsTeam tbody tr td:nth-child(2) {
-    width: 10%;
+    width: 8%;
 }
 
 .team-Table.logisticsTeam tbody tr td:nth-child(2) {
