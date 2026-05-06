@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { FaStar } from "react-icons/fa";
 import {
-    useDeleteLeaverCard,
+    /*useDeleteLeaverCard,*/
     useGetLeaverCardList,
     useRestoreLeaverCard,
     type LeaverCardRecord,
@@ -155,13 +155,13 @@ const FilterChipInput = ({
 const LeaverCardListPage = () => {
     const { user } = useAuthStore();
     const { data: cards = [], isLoading, isError } = useGetLeaverCardList();
-    const deleteLeaverCard = useDeleteLeaverCard();
+   /* const deleteLeaverCard = useDeleteLeaverCard();*/
     const restoreLeaverCard = useRestoreLeaverCard();
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedDetailUserId, setSelectedDetailUserId] = useState<number | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
+    /*const [isDeleting, setIsDeleting] = useState(false);*/
     const [isRestoring, setIsRestoring] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [checkedUserIds, setCheckedUserIds] = useState<number[]>([]);
@@ -273,7 +273,7 @@ const LeaverCardListPage = () => {
         });
     };
 
-    const handleDeleteSelected = async () => {
+/*    const handleDeleteSelected = async () => {
         const targetUserIds = selectedUserIds;
 
         if (targetUserIds.length === 0 || isDeleting) {
@@ -321,7 +321,7 @@ const LeaverCardListPage = () => {
         } finally {
             setIsDeleting(false);
         }
-    };
+    };*/
 
     const handleRestoreSelected = async () => {
         const targetUserIds = selectedUserIds;
@@ -496,14 +496,15 @@ const LeaverCardListPage = () => {
                         {isRestoring ? "복귀 처리 중..." : "직원복귀"}
                     </button>
 
-                    <button
+{/*                    <button
                         type="button"
                         className="btn-Secondary"
                         disabled={selectedUserIds.length === 0 || isDeleting}
                         onClick={handleDeleteSelected}
                     >
                         {isDeleting ? "삭제 중.." : "삭제"}
-                    </button>
+                    </button>*/}
+
                 </div>
 
                 <div className="hrCardListPage-paging-group">
