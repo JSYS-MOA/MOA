@@ -1,6 +1,7 @@
 import {baseConfigs} from "../../types/baseConfigs.tsx";
 import {saveBaseData, updateBaseData} from "../../apis/BaseService.tsx";
 import {useEffect, useState} from "react";
+import {IoCloseOutline} from "react-icons/io5";
 
 
 interface BaseModalProps {
@@ -60,13 +61,14 @@ const BaseModal = ({ title, isOpen, apiType,onClose, baseData, fetchData, column
             {/* 상단: 헤더 */}
             <div className="modal-Header">
                 <span>{title} {baseData ? "수정" : "등록"}</span>
-                <button onClick={onClose}>X</button>
+                <button onClick={onClose}><IoCloseOutline color="#fff" size={18}/></button>
             </div>
 
             {/* 중단: 입력 폼 영역 */}
-            <div className="modal-Container">
+            <div className="modal-Body">
+                <div className="modal-Children">
                 {columns.map((col) => (
-                    <div key={col.key} className="modal-Title">
+                    <div key={col.key} className="modal-Row">
                         <label>{col.label}</label>
 
                         {/* '사용여부'처럼 선택형인 경우와 일반 입력형 구분 */}
@@ -98,13 +100,15 @@ const BaseModal = ({ title, isOpen, apiType,onClose, baseData, fetchData, column
                     </div>
                 ))}
             </div>
-
-            {/* 하단: 액션 버튼 (사진 하단 위치) */}
-            <div className="modal-Footer">
-                <button onClick={handleSave}>저장</button>
-                <button onClick={onClose}>취소</button>
             </div>
-            </div>
+                {/* 하단: 액션 버튼 (사진 하단 위치) */}
+                <div className="modal-Footer">
+                    <div className="btn-Wrap">
+                        <button onClick={handleSave} className="btn-Primary">저장</button>
+                        <button onClick={onClose} className="btn-Secondary">취소</button>
+                    </div>
+                </div>
+        </div>
         </div>
     );
 };

@@ -100,5 +100,5 @@
     .login-Wrapper{width: 464px;}
 }
 @media (max-width: 520px) {
-    .login-Wrapper{width: 325px;}
+    .login-Wrapper{width: 325px; margin-top: 0}
 }

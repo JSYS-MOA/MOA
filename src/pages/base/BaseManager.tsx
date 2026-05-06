@@ -3,6 +3,7 @@ import {baseConfigs} from "../../types/baseConfigs.tsx";
 import Table from "../../components/Table.tsx";
 import BaseModal from "../../components/base/BaseModal.tsx";
 import {deleteBaseData, getBaseData} from "../../apis/BaseService.tsx";
+import {FaStar} from "react-icons/fa";
 
 // 인사 - 연차기본사항 포함
 
@@ -188,7 +189,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                 fetchData={fetchData}
                 columns={config.columns}
             />
-            <div className="pagination" style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
+            <div className="Page-Btn-container" style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
                 <button
                     disabled={page === 0}
                     onClick={() => setPage(prev => prev - 1)}
@@ -200,7 +201,7 @@ const BaseManager = ({ apiType }: BaseManagerProps) => {
                     <button
                         key={i}
                         onClick={() => setPage(i)}
-                        style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'blue' : 'black' }}
+                        style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'var(--text-accent)' : 'black' }}
                     >
                         {i + 1}
                     </button>

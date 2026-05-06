@@ -120,9 +120,9 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
 
 
     return (
-        <div className="filter-container" style={{display:"flex",gap:"12px"}}>
+        <div className="filter-container" style={{display:"flex",gap:"12px", background:"#fff", padding:" 15px 12px", borderRadius:"15px"}}>
             {/* 1. 무조건 있는 날짜 컴포넌트 */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" , fontSize:"12px"}}>
                 <FilterDate
                     label="일자"
                     value={dates.start}
@@ -153,8 +153,6 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     />
                 </div>
             ))}
-
-            <button onClick={() => handleSearchClick()} className="btn-Primary">검색</button>
 
             {/* 3. 공용 모달 연결 */}
             <Modal
@@ -213,9 +211,9 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                 // 1. 그룹 버튼 타입일 경우
                 if (tap.type === "groupButton") {
                     return (
-                        <div key={tap.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 'bold', marginRight: '8px' }}>{tap.label}:</span>
-                            <div className="btn-group" style={{ display: 'flex', gap: '2px' }}>
+                        <div key={tap.id} className="group-button-filter" style={{ display: 'flex', gap: '5px', alignItems: 'center', fontSize:"12px" ,border:"1px solid #e6e6e6",padding:"0 8px", borderRadius:"4px"}}>
+                            <span style={{ fontWeight: '300', marginRight: '8px' }}>{tap.label}:</span>
+                            <div className="btn-group" style={{ display: 'flex', gap: '18px' }}>
                                 <button
                                     className={!searchValues[tap.id] ? "active" : ""}
                                     onClick={() => {
@@ -243,6 +241,7 @@ const Filter = ({ apiType, onFilter }: FilterProps) => {
                     )}
                 return null;
             })}
+            <button onClick={() => handleSearchClick()} className="btn-Primary">검색</button>
         </div>
     )
 }
