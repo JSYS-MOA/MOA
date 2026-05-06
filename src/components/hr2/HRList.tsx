@@ -8,6 +8,7 @@ import HRModal from "./HRModal.tsx";
 
 import {deleteHr2Data} from "../../apis/hr2/Hr2Service.tsx";
 import useHR2Data from "./useHR2Data.tsx";
+import {FaStar} from "react-icons/fa";
 
 
 
@@ -90,9 +91,11 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
     if (!config) return <div>페이지 정보를 찾을 수 없습니다.</div>;
 
     return (
-    <div>
-
-        <h2>{(config as any).title}리스트</h2>
+    <>
+        <div className="favorite-Header">
+            <FaStar size={18} color="#C4C4C4"/>
+            <span>{(config as any).title}리스트</span>
+        </div>
         <Table
             idKey={(config as any).idKey}
             items={items}
@@ -107,7 +110,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
                         return (
                             <span
                                 onClick={() => handleEditOpen(item)}
-                                style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                                style={{ cursor: 'pointer', color: 'var(--text-accent)', textDecoration: 'underline' }}
                             >
                         {renderedValue}
                     </span>
@@ -122,15 +125,15 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
             onCheck={handleCheck}
         />
         {((config as any).fields?.length && (config as any).hasCrud) ?(
-            <div>
-                <button onClick={handleInsert} disabled={loading}>신규</button>
-                <button onClick={handleDelete} disabled={loading}>삭제</button>
+            <div className="btn-Wrap" style={{marginTop:"12px"}}>
+                <button onClick={handleInsert} disabled={loading}  className="btn-Primary">신규</button>
+                <button onClick={handleDelete} disabled={loading}  className="btn-Secondary">삭제</button>
             </div>
         ) : (
             <></>
         )}
 
-        <div className="pagination" style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
+        <div className="Page-Btn-container" >
             <button
                 disabled={page === 0}
                 onClick={() => setPage(prev => prev - 1)}
@@ -142,7 +145,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
                 <button
                     key={`${apiType}-${i}`}
                     onClick={() => setPage(i)}
-                    style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'blue' : 'black' }}
+                    style={{ fontWeight: page === i ? 'bold' : 'normal', color: page === i ? 'var(--text-accent)' : 'black' }}
                 >
                     {i + 1}
                 </button>
@@ -169,7 +172,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
                 fetchData={fetchData}    // 새로고침 함수 전달
             />
         )}
-    </div>
+    </>
 );
 }
 
