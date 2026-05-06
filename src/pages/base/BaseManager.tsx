@@ -4,7 +4,6 @@ import Table from "../../components/Table.tsx";
 import { FaStar } from "react-icons/fa";
 import BaseModal from "../../components/base/BaseModal.tsx";
 import {deleteBaseData, getBaseData} from "../../apis/BaseService.tsx";
-import {FaStar} from "react-icons/fa";
 
 // 인사 - 연차기본사항 포함
 
