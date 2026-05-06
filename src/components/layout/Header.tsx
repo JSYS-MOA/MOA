@@ -1,4 +1,5 @@
 import '../../assets/styles/layout.css';
+import {RxHamburgerMenu} from "react-icons/rx";
 
 interface HeaderProps {
     menuList: any[];
@@ -35,28 +36,33 @@ const Header = ({menuList, userDept, onMenuClick}:HeaderProps) => {
 
     return (
     <header className="header-container">
-        <div className="header-logo" onClick={()=>onMenuClick(1)}>MOA</div>
-        <ul className="header-nav">
-            {Array.isArray(uniqueMenuList) && uniqueMenuList.map((item) => {
-                const config = menuData[item.menuNum];
-                if (!config) return null;
-                console.log(userDept);
-                const hasAccess = config.depts === 'all' ||
-                    (Array.isArray(config.depts) && config.depts.includes(userDept));
+        <div className="header-left">
+            <div className="header-logo" onClick={()=>onMenuClick(1)}>MOA</div>
+                <ul className="header-nav">
+                    {Array.isArray(uniqueMenuList) && uniqueMenuList.map((item) => {
+                        const config = menuData[item.menuNum];
+                        if (!config) return null;
+                        console.log(userDept);
+                        const hasAccess = config.depts === 'all' ||
+                            (Array.isArray(config.depts) && config.depts.includes(userDept));
 
-                if (!hasAccess) return null;
+                        if (!hasAccess) return null;
 
-                return (
-                    <li
-                        key={item.menuId}
-                        className="header-nav-item"
-                        onClick={() => onMenuClick(item.menuNum)}
-                    >
-                        {config.name}
-                    </li>
-                );
-            })}
-        </ul>
+                        return (
+                            <li
+                                key={item.menuId}
+                                className="header-nav-item"
+                                onClick={() => onMenuClick(item.menuNum)}
+                            >
+                                {config.name}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+        <div className="header-Open">
+            <RxHamburgerMenu size={19}/>
+        </div>
     </header>
   );
 }

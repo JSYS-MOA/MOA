@@ -4,7 +4,6 @@ import "../../assets/styles/layout.css";
 import {logoutApi} from "../../apis/LoginService.tsx";
 import {useAuthStore} from "../../stores/useAuthStore.tsx";
 import {IoLogOutOutline} from "react-icons/io5";
-import {FaBell} from "react-icons/fa6";
 import {SlArrowDown} from "react-icons/sl";
 
 interface CategoryConfig {
@@ -85,11 +84,6 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
 
     return (
         <aside className="sidebar">
-            <div className="sidebar-notification">
-                <FaBell className="notifi-bell" />
-                <span className="notif-text">새 알림이 있습니다</span>
-                <span className="notif-dot">●</span>
-            </div>
             <div className="sidebar-user-card">
                 <div className="user-avatar-circle">
                     {layoutData.userName ? layoutData.userName[0] : "U"}

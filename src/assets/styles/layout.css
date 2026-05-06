@@ -17,7 +17,7 @@
 .header-left {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 215px;
     z-index: 10;
 }
 
@@ -37,13 +37,8 @@
     list-style: none;
     margin: 0;
     padding: 0;
-
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
 }
-
+.header-Open{display: flex; justify-content: center; align-items: center}
 .header-nav-item {
     background: none;
     border: none;
@@ -105,7 +100,7 @@
 }
 
 .sidebar-user-card{
-    height: 60px;
+    height: 45px;
     padding: 15px;
     display: flex;
     align-items: center;
@@ -113,8 +108,8 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .user-avatar-circle {
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
     background-color: #D9D9D9;
     border-radius: 50%;
     display: flex;
@@ -122,7 +117,7 @@
     align-items: center;
     color: #333;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
 }
 .user-info-detail {
     flex: 1;
@@ -135,13 +130,14 @@
     margin-bottom: 4px;
 }
 .u-name {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 300;
 }
 .u-sub-info {
-    font-size: 11px;
+    font-size: 12px;
     opacity: 0.6;
     margin: 0;
+    font-weight: 100;
 }
 
 .icon-arrow-right {
@@ -164,7 +160,7 @@
     gap: 10px;
     cursor: pointer;
     transition: background 0.2s;
-    font-weight: 500;
+    font-weight: 300;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .group-Title:hover, .group-Title.is-Active {
@@ -184,6 +180,7 @@
 }
 
 .sub-menu-Item {
+    font-weight: 200;
     padding: 8px 10px 8px 40px;
     cursor: pointer;
     opacity: 0.8;
@@ -240,41 +237,38 @@
     flex-direction: column;
 }
 
-/* --------------------------- */
-/* 📱 반응형 미디어 쿼리 */
-/* --------------------------- */
 
 @media (max-width: 1024px) {
-    .header-container {
-        padding: 0 20px;
-    }
-    .header-nav {
-        gap: 20px;
-    }
-
-    .sidebar { width: 200px; }
+    /*.header-nav{display: none;}*/
+        /*    .header-container {*/
+        /*        padding: 0 20px;*/
+        /*    }*/
+        /*    .header-nav {*/
+        /*        gap: 20px;*/
+        /*    }*/
+        /*    .sidebar { width: 200px; }*/
+        /*}*/
 }
+/*@media (max-width: 768px) {*/
 
-@media (max-width: 768px) {
+/*    !*.header-nav {*!*/
+/*    !*    position: static;*!*/
+/*    !*    transform: none;*!*/
+/*    !*    left: auto;*!*/
 
-    .header-nav {
-        position: static;
-        transform: none;
-        left: auto;
+/*    !*    display: flex;*!*/
+/*    !*    gap: 15px;*!*/
+/*    !*}*!*/
 
-        display: flex;
-        gap: 15px;
-    }
-
-    .header-nav-item {
-        font-size: 13px; /* 글자 크기 축소 */
-    }
+/*    !*.header-nav-item {*!*/
+/*    !*    font-size: 13px; !* 글자 크기 축소 *!*!*/
+/*    !*}*!*/
 
 
-    .sidebar {
-        width: 145px;
-    }
+/*    !*.sidebar {*!*/
+/*    !*    width: 145px;*!*/
+/*    !*}*!*/
 
-    /* 모바일에서 글자 크기 조정 */
-    .group-Title { padding: 12px; font-size: 13px; }
-}
+/*    !*!* 모바일에서 글자 크기 조정 *!*!*/
+/*    !*.group-Title { padding: 12px; font-size: 13px; }*!*/
+/*}*/
