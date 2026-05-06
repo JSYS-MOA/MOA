@@ -3,6 +3,8 @@ import {useState} from "react";
 import {saveHr2Data} from "../../apis/hr2/Hr2Service.tsx";
 // import HRSearchModal from "./HRSearchModal.tsx";
 import FilterDate from "./FilterDate.tsx";
+import {IoCloseOutline} from "react-icons/io5";
+import {PiMagnifyingGlassLight} from "react-icons/pi";
 
 
 interface HRModalProps {
@@ -112,9 +114,9 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
                 <div className="modal-Header">
 
-                    <h2>{(config as any).title} {baseData ? '수정' : '등록'}</h2>
+                    <p>{(config as any).title} {baseData ? '수정' : '등록'}</p>
 
-                    <button onClick={onClose}>X</button>
+                    <button onClick={onClose}><IoCloseOutline color="#fff" size={18}/></button>
 
                 </div>
 
@@ -122,55 +124,62 @@ const HRModal = ({ isOpen, onClose, apiType, baseData, fetchData }: HRModalProps
 
                 {/* 본문 */}
 
-                <div>
-                    {fields.map((f:any) => {
-                        return (
-                            <div key={f.key} className="modal-Title">
-                                <label>{f.label}</label>
-                                <div className="modal-Body">
-                                    {f.isDate ? (
-                                        <FilterDate
-                                            value={formData[f.key] || ""}
-                                            onChange={(newDate:any) => handleChange(f.key, newDate)}
-                                        />
-                                    ) : (
-                                        // 2. 일반 타입인 경우 기존 input 사용
-                                        <input
-                                            type={f.type || "text"}
-                                            value={formData[f.key] || ""}
-                                            readOnly={f.readOnly}
-                                            onChange={(e) => handleChange(f.key, e.target.value)}
-                                            style={{
-                                                backgroundColor: f.readOnly ? '#f0f0f0' : 'white',
-                                                cursor: f.readOnly ? 'not-allowed' : 'text'
+                <div className="modal-Body">
+                    <div className="modal-Children">
+                        {fields.map((f:any) => {
+                            return (
+                                <div key={f.key} className="modal-Row">
+                                    <label>{f.label}</label>
+                                    <div className="modal-Body" style={{flexDirection:"inherit"}}>
+                                        {f.isDate ? (
+                                            <FilterDate
+                                                value={formData[f.key] || ""}
+                                                onChange={(newDate:any) => handleChange(f.key, newDate)}
+                                            />
+                                        ) : (
+                                            // 2. 일반 타입인 경우 기존 input 사용
+                                            <input
+                                                type={f.type || "text"}
+                                                value={formData[f.key] || ""}
+                                                readOnly={f.readOnly}
+                                                onChange={(e) => handleChange(f.key, e.target.value)}
+                                                style={{
+                                                    backgroundColor: f.readOnly ? '#f0f0f0' : 'white',
+                                                    cursor: f.readOnly ? 'not-allowed' : 'text'
+                                                }}
+                                            />
+                                        )}
+                                        {/* 돋보기 버튼 */}
+                                        {f.hasSearch && (
+                                            <button
+                                                type="button"
+                                                onClick={() => handleOpenSearch(f)}
+                                                style={{width:"28px",
+                                                    height:"28px",
+                                                    border:"1px solid #e6e6e6",
+                                                    borderRadius:"4px",
+                                                    alignItems:"center",
+                                                    display:"flex",
+                                                    justifyContent:"center",
+                                                    marginLeft:"4px"
                                             }}
-                                        />
-                                    )}
-                                    {/* 돋보기 버튼 */}
-                                    {f.hasSearch && (
-                                        <button type="button" onClick={() => handleOpenSearch(f)}>
-                                            🔍
-                                        </button>
-                                    )}
+                                            >
+                                                <PiMagnifyingGlassLight />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
                 </div>
-
-
-
-                {/* 하단 버튼 */}
-
-                <div className="confirm-Footer btn-Wrap">
-
-                    <button className="btn-Primary" onClick={handleSave}>저장</button>
-
-                    <button className="btn-Secondary" onClick={onClose}>취소</button>
-
-                </div>
-
             <div>
+                <div className="modal-Footer">
+                    <div className="btn-Wrap">
+                        <button className="btn-Primary" onClick={handleSave}>저장</button>
+                        <button className="btn-Secondary" onClick={onClose}>취소</button>
+                    </div>
+                </div>
                 {/* 3층 검색 모달: SearchModal이 만들어지면 활성화 */}
                 {/* {isSearchOpen && (
                     <HRSearchModal
