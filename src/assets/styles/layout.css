@@ -191,7 +191,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.sub-menu-Item:hover {
+.sub-menu-Item:hover .sub-menu-Item:active {
     background-color: #4D4B62;
     opacity: 1;
 }
