@@ -46,7 +46,7 @@ const HrTeam = () => {
                    items={Array.isArray(data) ? data : data.content ?? []}
                    idKey={config.idKey}
                    columns={columns}
-                   className="Team-Table"
+                   className="team-Table"
                    wrapperStyle={{overflowX: "auto"}}
                />
             </TeamLayout>
