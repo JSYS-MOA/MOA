@@ -32,6 +32,7 @@ const HrTeam = () => {
     const columns: TableColumn<any>[] = config.columns.map(col => ({
         key: col.key,
         label: col.label,
+         render: col.render
         // render: col.render ? (val: any) => col.render!(val) : undefined,
     }));
 
