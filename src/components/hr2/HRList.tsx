@@ -133,7 +133,11 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
             <></>
         )}
 
+<<<<<<< HEAD
+        <div className="pagination">
+=======
         <div className="Page-Btn-container" >
+>>>>>>> 9a45bf8bcad075e4d4f05bbb071703ba4bc14daf
             <button
                 disabled={page === 0}
                 onClick={() => setPage(prev => prev - 1)}
