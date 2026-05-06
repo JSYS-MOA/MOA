@@ -156,7 +156,7 @@ export const hr2Configs = {
     calendar: {
         hasCrud: true,
         title: "출/퇴근기록부",
-        apiUrl: "/api/hr/attendances/calendar",
+        apiUrl: "/api/hr/attendances/calendar-data",
         idKey: "workId",
         tap: [{id: "departmentId", label: "팀별", type: "groupButton", option: []}],
         count: [{key: "totalCount", label: "date", clickable: true}],
