@@ -51,6 +51,16 @@ const MainLayout = () => {
         init();
     }, []);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 768) {
+                setIsSidebarOpen(false);
+            }
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const handleMenuClick = (menuNum: number) => {
         setActiveMenu(menuNum);
 
@@ -90,7 +100,7 @@ const MainLayout = () => {
                         onMenuClick={handleMenuClick}
                     />
                 )}
-                <main className={isMainPage ? "" : "main"}>
+                <main className={isMainPage ? "main-home" : "main"}>
                     <Outlet />
                 </main>
                 

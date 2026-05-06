@@ -42,7 +42,9 @@ const Sidebar = ({layoutData, activeMenu,isOpen, onClose, onMenuClick}:SidebarPr
 
     const uniqueMainMenus = layoutData.menuList.filter((item, index, self) =>
         index === self.findIndex((t) => t.menuNum === item.menuNum)
-    );
+
+    )
+        .sort((a, b) => a.menuNum - b.menuNum);
 
     const handleMainMenuClick = (menuNum: number) => {
         setOpenMainMenu(openMainMenu === menuNum ? null : menuNum);

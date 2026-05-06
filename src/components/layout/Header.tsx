@@ -33,6 +33,7 @@ const Header = ({menuList, userDept, onMenuClick,onHamburgerClick}:HeaderProps) 
         ? menuList.filter((item, index, self) =>
             index === self.findIndex((t) => t.menuNum === item.menuNum)
         )
+            .sort((a, b) => a.menuNum - b.menuNum)
         : []
 
     return (
