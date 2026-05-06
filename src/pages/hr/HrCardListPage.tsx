@@ -471,7 +471,7 @@ const HrCardListPage = () => {
 
                         <button
                             type="button"
-                            className="btn-Secondary"
+                            className="btn-Primary"
                             disabled={selectedUserIds.length === 0 || isDeleting}
                             onClick={handleDeleteSelected}
                         >

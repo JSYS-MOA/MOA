@@ -76,7 +76,7 @@ const FilterDate = ({ label, value, onChange }: any) => {
                 <option value="">연</option>
                 {years.map(y => <option key={y} value={y}>{y}</option>)}
             </select>
-            <span>/</span>
+            <span> / </span>
             <select
                 value={safeValue.m}
                 onChange={(e) => handleDateChange('m', e.target.value)}
@@ -92,7 +92,7 @@ const FilterDate = ({ label, value, onChange }: any) => {
                     </option>
                 ))}
             </select>
-            <span>/</span>
+            <span> / </span>
             <select
                 value={safeValue.d}
                 onChange={(e) => handleDateChange( 'd', e.target.value)}

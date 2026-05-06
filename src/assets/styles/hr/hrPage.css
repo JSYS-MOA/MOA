@@ -242,7 +242,7 @@ textarea {
 }
 
 .chip-input.has-chip {
-    padding-block: var(--spacing-xs);
+
 }
 
 .chip-input:focus-within {
@@ -256,6 +256,7 @@ textarea {
     height: 28px;
     align-self: stretch;
     border-right: 1px solid var(--border);
+    display: none;
 }
 
 .chip-input-icon::before {
@@ -303,12 +304,13 @@ textarea {
     align-items: center;
     gap: var(--spacing-xs);
     max-width: 100%;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 4px 8px;
     border-radius: 999px;
     background: var(--text-accent);
     color: var(--color-inverse);
     font-size: var(--font-xs);
     line-height: 1;
+    margin-left: 4px;
 }
 
 .chip span {
