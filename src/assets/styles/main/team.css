@@ -183,11 +183,11 @@
 
 .team-Table.logisticsTeam thead tr th:nth-child(1),
 .team-Table.logisticsTeam tbody tr td:nth-child(1) {
-    width: 20%;
+    width: 15%;
 }
 .team-Table.logisticsTeam thead tr th:nth-child(2),
 .team-Table.logisticsTeam tbody tr td:nth-child(2) {
-    width: 20%;
+    width: 15%;
 }
 
 .team-Table.logisticsTeam tbody tr td:nth-child(2) {
