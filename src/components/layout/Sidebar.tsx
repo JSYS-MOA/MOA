@@ -55,7 +55,7 @@ const Sidebar = ({layoutData, activeMenu}:SidebarProps) => {
             { id: 'hr-pay', title: '급여관리', keywords: ['attendances'] },
             { id: 'hr-leavers', title: '퇴사자관리', keywords: ['leavers'] },
             { id: 'hr-info', title: '인사관리', keywords: ['cards', 'certificates', 'evaluations', 'payroll'] },
-            { id: 'hr-work', title: '근태관리', keywords: ['approvalWait', 'calendar', 'annualLeaves', 'Print'] }
+            { id: 'hr-work', title: '근태관리', keywords: ['approvalWait', 'annualLeaves', 'Print'] }
         ],
         6: [ // 물류
             { id: 'inven-status', title: '재고현황', keywords: ['status', 'disposals'] },
