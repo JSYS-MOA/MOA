@@ -91,7 +91,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
     if (!config) return <div>페이지 정보를 찾을 수 없습니다.</div>;
 
     return (
-    <>
+    <div style={{marginTop:"21px"}}>
         <div className="favorite-Header">
             <FaStar size={18} color="#C4C4C4"/>
             <span>{(config as any).title}리스트</span>
@@ -172,7 +172,7 @@ const HRList = ({ apiType,filterParams }: Hr2Props) => {
                 fetchData={fetchData}    // 새로고침 함수 전달
             />
         )}
-    </>
+    </div>
 );
 }
 

@@ -70,7 +70,11 @@ const FilterDate = ({ label, value, onChange }: any) => {
                 onChange={(e) => handleDateChange('y', e.target.value)}
                 style={{
                         width: '75px',
-                        paddingRight: '20px'
+                        height:"29px",
+                        padding:"0 8px",
+                        border:"1px solid #e6e6e6",
+                        borderRadius:"4px",
+                        fontSize:"12px"
                 }}
             >
                 <option value="">연</option>
@@ -82,7 +86,11 @@ const FilterDate = ({ label, value, onChange }: any) => {
                 onChange={(e) => handleDateChange('m', e.target.value)}
                 style={{
                     width: '75px',
-                    paddingRight: '20px'
+                    height:"29px",
+                    padding:"0 8px",
+                    border:"1px solid #e6e6e6",
+                    borderRadius:"4px",
+                    fontSize:"12px"
                 }}
             >
                 <option value="">월</option>
@@ -98,7 +106,11 @@ const FilterDate = ({ label, value, onChange }: any) => {
                 onChange={(e) => handleDateChange( 'd', e.target.value)}
                 style={{
                     width: '75px',
-                    paddingRight: '20px'
+                    height:"29px",
+                    padding:"0 8px",
+                    border:"1px solid #e6e6e6",
+                    borderRadius:"4px",
+                    fontSize:"12px"
                 }}
             >
                 <option value="">일</option>
