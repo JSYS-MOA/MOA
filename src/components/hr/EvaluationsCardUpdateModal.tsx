@@ -61,7 +61,9 @@ type ComparableFormState = Pick<
     "employeeId" | "userName" | "departmentName" | "gradeName" | "performance"
 >;
 
-const DEPARTMENT_API_BASE = "https://moa-server.onrender.com/api/base/dept";
+// const DEPARTMENT_API_BASE = "https://moa-server.onrender.com/api/base/dept";
+const DEPARTMENT_API_BASE = "http://3.34.125.146/api/base/dept";
+
 const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
 
 const DEPARTMENT_CODE_BY_ID: Record<number, string> = {
