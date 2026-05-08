@@ -19,7 +19,7 @@ const CalendarDetailModal = ({calendarId, isOpen, onClose, onEdit, onSuccess }:C
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
     // const BASE_URL = "https://moa-server.onrender.com/api";
-    const BASE_URL = "http://3.34.125.146/api";
+    const BASE_URL = "http://3.34.125.146:8080/api";
 
     const user = useAuthStore((state:AuthState) => state.user);
 

@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // const API = "https://moa-server.onrender.com/api/hr/cards";
 
 //아마존용
-const API = "http://3.34.125.146/api/hr/cards";
+const API = "http://3.34.125.146:8080/api/hr/cards";
 
 export interface HrCard {
     user_id: number;

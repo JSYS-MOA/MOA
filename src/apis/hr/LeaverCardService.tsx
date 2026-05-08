@@ -8,8 +8,8 @@ import axios from "axios";
 // const HR_CARD_API_BASE = "https://moa-server.onrender.com/api/hr/cards";
 
 //아마존용
-const LEAVER_API_BASE  = "http://3.34.125.146/api/hr/leavers";
-const HR_CARD_API_BASE  = "http://3.34.125.146/api/hr/cards";
+const LEAVER_API_BASE  = "http://3.34.125.146:8080/api/hr/leavers";
+const HR_CARD_API_BASE  = "http://3.34.125.146:8080/api/hr/cards";
 
 export type LeaverCardRecord = {
     userId: number;

@@ -5,7 +5,7 @@ import axios from "axios";
 // const EVALUATIONS_CARD_API_BASE = "https://moa-server.onrender.com/api/hr/evaluations";
 
 //아마존용
-const EVALUATIONS_CARD_API_BASE  = "http://3.34.125.146/api/hr/evaluations";
+const EVALUATIONS_CARD_API_BASE  = "http://3.34.125.146:8080/api/hr/evaluations";
 
 export type EvaluationsCardRecord = {
     userId?: number;

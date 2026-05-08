@@ -61,7 +61,7 @@ type GradeGroup = "EXECUTIVE" | "LEAD" | "STAFF";
 type RoleOption = { roleId: number; code: string; label: string };
 
 // const DEPARTMENT_API_BASE = "https://moa-server.onrender.com/api/base/dept";
-const DEPARTMENT_API_BASE = "http://3.34.125.146/api/base/dept";
+const DEPARTMENT_API_BASE = "http://3.34.125.146:8080/api/base/dept";
 
 const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
 const MIN_VISIBLE_GRADE_ID = 5;

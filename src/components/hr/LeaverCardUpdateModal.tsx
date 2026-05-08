@@ -97,7 +97,7 @@ type DateInputWithPickerProps = {
 };
 
 // const DEPARTMENT_API_BASE = "https://moa-server.onrender.com/api/base/dept";
-const DEPARTMENT_API_BASE = "http://3.34.125.146/api/base/dept";
+const DEPARTMENT_API_BASE = "http://3.34.125.146:8080/api/base/dept";
 
 const EXCLUDED_DEPARTMENT_KEYWORDS = ["이사회"];
 const HIDDEN_GRADE_KEYWORDS = ["부장", "상무", "부사장", "사장", "임원", "이사"];

@@ -5,7 +5,7 @@ import type {Transaction, VendorMonthly} from "../types/transaction.ts";
 // const API = "https://moa-server.onrender.com/api";
 
 //아마존용
-const API = "http://3.34.125.146/api";
+const API = "http://3.34.125.146:8080/api";
 
 //전체조회
 export const getTransactionsApi = async () => {

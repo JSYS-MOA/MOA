@@ -5,7 +5,7 @@ import {baseConfigs} from "../types/baseConfigs.tsx";
         //  baseURL: "http://localhost/",
         // baseURL: "https://moa-server.onrender.com",
         //아마존용
-        baseURL : "http://3.34.125.146/",
+        baseURL : "http://3.34.125.146:8080/",
         withCredentials: true
     });
 // GET 요청용 (조회)

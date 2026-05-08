@@ -4,7 +4,7 @@ import axios from "axios";
 // const API = "https://moa-server.onrender.com/api";
 
 //아마존용
-const API = "http://3.34.125.146/api";
+const API = "http://3.34.125.146:8080/api";
 
 export async function loginApi(employeeId: string, password: string){
     const { data } = await axios.post(
