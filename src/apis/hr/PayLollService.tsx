@@ -15,9 +15,9 @@ const SALARY_API_BASE = "https://moa-server.onrender.com/api/hr/salary";
 
 const api = axios.create({
     // baseURL: "http://localhost/",
-    // baseURL: "https://moa-server.onrender.com",
+    baseURL: "https://moa-server.onrender.com",
     //아마존
-    baseURL : "http://3.34.125.146/",
+    // baseURL : "http://3.34.125.146/",
     withCredentials: true,
 });
 
