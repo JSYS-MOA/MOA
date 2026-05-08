@@ -2,10 +2,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 // const API_BASE = "http://localhost/api/hr/cards";
-// const API_BASE = "https://moa-server.onrender.com/api/hr/cards";
+const API_BASE = "https://moa-server.onrender.com/api/hr/cards";
 
 //아마존용
-const API_BASE  = "http://3.34.125.146/api/hr/cards";
+// const API_BASE  = "http://3.34.125.146/api/hr/cards";
 
 export type HrCardRecord = {
     userId?: number;
