@@ -3,7 +3,9 @@ import {baseConfigs} from "../types/baseConfigs.tsx";
 
     const api = axios.create({
         //  baseURL: "http://localhost/",
-        baseURL: "https://moa-server.onrender.com",
+        // baseURL: "https://moa-server.onrender.com",
+        //아마존용
+        baseURL : "http://3.34.125.146/",
         withCredentials: true
     });
 // GET 요청용 (조회)
