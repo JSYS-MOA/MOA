@@ -2,10 +2,10 @@ import axios from "axios";
 
 //  const API = "http://localhost/api";
 
-// const API = "https://moa-server.onrender.com/api";
+const API = "https://moa-server.onrender.com/api";
 
 //아마존용
-const API = "http://3.34.125.146/api";
+// const API = "http://3.34.125.146/api";
 
 // 캘린더 목록 조회
 export async function getCalendarsApi(type?: string) {
