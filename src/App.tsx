@@ -33,8 +33,16 @@ const App = () => {
     const { login } = useAuthStore();
     const [isLoading, setIsLoading] = useState(true)
     
+  
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+    fetch('https://onrender.com') 
+        .then(() => console.log('서버가 깨어났습니다.'))
+        .catch(err => console.error('깨우기 실패:', err));
+    }, []);
+
 
     useEffect(()=>{
         authCheck()
@@ -58,7 +66,7 @@ const App = () => {
             });
     },[login, navigate, location.pathname]);
 
-    if (isLoading) return null;
+    if (isLoading) return <span>로딩중</span>;
 
     return (
     <>
