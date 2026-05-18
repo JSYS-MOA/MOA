@@ -38,7 +38,7 @@ const App = () => {
     const location = useLocation();
 
     useEffect(() => {
-    fetch('https://onrender.com') 
+    fetch('https://moa-server.onrender.com/') 
         .then(() => console.log('서버가 깨어났습니다.'))
         .catch(err => console.error('깨우기 실패:', err));
     }, []);
