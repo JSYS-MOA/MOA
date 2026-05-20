@@ -295,6 +295,20 @@
     padding: 4px;
 }
 
+.header-hamburger--desktop{
+    display: flex;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.header-hamburger--desktop > span{
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #151515;
+}
+
+
 .sidebar-main-menu {
     list-style: none;
     padding: 0;
@@ -368,6 +382,10 @@
     .header-hamburger {
         display: flex;
         align-items: center;
+    }
+
+    .header-hamburger--desktop{
+    display: none;
     }
 
     .sidebar {

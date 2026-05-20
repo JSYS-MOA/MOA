@@ -1,4 +1,7 @@
 import '../../assets/styles/layout.css';
+import { useNavigate } from "react-router";
+import {logoutApi} from "../../apis/LoginService.tsx";
+import {useAuthStore} from "../../stores/useAuthStore.tsx";
 import {RxHamburgerMenu} from "react-icons/rx";
 
 interface HeaderProps {
@@ -10,9 +13,9 @@ interface HeaderProps {
 }
 
 
-
 const Header = ({menuList, userDept, onMenuClick,onHamburgerClick}:HeaderProps) => {
-
+    const navigate = useNavigate();
+    const { user , logout } = useAuthStore();
     // || !userDept 부서명이 없는 경우도 있어서 삭제
 
   if (!menuList || menuList.length === 0 ) {
@@ -65,6 +68,20 @@ const Header = ({menuList, userDept, onMenuClick,onHamburgerClick}:HeaderProps) 
         <div className="header-hamburger" onClick={onHamburgerClick}>
             <RxHamburgerMenu size={19}/>
         </div>
+
+        <div className='header-hamburger--desktop'>
+            
+                <span className='header-userinfo'>{user?.userName}님</span>
+
+                <button onClick={async () => {
+                await logoutApi();
+                
+                logout();
+                navigate("/");
+                }} className='btn-Primary'>로그아웃</button>
+
+        </div>
+        
     </header>
   );
 }
