@@ -66,7 +66,19 @@ const App = () => {
             });
     },[login, navigate, location.pathname]);
 
-    if (isLoading) return <span>로딩중</span>;
+    if (isLoading) return 
+        <div className="login-Wrapper">
+          <div className="logo">
+            <h1>MOA</h1>
+            <p>All-in-One 비즈니스 솔루션</p>
+          </div>
+          <form>
+            <div className="spinner-Wrap">
+                    <span className="spinner spinner-Dark"></span>
+                     render server 로딩 중...
+            </div>
+          </form>
+        </div>;
 
     return (
     <>

@@ -66,6 +66,7 @@ const Login = () =>{
   }
   return(
       <div style={{display:"flex", alignItems:"center",justifyContent:"center", height:"100%"}}>
+
         <div className="login-Wrapper">
           <div className="logo">
             <h1>MOA</h1>
