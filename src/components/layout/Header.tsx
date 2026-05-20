@@ -15,7 +15,7 @@ interface HeaderProps {
 
 const Header = ({menuList, userDept, onMenuClick,onHamburgerClick}:HeaderProps) => {
     const navigate = useNavigate();
-    const { user , logout } = useAuthStore();
+    const { user } = useAuthStore();
     // || !userDept 부서명이 없는 경우도 있어서 삭제
 
   if (!menuList || menuList.length === 0 ) {
@@ -75,8 +75,6 @@ const Header = ({menuList, userDept, onMenuClick,onHamburgerClick}:HeaderProps) 
 
                 <button onClick={async () => {
                 await logoutApi();
-                
-                logout();
                 navigate("/");
                 }} className='btn-Primary'>로그아웃</button>
 
