@@ -258,6 +258,7 @@ const Sidebar = ({layoutData, activeMenu,isOpen, onClose, onMenuClick}:SidebarPr
                 </ul>
                 <div className="sidebar-footer" onClick={async () => {
                     await logoutApi();
+                    logout();
                     navigate("/");
                 }}>
                     <span>로그아웃</span>

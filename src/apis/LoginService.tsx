@@ -1,5 +1,4 @@
 import axios from "axios";
-import {useAuthStore} from "../stores/useAuthStore";
 
 //  const API = "http://localhost/api";
 const API = "https://moa-server.onrender.com/api";
@@ -24,9 +23,6 @@ export async function logoutApi(){
         {},
         { withCredentials:true }
     );
-
-    const { logout } = useAuthStore.getState();
-    logout();
 
     return data;
 }

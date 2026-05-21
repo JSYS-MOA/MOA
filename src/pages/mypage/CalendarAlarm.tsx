@@ -20,7 +20,7 @@ const CalendarAlarm = () => {
     const notifiedIds = useRef<Set<string>>(new Set());
 
     useEffect(() => {
-        if(!user) return ;
+        if(!user) return;
         const checkAlarms = async () => {
             try {
                 const data = await getCalendarsApi();
